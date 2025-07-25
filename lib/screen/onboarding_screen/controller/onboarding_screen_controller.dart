@@ -1,0 +1,54 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class OnboardingScreenController extends GetxController {
+  final PageController pageController = PageController();
+  RxInt currentPageIndex = 0.obs;
+  final int totalPages = 5;
+
+  void nextPage() {
+    if (currentPageIndex.value < totalPages - 1) {
+      currentPageIndex.value++;
+      pageController.animateToPage(
+        currentPageIndex.value,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      // Navigate to subscription screen when onboarding is finished
+      goToSubscriptionScreen();
+    }
+  }
+
+  void previousPage() {
+    if (currentPageIndex.value > 0) {
+      currentPageIndex.value--;
+      pageController.animateToPage(
+        currentPageIndex.value,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void skipOnboarding() {
+    // Navigate to subscription screen
+    goToSubscriptionScreen();
+  }
+
+  void goToSubscriptionScreen() {
+    // TODO: Replace with your actual subscription screen route
+    // Get.offNamed('/subscription');
+    print('Navigate to subscription screen');
+  }
+
+  void onPageChanged(int index) {
+    currentPageIndex.value = index;
+  }
+
+  @override
+  void onClose() {
+    pageController.dispose();
+    super.onClose();
+  }
+}

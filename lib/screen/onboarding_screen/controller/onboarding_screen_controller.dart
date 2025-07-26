@@ -1,3 +1,4 @@
+import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -37,9 +38,9 @@ class OnboardingScreenController extends GetxController {
   }
 
   void goToSubscriptionScreen() {
-    // TODO: Replace with your actual subscription screen route
+    //!  Replace with your actual subscription screen route
     // Get.offNamed('/subscription');
-    print('Navigate to subscription screen');
+    appLog('Navigate to subscription screen');
   }
 
   void onPageChanged(int index) {

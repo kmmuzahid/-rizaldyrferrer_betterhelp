@@ -54,4 +54,21 @@ class AppString {
       'I have a hard time keeping up with things like my space, health, or relationships.';
 
   static const String step = 'Step ';
+
+  //! Question 05
+  static const String whatdoYouwanttoAchieve = "What do you want to achieve?";
+  static const String buildingBetterHabits = "Building better habits";
+  static const String boostingProductivity = "Boosting productivity";
+  static const String stayingActiveandEngergized =
+      "Staying active and energized";
+  static const String sharperningFocus = "Sharpening focus";
+  static const String strengtheingDiscipline = "Strengthening discipline";
+  static const String livingMoreMidfully = "Living more midfully";
+  static const String mangingTimeBetter = "Managing time better";
+  static const String reducingOverwhelm = "Reducing Overwhelm";
+  static const String followingThoughonGoals = "Following through on goals";
+  static const String feelingEmotionallyBalanced =
+      "Feeling emotionally balanced";
+  static const String improvingSelfawreness = "Improving self-awareness";
+  static const String creatingAhealthierRoutine = "Creating a Healthier life";
 }

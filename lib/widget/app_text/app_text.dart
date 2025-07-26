@@ -82,6 +82,26 @@ class AppText extends StatelessWidget {
           decoration: effectiveDecoration,
           decorationColor: decorationColor,
         );
+      case 4:
+        return GoogleFonts.roboto(
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+          color: color,
+          height: lineHeight,
+          letterSpacing: letterSpacing,
+          decoration: effectiveDecoration,
+          decorationColor: decorationColor,
+        );
+      case 5: 
+        return GoogleFonts.montserrat(
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+          color: color,
+          height: lineHeight,
+          letterSpacing: letterSpacing,
+          decoration: effectiveDecoration,
+          decorationColor: decorationColor,
+        );
       default:
         return GoogleFonts.playfairDisplay(
           fontSize: fontSize,

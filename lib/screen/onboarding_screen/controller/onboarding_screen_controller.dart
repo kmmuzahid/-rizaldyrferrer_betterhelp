@@ -1,3 +1,4 @@
+import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,13 +34,14 @@ class OnboardingScreenController extends GetxController {
   }
 
   void skipOnboarding() {
-    // Navigate to subscription screen
+    //! Navigate to subscription screen
     goToSubscriptionScreen();
   }
 
   void goToSubscriptionScreen() {
     //!  Replace with your actual subscription screen route
-    // Get.offNamed('/subscription');
+    //! Get.offNamed('/subscription');
+    Get.offAllNamed(AppRoute.questionariescreen);
     appLog('Navigate to subscription screen');
   }
 

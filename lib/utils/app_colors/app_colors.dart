@@ -14,6 +14,7 @@ class AppColors {
   static const Color white50 = Color(0xFFFEFEFE);
   static const Color t3 = Color(0xFF032F49);
   static const Color blue50 = Color(0xFFEAF5F7);
+  static const Color white900 = Color(0xFF656565);
 
 
   static const Color questionBG01 = Color(0xFFDC8C44);
@@ -51,4 +52,6 @@ class AppColors {
   static const Color questionBg05TextColor = Color(0xFFEE443F);
   static const Color questionBg05SelectBox = Color(0xFFEE443F);
   static const Color questionBg05CardOptionBg = Color(0xFFE7F2FF);
+
+  static const Color resultBg = Color(0xFFFCF7FA);
 }

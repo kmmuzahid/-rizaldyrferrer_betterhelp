@@ -26,7 +26,7 @@ class QuestionnariesScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 12)),
             child: Column(
               children: [
-                Gap(height: AppSize.height(value: 10)),
+                Gap(height: AppSize.height(value: 32)),
                 Row(
                   children: [
                     InkWell(
@@ -91,13 +91,18 @@ class QuestionnariesScreen extends StatelessWidget {
                               inactiveTickMarkColor: AppColors
                                   .questionBG01StatusBarColor
                                   .withValues(alpha: 0.3),
+                              thumbShape: RoundSliderThumbShape(
+                                enabledThumbRadius: 0,
+                              ),
                             ),
                             child: Slider(
+                              //thumbColor: Colors.transparent,
+                              autofocus: false,
                               value: controller.progressValue.value,
                               onChanged: (value) {
                                 // Disabled - progress is controlled by questions
                               },
-                              max: 4,
+                              max: 5,
                               min: 1,
                               activeColor: _getActiveSliderColor(
                                 controller.currentPageIndex.value,
@@ -123,7 +128,7 @@ class QuestionnariesScreen extends StatelessWidget {
                       SingleChildScrollView(child: questionPage02(controller)),
                       SingleChildScrollView(child: questionPage03(controller)),
                       SingleChildScrollView(child: questionPage04(controller)),
-                      questionPage05(controller),
+                      SingleChildScrollView(child: questionPage05(controller)),
                     ],
                   ),
                 ),
@@ -313,45 +318,47 @@ Widget questionPage05(QuestionnariesScreenController controller) {
     AppString.creatingAhealthierRoutine,
   ];
 
-  return Column(
-    children: [
-      Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppSize.width(value: 12),
-          vertical: AppSize.height(value: 9),
-        ),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.all(
-            Radius.circular(AppSize.width(value: 12)),
+  return Obx(
+    () => Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSize.width(value: 12),
+            vertical: AppSize.height(value: 9),
           ),
-        ),
-        child: Column(
-          children: [
-            Image.asset(
-              AppStaticImages.qusDoddle05,
-              height: AppSize.height(value: 115),
-              width: AppSize.width(value: 115),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.all(
+              Radius.circular(AppSize.width(value: 12)),
             ),
-            Gap(height: AppSize.height(value: 14)),
-            AppText(
-              text: AppString.whatdoYouwanttoAchieve,
-              fontSize: AppSize.width(value: 16),
-              fontFamilyIndex: 5,
-              fontWeight: FontWeight.w600,
-              color: AppColors.black,
-              textAlign: TextAlign.center,
-            ),
-            Gap(height: AppSize.height(value: 14)),
-            ...List.generate(selectPageOption.length, (index) {
-              return Padding(
-                padding: EdgeInsets.only(bottom: AppSize.height(value: 8)),
-                child: Container(
+          ),
+          child: Column(
+            children: [
+              Image.asset(
+                AppStaticImages.qusDoddle05,
+                height: AppSize.height(value: 115),
+                width: AppSize.width(value: 115),
+              ),
+              Gap(height: AppSize.height(value: 14)),
+              AppText(
+                text: AppString.whatdoYouwanttoAchieve,
+                fontSize: AppSize.width(value: 16),
+                fontFamilyIndex: 5,
+                fontWeight: FontWeight.w600,
+                color: AppColors.black,
+                textAlign: TextAlign.center,
+              ),
+              Gap(height: AppSize.height(value: 14)),
+              ...List.generate(selectPageOption.length, (index) {
+                bool isSelected = controller.selectedOptions.contains(index);
+                return Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: AppSize.width(value: 18),
                     vertical: AppSize.height(value: 8),
                   ),
+                  margin: EdgeInsets.only(bottom: AppSize.height(value: 8)),
+                  height: AppSize.height(value: 44),
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: AppColors.blue50,
@@ -360,38 +367,53 @@ Widget questionPage05(QuestionnariesScreenController controller) {
                     ),
                   ),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
                         onTap: () {
-                          // Toggle selection logic here
+                          controller.toggleOption(index);
                         },
                         child: Icon(
-                          Icons.circle,
-                          color: false ? Colors.red : Colors.grey,
+                          Icons.check_circle,
+                          color: isSelected
+                              ? AppColors.questionBG05
+                              : AppColors.white900,
                           size: AppSize.width(value: 20),
                         ),
                       ),
                       Gap(width: AppSize.width(value: 12)),
-                      Expanded(
-                        child: AppText(
-                          text: selectPageOption[index],
-                          fontSize: AppSize.width(value: 14),
-                          fontFamilyIndex: 4,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.black,
-                        ),
+                      AppText(
+                        text: selectPageOption[index],
+                        fontSize: AppSize.width(value: 14),
+                        fontFamilyIndex: 4,
+                        fontWeight: FontWeight.w600,
+                        color: isSelected
+                            ? AppColors.questionBG05
+                            : AppColors.grey500,
                       ),
                     ],
                   ),
-                ),
-              );
-            }),
-          ],
+                );
+              }),
+            ],
+          ),
         ),
-      ),
-    ],
+      ],
+    ),
   );
 }
+
+Widget resultPage() => Column(
+  children: [
+    AppText(
+      text: AppString.resultQuestion,
+      fontFamilyIndex: 3,
+      lineHeight: 1.83,
+      maxLines: 2,
+      textAlign: TextAlign.center,
+    ),
+  ],
+);
 
 // Helper functions for slider colors
 Color _getActiveSliderColor(int pageIndex) {
@@ -404,7 +426,8 @@ Color _getActiveSliderColor(int pageIndex) {
       return AppColors.questionBG03StatusBarColor;
     case 3:
       return AppColors.questionBG04StatusBarColor;
-
+    case 4:
+      return AppColors.questionBG05StatusBarColor;
     default:
       return AppColors.questionBG01StatusBarColor;
   }
@@ -422,6 +445,8 @@ Color getBackgroundColors(int pageIndex) {
       return AppColors.questionBG04;
     case 4:
       return AppColors.questionBG05;
+    case 5:
+      AppColors.resultBg;
     default:
       return AppColors.questionBG01;
   }
@@ -437,6 +462,8 @@ Color _getInactiveSliderColor(int pageIndex) {
       return AppColors.questionBG03StatusBarColor.withValues(alpha: 0.3);
     case 3:
       return AppColors.questionBG04StatusBarColor.withValues(alpha: 0.3);
+    case 4:
+      return AppColors.questionBG05StatusBarColor.withValues(alpha: 0.3);
     default:
       return AppColors.questionBG01StatusBarColor.withValues(alpha: 0.3);
   }

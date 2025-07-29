@@ -10,14 +10,17 @@ class QuestionnariesScreenController extends GetxController {
   RxString selectedAnswer = ''.obs;
 
   final int totalQuestions = 25; // or make this dynamic
-  final int totalSteps = 5;
-  final int totalPages = 4;
+  final int totalSteps = 6;
+  final int totalPages = 5;
 
   // Answer options
   final List<String> answerOptions = ['rarely', 'frequently', 'sometimes'];
 
   // Store answers for all questions
   RxMap<int, String> answers = <int, String>{}.obs;
+
+  // Store selected options for multi-select questions (like page 5)
+  RxList<int> selectedOptions = <int>[].obs;
 
   void selectAnswer(String answer) {
     selectedAnswer.value = answer;
@@ -119,6 +122,23 @@ class QuestionnariesScreenController extends GetxController {
 
   double getCompletionPercentage() {
     return (answers.length / totalQuestions) * 100;
+  }
+
+  // Methods for multi-select options (page 5)
+  void toggleOption(int index) {
+    if (selectedOptions.contains(index)) {
+      selectedOptions.remove(index);
+    } else {
+      selectedOptions.add(index);
+    }
+  }
+
+  void clearSelectedOptions() {
+    selectedOptions.clear();
+  }
+
+  bool isOptionSelected(int index) {
+    return selectedOptions.contains(index);
   }
 
   @override

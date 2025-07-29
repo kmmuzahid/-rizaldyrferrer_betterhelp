@@ -71,4 +71,9 @@ class AppString {
       "Feeling emotionally balanced";
   static const String improvingSelfawreness = "Improving self-awareness";
   static const String creatingAhealthierRoutine = "Creating a Healthier life";
+
+  //! ============== Result Screen ==============
+  static const String resultQuestion =
+      "If 10 means thriving, how well do you feel in life?  Scale of 1-10";
+  static const String answer = "You Crushed It! You're closer than ever. Let's go!";
 }

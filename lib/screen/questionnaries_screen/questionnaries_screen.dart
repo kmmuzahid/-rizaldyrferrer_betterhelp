@@ -26,98 +26,104 @@ class QuestionnariesScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 12)),
             child: Column(
               children: [
-                Gap(height: AppSize.height(value: 32)),
-                Row(
-                  children: [
-                    InkWell(
-                      splashColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      onTap: () {},
-                      child: SvgPicture.asset(
-                        AppIcons.questionPageBack,
-                        height: AppSize.height(value: 24),
-                        width: AppSize.width(value: 24),
-                      ),
-                    ),
-                    Gap(width: AppSize.width(value: 08)),
-                    Flexible(
-                      child: AppText(
-                        text: AppString.questionTitle,
-                        color: AppColors.white500,
-                        lineHeight: 1.3,
-                        fontSize: AppSize.width(value: 16),
-                        fontFamilyIndex: 2,
-                        fontWeight: FontWeight.w600,
-                        maxLines: 3,
-                        textAlign: TextAlign.justify,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-                Gap(height: AppSize.height(value: 26)),
-                //! Questionnaries Step
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSize.width(value: 12),
-                    vertical: AppSize.height(value: 9),
-                  ),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(AppSize.width(value: 12)),
-                    ),
-                  ),
-                  child: Row(
+                // Conditionally show header elements (hide on result page)
+                if (controller.currentPageIndex.value !=
+                    controller.totalPages - 1) ...[
+                  Gap(height: AppSize.height(value: 32)),
+                  Row(
                     children: [
-                      Obx(
-                        () => AppText(
-                          text:
-                              "${AppString.step} ${controller.getCurrentStepText()}",
-                          fontSize: AppSize.width(value: 12),
-                          fontFamilyIndex: 4,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.black,
+                      InkWell(
+                        splashColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        onTap: () {},
+                        child: SvgPicture.asset(
+                          AppIcons.questionPageBack,
+                          height: AppSize.height(value: 24),
+                          width: AppSize.width(value: 24),
                         ),
                       ),
-                      Expanded(
-                        child: Obx(() {
-                          return SliderTheme(
-                            data: SliderTheme.of(context).copyWith(
-                              trackHeight: AppSize.height(value: 6),
-                              activeTrackColor:
-                                  AppColors.questionBG01StatusBarColor,
-                              inactiveTickMarkColor: AppColors
-                                  .questionBG01StatusBarColor
-                                  .withValues(alpha: 0.3),
-                              thumbShape: RoundSliderThumbShape(
-                                enabledThumbRadius: 0,
-                              ),
-                            ),
-                            child: Slider(
-                              //thumbColor: Colors.transparent,
-                              autofocus: false,
-                              value: controller.progressValue.value,
-                              onChanged: (value) {
-                                // Disabled - progress is controlled by questions
-                              },
-                              max: 5,
-                              min: 1,
-                              activeColor: _getActiveSliderColor(
-                                controller.currentPageIndex.value,
-                              ),
-                              inactiveColor: _getInactiveSliderColor(
-                                controller.currentPageIndex.value,
-                              ),
-                            ),
-                          );
-                        }),
+                      Gap(width: AppSize.width(value: 08)),
+                      Flexible(
+                        child: AppText(
+                          text: AppString.questionTitle,
+                          color: AppColors.white500,
+                          lineHeight: 1.3,
+                          fontSize: AppSize.width(value: 16),
+                          fontFamilyIndex: 2,
+                          fontWeight: FontWeight.w600,
+                          maxLines: 3,
+                          textAlign: TextAlign.justify,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),
-                ),
-                Gap(height: AppSize.height(value: 18)),
+                  Gap(height: AppSize.height(value: 26)),
+                  //! Questionnaries Step
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSize.width(value: 12),
+                      vertical: AppSize.height(value: 9),
+                    ),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(AppSize.width(value: 12)),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Obx(
+                          () => AppText(
+                            text:
+                                "${AppString.step} ${controller.getCurrentStepText()}",
+                            fontSize: AppSize.width(value: 12),
+                            fontFamilyIndex: 4,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.black,
+                          ),
+                        ),
+                        Expanded(
+                          child: Obx(() {
+                            return SliderTheme(
+                              data: SliderTheme.of(context).copyWith(
+                                trackHeight: AppSize.height(value: 6),
+                                activeTrackColor:
+                                    AppColors.questionBG01StatusBarColor,
+                                inactiveTickMarkColor: AppColors
+                                    .questionBG01StatusBarColor
+                                    .withValues(alpha: 0.3),
+                                thumbShape: RoundSliderThumbShape(
+                                  enabledThumbRadius: 0,
+                                ),
+                              ),
+                              child: Slider(
+                                autofocus: false,
+                                value: controller.progressValue.value,
+                                onChanged: (value) {
+                                  // Disabled - progress is controlled by questions
+                                },
+                                max: 6,
+                                min: 1,
+                                activeColor: _getActiveSliderColor(
+                                  controller.currentPageIndex.value,
+                                ),
+                                inactiveColor: _getInactiveSliderColor(
+                                  controller.currentPageIndex.value,
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Gap(height: AppSize.height(value: 18)),
+                ] else ...[
+                  // Show minimal spacing for result page
+                  Gap(height: AppSize.height(value: 20)),
+                ],
                 // PageView
                 Expanded(
                   child: PageView(
@@ -129,6 +135,7 @@ class QuestionnariesScreen extends StatelessWidget {
                       SingleChildScrollView(child: questionPage03(controller)),
                       SingleChildScrollView(child: questionPage04(controller)),
                       SingleChildScrollView(child: questionPage05(controller)),
+                      SingleChildScrollView(child: resultPage()),
                     ],
                   ),
                 ),
@@ -138,11 +145,30 @@ class QuestionnariesScreen extends StatelessWidget {
                     title:
                         controller.currentPageIndex.value ==
                             controller.totalPages - 1
-                        ? 'Complete'
+                        ? 'Continue'
+                        : controller.currentPageIndex.value ==
+                              controller.totalPages - 2
+                        ? 'See Results'
                         : AppString.next,
-                    titleColor: AppColors.black,
-                    backgroundColor: AppColors.white,
-                    onTap: controller.nextPage,
+                    titleColor:
+                        controller.currentPageIndex.value ==
+                            controller.totalPages - 1
+                        ? AppColors.white
+                        : AppColors.black,
+                    backgroundColor:
+                        controller.currentPageIndex.value ==
+                            controller.totalPages - 1
+                        ? Colors.red
+                        : AppColors.white,
+                    onTap:
+                        controller.currentPageIndex.value ==
+                            controller.totalPages - 1
+                        ? () {
+                            // Navigate to next screen (subscription, home, etc.)
+                            // Get.offNamed('/subscription');
+                            print('Navigate to next screen');
+                          }
+                        : controller.nextPage,
                   ),
                 ),
                 Gap(height: AppSize.height(value: 20)),
@@ -411,7 +437,28 @@ Widget resultPage() => Column(
       lineHeight: 1.83,
       maxLines: 2,
       textAlign: TextAlign.center,
+      color: AppColors.black,
+      fontSize: AppSize.width(value: 24),
+      overflow: TextOverflow.ellipsis,
     ),
+    Gap(height: AppSize.height(value: 05)),
+    AppText(
+      text: AppString.answer,
+      fontFamilyIndex: 2,
+      fontSize: AppSize.width(value: 18),
+      fontWeight: FontWeight.w400,
+      lineHeight: 1.5,
+      color: AppColors.black,
+      maxLines: 2,
+      textAlign: TextAlign.center,
+      overflow: TextOverflow.ellipsis,
+    ),
+    Image.asset(
+      AppStaticImages.resultPage,
+      height: AppSize.height(value: 392),
+      width: AppSize.width(value: 262),
+    ),
+    Gap(height: AppSize.height(value: 25)),
   ],
 );
 
@@ -428,6 +475,9 @@ Color _getActiveSliderColor(int pageIndex) {
       return AppColors.questionBG04StatusBarColor;
     case 4:
       return AppColors.questionBG05StatusBarColor;
+    case 5:
+      return AppColors
+          .questionBG05StatusBarColor; // Use same color for result page
     default:
       return AppColors.questionBG01StatusBarColor;
   }
@@ -446,7 +496,7 @@ Color getBackgroundColors(int pageIndex) {
     case 4:
       return AppColors.questionBG05;
     case 5:
-      AppColors.resultBg;
+      return AppColors.resultBg;
     default:
       return AppColors.questionBG01;
   }
@@ -464,6 +514,10 @@ Color _getInactiveSliderColor(int pageIndex) {
       return AppColors.questionBG04StatusBarColor.withValues(alpha: 0.3);
     case 4:
       return AppColors.questionBG05StatusBarColor.withValues(alpha: 0.3);
+    case 5:
+      return AppColors.questionBG05StatusBarColor.withValues(
+        alpha: 0.3,
+      ); // Use same color for result page
     default:
       return AppColors.questionBG01StatusBarColor.withValues(alpha: 0.3);
   }

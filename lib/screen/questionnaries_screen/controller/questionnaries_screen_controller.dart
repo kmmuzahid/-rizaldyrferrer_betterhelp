@@ -9,9 +9,9 @@ class QuestionnariesScreenController extends GetxController {
   RxInt currentPageIndex = 0.obs;
   RxString selectedAnswer = ''.obs;
 
-  final int totalQuestions = 25; // or make this dynamic
-  final int totalSteps = 6;
-  final int totalPages = 5;
+  final int totalQuestions = 25; 
+  final int totalSteps = 5;
+  final int totalPages = 6;
 
   // Answer options
   final List<String> answerOptions = ['rarely', 'frequently', 'sometimes'];

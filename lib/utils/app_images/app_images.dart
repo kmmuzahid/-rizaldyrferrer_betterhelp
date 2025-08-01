@@ -3,7 +3,6 @@ class AppStaticImages {
   static const String appBarlogo = "assets/images/appbarLogo.png";
   static const String appLogo = "assets/images/appLogo.png";
 
-
   //! ============== Onboarding Screen Images ==============
   static const String on01 = "assets/images/onboarding01.png";
   static const String on02 = "assets/images/onboarding02.png";
@@ -18,10 +17,10 @@ class AppStaticImages {
   static const String qusDoddle04 = "assets/images/questionDoddle04.png";
   static const String qusDoddle05 = "assets/images/questionDoddle05.png";
 
-
   //! ============== Subscription Screen Images ==============
   static const String subscription01 = "assets/images/subscription01.png";
   static const String subscription02 = "assets/images/subscription02.png";
   static const String subscription03 = "assets/images/subscription03.png";
   static const String subscription04 = "assets/images/subscription04.png";
+  static const String resultPage = "assets/images/resultPage.png";
 }

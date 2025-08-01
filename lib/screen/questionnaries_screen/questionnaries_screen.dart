@@ -1,7 +1,9 @@
+import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/questionnaries_screen/controller/questionnaries_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
+import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
@@ -17,7 +19,10 @@ class QuestionnariesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(QuestionnariesScreenController());
+    final controller = Get.put(
+      QuestionnariesScreenController(),
+      tag: 'questionnaires',
+    );
     return Obx(
       () => Scaffold(
         backgroundColor: getBackgroundColors(controller.currentPageIndex.value),
@@ -164,9 +169,13 @@ class QuestionnariesScreen extends StatelessWidget {
                         controller.currentPageIndex.value ==
                             controller.totalPages - 1
                         ? () {
-                            // Navigate to next screen (subscription, home, etc.)
-                            // Get.offNamed('/subscription');
-                            print('Navigate to next screen');
+                            try {
+                              // Navigate to subscription screen
+                              Get.offNamed(AppRoute.subscriptionscreen);
+                              appLog('Navigate to subscription screen');
+                            } catch (e) {
+                              appLog('Navigation error: $e');
+                            }
                           }
                         : controller.nextPage,
                   ),
@@ -207,7 +216,7 @@ Widget questionPage01(QuestionnariesScreenController controller) => Column(
       questionNumber: 3,
       totalQuestions: 15,
     ),
-    Gap(height: AppSize.height(value: 70)),
+    Gap(height: AppSize.height(value: 30)),
   ],
 );
 
@@ -246,7 +255,7 @@ Widget questionPage02(QuestionnariesScreenController controller) => Column(
       selectedAnswerColor: AppColors.questionBG02,
       answerCardBg: AppColors.questionBg02CardOptionBg,
     ),
-    Gap(height: AppSize.height(value: 70)),
+    Gap(height: AppSize.height(value: 30)),
   ],
 );
 Widget questionPage03(QuestionnariesScreenController controller) => Column(
@@ -284,7 +293,7 @@ Widget questionPage03(QuestionnariesScreenController controller) => Column(
       selectedAnswerColor: AppColors.questionBG03,
       answerCardBg: AppColors.questionBg03CardOptionBg,
     ),
-    Gap(height: AppSize.height(value: 70)),
+    Gap(height: AppSize.height(value: 30)),
   ],
 );
 Widget questionPage04(QuestionnariesScreenController controller) => Column(
@@ -322,7 +331,7 @@ Widget questionPage04(QuestionnariesScreenController controller) => Column(
       selectedAnswerColor: AppColors.questionBG04,
       answerCardBg: AppColors.questionBg04CardOptionBg,
     ),
-    Gap(height: AppSize.height(value: 40)),
+    Gap(height: AppSize.height(value: 30)),
   ],
 );
 
@@ -431,11 +440,12 @@ Widget questionPage05(QuestionnariesScreenController controller) {
 
 Widget resultPage() => Column(
   children: [
+    Gap(height: AppSize.height(value: 70)),
     AppText(
       text: AppString.resultQuestion,
       fontFamilyIndex: 3,
       lineHeight: 1.83,
-      maxLines: 2,
+      maxLines: 3,
       textAlign: TextAlign.center,
       color: AppColors.black,
       fontSize: AppSize.width(value: 24),

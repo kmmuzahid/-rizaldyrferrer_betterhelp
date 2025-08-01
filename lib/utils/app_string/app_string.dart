@@ -75,5 +75,31 @@ class AppString {
   //! ============== Result Screen ==============
   static const String resultQuestion =
       "If 10 means thriving, how well do you feel in life?  Scale of 1-10";
-  static const String answer = "You Crushed It! You're closer than ever. Let's go!";
+  static const String answer =
+      "You Crushed It! You're closer than ever. Let's go!";
+
+  //! ============== Subscription Screen ==============
+  static const String enrollment = "Enrollment";
+  static const String unlockAllThePower =
+      "Unlock all the power of this mobile tool and enjoy digital experience like never before!";
+  static const String momentum = "Momentum";
+  static const String acceleration = "Acceleration";
+  static const String elevate = "Elevate";
+  static const String ignite = "Ignite";
+  static const String first30daysFree = "First 30 da ys free - Then \$999/Year";
+  static const String year99 = "\$999/Year";
+  static const String unlimitedLikes = "Unlimited Likes";
+  static const String unlimitedRewinds = "Unlimited Rewinds";
+  static const String unlimitedPostandMedia = "Unlimited Post and Media";
+  static const String uploadManyasEvent = "Upload many as event";
+  static const String unlimitedDiscount = "Unlimited Discount";
+  static const String getNow = "Get Now";
+  static const String heyCheckThis =
+      "Hey, Check this before Leaving I've got this solo ";
+  static const String pleaseDontLeave =
+      "Please  Don't Leave Too Fast. Let's Do Free 15 min Talk ";
+  static const String afternoon = "Afternoon";
+  static const String slots = "Slots";
+  static const String evening = "Evening";
+  static const String confirmBooking = "Confirm Booking";
 }

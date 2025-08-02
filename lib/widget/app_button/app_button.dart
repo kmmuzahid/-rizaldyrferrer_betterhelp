@@ -85,6 +85,7 @@ class AppButton extends StatelessWidget {
             : child ??
                   AppText(
                     text: title ?? "",
+                    fontFamilyIndex: 2,
                     fontSize: fontSize ?? 18,
                     color: titleColor ?? AppColors.white,
                     fontWeight: FontWeight.w700,

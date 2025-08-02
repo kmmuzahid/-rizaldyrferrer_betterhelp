@@ -97,9 +97,49 @@ class AppString {
   static const String heyCheckThis =
       "Hey, Check this before Leaving I've got this solo ";
   static const String pleaseDontLeave =
-      "Please  Don't Leave Too Fast. Let's Do Free 15 min Talk ";
+      "Please Don't Leave Too Fast. Let's Do Free 15 min Talk";
   static const String afternoon = "Afternoon";
   static const String slots = "Slots";
   static const String evening = "Evening";
   static const String confirmBooking = "Confirm Booking";
+  static const String free15min = "Free 15 min Talk ";
+
+  //! ============== Authentication Screen ==============
+  static const String createAccount = "Create Account";
+  static const String pleaseEnterYourMailandPassword =
+      "Please enter you email and password to get into your account";
+  static const String fullName = "Full Name";
+  static const String hintFullName = "Enter your full name";
+  static const String emailAddress = "Email Address";
+  static const String hintEmailAddress = "hint@gmail.com";
+  static const String password = "Password";
+  static const String confirmPassword = "Confirm Password";
+  static const String hintPassword = "********";
+  static const String login = "Log In";
+  static const String continueWithGoogle = "Continue with Google";
+  static const String continueWithApple = "Continue with Apple";
+  static const String dontHavaAnAccount = "Don't have an account? ";
+  static const String signUp = "Sign Up";
+  static const String welcomeBack = "Welcome Back";
+  static const String forgotPassword = "Forgot Password?";
+  static const String enterYouremailAddressToSendYou =
+      "Enter your email address to send your a verifications code.";
+  static const String sendCode = "Send Code";
+  static const String otpVerification = "OTP Verification";
+  static const String enterOtp =
+      "Enter your OTP which has been sent to your email and completely verify your account.";
+  static const String verify = "Verify";
+  static const String changePassword = "Change Password";
+  static const String writeyourNewPassword =
+      "Write your new password, make sure you remember this password next time.";
+  static const String setPassword = "Set Password";
+  static const String completeYourProfile = "Complete Your Profile";
+  static const String shareYourpersonaldetails =
+      "Share your personal details, so people can discover you and gets connected with them";
+  static const String myEthnicDecent = "My Ethnic Decent";
+  static const String gender = "Gender";
+  static const String dateOfBirth = "Date of Birth (DD/MM/YYYY)";
+  static const String cityCountry = "City/Country";
+  static const String timeZone = "Time Zone";
+  static const String alreaHaveanAccount = "Already have an account? ";
 }

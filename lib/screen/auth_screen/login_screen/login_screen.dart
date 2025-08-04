@@ -44,7 +44,7 @@ class LoginScreen extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               Gap(height: AppSize.height(value: 30)),
-            
+
               //! Email Address Field
               // Gap(height: AppSize.height(value: 12)),
               AppText(
@@ -105,7 +105,9 @@ class LoginScreen extends StatelessWidget {
                 title: AppString.login,
                 backgroundColor: AppColors.primary500,
                 titleColor: AppColors.white,
-                onTap: () {},
+                onTap: () {
+                  Get.toNamed(AppRoute.completeProfileScreen);
+                },
               ),
               Gap(height: AppSize.height(value: 12)),
               Center(child: AppText(text: "Or", fontFamilyIndex: 2)),

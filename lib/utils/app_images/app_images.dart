@@ -23,4 +23,6 @@ class AppStaticImages {
   static const String subscription03 = "assets/images/subscription03.png";
   static const String subscription04 = "assets/images/subscription04.png";
   static const String resultPage = "assets/images/resultPage.png";
+
+  static const String completeProfile = "assets/images/completeProfile01.png";
 }

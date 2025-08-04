@@ -129,6 +129,10 @@ class AppString {
   static const String enterOtp =
       "Enter your OTP which has been sent to your email and completely verify your account.";
   static const String verify = "Verify";
+  static const String enterCode = "Enter Code";
+  static const String aCodehasbeenSent = "A code has been sent to your email.";
+  static const String resendCode = "Resend Code";
+  static const String resendin = "Resend in : ";
   static const String changePassword = "Change Password";
   static const String writeyourNewPassword =
       "Write your new password, make sure you remember this password next time.";

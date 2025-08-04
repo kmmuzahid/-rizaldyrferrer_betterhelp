@@ -118,7 +118,12 @@ class SignupScreen extends StatelessWidget {
                 title: AppString.signUp,
                 backgroundColor: AppColors.primary500,
                 titleColor: AppColors.white,
-                onTap: () {},
+                onTap: () {
+                  Get.toNamed(
+                    AppRoute.otpVerificationScreen,
+                    arguments: {'screen': "signup"},
+                  );
+                },
               ),
               Gap(height: AppSize.height(value: 40)),
               Row(

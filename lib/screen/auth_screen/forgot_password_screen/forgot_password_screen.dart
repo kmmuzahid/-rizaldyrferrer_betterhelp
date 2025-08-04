@@ -1,3 +1,4 @@
+import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
@@ -6,9 +7,10 @@ import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/app_text_input/app_text_input.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
-  const ForgotPasswordScreen({Key? key}) : super(key: key);
+  const ForgotPasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +66,12 @@ class ForgotPasswordScreen extends StatelessWidget {
                 title: AppString.sendCode,
                 backgroundColor: AppColors.primary500,
                 titleColor: AppColors.white,
-                onTap: () {},
+                onTap: () {
+                  Get.toNamed(
+                    AppRoute.otpVerificationScreen,
+                    arguments: {'screen': "forgotpassword"},
+                  );
+                },
               ),
             ],
           ),

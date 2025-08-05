@@ -39,7 +39,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Gap(height: AppSize.height(value: 50)),
+              Gap(height: 50),
               AppText(
                 text: AppString.otpVerification,
                 fontSize: AppSize.width(value: 35),
@@ -48,7 +48,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 fontWeight: FontWeight.w600,
                 color: AppColors.blue900,
               ),
-              Gap(height: AppSize.height(value: 12)),
+              Gap(height: 12),
               AppText(
                 text: AppString.enterOtp,
                 fontFamilyIndex: 2,
@@ -59,7 +59,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 textAlign: TextAlign.start,
                 overflow: TextOverflow.ellipsis,
               ),
-              Gap(height: AppSize.height(value: 30)),
+              Gap(height: 30),
               AppText(
                 text: AppString.enterCode,
                 fontFamilyIndex: 2,
@@ -67,7 +67,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 fontWeight: FontWeight.w500,
                 color: AppColors.secondary,
               ),
-              Gap(height: AppSize.height(value: 3)),
+              Gap(height: 3),
               Pinput(
                 controller: _controller,
                 focusNode: _focusNode,
@@ -124,7 +124,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   controller.verifyOtp(pin);
                 },
               ),
-              Gap(height: AppSize.height(value: 30)),
+              Gap(height: 30),
               Center(
                 child: AppText(
                   text: AppString.aCodehasbeenSent,
@@ -136,7 +136,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Gap(height: AppSize.height(value: 20)),
+              Gap(height: 20),
               Center(
                 child: Obx(
                   () => controller.isTimerActive.value
@@ -168,7 +168,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 ),
               ),
               //! Verify Otp Button
-              Gap(height: AppSize.height(value: 30)),
+              Gap(height: 30),
               AppButton(
                 title: AppString.verify,
                 onTap: () {
@@ -177,7 +177,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 backgroundColor: AppColors.primary500,
                 titleColor: AppColors.white,
               ),
-              Gap(height: AppSize.height(value: 30)),
+              Gap(height: 30),
             ],
           ),
         ),

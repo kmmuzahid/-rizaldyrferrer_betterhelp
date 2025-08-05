@@ -146,4 +146,10 @@ class AppString {
   static const String cityCountry = "City/Country";
   static const String timeZone = "Time Zone";
   static const String alreaHaveanAccount = "Already have an account? ";
+
+  static const String habits = "Habits";
+  static const String learn = "Learn";
+  static const String support = "Support";
+  static const String progress = "Progress";
+  static const String community = "Community";
 }

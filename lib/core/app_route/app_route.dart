@@ -4,11 +4,17 @@ import 'package:better_help/screen/auth_screen/forgot_password_screen/forgot_pas
 import 'package:better_help/screen/auth_screen/login_screen/login_screen.dart';
 import 'package:better_help/screen/auth_screen/otp_verification_screen/otp_verification_screen.dart';
 import 'package:better_help/screen/auth_screen/signup_screen/signup_screen.dart';
-import 'package:better_help/screen/home_screen/home_screen.dart';
+import 'package:better_help/screen/bottom_nav/bottom_nav_screen.dart';
+import 'package:better_help/screen/community/main_community/community_screen.dart';
+import 'package:better_help/screen/habits/home_screen.dart';
+import 'package:better_help/screen/habits/main_habits/habits_screen.dart';
+import 'package:better_help/screen/learn/main_learn/learn_screen.dart';
 import 'package:better_help/screen/onboarding_screen/onbarding_screen.dart';
+import 'package:better_help/screen/progress/main_progress/progress_screen.dart';
 import 'package:better_help/screen/questionnaries_screen/questionnaries_screen.dart';
 import 'package:better_help/screen/splash_screen/splash_screen.dart';
 import 'package:better_help/screen/subscription/subscription_and_payment.dart';
+import 'package:better_help/screen/supports/main_supports/support_screen.dart';
 import 'package:get/get.dart';
 
 class AppRoute {
@@ -27,6 +33,15 @@ class AppRoute {
   static const String changePasswrodScreen = '/changePasswrodScreen';
   static const String completeProfileScreen = '/completeProfileScreen';
   static const String homeScreen = '/homeScreen';
+
+
+  //! Bottom Navigation Screen Route
+  static const String bottomNav = '/bottomNav';
+  static const String habitsScreen = '/habitsScreen';
+  static const String communityScreen = '/communityScreen';
+  static const String learnScreen = '/learningScreen';
+  static const String supportScreen = '/supportScreen';
+  static const String progressScreen = '/progressScreen';
 
   static List<GetPage> appRoutes = [
     //! Splash Screen Route
@@ -93,6 +108,42 @@ class AppRoute {
     GetPage(
       name: AppRoute.homeScreen,
       page: () => const HomeScreen(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    //! Bottom Navigation Screen Route
+    GetPage(
+      name: AppRoute.bottomNav,
+      page: () => const BottomNavScreen(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    //! Habits Screen Route
+    GetPage(
+      name: AppRoute.habitsScreen,
+      page: () => const HabitsScreen(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    //! Community Screen Route
+    GetPage(
+      name: AppRoute.communityScreen,
+      page: () => const CommunityScreen(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    //! Learning Screen Route
+    GetPage(
+      name: AppRoute.learnScreen,
+      page: () => const LearnScreen(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    //! Support Screen Route
+    GetPage(
+      name: AppRoute.supportScreen,
+      page: () => const SupportScreen(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    //! Progress Screen Route
+    GetPage(
+      name: AppRoute.progressScreen,
+      page: () => const ProgressScreen(),
       transition: Transition.rightToLeftWithFade,
     ),
   ];

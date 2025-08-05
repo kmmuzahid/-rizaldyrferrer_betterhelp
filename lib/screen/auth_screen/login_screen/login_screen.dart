@@ -24,7 +24,7 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Gap(height: AppSize.height(value: 50)),
+              Gap(height: 50),
               AppText(
                 text: AppString.welcomeBack,
                 fontSize: AppSize.width(value: 40),
@@ -33,7 +33,7 @@ class LoginScreen extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 color: AppColors.blue900,
               ),
-              Gap(height: AppSize.height(value: 12)),
+              Gap(height: 12),
               AppText(
                 text: AppString.pleaseEnterYourMailandPassword,
                 fontFamilyIndex: 2,
@@ -43,7 +43,7 @@ class LoginScreen extends StatelessWidget {
                 textAlign: TextAlign.start,
                 overflow: TextOverflow.ellipsis,
               ),
-              Gap(height: AppSize.height(value: 30)),
+              Gap(height: 30),
 
               //! Email Address Field
               // Gap(height: AppSize.height(value: 12)),
@@ -54,7 +54,7 @@ class LoginScreen extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 color: AppColors.secondary,
               ),
-              Gap(height: AppSize.height(value: 03)),
+              Gap(height: 03),
               AppTextInput(
                 controller: TextEditingController(),
                 hintText: AppString.hintEmailAddress,
@@ -63,7 +63,7 @@ class LoginScreen extends StatelessWidget {
                 keyboardType: TextInputType.emailAddress,
               ),
               //! Password Field
-              Gap(height: AppSize.height(value: 12)),
+              Gap(height: 12),
               AppText(
                 text: AppString.password,
                 fontFamilyIndex: 2,
@@ -71,7 +71,7 @@ class LoginScreen extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 color: AppColors.secondary,
               ),
-              Gap(height: AppSize.height(value: 03)),
+              Gap(height: 03),
               AppTextInput(
                 controller: TextEditingController(),
                 hintText: AppString.hintPassword,
@@ -81,7 +81,7 @@ class LoginScreen extends StatelessWidget {
                 isPassword: true,
               ),
               //! Forget Password
-              Gap(height: AppSize.height(value: 05)),
+              Gap(height: 05),
               Align(
                 alignment: Alignment.topRight,
                 child: InkWell(
@@ -100,7 +100,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               //! Log In Button
-              Gap(height: AppSize.height(value: 20)),
+              Gap(height: 20),
               AppButton(
                 title: AppString.login,
                 backgroundColor: AppColors.primary500,
@@ -109,9 +109,9 @@ class LoginScreen extends StatelessWidget {
                   Get.toNamed(AppRoute.completeProfileScreen);
                 },
               ),
-              Gap(height: AppSize.height(value: 12)),
+              Gap(height: 12),
               Center(child: AppText(text: "Or", fontFamilyIndex: 2)),
-              Gap(height: AppSize.height(value: 12)),
+              Gap(height: 12),
               //! Google Login
               IconAppButton(
                 iconAlignment: CustomIconAlignment.left,
@@ -122,7 +122,7 @@ class LoginScreen extends StatelessWidget {
                 icon: AppIcons.google,
                 onTap: () {},
               ),
-              Gap(height: AppSize.height(value: 12)),
+              Gap(height: 12),
               //! Apple Login
               IconAppButton(
                 iconAlignment: CustomIconAlignment.left,
@@ -133,7 +133,7 @@ class LoginScreen extends StatelessWidget {
                 icon: AppIcons.apple,
                 onTap: () {},
               ),
-              Gap(height: AppSize.height(value: 40)),
+              Gap(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -146,7 +146,7 @@ class LoginScreen extends StatelessWidget {
                     fontSize: AppSize.width(value: 14),
                     fontWeight: FontWeight.w500,
                   ),
-                  Gap(width: AppSize.width(value: 05)),
+                  Gap(width: 05),
                   InkWell(
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,

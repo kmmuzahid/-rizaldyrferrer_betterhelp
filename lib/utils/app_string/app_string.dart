@@ -152,4 +152,46 @@ class AppString {
   static const String support = "Support";
   static const String progress = "Progress";
   static const String community = "Community";
+
+  //! Habits Screen
+  static const String getReadytoStart = "Get Ready To Start";
+  static const String mahbubulQareem = "Mahbubul Qareem";
+  static const String dailyAffermation = "Daily Affermation";
+  static const String quotes01 =
+      "And now that you don't have to be perfect, you can be good.";
+  static const String quotes01Author = "John Steinbeck";
+  static const String quotes02 =
+      "I haven't had a very good day. I think I might still be hungover and everyone's dead and my root beer's gone.";
+  static const String quotes02Author = "Holly Black";
+  static const String quotes03 =
+      "But I am very poorly today & very stupid & I hate everybody & everything. One lives only to make blunders.";
+  static const String quotes03Author = "Charles Darwin";
+  static const String quotes04 =
+      "Life is never fair, and perhaps it is a good thing for most of us that it is not.";
+  static const String quotes04Author = "Oscar Wilde";
+  static const String emotionRegulation = "Emotion Regulation";
+  static const String practiceGroundingTechnique =
+      "Practice Grounding technique";
+  static const String minuteMeditation = "-minute meditation";
+  static const String am = "AM";
+  static const String startNow = "Start Now";
+  static const String talkTobhaa = "Talk to BHAA";
+  static const String checkList = "Checklist";
+  static const String drinkWaterDaily = "Drink 8 gleasse of water daily";
+  static const String startTimer = "Start Timer";
+  //! Learn Screen
+  static const String masterclassTutorial = "Masterclass Tutorials";
+  static const String learnAndImprove = "Learn and Improve your lifestyle.";
+  //! Support Screen
+  static const String seekExpartSupports = "Seek Experts Support";
+  static const String directContactWithBha =
+      "Direct contact with the BHAA, BHA";
+  //! Track Progrss
+  static const String trackProgress = "Track Progress";
+  static const String getreportsBasedonYou =
+      "Get Reports Based on Your Activity";
+  //! Community
+  static const String communities = "Communities";
+  static const String engageWithLikeMindedPeople =
+      "Engage with like-minded people";
 }

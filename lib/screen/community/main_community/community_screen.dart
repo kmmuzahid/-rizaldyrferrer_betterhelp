@@ -1,4 +1,9 @@
 import 'package:better_help/utils/app_colors/app_colors.dart';
+import 'package:better_help/utils/app_icons/app_icons.dart';
+import 'package:better_help/utils/app_images/app_images.dart';
+import 'package:better_help/utils/app_size/app_size.dart';
+import 'package:better_help/utils/app_string/app_string.dart';
+import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
 import 'package:flutter/material.dart';
 
 class CommunityScreen extends StatelessWidget {
@@ -7,6 +12,14 @@ class CommunityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: FlexibleCustomAppBar(
+        title: AppString.communities,
+        subtitle: AppString.engageWithLikeMindedPeople,
+        leadingImagePath: AppStaticImages.communityAppbar ,
+        appBarHeight: AppSize.height(value: 70),
+        notificationIconPath: AppIcons.notificationIcons,
+        menuIconPath: AppIcons.menuIcons,
+      ),
       backgroundColor: AppColors.orange600,
       body: Center(
         child: Text(

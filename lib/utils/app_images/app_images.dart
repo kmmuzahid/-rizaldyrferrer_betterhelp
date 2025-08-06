@@ -25,4 +25,18 @@ class AppStaticImages {
   static const String resultPage = "assets/images/resultPage.png";
 
   static const String completeProfile = "assets/images/completeProfile01.png";
+
+  //! ============== Habits Screen Images ==============
+  static const String habitsAppbar = "assets/images/homeLedingImage.png";
+  static const String habits01 = "assets/images/habitDaily05.png";
+  static const String habits02 = "assets/images/habitDaily01.jpg";
+  static const String habits03 = "assets/images/habitDaily02.jpg";
+  static const String habits04 = "assets/images/habitDaily03.jpg";
+
+
+
+  static const String learnAppbar = "assets/images/learnAppbar.png";
+  static const String supportAppbar = "assets/images/supportAppbar.png";
+  static const String progressAppbar = "assets/images/progressAppbar.png";
+  static const String communityAppbar = "assets/images/communityAppbar.png";
 }

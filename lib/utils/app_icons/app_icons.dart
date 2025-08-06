@@ -18,4 +18,12 @@ class AppIcons {
   static const String progressFill = "assets/icons/progressFill.svg";
   static const String community = "assets/icons/community.svg";
   static const String communityFill = "assets/icons/communityFill.svg";
+
+  static const String notificationIcons = "assets/icons/notificationIcons.svg";
+  static const String menuIcons = "assets/icons/menuIcons.svg";
+
+  static const String appBarbackbutton = "assets/icons/appBarBackbutton.svg";
+  static const String threedots = "assets/icons/threeDots.svg";
+  static const String minuteMeditation = "assets/icons/minuteMeditation.svg";
+  static const String scheduleTime = "assets/icons/timeSchedule.svg";
 }

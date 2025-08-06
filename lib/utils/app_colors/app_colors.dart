@@ -12,7 +12,7 @@ class AppColors {
   static const Color textMain = Color(0xFF393938);
   static const Color yellow50 = Color(0xFFFCF4EC);
   static const Color white500 = Color(0xFFF0F0F0);
-  static const Color white50 = Color(0xFFFEFEFE);
+  static const Color white50 = Color(0xFFF0F0F0);
   static const Color t3 = Color(0xFF032F49);
   // static const Color blue50 = Color(0xFFEAF5F7);
   static const Color white900 = Color(0xFF656565);
@@ -47,6 +47,8 @@ class AppColors {
   static const Color questionBg05TextColor = Color(0xFFEE443F);
   static const Color questionBg05SelectBox = Color(0xFFEE443F);
   static const Color questionBg05CardOptionBg = Color(0xFFE7F2FF);
+  static const Color iconLightgrey = Color(0xFFD2D5DB);
+  static const Color habitsCalendarBorder = Color(0xFF393433);
 
   static const Color resultBg = Color(0xFFFCF7FA);
 
@@ -166,4 +168,7 @@ class AppColors {
   static const Color green700 = Color(0xFF308242);
   static const Color green800 = Color(0xFF256533);
   static const Color green900 = Color(0xFF1c4d27);
+
+  //! Habits Screen Color
+  static const Color habitBackground = Color(0xFFFEFEFE);
 }

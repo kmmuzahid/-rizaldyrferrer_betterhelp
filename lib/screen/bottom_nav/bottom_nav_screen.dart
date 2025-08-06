@@ -6,303 +6,191 @@ import 'package:better_help/screen/progress/main_progress/progress_screen.dart';
 import 'package:better_help/screen/supports/main_supports/support_screen.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
-import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
-import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class BottomNavScreen extends StatelessWidget {
   const BottomNavScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Move the GlobalKey outside of GetBuilder to prevent recreation
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
     final BottomNavScreenController controller = Get.put(
       BottomNavScreenController(),
     );
 
-    return Scaffold(
-      key: scaffoldKey,
-      // appBar: AppBar(
-      //   backgroundColor: AppColors.instance.white50,
-      //   title: Row(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       Image.asset(
-      //         AppAssertImage.instance.logoIcon,
-      //         height: 40,
-      //         width: 40,
-      //       ),
-      //     ],
-      //   ),
-      //   centerTitle: true,
-      //   leading: IconButton(
-      //     onPressed: () {
-      //       scaffoldKey.currentState?.openDrawer();
-      //     },
-      //     icon: SvgPicture.asset(AppAssertIcons.userMenu),
-      //   ),
-      //   actions: [
-      //     IconButton(
-      //       onPressed: () {}, // Add functionality for notifications
-      //       icon: SvgPicture.asset(AppAssertIcons.userNotification),
-      //     ),
-      //   ],
-      // ),
-      //drawer: const UserMenuDrawer(),
-      body: Obx(
-        () => IndexedStack(
-          index: controller.selectedIndex.value,
-          children: [
-            ////////// index 0
-            HabitsScreen(),
-            ////////// index 1
-            LearnScreen(),
-            /////////// index 2
-            SupportScreen(),
-            /////////// index 3
-            ProgressScreen(),
-            /////////// index 4 -
-            CommunityScreen(),
-          ],
-        ),
-      ),
-      // floatingActionButtonLocation:
-      //     FloatingActionButtonLocation.centerDocked,
-      // floatingActionButton: ClipOval(
-      //   child: Container(
-      //     padding: EdgeInsets.all(6),
-      //     decoration: BoxDecoration(
-      //       color: AppColors.instance.green500.withAlpha(80),
-      //       borderRadius: BorderRadius.circular(100),
-      //     ),
-      //     child: Material(
-      //       color: AppColors.instance.green500,
-      //       borderRadius: BorderRadius.circular(100),
-      //       child: InkWell(
-      //         onTap: () {
-      //           controller.changeIndex(4);
-      //         },
-      //         borderRadius: BorderRadius.circular(100),
-      //         child: Container(
-      //           width: AppSize.width(value: 50),
-      //           height: AppSize.height(value: 50),
-      //           alignment: Alignment.center,
-      //           child: SvgPicture.asset(
-      //             AppAssertIcons.uProduct,
-      //             height: AppSize.width(value: 22),
-      //             width: AppSize.height(value: 22),
-      //             colorFilter: ColorFilter.mode(
-      //               AppColors.instance.white50,
-      //               BlendMode.srcIn,
-      //             ),
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      //   ),
-      // ),
-      bottomNavigationBar: Container(
-        height: AppSize.height(value: 70),
-        padding: EdgeInsets.symmetric(vertical: AppSize.width(value: 8)),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: Obx(
-          () => Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              //////////////////  home
-              GestureDetector(
-                onTap: () {
-                  controller.changeIndex(0);
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    controller.selectedIndex.value == 0
-                        ? Container(
-                            height: AppSize.height(value: 4),
-                            width: AppSize.width(value: 30),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary500,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                    Gap(height: 4),
-                    SvgPicture.asset(
-                      controller.selectedIndex.value == 0
-                          ? AppIcons.habitsFill
-                          : AppIcons.habits,
-                      width: AppSize.width(value: 18),
-                      height: AppSize.height(value: 18),
-                    ),
-                    AppText(
-                      text: AppString.habits,
-                      color: controller.selectedIndex.value == 0
-                          ? AppColors.primary500
-                          : AppColors.secondary500,
-                    ),
-                  ],
-                ),
-              ),
-
-              ////////////  Search
-              GestureDetector(
-                onTap: () {
-                  controller.changeIndex(1);
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    controller.selectedIndex.value == 1
-                        ? Container(
-                            height: AppSize.height(value: 4),
-                            width: AppSize.width(value: 30),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary500,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                    Gap(height: 4),
-                    SvgPicture.asset(
-                      controller.selectedIndex.value == 1
-                          ? AppIcons.learnFill
-                          : AppIcons.learn,
-                      width: AppSize.width(value: 18),
-                      height: AppSize.height(value: 18),
-                    ),
-                    AppText(
-                      text: AppString.learn,
-                      color: controller.selectedIndex.value == 1
-                          ? AppColors.primary500
-                          : AppColors.secondary500,
-                    ),
-                  ],
-                ),
-              ),
-              //////////// support
-              GestureDetector(
-                onTap: () {
-                  controller.changeIndex(2);
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    controller.selectedIndex.value == 2
-                        ? Container(
-                            height: AppSize.height(value: 4),
-                            width: AppSize.width(value: 30),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary500,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                    Gap(height: 4),
-                    SvgPicture.asset(
-                      controller.selectedIndex.value == 2
-                          ? AppIcons.supportFill
-                          : AppIcons.support,
-                      width: AppSize.width(value: 18),
-                      height: AppSize.height(value: 18),
-                    ),
-                    AppText(
-                      text: AppString.support,
-                      color: controller.selectedIndex.value == 2
-                          ? AppColors.primary500
-                          : AppColors.secondary500,
-                    ),
-                  ],
-                ),
-              ),
-              //////////// account
-              GestureDetector(
-                onTap: () {
-                  controller.changeIndex(3);
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    controller.selectedIndex.value == 3
-                        ? Container(
-                            height: AppSize.height(value: 4),
-                            width: AppSize.width(value: 30),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary500,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                    Gap(height: 4),
-                    SvgPicture.asset(
-                      controller.selectedIndex.value == 3
-                          ? AppIcons.progressFill
-                          : AppIcons.progress,
-                      width: AppSize.width(value: 18),
-                      height: AppSize.height(value: 18),
-                    ),
-                    AppText(
-                      text: AppString.progress,
-                      color: controller.selectedIndex.value == 3
-                          ? AppColors.primary500
-                          : AppColors.secondary500,
-                    ),
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  controller.changeIndex(4);
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    controller.selectedIndex.value == 4
-                        ? Container(
-                            height: AppSize.height(value: 4),
-                            width: AppSize.width(value: 30),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary500,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                    Gap(height: 4),
-                    SvgPicture.asset(
-                      controller.selectedIndex.value == 4
-                          ? AppIcons.communityFill
-                          : AppIcons.community,
-                      width: AppSize.width(value: 18),
-                      height: AppSize.height(value: 18),
-                    ),
-                    AppText(
-                      text: AppString.community,
-                      color: controller.selectedIndex.value == 4
-                          ? AppColors.primary500
-                          : AppColors.secondary500,
-                    ),
-                  ],
-                ),
-              ),
-            ],
+    return Theme(
+      data: Theme.of(context).copyWith(
+        textTheme: Theme.of(context).textTheme.copyWith(
+          bodySmall: TextStyle(
+            fontSize: AppSize.width(value: 13),
+            fontWeight: FontWeight.w700,
+            color: AppColors.primary500,
           ),
         ),
       ),
+      child: Obx(
+        () => PersistentTabView(
+          context,
+          controller: PersistentTabController(
+            initialIndex: controller.selectedIndex.value,
+          ),
+          screens: _buildScreens(),
+          items: _navBarsItems(),
+          handleAndroidBackButtonPress: true,
+          resizeToAvoidBottomInset: true,
+          stateManagement: true,
+          hideNavigationBarWhenKeyboardAppears: true,
+          popBehaviorOnSelectedNavBarItemPress: PopBehavior.all,
+          padding: EdgeInsets.only(
+            top: AppSize.height(value: 2),
+            bottom: AppSize.height(value: 8),
+          ),
+          backgroundColor: AppColors.white,
+          isVisible: true,
+          bottomScreenMargin: AppSize.height(value: 05),
+          animationSettings: const NavBarAnimationSettings(
+            navBarItemAnimation: ItemAnimationSettings(
+              duration: Duration(milliseconds: 500),
+              curve: Curves.ease,
+            ),
+            screenTransitionAnimation: ScreenTransitionAnimationSettings(
+              animateTabTransition: true,
+              duration: Duration(milliseconds: 400),
+              curve: Curves.easeInOutExpo,
+            ),
+          ),
+          confineToSafeArea: true,
+          navBarHeight: AppSize.height(value: 75),
+          navBarStyle: NavBarStyle.style3,
+          onItemSelected: (index) {
+            controller.changeIndex(index);
+          },
+        ),
+      ),
     );
+  }
+
+  List<Widget> _buildScreens() {
+    return [
+      const HabitsScreen(),
+      const LearnScreen(),
+      const SupportScreen(),
+      const ProgressScreen(),
+      const CommunityScreen(),
+    ];
+  }
+
+  List<PersistentBottomNavBarItem> _navBarsItems() {
+    return [
+      //! Habits Screen
+      PersistentBottomNavBarItem(
+        icon: SvgPicture.asset(
+          AppIcons.habitsFill,
+          width: AppSize.width(value: 25),
+          height: AppSize.height(value: 25),
+          colorFilter: ColorFilter.mode(AppColors.primary500, BlendMode.srcIn),
+        ),
+        inactiveIcon: SvgPicture.asset(
+          AppIcons.habits,
+          width: AppSize.width(value: 25),
+          height: AppSize.height(value: 25),
+          colorFilter: ColorFilter.mode(
+            AppColors.secondary500,
+            BlendMode.srcIn,
+          ),
+        ),
+        title: AppString.habits,
+        activeColorPrimary: AppColors.primary500,
+        inactiveColorPrimary: AppColors.secondary500,
+      ),
+      //! Learn Screen
+      PersistentBottomNavBarItem(
+        icon: SvgPicture.asset(
+          AppIcons.learnFill,
+          width: AppSize.width(value: 25),
+          height: AppSize.height(value: 25),
+          colorFilter: ColorFilter.mode(AppColors.primary500, BlendMode.srcIn),
+        ),
+        inactiveIcon: SvgPicture.asset(
+          AppIcons.learn,
+          width: AppSize.width(value: 25),
+          height: AppSize.height(value: 25),
+          colorFilter: ColorFilter.mode(
+            AppColors.secondary500,
+            BlendMode.srcIn,
+          ),
+        ),
+        title: AppString.learn,
+        activeColorPrimary: AppColors.primary500,
+        inactiveColorPrimary: AppColors.secondary500,
+      ),
+      //! Support Screen
+      PersistentBottomNavBarItem(
+        icon: SvgPicture.asset(
+          AppIcons.supportFill,
+          width: AppSize.width(value: 25),
+          height: AppSize.height(value: 25),
+          colorFilter: ColorFilter.mode(AppColors.primary500, BlendMode.srcIn),
+        ),
+        inactiveIcon: SvgPicture.asset(
+          AppIcons.support,
+          width: AppSize.width(value: 25),
+          height: AppSize.height(value: 25),
+          colorFilter: ColorFilter.mode(
+            AppColors.secondary500,
+            BlendMode.srcIn,
+          ),
+        ),
+        title: AppString.support,
+        activeColorPrimary: AppColors.primary500,
+        inactiveColorPrimary: AppColors.secondary500,
+      ),
+      //! Progress Screen
+      PersistentBottomNavBarItem(
+        icon: SvgPicture.asset(
+          AppIcons.progressFill,
+          width: AppSize.width(value: 25),
+          height: AppSize.height(value: 25),
+          colorFilter: ColorFilter.mode(AppColors.primary500, BlendMode.srcIn),
+        ),
+        inactiveIcon: SvgPicture.asset(
+          AppIcons.progress,
+          width: AppSize.width(value: 25),
+          height: AppSize.height(value: 25),
+          colorFilter: ColorFilter.mode(
+            AppColors.secondary500,
+            BlendMode.srcIn,
+          ),
+        ),
+        title: AppString.progress,
+        activeColorPrimary: AppColors.primary500,
+        inactiveColorPrimary: AppColors.secondary500,
+      ),
+      //! Community Screen
+      PersistentBottomNavBarItem(
+        icon: SvgPicture.asset(
+          AppIcons.communityFill,
+          width: AppSize.width(value: 25),
+          height: AppSize.height(value: 25),
+          colorFilter: ColorFilter.mode(AppColors.primary500, BlendMode.srcIn),
+        ),
+        inactiveIcon: SvgPicture.asset(
+          AppIcons.community,
+          width: AppSize.width(value: 25),
+          height: AppSize.height(value: 25),
+          colorFilter: ColorFilter.mode(
+            AppColors.secondary500,
+            BlendMode.srcIn,
+          ),
+        ),
+        title: AppString.community,
+        activeColorPrimary: AppColors.primary500,
+        inactiveColorPrimary: AppColors.secondary500,
+      ),
+    ];
   }
 }

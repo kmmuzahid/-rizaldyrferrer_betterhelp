@@ -32,8 +32,7 @@ class AppStaticImages {
   static const String habits02 = "assets/images/habitDaily01.jpg";
   static const String habits03 = "assets/images/habitDaily02.jpg";
   static const String habits04 = "assets/images/habitDaily03.jpg";
-
-
+  static const String startTimer = "assets/images/startTime.png";
 
   static const String learnAppbar = "assets/images/learnAppbar.png";
   static const String supportAppbar = "assets/images/supportAppbar.png";

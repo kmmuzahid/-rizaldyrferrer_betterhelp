@@ -174,6 +174,7 @@ class AppString {
       "Practice Grounding technique";
   static const String minuteMeditation = "-minute meditation";
   static const String am = "AM";
+  static const String pm = "PM";
   static const String startNow = "Start Now";
   static const String talkTobhaa = "Talk to BHAA";
   static const String checkList = "Checklist";

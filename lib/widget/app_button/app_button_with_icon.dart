@@ -22,13 +22,14 @@ class IconAppButton extends StatelessWidget {
     this.titleColor,
     this.border,
     this.borderColor,
-    this.icon, // Icon for button
+    this.icon, // Icon for button (SVG or PNG asset path)
     this.iconAlignment =
         CustomIconAlignment.left, // Default icon alignment is left
     this.iconSize = 24.0, // Default size for icon
     this.rowWidth, // Optional width for the row
     this.borderRadius,
     this.fontSize, // Optional font size for the button title
+    this.iconColor, // Color for SVG icons (doesn't affect PNG)
   });
 
   final double? loadingSize;
@@ -47,12 +48,43 @@ class IconAppButton extends StatelessWidget {
   final Color? backgroundColor;
   final BoxBorder? border;
   final Color? borderColor;
-  final String? icon; // Icon as SVG file path or asset
+  final String? icon; // Icon as SVG or PNG file path or asset
   final CustomIconAlignment iconAlignment; // Enum for icon alignment
   final double iconSize; // Size for the icon
   final double? rowWidth; // Optional width for the row
   final double? borderRadius; // Optional border radius for button
   final double? fontSize;
+  final Color? iconColor; // Color for SVG icons
+
+  // Helper method to determine if the icon is SVG or PNG
+  bool _isSvgIcon(String iconPath) {
+    return iconPath.toLowerCase().endsWith('.svg');
+  }
+
+  // Helper method to build the appropriate icon widget
+  Widget _buildIconWidget(String iconPath) {
+    if (_isSvgIcon(iconPath)) {
+      // SVG Icon
+      return SvgPicture.asset(
+        iconPath,
+        width: iconSize,
+        height: iconSize,
+        colorFilter: iconColor != null 
+            ? ColorFilter.mode(iconColor!, BlendMode.srcIn)
+            : null,
+      );
+    } else {
+      // PNG/Image Icon
+      return Image.asset(
+        iconPath,
+        width: iconSize,
+        height: iconSize,
+        fit: BoxFit.contain,
+        // Note: PNG images can't be tinted easily like SVGs
+        // If you need colored PNG icons, you might want to prepare different colored versions
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,11 +128,7 @@ class IconAppButton extends StatelessWidget {
                   if (icon != null && iconAlignment == CustomIconAlignment.left)
                     Padding(
                       padding: EdgeInsets.only(right: 8.0),
-                      child: SvgPicture.asset(
-                        icon!,
-                        width: iconSize,
-                        height: iconSize,
-                      ),
+                      child: _buildIconWidget(icon!),
                     ),
                   // Text and the space between the text and the icon
                   AppText(
@@ -114,11 +142,7 @@ class IconAppButton extends StatelessWidget {
                       iconAlignment == CustomIconAlignment.right)
                     Padding(
                       padding: EdgeInsets.only(left: 8.0),
-                      child: SvgPicture.asset(
-                        icon!,
-                        width: iconSize,
-                        height: iconSize,
-                      ),
+                      child: _buildIconWidget(icon!),
                     ),
                   // Add a SizedBox with a given width between the text and icon
                 ],

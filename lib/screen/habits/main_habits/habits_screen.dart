@@ -7,10 +7,10 @@ import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
+import 'package:better_help/widget/app_button/app_button_with_icon.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
@@ -45,7 +45,7 @@ class HabitsScreen extends StatelessWidget {
                 text: "Daily Affirmations",
                 fontFamilyIndex: 2,
                 fontSize: AppSize.width(value: 14),
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w800,
                 color: AppColors.grey500,
               ),
             ),
@@ -178,7 +178,7 @@ class HabitsScreen extends StatelessWidget {
               child: EasyDateTimeLine(
                 initialDate: DateTime.now(),
                 onDateChange: (selectedDate) {
-                  // Handle date change
+                  controller.updateSelectedDate(selectedDate);
                 },
                 headerProps: EasyHeaderProps(
                   monthPickerType: MonthPickerType.switcher,
@@ -264,124 +264,291 @@ class HabitsScreen extends StatelessWidget {
               ),
             ),
             Gap(height: 10),
-            //! Date Selection Container
+            //! Schedule Containers for Selected Date (Horizontal)
+            Obx(() {
+              final schedules = controller.selectedDateSchedules;
+              if (schedules.isEmpty) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.width(value: 20),
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(AppSize.width(value: 20)),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      border: Border.all(
+                        color: const Color(0xFFF0F0F0),
+                        width: 0.87,
+                      ),
+                      borderRadius: BorderRadius.circular(10.39),
+                    ),
+                    child: Center(
+                      child: AppText(
+                        text: "No schedules for this date",
+                        fontFamilyIndex: 2,
+                        fontSize: AppSize.width(value: 14),
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.grey400,
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              return SizedBox(
+                height: AppSize.height(
+                  value: 200,
+                ), // Fixed height for horizontal scroll
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.width(value: 20),
+                  ),
+                  itemCount: schedules.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      width: AppSize.width(
+                        value: 300,
+                      ), // Fixed width for each container
+                      margin: EdgeInsets.only(
+                        right: index < schedules.length - 1
+                            ? AppSize.width(value: 12)
+                            : 0,
+                      ),
+                      child: _buildScheduleContainer(schedules[index]),
+                    );
+                  },
+                ),
+              );
+            }),
+
+            //! Checklist
+            Gap(height: 12),
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: AppSize.width(value: 20),
               ),
-              child: Container(
-                width: AppSize.width(value: 336),
-                padding: EdgeInsets.all(13),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  border: Border.all(
-                    width: 0.87,
-                    color: const Color(0xFFF0F0F0),
-                  ),
-                  borderRadius: BorderRadius.circular(10.39),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: AppSize.width(value: 13),
-                        vertical: AppSize.height(value: 10),
-                      ),
-                      width: AppSize.width(value: 300),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary50,
-                        borderRadius: BorderRadius.circular(7),
-                      ),
-                      child: Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AppText(
-                                text: AppString.emotionRegulation,
-                                fontFamilyIndex: 2,
-                                fontSize: AppSize.width(value: 14),
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.grey500,
-                              ),
-                              AppText(
-                                text: AppString.practiceGroundingTechnique,
-                                fontFamilyIndex: 2,
-                                fontSize: AppSize.width(value: 12),
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.primary900,
-                              ),
-                            ],
-                          ),
-                          Spacer(),
-                          SvgPicture.asset(
-                            AppIcons.threedots,
-                            height: AppSize.height(value: 24),
-                            width: AppSize.width(value: 24),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Gap(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SvgPicture.asset(AppIcons.minuteMeditation),
-                            AppText(
-                              text: "5${AppString.minuteMeditation}",
-                              fontFamilyIndex: 2,
-                              fontSize: AppSize.width(value: 12),
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.textPrimaryBlack,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            SvgPicture.asset(AppIcons.scheduleTime),
-                            AppText(
-                              text:
-                                  "09:00${AppString.am} - 09:10 ${AppString.am}",
-                              fontFamilyIndex: 2,
-                              fontSize: AppSize.width(value: 12),
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.textPrimaryBlack,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Gap(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        AppButton(
-                          width: AppSize.width(value: 150),
-                          title: AppString.startNow,
-                          backgroundColor: AppColors.blue500,
-                          fontSize: AppSize.width(value: 12),
-                          titleColor: AppColors.white,
-                          onTap: () {},
-                        ),
-                        AppButton(
-                          width: AppSize.width(value: 150),
-                          title: AppString.talkTobhaa,
-                          fontSize: AppSize.width(value: 12),
-                          backgroundColor: AppColors.white50,
-                          titleColor: AppColors.grey500,
-                          onTap: () {},
-                        ),
-                      ],
-                    ),         
-                  ],
-                ),
+              child: AppText(
+                text: "Check List",
+                fontFamilyIndex: 2,
+                fontSize: AppSize.width(value: 14),
+                fontWeight: FontWeight.w800,
+                color: AppColors.grey500,
               ),
             ),
+            Gap(height: 08),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSize.width(value: 20),
+              ),
+              child: Column(
+                children: List.generate(3, (index) {
+                  List<String> checklistItems = [
+                    AppString.drinkWaterDaily,
+                    "Complete morning meditation",
+                    "Practice gratitude journaling",
+                  ];
+
+                  return Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSize.width(value: 16),
+                      vertical: AppSize.height(value: 10),
+                    ),
+                    margin: EdgeInsets.only(bottom: AppSize.height(value: 10)),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      border: Border.all(color: AppColors.borderColor),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        Obx(
+                          () => Checkbox(
+                            value: controller.checklistStates[index],
+                            onChanged: (value) {
+                              controller.updateChecklistState(
+                                index,
+                                value ?? false,
+                              );
+                            },
+                            checkColor: AppColors.white,
+                            activeColor: AppColors.primary500,
+                          ),
+                        ),
+
+                        Expanded(
+                          child: AppText(
+                            text: checklistItems[index],
+                            fontSize: AppSize.width(value: 14),
+                            fontWeight: FontWeight.w500,
+                            fontFamilyIndex: 2,
+                            color: AppColors.textPrimaryBlack,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ),
+            ),
+            Gap(height: 20),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSize.width(value: 20),
+              ),
+              child: IconAppButton(
+                iconAlignment: CustomIconAlignment.left,
+                title: AppString.startTimer,
+                fontSize: AppSize.width(value: 16),
+                backgroundColor: AppColors.blue500,
+                titleColor: AppColors.white,
+                icon: AppStaticImages.startTimer,
+                onTap: () {},
+              ),
+            ),
+            Gap(height: 100),
           ],
         ),
       ),
     );
+  }
+
+  // Helper method to build individual schedule container
+  Widget _buildScheduleContainer(Map<String, dynamic> schedule) {
+    Color backgroundColor = _getBackgroundColor(schedule['backgroundColor']);
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(13),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        border: Border.all(width: 0.87, color: const Color(0xFFF0F0F0)),
+        borderRadius: BorderRadius.circular(10.39),
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSize.width(value: 13),
+              vertical: AppSize.height(value: 10),
+            ),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(7),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppText(
+                        text: schedule['title'],
+                        fontFamilyIndex: 2,
+                        fontSize: AppSize.width(value: 14),
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.grey500,
+                      ),
+                      AppText(
+                        text: schedule['subtitle'],
+                        fontFamilyIndex: 2,
+                        fontSize: AppSize.width(value: 12),
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primary900,
+                      ),
+                    ],
+                  ),
+                ),
+                SvgPicture.asset(
+                  AppIcons.threedots,
+                  height: AppSize.height(value: 24),
+                  width: AppSize.width(value: 24),
+                ),
+              ],
+            ),
+          ),
+          Gap(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  SvgPicture.asset(AppIcons.minuteMeditation),
+                  Gap(width: 4),
+                  AppText(
+                    text: schedule['duration'],
+                    fontFamilyIndex: 2,
+                    fontSize: AppSize.width(value: 12),
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textPrimaryBlack,
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  SvgPicture.asset(AppIcons.scheduleTime),
+                  Gap(width: 4),
+                  AppText(
+                    text: schedule['time'],
+                    fontFamilyIndex: 2,
+                    fontSize: AppSize.width(value: 12),
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textPrimaryBlack,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Gap(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              AppButton(
+                width: AppSize.width(value: 130),
+                title: AppString.startNow,
+                backgroundColor: AppColors.blue500,
+                fontSize: AppSize.width(value: 12),
+                titleColor: AppColors.white,
+                onTap: () {
+                  // Handle start now action
+                },
+              ),
+              AppButton(
+                width: AppSize.width(value: 130),
+                title: AppString.talkTobhaa,
+                fontSize: AppSize.width(value: 12),
+                backgroundColor: AppColors.white50,
+                titleColor: AppColors.grey500,
+                onTap: () {
+                  // Handle talk to BHA action
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper method to get background color based on string
+  Color _getBackgroundColor(String colorName) {
+    switch (colorName) {
+      case 'primary50':
+        return AppColors.primary50;
+      case 'green50':
+        return AppColors.green50;
+      case 'blue50':
+        return AppColors.blue50;
+      case 'orange50':
+        return AppColors.orange50;
+      case 'red50':
+        return AppColors.red50;
+      case 'babygreen50':
+        return AppColors.babygreen50;
+      default:
+        return AppColors.primary50;
+    }
   }
 }

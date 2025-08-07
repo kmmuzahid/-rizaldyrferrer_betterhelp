@@ -8,6 +8,7 @@ import 'package:better_help/screen/bottom_nav/bottom_nav_screen.dart';
 import 'package:better_help/screen/community/main_community/community_screen.dart';
 import 'package:better_help/screen/habits/home_screen.dart';
 import 'package:better_help/screen/habits/main_habits/habits_screen.dart';
+import 'package:better_help/screen/habits/timer_screen/timer_screen.dart';
 import 'package:better_help/screen/learn/main_learn/learn_screen.dart';
 import 'package:better_help/screen/onboarding_screen/onbarding_screen.dart';
 import 'package:better_help/screen/progress/main_progress/progress_screen.dart';
@@ -34,7 +35,6 @@ class AppRoute {
   static const String completeProfileScreen = '/completeProfileScreen';
   static const String homeScreen = '/homeScreen';
 
-
   //! Bottom Navigation Screen Route
   static const String bottomNav = '/bottomNav';
   static const String habitsScreen = '/habitsScreen';
@@ -42,6 +42,7 @@ class AppRoute {
   static const String learnScreen = '/learningScreen';
   static const String supportScreen = '/supportScreen';
   static const String progressScreen = '/progressScreen';
+  static const String timerScreen = '/timerScreen';
 
   static List<GetPage> appRoutes = [
     //! Splash Screen Route
@@ -144,6 +145,11 @@ class AppRoute {
     GetPage(
       name: AppRoute.progressScreen,
       page: () => const ProgressScreen(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    GetPage(
+      name: AppRoute.timerScreen,
+      page: () => TimerScreen(),
       transition: Transition.rightToLeftWithFade,
     ),
   ];

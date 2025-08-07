@@ -1,3 +1,4 @@
+import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/habits/main_habits/controller/habits_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
@@ -404,7 +405,9 @@ class HabitsScreen extends StatelessWidget {
                 backgroundColor: AppColors.blue500,
                 titleColor: AppColors.white,
                 icon: AppStaticImages.startTimer,
-                onTap: () {},
+                onTap: () {
+                  Get.toNamed(AppRoute.timerScreen);
+                },
               ),
             ),
             Gap(height: 100),
@@ -520,7 +523,7 @@ class HabitsScreen extends StatelessWidget {
                 title: AppString.talkTobhaa,
                 fontSize: AppSize.width(value: 12),
                 backgroundColor: AppColors.white50,
-                titleColor: AppColors.grey500,
+                titleColor: const Color.fromARGB(255, 168, 129, 129),
                 onTap: () {
                   // Handle talk to BHA action
                 },

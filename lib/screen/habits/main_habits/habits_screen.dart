@@ -323,7 +323,6 @@ class HabitsScreen extends StatelessWidget {
                 ),
               );
             }),
-
             //! Checklist
             Gap(height: 12),
             Padding(

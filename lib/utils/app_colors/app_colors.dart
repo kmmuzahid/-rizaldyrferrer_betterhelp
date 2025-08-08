@@ -10,6 +10,7 @@ class AppColors {
   static const Color black = Color(0xFF000000);
   static const Color grey500 = Color(0xFF292929);
   static const Color grey400 = Color(0xFF545454);
+  static const Color timerBackColor = Color(0xFF303044);
   static const Color textMain = Color(0xFF393938);
   static const Color yellow50 = Color(0xFFFCF4EC);
   static const Color white500 = Color(0xFFF0F0F0);

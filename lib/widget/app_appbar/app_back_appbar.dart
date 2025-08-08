@@ -8,14 +8,15 @@ import 'package:get/get.dart';
 
 class AppBarWithBack extends StatelessWidget implements PreferredSizeWidget {
   final String text;
-  const AppBarWithBack({super.key, required this.text});
+  final Color? backgroundColor;
+  const AppBarWithBack({super.key, required this.text, this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
     return PreferredSize(
       preferredSize: Size.fromHeight(kToolbarHeight),
       child: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: backgroundColor ?? AppColors.white,
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: Padding(

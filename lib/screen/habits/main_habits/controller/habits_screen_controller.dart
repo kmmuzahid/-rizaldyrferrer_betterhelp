@@ -77,7 +77,6 @@ class HabitsScreenController extends GetxController {
 
     // Get current month details
     DateTime now = DateTime.now();
-    DateTime firstDayOfMonth = DateTime(now.year, now.month, 1);
     DateTime lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
 
     // Generate schedules for each day of the month

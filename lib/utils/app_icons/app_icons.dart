@@ -27,4 +27,5 @@ class AppIcons {
   static const String minuteMeditation = "assets/icons/minuteMeditation.svg";
   static const String scheduleTime = "assets/icons/timeSchedule.svg";
   static const String appBackUptton = "assets/icons/backButton.svg";
+  static const String timerAppSchedule = "assets/icons/timer_icons.svg";
 }

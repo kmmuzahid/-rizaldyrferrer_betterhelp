@@ -8,8 +8,12 @@ import 'package:better_help/screen/bottom_nav/bottom_nav_screen.dart';
 import 'package:better_help/screen/community/main_community/community_screen.dart';
 import 'package:better_help/screen/habits/home_screen.dart';
 import 'package:better_help/screen/habits/main_habits/habits_screen.dart';
+import 'package:better_help/screen/habits/my_task/my_task.dart';
 import 'package:better_help/screen/habits/timer_screen/timer_screen.dart';
+import 'package:better_help/screen/learn/categories_screen/categories_screen.dart';
 import 'package:better_help/screen/learn/main_learn/learn_screen.dart';
+import 'package:better_help/screen/learn/trending_course/controller/trending_course_controller.dart';
+import 'package:better_help/screen/learn/trending_course/tranding_course.dart';
 import 'package:better_help/screen/onboarding_screen/onbarding_screen.dart';
 import 'package:better_help/screen/progress/main_progress/progress_screen.dart';
 import 'package:better_help/screen/questionnaries_screen/questionnaries_screen.dart';
@@ -42,115 +46,160 @@ class AppRoute {
   static const String learnScreen = '/learningScreen';
   static const String supportScreen = '/supportScreen';
   static const String progressScreen = '/progressScreen';
+  //! Habit Screen Route
   static const String timerScreen = '/timerScreen';
+  static const String mytask = "/mytask";
+  static const String trendingCourse = "/trendingCOUrse";
 
+  //! Learn Screen Route
+  static const String allCategoriesScreen = '/allCategoriesScreen';
   static List<GetPage> appRoutes = [
     //! Splash Screen Route
     GetPage(
       name: AppRoute.splashscreen,
       page: () => const SplashScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
     //! Onboarding Screen Route
     GetPage(
       name: AppRoute.onboardingscreen,
       page: () => const OnbardingScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
     //! Subscription Screen Route
     GetPage(
       name: AppRoute.subscriptionscreen,
       page: () => const SubscriptionAndPayment(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
     //! Questionnaries Screen Route
     GetPage(
       name: AppRoute.questionariescreen,
       page: () => const QuestionnariesScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
     //! Login Screen Route
     GetPage(
       name: AppRoute.loginScreen,
       page: () => const LoginScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
     //! Signup Screen Route
     GetPage(
       name: AppRoute.signupScreen,
       page: () => const SignupScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
     //! Forgot Password Screen Route
     GetPage(
       name: AppRoute.forgotPasswordScreen,
       page: () => const ForgotPasswordScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
     //! OTP Verification Screen Route
     GetPage(
       name: AppRoute.otpVerificationScreen,
       page: () => const OtpVerificationScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
     //! Change Password Screen Route
     GetPage(
       name: AppRoute.changePasswrodScreen,
       page: () => const ChangePasswordScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
     //! Complete Profile Screen Route
     GetPage(
       name: AppRoute.completeProfileScreen,
       page: () => const CompleteProfileScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
     //! Home Screen Route
     GetPage(
       name: AppRoute.homeScreen,
       page: () => const HomeScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
     //! Bottom Navigation Screen Route
     GetPage(
       name: AppRoute.bottomNav,
       page: () => const BottomNavScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
     //! Habits Screen Route
     GetPage(
       name: AppRoute.habitsScreen,
       page: () => const HabitsScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
     //! Community Screen Route
     GetPage(
       name: AppRoute.communityScreen,
       page: () => const CommunityScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
     //! Learning Screen Route
     GetPage(
       name: AppRoute.learnScreen,
       page: () => const LearnScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
     //! Support Screen Route
     GetPage(
       name: AppRoute.supportScreen,
       page: () => const SupportScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
     //! Progress Screen Route
     GetPage(
       name: AppRoute.progressScreen,
       page: () => const ProgressScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
     ),
+    //! TimerScreen Screen Route
     GetPage(
       name: AppRoute.timerScreen,
       page: () => TimerScreen(),
       transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
+    ),
+    //! My Task Screen Route
+    GetPage(
+      name: AppRoute.mytask,
+      page: () => MyTaskScreeen(),
+      transition: Transition.rightToLeft,
+      transitionDuration: Duration(milliseconds: 300),
+    ),
+    //! All Categories screen
+    GetPage(
+      name: AppRoute.allCategoriesScreen,
+      page: () => CategoriesScreen(),
+      transition: Transition.rightToLeft,
+      transitionDuration: Duration(milliseconds: 300),
+    ),
+    //! Trending course scree
+    GetPage(
+      name: AppRoute.trendingCourse,
+      page: () => TrandingCourse(),
+      transition: Transition.rightToLeft,
+      transitionDuration: Duration(microseconds: 300),
     ),
   ];
 }

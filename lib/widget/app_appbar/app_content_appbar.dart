@@ -192,7 +192,7 @@ class FlexibleCustomAppBar extends StatelessWidget
               onNotificationTap ??
               () {
                 // Default behavior - you can customize this
-                Navigator.pushNamed(context, '/notifications');
+                //Navigator.pushNamed(context, '/notifications');
               },
           child: SvgPicture.asset(
             notificationIconPath!,

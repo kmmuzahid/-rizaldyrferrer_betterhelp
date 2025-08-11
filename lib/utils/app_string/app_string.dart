@@ -180,9 +180,19 @@ class AppString {
   static const String checkList = "Checklist";
   static const String drinkWaterDaily = "Drink 8 gleasse of water daily";
   static const String startTimer = "Start Timer";
+  static const String myTask = "My Task";
+  static const String emotionRegulationDescription =
+      "Emotion regulation is the ability to manage and respond to emotional experiences in a healthy and balanced way. It is important because it helps us cope with stress, make thoughtful decisions, and maintain healthier relationships. By regulating our emotions, we can prevent impulsive reactions, reduce emotional distress, and improve overall well-being. It also allows us to adapt to challenges, enhancing resilience and emotional intelligence, which are crucial for personal growth and mental health.";
+  static const String task = "Task";
+  static const String editThePdf = "Edit The PDF";
+  static const String writeInagradititudeJournal = "Write in a Gradtitude ";
+  static const String getAnoteBook = "Get a Notebook";
+  static const String follwtheYoutubeTutorial = "Follow the youtube tutorial";
+  static const String strechEverydayfor = "Strech everyday for 15 mins";
   //! Learn Screen
   static const String masterclassTutorial = "Masterclass Tutorials";
   static const String learnAndImprove = "Learn and Improve your lifestyle.";
+  static const String categories = "Categories";
   //! Support Screen
   static const String seekExpartSupports = "Seek Experts Support";
   static const String directContactWithBha =

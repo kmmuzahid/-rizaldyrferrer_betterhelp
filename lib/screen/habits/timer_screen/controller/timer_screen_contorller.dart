@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:better_help/service/timer_service/timer_service.dart';
@@ -21,13 +20,13 @@ class TimerScreenController extends GetxController {
   }
 
   void _initializeProgressListener() {
-    // Cancel existing worker if any
+    //! Cancel existing worker if any
     _progressWorker?.dispose();
 
-    // Listen to timer service changes and update progress bar
+    //! Listen to timer service changes and update progress bar
     _progressWorker = ever(_timerService.remainingSeconds, (int remaining) {
       if (_valueNotifier != null && !_valueNotifier!.hasListeners) {
-        // ValueNotifier has been disposed, don't update
+        //! ValueNotifier has been disposed, don't update
         return;
       }
       double progressValue = _timerService.progressPercentage;
@@ -36,7 +35,7 @@ class TimerScreenController extends GetxController {
       }
     });
 
-    // Initialize progress bar with current timer state
+    //! Initialize progress bar with current timer state
     if (_valueNotifier != null) {
       _valueNotifier!.value = _timerService.progressPercentage;
     }
@@ -45,7 +44,7 @@ class TimerScreenController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    // Ensure progress is synced when screen becomes ready
+    //! Ensure progress is synced when screen becomes ready
     if (_valueNotifier != null) {
       _valueNotifier!.value = _timerService.progressPercentage;
     }
@@ -63,7 +62,7 @@ class TimerScreenController extends GetxController {
     _timerService.resetTimer();
   }
 
-  // Getters that delegate to the service
+  //! Getters that delegate to the service
   RxInt get remainingSeconds => _timerService.remainingSeconds;
   RxBool get isRunning => _timerService.isRunning;
   String get formattedTime => _timerService.formattedTime;

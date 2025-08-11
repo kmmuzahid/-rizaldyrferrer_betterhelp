@@ -56,7 +56,6 @@ class HabitsScreen extends StatelessWidget {
               items: controller.backgroundImages.asMap().entries.map((entry) {
                 int index = entry.key;
                 String imagePath = entry.value;
-
                 return ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Container(
@@ -296,7 +295,6 @@ class HabitsScreen extends StatelessWidget {
                   ),
                 );
               }
-
               return SizedBox(
                 height: AppSize.height(
                   value: 200,
@@ -308,16 +306,23 @@ class HabitsScreen extends StatelessWidget {
                   ),
                   itemCount: schedules.length,
                   itemBuilder: (context, index) {
-                    return Container(
-                      width: AppSize.width(
-                        value: 300,
-                      ), // Fixed width for each container
-                      margin: EdgeInsets.only(
-                        right: index < schedules.length - 1
-                            ? AppSize.width(value: 12)
-                            : 0,
+                    return InkWell(
+                      onTap: () {
+                        Get.toNamed(AppRoute.mytask);
+                      },
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      child: Container(
+                        width: AppSize.width(
+                          value: 300,
+                        ), // Fixed width for each container
+                        margin: EdgeInsets.only(
+                          right: index < schedules.length - 1
+                              ? AppSize.width(value: 12)
+                              : 0,
+                        ),
+                        child: _buildScheduleContainer(schedules[index]),
                       ),
-                      child: _buildScheduleContainer(schedules[index]),
                     );
                   },
                 ),

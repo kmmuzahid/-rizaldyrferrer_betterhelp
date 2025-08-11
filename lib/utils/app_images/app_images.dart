@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 class AppStaticImages {
   AppStaticImages._();
   static const String appBarlogo = "assets/images/appbarLogo.png";
@@ -38,4 +40,13 @@ class AppStaticImages {
   static const String supportAppbar = "assets/images/supportAppbar.png";
   static const String progressAppbar = "assets/images/progressAppbar.png";
   static const String communityAppbar = "assets/images/communityAppbar.png";
+
+  //! ============== Learn Screen Images ==============
+  static const String relationshipGuidance =
+      "assets/images/relationshipGuidance.png";
+  static const String stressManagements = "assets/images/stressManagement.png";
+  static const String healthyHabits = "assets/images/healthyHabits.png";
+  static const String selfCareDevelopment =
+      "assets/images/self-care-development.png";
+  static const String trendingCOurder001 = "";
 }

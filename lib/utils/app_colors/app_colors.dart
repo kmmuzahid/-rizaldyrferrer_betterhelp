@@ -8,6 +8,7 @@ class AppColors {
   static const Color white = Color(0xFFFFFFFF);
   static const Color white400 = Color(0xFFF3F3F3);
   static const Color black = Color(0xFF000000);
+  static const Color black10 = Color(0xFFEAECF0);
   static const Color grey500 = Color(0xFF292929);
   static const Color grey400 = Color(0xFF545454);
   static const Color timerBackColor = Color(0xFF303044);
@@ -16,6 +17,7 @@ class AppColors {
   static const Color white500 = Color(0xFFF0F0F0);
   static const Color white50 = Color(0xFFF0F0F0);
   static const Color t3 = Color(0xFF032F49);
+  static const Color t5 = Color(0xFFE8D5C0);
   // static const Color blue50 = Color(0xFFEAF5F7);
   static const Color white900 = Color(0xFF656565);
   static const Color secondary = Color(0xFF1A1C1E);

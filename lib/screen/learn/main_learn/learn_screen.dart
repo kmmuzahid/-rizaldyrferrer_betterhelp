@@ -30,226 +30,238 @@ class LearnScreen extends StatelessWidget {
         menuIconPath: AppIcons.menuIcons,
       ),
       backgroundColor: AppColors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSize.width(value: 20),
-              ),
-              child: AppTextInput(
-                prefixIcon: Icons.search,
-                hintText: "Search courses...",
-                height: AppSize.height(value: 48),
-                backgroundColor: AppColors.white,
-                borderColor: AppColors.black10,
-              ),
-            ),
-            Gap(height: 15),
-            CarouselSlider(
-              carouselController: controller.carouselController,
-              items: controller.backgroundImages.asMap().entries.map((entry) {
-                int index = entry.key;
-                String imagePath = entry.value;
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(imagePath),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: AppSize.width(value: 22),
-                        vertical: AppSize.height(value: 21),
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Colors.black.withValues(alpha: 0.3),
-                          ],
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: AppText(
-                              text: controller.quoteList[index],
-                              fontFamilyIndex: 4,
-                              fontSize: AppSize.width(value: 16),
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.white,
-                              maxLines: 3,
-                              textAlign: TextAlign.start,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          Gap(height: 12),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: AppText(
-                              text: controller.quoteAuthorList[index],
-                              fontFamilyIndex: 4,
-                              fontSize: AppSize.width(value: 14),
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+      body: CustomScrollView(
+        slivers: [
+          // Fixed content before pinned search (Carousel and indicators)
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.width(value: 20),
                   ),
-                );
-              }).toList(),
-              options: CarouselOptions(
-                height: AppSize.height(value: 137),
-                aspectRatio: 16 / 9,
-                viewportFraction: 0.85,
-                initialPage: 0,
-                enableInfiniteScroll: true,
-                autoPlay: true,
-                autoPlayInterval: const Duration(seconds: 4),
-                autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                autoPlayCurve: Curves.linear,
-                enlargeCenterPage: true,
-                enlargeFactor: 0.2,
-                scrollDirection: Axis.horizontal,
-                onPageChanged: (index, reason) {
-                  controller.updateCurrentIndex(index);
-                },
-              ),
-            ),
-            Gap(height: 16),
-            Center(
-              child: Obx(
-                () => Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(controller.backgroundImages.length, (
-                    index,
+                  child: AppTextInput(
+                    prefixIcon: Icons.search,
+                    hintText: "Search courses...",
+                    height: AppSize.height(value: 48),
+                    backgroundColor: AppColors.white,
+                    borderColor: AppColors.black10,
+                  ),
+                ),
+                Gap(height: 15),
+                CarouselSlider(
+                  carouselController: controller.carouselController,
+                  items: controller.backgroundImages.asMap().entries.map((
+                    entry,
                   ) {
-                    return GestureDetector(
-                      onTap: () => controller.goToSlide(index),
+                    int index = entry.key;
+                    String imagePath = entry.value;
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
                       child: Container(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: AppSize.width(value: 3),
-                        ),
-                        height: AppSize.height(value: 8),
-                        width: AppSize.width(value: 32),
+                        width: double.infinity,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.5),
-                          color: controller.currentIndex.value == index
-                              ? AppColors.secondary900
-                              : AppColors.iconLightgrey,
+                          image: DecorationImage(
+                            image: AssetImage(imagePath),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSize.width(value: 22),
+                            vertical: AppSize.height(value: 21),
+                          ),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Colors.black.withValues(alpha: 0.3),
+                              ],
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: AppText(
+                                  text: controller.quoteList[index],
+                                  fontFamilyIndex: 4,
+                                  fontSize: AppSize.width(value: 16),
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.white,
+                                  maxLines: 3,
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Gap(height: 12),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: AppText(
+                                  text: controller.quoteAuthorList[index],
+                                  fontFamilyIndex: 4,
+                                  fontSize: AppSize.width(value: 14),
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.white,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );
-                  }),
-                ),
-              ),
-            ),
-
-            //! Categories Section
-            Gap(height: 16),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSize.height(value: 20),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AppText(
-                    text: "Categories",
-                    fontFamilyIndex: 2,
-                    fontSize: AppSize.width(value: 16),
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.grey500,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Get.toNamed(AppRoute.allCategoriesScreen);
+                  }).toList(),
+                  options: CarouselOptions(
+                    height: AppSize.height(value: 137),
+                    aspectRatio: 16 / 9,
+                    viewportFraction: 0.85,
+                    initialPage: 0,
+                    enableInfiniteScroll: true,
+                    autoPlay: true,
+                    autoPlayInterval: const Duration(seconds: 4),
+                    autoPlayAnimationDuration: const Duration(
+                      milliseconds: 800,
+                    ),
+                    autoPlayCurve: Curves.linear,
+                    enlargeCenterPage: true,
+                    enlargeFactor: 0.2,
+                    scrollDirection: Axis.horizontal,
+                    onPageChanged: (index, reason) {
+                      controller.updateCurrentIndex(index);
                     },
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    child: AppText(
-                      text: "See all",
-                      color: AppColors.blue500,
-                      fontFamilyIndex: 2,
-                      fontSize: AppSize.width(value: 14),
-                      fontWeight: FontWeight.w600,
-                      decoration: TextDecoration.underline,
-                      decorationColor: AppColors.blue500,
+                  ),
+                ),
+                Gap(height: 16),
+                Center(
+                  child: Obx(
+                    () => Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(
+                        controller.backgroundImages.length,
+                        (index) {
+                          return GestureDetector(
+                            onTap: () => controller.goToSlide(index),
+                            child: Container(
+                              margin: EdgeInsets.symmetric(
+                                horizontal: AppSize.width(value: 3),
+                              ),
+                              height: AppSize.height(value: 8),
+                              width: AppSize.width(value: 32),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4.5),
+                                color: controller.currentIndex.value == index
+                                    ? AppColors.secondary900
+                                    : AppColors.iconLightgrey,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            Gap(height: 08),
-            SizedBox(
-              height: AppSize.height(value: 95),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppSize.width(value: 20),
                 ),
-                itemCount: controller.categoryImages.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Get.toNamed(
-                        AppRoute.trendingCourse,
-                        arguments: {
-                          'categoryName': controller.categoryNames[index],
+                Gap(height: 16),
+                //! Categories Section
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.height(value: 20),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AppText(
+                        text: "Categories",
+                        fontFamilyIndex: 2,
+                        fontSize: AppSize.width(value: 16),
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.grey500,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Get.toNamed(AppRoute.allCategoriesScreen);
                         },
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        child: AppText(
+                          text: "See all",
+                          color: AppColors.blue500,
+                          fontFamilyIndex: 2,
+                          fontSize: AppSize.width(value: 14),
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.underline,
+                          decorationColor: AppColors.blue500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Gap(height: 08),
+                SizedBox(
+                  height: AppSize.height(value: 95),
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSize.width(value: 20),
+                    ),
+                    itemCount: controller.categoryImages.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Get.toNamed(
+                            AppRoute.trendingCourse,
+                            arguments: {
+                              'categoryName': controller.categoryNames[index],
+                            },
+                          );
+                        },
+                        child: Container(
+                          width: AppSize.width(value: 88),
+                          margin: EdgeInsets.only(
+                            right: AppSize.width(value: 12),
+                          ),
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AppColors.red50,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                controller.categoryImages[index],
+                                height: AppSize.height(value: 32),
+                                width: AppSize.width(value: 32),
+                              ),
+                              Gap(height: 4),
+                              Expanded(
+                                child: AppText(
+                                  text: controller.categoryNames[index],
+                                  fontFamilyIndex: 2,
+                                  fontSize: AppSize.width(value: 12),
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.textPrimaryBlack,
+                                  maxLines: 2,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       );
                     },
-                    child: Container(
-                      width: AppSize.width(value: 88),
-                      margin: EdgeInsets.only(right: AppSize.width(value: 12)),
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.red50,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            controller.categoryImages[index],
-                            height: AppSize.height(value: 32),
-                            width: AppSize.width(value: 32),
-                          ),
-                          Gap(height: 4),
-                          Expanded(
-                            child: AppText(
-                              text: controller.categoryNames[index],
-                              fontFamilyIndex: 2,
-                              fontSize: AppSize.width(value: 12),
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.textPrimaryBlack,
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+                  ),
+                ),
+                Gap(height: 20),
+              ],
             ),
-            Gap(height: 20),
+          ),
 
-            //! Trending Courses Section
-            Padding(
+          //! Trending Courses Section - As Sliver
+          SliverToBoxAdapter(
+            child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: AppSize.width(value: 20),
               ),
@@ -282,8 +294,12 @@ class LearnScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Gap(height: 12),
-            SizedBox(
+          ),
+
+          SliverToBoxAdapter(child: Gap(height: 12)),
+
+          SliverToBoxAdapter(
+            child: SizedBox(
               height: AppSize.height(value: 250),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
@@ -407,6 +423,7 @@ class LearnScreen extends StatelessWidget {
                                     fontSize: AppSize.width(value: 14),
                                     color: AppColors.grey500,
                                     fontWeight: FontWeight.w500,
+                                    fontFamilyIndex: 2,
                                   ),
                                 ],
                               ),
@@ -419,9 +436,13 @@ class LearnScreen extends StatelessWidget {
                 },
               ),
             ),
-            Gap(height: 20),
-            //! Recent Course
-            Padding(
+          ),
+
+          SliverToBoxAdapter(child: Gap(height: 20)),
+
+          //! Recent Course Section - As Sliver
+          SliverToBoxAdapter(
+            child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: AppSize.width(value: 20),
               ),
@@ -454,8 +475,12 @@ class LearnScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Gap(height: 12),
-            SizedBox(
+          ),
+
+          SliverToBoxAdapter(child: Gap(height: 12)),
+
+          SliverToBoxAdapter(
+            child: SizedBox(
               height: AppSize.height(value: 250),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
@@ -528,6 +553,7 @@ class LearnScreen extends StatelessWidget {
                                   fontSize: AppSize.width(value: 12),
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500,
+                                  fontFamilyIndex: 2,
                                 ),
                               ),
                             ),
@@ -581,6 +607,7 @@ class LearnScreen extends StatelessWidget {
                                     fontSize: AppSize.width(value: 14),
                                     color: AppColors.grey500,
                                     fontWeight: FontWeight.w500,
+                                    fontFamilyIndex: 2,
                                   ),
                                 ],
                               ),
@@ -593,9 +620,9 @@ class LearnScreen extends StatelessWidget {
                 },
               ),
             ),
-            Gap(height: 100),
-          ],
-        ),
+          ),
+          SliverToBoxAdapter(child: Gap(height: 100)),
+        ],
       ),
     );
   }

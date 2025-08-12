@@ -1,5 +1,3 @@
-import 'package:flutter/widgets.dart';
-
 class AppStaticImages {
   AppStaticImages._();
   static const String appBarlogo = "assets/images/appbarLogo.png";

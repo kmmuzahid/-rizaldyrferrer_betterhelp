@@ -61,7 +61,7 @@ class TrandingCourse extends StatelessWidget {
             ),
           ),
 
-          // Course List
+          //! Course List
           SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
             sliver: SliverList(
@@ -130,6 +130,7 @@ class TrandingCourse extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: AppText(
+                                fontFamilyIndex: 2,
                                 text: controller.trendingCourseViews[index],
                                 fontSize: AppSize.width(value: 12),
                                 color: Colors.white,
@@ -147,6 +148,7 @@ class TrandingCourse extends StatelessWidget {
                             AppText(
                               text: controller.trendingCourseTitles[index],
                               fontSize: AppSize.width(value: 16),
+                              fontFamilyIndex: 2,
                               fontWeight: FontWeight.w600,
                               color: AppColors.textPrimaryBlack,
                               maxLines: 2,
@@ -155,6 +157,7 @@ class TrandingCourse extends StatelessWidget {
                             Gap(height: 4),
                             AppText(
                               text: controller.trendingCourseInstructors[index],
+                              fontFamilyIndex: 2,
                               fontSize: AppSize.width(value: 14),
                               color: AppColors.grey500,
                               fontWeight: FontWeight.w500,
@@ -183,6 +186,7 @@ class TrandingCourse extends StatelessWidget {
                                   fontSize: AppSize.width(value: 14),
                                   color: AppColors.grey500,
                                   fontWeight: FontWeight.w500,
+                                  fontFamilyIndex: 2,
                                 ),
                               ],
                             ),

@@ -46,7 +46,7 @@ class CategoriesScreen extends StatelessWidget {
                 crossAxisCount: 4,
                 childAspectRatio: getResponsiveAspectRatio(
                   context: context,
-                  ratioAdjuster: 0.171,
+                  ratioAdjuster: 0.170,
                 ),
               ),
               itemCount: controller.categoryImages.length,
@@ -61,7 +61,7 @@ class CategoriesScreen extends StatelessWidget {
                     );
                   },
                   child: Container(
-                    margin: EdgeInsets.all(10),
+                    margin: EdgeInsets.all(05),
                     padding: EdgeInsets.all(05),
                     decoration: BoxDecoration(
                       color: AppColors.red50,

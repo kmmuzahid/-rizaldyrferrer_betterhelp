@@ -28,4 +28,9 @@ class AppIcons {
   static const String scheduleTime = "assets/icons/timeSchedule.svg";
   static const String appBackUptton = "assets/icons/backButton.svg";
   static const String timerAppSchedule = "assets/icons/timer_icons.svg";
+  static const String progressPointsEarned =
+      "assets/icons/progreessPointsEarned.svg";
+  static const String arrowLeft = "assets/icons/previousButton.svg";
+  static const String arrowRight = "assets/icons/arrowRight.svg";
+  static const String dropdown = "assets/icons/progressChartdropdown.svg";
 }

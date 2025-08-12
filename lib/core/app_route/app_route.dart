@@ -12,7 +12,6 @@ import 'package:better_help/screen/habits/my_task/my_task.dart';
 import 'package:better_help/screen/habits/timer_screen/timer_screen.dart';
 import 'package:better_help/screen/learn/categories_screen/categories_screen.dart';
 import 'package:better_help/screen/learn/main_learn/learn_screen.dart';
-import 'package:better_help/screen/learn/trending_course/controller/trending_course_controller.dart';
 import 'package:better_help/screen/learn/trending_course/tranding_course.dart';
 import 'package:better_help/screen/onboarding_screen/onbarding_screen.dart';
 import 'package:better_help/screen/progress/main_progress/progress_screen.dart';

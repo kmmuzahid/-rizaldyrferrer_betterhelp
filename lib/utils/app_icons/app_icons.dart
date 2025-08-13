@@ -33,4 +33,21 @@ class AppIcons {
   static const String arrowLeft = "assets/icons/previousButton.svg";
   static const String arrowRight = "assets/icons/arrowRight.svg";
   static const String dropdown = "assets/icons/progressChartdropdown.svg";
+  static const String savedArticle = "assets/icons/drawerSavedArticle.svg";
+  static const String favoriteCourse = "assets/icons/drawerFavoritCourse.svg";
+  static const String bookings = "assets/icons/drawerBookings.svg";
+  static const String calendar = "assets/icons/drawerBookings.svg";
+  static const String mySubscription = "assets/icons/drawerMysubscriptions.svg";
+  static const String faqs = "assets/icons/drawerMysubscriptions.svg";
+  static const String talkTosupport = "assets/icons/drawerTalktosupport.svg";
+  static const String termsAndConditions =
+      "assets/icons/drawertermsAndConditions.svg";
+  static const String privacyPolicy = "assets/icons/drawerFavoritCourse.svg";
+  static const String drawerForwart = "assets/icons/drawerForward.svg";
+  static const String mySubscriptionConfirm =
+      "assets/icons/mySubscriptions.svg";
+  static const String mySubscriptionreson =
+      "assets/icons/mySubscriptionsfinished.svg";
+  static const String mySubscriptionfinished =
+      "assets/icons/mySubscriptionsReason.svg";
 }

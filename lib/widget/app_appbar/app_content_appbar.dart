@@ -152,24 +152,6 @@ class FlexibleCustomAppBar extends StatelessWidget
           fontWeight: titleFontWeight,
           color: textColor,
         ),
-        // Text(
-        //   title,
-        //   style: TextStyle(
-        //     fontFamily: _getFontFamily(fontFamilyIndex),
-        //     fontSize: titleFontSize,
-        //     fontWeight: titleFontWeight,
-        //     color: textColor,
-        //   ),
-        // ),
-        // Text(
-        //   subtitle,
-        //   style: TextStyle(
-        //     fontFamily: _getFontFamily(fontFamilyIndex),
-        //     fontSize: subtitleFontSize,
-        //     fontWeight: subtitleFontWeight,
-        //     color: textColor,
-        //   ),
-        // ),
         AppText(
           text: subtitle,
           fontFamilyIndex: 2,
@@ -232,20 +214,6 @@ class FlexibleCustomAppBar extends StatelessWidget
 
     return actions;
   }
-
-  // String? _getFontFamily(int index) {
-  //   // You can customize this based on your app's font families
-  //   switch (index) {
-  //     case 1:
-  //       return 'Roboto';
-  //     case 2:
-  //       return 'Poppins';
-  //     case 3:
-  //       return 'Inter';
-  //     default:
-  //       return null;
-  //   }
-  // }
 
   @override
   Size get preferredSize => Size.fromHeight(appBarHeight);

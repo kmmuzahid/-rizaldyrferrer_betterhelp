@@ -5,20 +5,30 @@ import 'package:better_help/screen/auth_screen/login_screen/login_screen.dart';
 import 'package:better_help/screen/auth_screen/otp_verification_screen/otp_verification_screen.dart';
 import 'package:better_help/screen/auth_screen/signup_screen/signup_screen.dart';
 import 'package:better_help/screen/bottom_nav/bottom_nav_screen.dart';
-import 'package:better_help/screen/community/main_community/community_screen.dart';
-import 'package:better_help/screen/habits/home_screen.dart';
-import 'package:better_help/screen/habits/main_habits/habits_screen.dart';
-import 'package:better_help/screen/habits/my_task/my_task.dart';
-import 'package:better_help/screen/habits/timer_screen/timer_screen.dart';
-import 'package:better_help/screen/learn/categories_screen/categories_screen.dart';
-import 'package:better_help/screen/learn/main_learn/learn_screen.dart';
-import 'package:better_help/screen/learn/trending_course/tranding_course.dart';
+import 'package:better_help/screen/community_sections/main_community/community_screen.dart';
+import 'package:better_help/screen/habits_sections/home_screen.dart';
+import 'package:better_help/screen/habits_sections/main_habits/habits_screen.dart';
+import 'package:better_help/screen/habits_sections/my_task/my_task.dart';
+import 'package:better_help/screen/habits_sections/timer_screen/timer_screen.dart';
+import 'package:better_help/screen/learn_sections/categories_screen/categories_screen.dart';
+import 'package:better_help/screen/learn_sections/main_learn/learn_screen.dart';
+import 'package:better_help/screen/learn_sections/trending_course/tranding_course.dart';
+import 'package:better_help/screen/menu_drawer/bookings_sessions/bookings_sessions_screen.dart';
+import 'package:better_help/screen/menu_drawer/calendar/calendar_task_screen.dart';
+import 'package:better_help/screen/menu_drawer/faqs/faqs_screen.dart';
+import 'package:better_help/screen/menu_drawer/favorite_course/favorite_course_screen.dart';
+import 'package:better_help/screen/menu_drawer/my_subscription/my_subscription_screen.dart';
+import 'package:better_help/screen/menu_drawer/privacy_policy/privacy_policy_screen.dart';
+import 'package:better_help/screen/menu_drawer/saved_article/saved_article_screen.dart';
+import 'package:better_help/screen/menu_drawer/talk_to_support/talk_to_support_screen.dart';
+import 'package:better_help/screen/menu_drawer/terms_conditions/terms_conditions_screen.dart';
+import 'package:better_help/screen/menu_drawer/user_drawer/user_drawer.dart';
 import 'package:better_help/screen/onboarding_screen/onbarding_screen.dart';
-import 'package:better_help/screen/progress/main_progress/progress_screen.dart';
+import 'package:better_help/screen/progress_sections/main_progress/progress_screen.dart';
 import 'package:better_help/screen/questionnaries_screen/questionnaries_screen.dart';
 import 'package:better_help/screen/splash_screen/splash_screen.dart';
 import 'package:better_help/screen/subscription/subscription_and_payment.dart';
-import 'package:better_help/screen/supports/main_supports/support_screen.dart';
+import 'package:better_help/screen/supports_sections/main_supports/support_screen.dart';
 import 'package:get/get.dart';
 
 class AppRoute {
@@ -52,6 +62,20 @@ class AppRoute {
 
   //! Learn Screen Route
   static const String allCategoriesScreen = '/allCategoriesScreen';
+
+  //! User Menu Drawer Screen Route
+  static const String userMenuDrawerScreen = '/userMenuDrawerScreen';
+  static const String bookingsSessions = "/bookingsessions";
+  static const String calendartaskscreen = "/calendartaskscreen";
+  static const String faqsScreen = "/faqsScreen";
+  static const String favriteScreen = "/favriteScreen";
+  static const String mySubscriptionScreen = "/mySubscriptionScreen";
+  static const String privacyPolicyScreen = "/privacyPolicyScreen";
+  static const String savedArticleScreen = "/savedArticleScreen";
+  static const String talkToSupportScreen = "/talkToSupportScreen";
+  static const String termsAndConditionsScreen = "/termsAndConditionsScreen";
+
+  //! Get Pages for all the Screen
   static List<GetPage> appRoutes = [
     //! Splash Screen Route
     GetPage(
@@ -199,6 +223,76 @@ class AppRoute {
       page: () => TrandingCourse(),
       transition: Transition.rightToLeft,
       transitionDuration: Duration(microseconds: 300),
+    ),
+    //! Menu Drawer Page
+    GetPage(
+      name: AppRoute.userMenuDrawerScreen,
+      page: () => UserDrawer(),
+      transition: Transition.fadeIn,
+      transitionDuration: Duration(milliseconds: 400),
+    ),
+    //! Menu Drawer Page
+    GetPage(
+      name: AppRoute.bookingsSessions,
+      page: () => BookingsSessionsScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 400),
+    ),
+    //! calendar taks screen
+    GetPage(
+      name: AppRoute.calendartaskscreen,
+      page: () => CalendarTaskScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 400),
+    ),
+    //! faqs screen
+    GetPage(
+      name: AppRoute.faqsScreen,
+      page: () => FaqsScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 400),
+    ),
+    //! favrite course screen
+    GetPage(
+      name: AppRoute.favriteScreen,
+      page: () => FavoriteCourseScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 400),
+    ),
+    //! my subscription screen
+    GetPage(
+      name: AppRoute.mySubscriptionScreen,
+      page: () => MySubscriptionScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 400),
+    ),
+    //! privacy policy screen
+    GetPage(
+      name: AppRoute.privacyPolicyScreen,
+      page: () => PrivacyPolicyScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 400),
+    ),
+    //! saved article screen
+    GetPage(
+      name: AppRoute.savedArticleScreen,
+      page: () => SavedArticleScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 400),
+    ),
+    //! talk to support screen
+    GetPage(
+      name: AppRoute.talkToSupportScreen,
+      page: () => TalkToSupportScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 400),
+    ),
+    //! terms and conditions screen
+    GetPage(
+      name: AppRoute.termsAndConditionsScreen,
+      page: () => TermsConditionsScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 400),
     ),
   ];
 }

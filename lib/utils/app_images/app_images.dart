@@ -47,4 +47,6 @@ class AppStaticImages {
   static const String selfCareDevelopment =
       "assets/images/self-care-development.png";
   static const String trendingCOurder001 = "";
+
+  static const String drawerImage = "assets/images/drawerImage.png";
 }

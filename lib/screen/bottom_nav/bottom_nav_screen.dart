@@ -1,9 +1,10 @@
 import 'package:better_help/screen/bottom_nav/controller/bottom_nav_screen_controller.dart';
-import 'package:better_help/screen/community/main_community/community_screen.dart';
-import 'package:better_help/screen/habits/main_habits/habits_screen.dart';
-import 'package:better_help/screen/learn/main_learn/learn_screen.dart';
-import 'package:better_help/screen/progress/main_progress/progress_screen.dart';
-import 'package:better_help/screen/supports/main_supports/support_screen.dart';
+import 'package:better_help/screen/community_sections/main_community/community_screen.dart';
+import 'package:better_help/screen/habits_sections/main_habits/habits_screen.dart';
+import 'package:better_help/screen/learn_sections/main_learn/learn_screen.dart';
+import 'package:better_help/screen/menu_drawer/user_drawer/user_drawer.dart';
+import 'package:better_help/screen/progress_sections/main_progress/progress_screen.dart';
+import 'package:better_help/screen/supports_sections/main_supports/support_screen.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
@@ -21,66 +22,71 @@ class BottomNavScreen extends StatelessWidget {
     final BottomNavScreenController controller = Get.put(
       BottomNavScreenController(),
     );
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-    return Theme(
-      data: Theme.of(context).copyWith(
-        textTheme: Theme.of(context).textTheme.copyWith(
-          bodySmall: TextStyle(
-            fontSize: AppSize.width(value: 13),
-            fontWeight: FontWeight.w700,
-            color: AppColors.primary500,
+    return Scaffold(
+      key: scaffoldKey,
+      drawer: const UserDrawer(),
+      body: Theme(
+        data: Theme.of(context).copyWith(
+          textTheme: Theme.of(context).textTheme.copyWith(
+            bodySmall: TextStyle(
+              fontSize: AppSize.width(value: 13),
+              fontWeight: FontWeight.w700,
+              color: AppColors.primary500,
+            ),
           ),
         ),
-      ),
-      child: Obx(
-        () => PersistentTabView(
-          context,
-          controller: PersistentTabController(
-            initialIndex: controller.selectedIndex.value,
-          ),
-          screens: _buildScreens(),
-          items: _navBarsItems(),
-          handleAndroidBackButtonPress: true,
-          resizeToAvoidBottomInset: true,
-          stateManagement: true,
-          hideNavigationBarWhenKeyboardAppears: true,
-          popBehaviorOnSelectedNavBarItemPress: PopBehavior.all,
-          padding: EdgeInsets.only(
-            top: AppSize.height(value: 2),
-            bottom: AppSize.height(value: 8),
-          ),
-          backgroundColor: AppColors.white,
-          isVisible: true,
-          bottomScreenMargin: AppSize.height(value: 05),
-          animationSettings: const NavBarAnimationSettings(
-            navBarItemAnimation: ItemAnimationSettings(
-              duration: Duration(milliseconds: 500),
-              curve: Curves.ease,
+        child: Obx(
+          () => PersistentTabView(
+            context,
+            controller: PersistentTabController(
+              initialIndex: controller.selectedIndex.value,
             ),
-            screenTransitionAnimation: ScreenTransitionAnimationSettings(
-              animateTabTransition: true,
-              duration: Duration(milliseconds: 400),
-              curve: Curves.easeInOutExpo,
+            screens: _buildScreens(scaffoldKey),
+            items: _navBarsItems(),
+            handleAndroidBackButtonPress: true,
+            resizeToAvoidBottomInset: true,
+            stateManagement: true,
+            hideNavigationBarWhenKeyboardAppears: true,
+            popBehaviorOnSelectedNavBarItemPress: PopBehavior.all,
+            padding: EdgeInsets.only(
+              top: AppSize.height(value: 2),
+              bottom: AppSize.height(value: 8),
             ),
+            backgroundColor: AppColors.white,
+            isVisible: true,
+            bottomScreenMargin: AppSize.height(value: 05),
+            animationSettings: const NavBarAnimationSettings(
+              navBarItemAnimation: ItemAnimationSettings(
+                duration: Duration(milliseconds: 500),
+                curve: Curves.ease,
+              ),
+              screenTransitionAnimation: ScreenTransitionAnimationSettings(
+                animateTabTransition: true,
+                duration: Duration(milliseconds: 400),
+                curve: Curves.easeInOutExpo,
+              ),
+            ),
+            confineToSafeArea: true,
+            navBarHeight: AppSize.height(value: 75),
+            navBarStyle: NavBarStyle.style3,
+            onItemSelected: (index) {
+              controller.changeIndex(index);
+            },
           ),
-          confineToSafeArea: true,
-          navBarHeight: AppSize.height(value: 75),
-          navBarStyle: NavBarStyle.style3,
-          onItemSelected: (index) {
-            controller.changeIndex(index);
-          },
         ),
       ),
     );
   }
 
-  List<Widget> _buildScreens() {
+  List<Widget> _buildScreens(GlobalKey<ScaffoldState> scaffoldKey) {
     return [
-      const HabitsScreen(),
-      const LearnScreen(),
-      const SupportScreen(),
-      const ProgressScreen(),
-      const CommunityScreen(),
+      HabitsScreen(scaffoldKey: scaffoldKey),
+      LearnScreen(scaffoldKey: scaffoldKey),
+      SupportScreen(scaffoldKey: scaffoldKey),
+      ProgressScreen(scaffoldKey: scaffoldKey),
+      CommunityScreen(scaffoldKey: scaffoldKey),
     ];
   }
 

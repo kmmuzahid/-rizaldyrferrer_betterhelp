@@ -1,8 +1,10 @@
 import 'package:better_help/utils/app_colors/app_colors.dart';
+import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class CalendarTaskScreen extends StatelessWidget {
   const CalendarTaskScreen({super.key});
@@ -19,7 +21,23 @@ class CalendarTaskScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
         child: Column(
           children: [
-            Center(child: AppText(text: "This the Calendar Task Screen")),
+            Gap(height: 20),
+            SfDateRangePicker(
+              view: DateRangePickerView.month,
+              backgroundColor: AppColors.white,
+              selectionMode: DateRangePickerSelectionMode.single,
+              selectionColor: AppColors.black,
+              toggleDaySelection: true,
+              selectionShape: DateRangePickerSelectionShape.rectangle,
+              headerStyle: const DateRangePickerHeaderStyle(
+                backgroundColor: AppColors.white500,
+                textStyle: TextStyle(
+                  color: AppColors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
           ],
         ),
       ),

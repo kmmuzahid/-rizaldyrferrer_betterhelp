@@ -49,4 +49,5 @@ class AppStaticImages {
   static const String trendingCOurder001 = "";
 
   static const String drawerImage = "assets/images/drawerImage.png";
+  static const String bookingImages = "assets/images/sessions_image.png";
 }

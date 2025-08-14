@@ -50,4 +50,7 @@ class AppIcons {
       "assets/icons/mySubscriptionsfinished.svg";
   static const String mySubscriptionfinished =
       "assets/icons/mySubscriptionsReason.svg";
+  static const String bookingSessions =
+      "assets/icons/bookAdvocateExtraSession.svg";
+  static const String reportProblem = "assets/icons/reportProblem.svg";
 }

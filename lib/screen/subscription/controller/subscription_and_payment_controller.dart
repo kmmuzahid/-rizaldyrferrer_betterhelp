@@ -16,10 +16,10 @@ class SubscriptionAndPaymentController extends GetxController {
     'confirm Booking',
   ];
 
-  // Date selection for booking
+  //! Date selection for booking
   Rx<DateTime> selectedDate = DateTime.now().obs;
 
-  // Sample slots data - you can replace this with real data
+  //! Sample slots data - you can replace this with real data
   final Map<String, List<String>> slotsData = {
     'today': ['9:00 AM', '2:00 PM', '4:00 PM'],
     'tomorrow': ['10:00 AM', '3:00 PM'],

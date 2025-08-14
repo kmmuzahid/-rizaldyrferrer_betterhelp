@@ -6,6 +6,7 @@ import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
+import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -189,6 +190,23 @@ class UserDrawer extends StatelessWidget {
                       ),
                     );
                   }),
+                  Gap(height: 40),
+                  AppButton(
+                    title: "Logout",
+                    onTap: () {},
+                    backgroundColor: AppColors.red500,
+                    borderradius: 08,
+                  ),
+                  Gap(height: 05),
+                  Center(
+                    child: AppText(
+                      text: "Copyright@BetterHabbitsforLife",
+                      color: Colors.white,
+                      fontSize: AppSize.width(value: 14),
+                      fontFamilyIndex: 2,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -5,13 +5,60 @@ import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
+import 'package:better_help/widget/app_chat_widget/app_chat_widget.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:flutter/material.dart';
 
-class SupportScreen extends StatelessWidget {
+class SupportScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
 
   const SupportScreen({super.key, this.scaffoldKey});
+
+  @override
+  State<SupportScreen> createState() => _SupportScreenState();
+}
+
+class _SupportScreenState extends State<SupportScreen> {
+  // Mock data for chat
+  final List<ChatMessage> _mockMessages = [
+    ChatMessage(
+      id: '1',
+      text: 'Hi 👋 Welcome to Health Assistant!',
+      isMe: false,
+      timestamp: DateTime.now().subtract(Duration(minutes: 5)),
+      senderName: 'Health Assistant',
+      senderAvatar: 'https://via.placeholder.com/40/4DB6AC/FFFFFF?text=HA',
+    ),
+    ChatMessage(
+      id: '2',
+      text: 'How can I help you today?',
+      isMe: false,
+      timestamp: DateTime.now().subtract(Duration(minutes: 4)),
+      senderName: 'Health Assistant',
+      senderAvatar: 'https://via.placeholder.com/40/4DB6AC/FFFFFF?text=HA',
+    ),
+    ChatMessage(
+      id: '3',
+      text: 'I need some guidance about my health routine',
+      isMe: true,
+      timestamp: DateTime.now().subtract(Duration(minutes: 3)),
+    ),
+    ChatMessage(
+      id: '4',
+      text:
+          'I\'d be happy to help! What specific area would you like to focus on?',
+      isMe: false,
+      timestamp: DateTime.now().subtract(Duration(minutes: 2)),
+      senderName: 'Health Assistant',
+      senderAvatar: 'https://via.placeholder.com/40/4DB6AC/FFFFFF?text=HA',
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Chat integration will be implemented when API is ready
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +70,7 @@ class SupportScreen extends StatelessWidget {
         appBarHeight: AppSize.height(value: 70),
         notificationIconPath: AppIcons.notificationIcons,
         menuIconPath: AppIcons.menuIcons,
-        onMenuTap: () => scaffoldKey?.currentState?.openDrawer(),
+        onMenuTap: () => widget.scaffoldKey?.currentState?.openDrawer(),
       ),
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
@@ -59,6 +106,42 @@ class SupportScreen extends StatelessWidget {
                 ),
               ],
             ),
+            Container(
+              height: 500, // Fixed height for the chat
+              margin: EdgeInsets.only(top: 20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 10,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: ModernChatScreen(
+                  title: 'Health Assistant',
+                  subtitle: 'Online',
+                  chatId: 'health_assistant_chat',
+                  recipientAvatar:
+                      'https://via.placeholder.com/40/4DB6AC/FFFFFF?text=HA',
+                  showOnlineStatus: true,
+                  primaryColor: Color(0xFF4DB6AC),
+                  backgroundColor: Color(0xFFF5F7FA),
+                  initialMessages: _mockMessages,
+                  onMessageSent: (message) {
+                    // Mock response - simulate bot reply
+                    Future.delayed(Duration(seconds: 2), () {
+                      // In a real app, this would send to your API
+                      print('User sent: $message');
+                    });
+                  },
+                ),
+              ),
+            ),
+            Gap(height: 70),
           ],
         ),
       ),

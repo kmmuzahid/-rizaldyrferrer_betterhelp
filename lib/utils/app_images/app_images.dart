@@ -50,4 +50,7 @@ class AppStaticImages {
 
   static const String drawerImage = "assets/images/drawerImage.png";
   static const String bookingImages = "assets/images/sessions_image.png";
+
+  static const String cat001 = "assets/images/cat.png";
+  static const String cat002 = "assets/images/cat1.png";
 }

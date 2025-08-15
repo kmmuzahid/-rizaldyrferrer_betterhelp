@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'package:better_help/widget/app_chat_widget/app_chat_widget.dart';
 import 'package:better_help/widget/app_chat_widget/controller/app_chat_widget_controller.dart';
+import 'package:better_help/widget/app_chat_widget/models/chat_models.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:http/http.dart' as http;

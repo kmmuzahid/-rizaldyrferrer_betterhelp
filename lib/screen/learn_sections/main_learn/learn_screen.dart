@@ -13,15 +13,32 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LearnScreen extends StatelessWidget {
+class LearnScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
 
   const LearnScreen({super.key, this.scaffoldKey});
 
   @override
-  Widget build(BuildContext context) {
-    final LearnScreenController controller = Get.put(LearnScreenController());
+  State<LearnScreen> createState() => _LearnScreenState();
+}
 
+class _LearnScreenState extends State<LearnScreen> {
+  late final LearnScreenController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(LearnScreenController(), permanent: false);
+  }
+
+  @override
+  void dispose() {
+    Get.delete<LearnScreenController>();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: FlexibleCustomAppBar(
         title: AppString.masterclassTutorial,
@@ -30,7 +47,7 @@ class LearnScreen extends StatelessWidget {
         appBarHeight: AppSize.height(value: 70),
         notificationIconPath: AppIcons.notificationIcons,
         menuIconPath: AppIcons.menuIcons,
-        onMenuTap: () => scaffoldKey?.currentState?.openDrawer(),
+        onMenuTap: () => widget.scaffoldKey?.currentState?.openDrawer(),
       ),
       backgroundColor: AppColors.white,
       body: CustomScrollView(

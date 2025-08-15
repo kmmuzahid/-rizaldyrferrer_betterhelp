@@ -16,15 +16,32 @@ import 'package:flutter_svg/svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 
-class HabitsScreen extends StatelessWidget {
+class HabitsScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
 
   const HabitsScreen({super.key, this.scaffoldKey});
 
   @override
-  Widget build(BuildContext context) {
-    final HabitsScreenController controller = Get.put(HabitsScreenController());
+  State<HabitsScreen> createState() => _HabitsScreenState();
+}
 
+class _HabitsScreenState extends State<HabitsScreen> {
+  late final HabitsScreenController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(HabitsScreenController(), permanent: false);
+  }
+
+  @override
+  void dispose() {
+    Get.delete<HabitsScreenController>();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: FlexibleCustomAppBar(
         appBarHeight: AppSize.height(value: 70),
@@ -34,7 +51,7 @@ class HabitsScreen extends StatelessWidget {
         menuIconPath: AppIcons.menuIcons,
         leadingImagePath: AppStaticImages.habitsAppbar,
         showCircleAvatar: true,
-        onMenuTap: () => scaffoldKey?.currentState?.openDrawer(),
+        onMenuTap: () => widget.scaffoldKey?.currentState?.openDrawer(),
       ),
       backgroundColor: AppColors.habitBackground,
       body: SingleChildScrollView(

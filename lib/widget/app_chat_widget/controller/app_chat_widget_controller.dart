@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:better_help/widget/app_chat_widget/app_chat_widget.dart';
+import 'package:better_help/widget/app_chat_widget/models/chat_models.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,6 +29,9 @@ class ModernChatController extends GetxController
   Timer? typingTimer;
   Timer? stopTypingTimer;
 
+  // Text change debouncer to prevent excessive rebuilds
+  Timer? _textChangeDebounce;
+
   ModernChatController({
     this.chatId,
     this.onMessageSent,
@@ -46,17 +49,25 @@ class ModernChatController extends GetxController
   void onInit() {
     super.onInit();
     _initializeAnimations();
-    textController.addListener(_onTextChanged);
+    _setupTextController();
   }
 
   @override
   void onClose() {
+    _textChangeDebounce?.cancel();
     textController.dispose();
     scrollController.dispose();
     typingAnimationController.dispose();
     typingTimer?.cancel();
     stopTypingTimer?.cancel();
     super.onClose();
+  }
+
+  void _setupTextController() {
+    // Remove existing listener if any
+    textController.removeListener(_onTextChanged);
+    // Add listener
+    textController.addListener(_onTextChanged);
   }
 
   void _initializeAnimations() {
@@ -81,15 +92,28 @@ class ModernChatController extends GetxController
   }
 
   void _onTextChanged() {
-    final text = textController.text.trim();
-    hasText.value = text.isNotEmpty;
-
-    // Handle typing indicator
-    if (text.isNotEmpty) {
-      _startTyping();
-    } else {
-      _stopTyping();
+    // Debounce text changes to prevent excessive rebuilds
+    if (_textChangeDebounce?.isActive ?? false) {
+      _textChangeDebounce!.cancel();
     }
+
+    _textChangeDebounce = Timer(const Duration(milliseconds: 100), () {
+      final text = textController.text.trim();
+      final wasEmpty = !hasText.value;
+      final isEmpty = text.isEmpty;
+
+      // Only update if state actually changed
+      if (wasEmpty != isEmpty) {
+        hasText.value = !isEmpty;
+      }
+
+      // Handle typing indicator
+      if (text.isNotEmpty) {
+        _startTyping();
+      } else {
+        _stopTyping();
+      }
+    });
   }
 
   void _startTyping() {
@@ -114,7 +138,9 @@ class ModernChatController extends GetxController
   }
 
   void onTextChanged(String text) {
-    _onTextChanged();
+    // This method is called from the TextField onChanged
+    // The actual handling is done by the TextController listener
+    // to avoid duplicate processing
   }
 
   void sendMessage() {
@@ -131,8 +157,12 @@ class ModernChatController extends GetxController
 
     // Add message to UI immediately
     messages.add(message);
+
+    // Clear text field and update state
     textController.clear();
     hasText.value = false;
+
+    // Scroll to bottom
     _scrollToBottom();
 
     // Update status to sent after a delay (simulating network)
@@ -318,5 +348,10 @@ class ModernChatController extends GetxController
         senderAvatar: 'https://via.placeholder.com/40',
       );
     });
+  }
+
+  // Method to refresh controller state if needed
+  void refreshController() {
+    _setupTextController();
   }
 }

@@ -205,4 +205,9 @@ class AppString {
   static const String communities = "Communities";
   static const String engageWithLikeMindedPeople =
       "Engage with like-minded people";
+
+  static const String demoPost = """This is what i learned in my recent course
+“The whole secret of existence”
+"The whole secret of existence lies in the pursuit of meaning, purpose, and connection. It is a delicate dance between self-discovery, compassion for others, and embracing the ever-unfolding mysteries of life. Finding harmony in the ebb and flow of experiences, we unlock the profound beauty that resides within our shared journey.
+This is dev kor afjdalkjreoijn lksdjfoiwe n osjdfoweiuj""";
 }

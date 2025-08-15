@@ -1,18 +1,63 @@
+import 'package:better_help/screen/community_sections/main_community/controller/community_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
+import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
+import 'package:better_help/widget/app_button/selectable_icon_app_button.dart';
+import 'package:better_help/widget/app_course_card/app_course_card.dart';
+import 'package:better_help/widget/app_post_card/app_post_card.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class CommunityScreen extends StatelessWidget {
+class CommunityScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
 
   const CommunityScreen({super.key, this.scaffoldKey});
 
   @override
+  State<CommunityScreen> createState() => _CommunityScreenState();
+}
+
+class _CommunityScreenState extends State<CommunityScreen> {
+  late final CommunityScreenController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    // Use Get.put with permanent: false to allow disposal
+    controller = Get.put(CommunityScreenController(), permanent: false);
+  }
+
+  @override
+  void dispose() {
+    // Clean up controller when screen is disposed
+    Get.delete<CommunityScreenController>();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    List<String> articleImages = [
+      AppStaticImages.habits01,
+      AppStaticImages.habits02,
+      AppStaticImages.habits03,
+      AppStaticImages.habits04,
+      AppStaticImages.habits01,
+      AppStaticImages.habits02,
+      AppStaticImages.habits03,
+      AppStaticImages.habits04,
+      AppStaticImages.habits01,
+      AppStaticImages.habits02,
+      AppStaticImages.habits03,
+      AppStaticImages.habits04,
+      AppStaticImages.habits01,
+      AppStaticImages.habits02,
+      AppStaticImages.habits03,
+      AppStaticImages.habits04,
+    ];
     return Scaffold(
       appBar: FlexibleCustomAppBar(
         title: AppString.communities,
@@ -21,19 +66,247 @@ class CommunityScreen extends StatelessWidget {
         appBarHeight: AppSize.height(value: 70),
         notificationIconPath: AppIcons.notificationIcons,
         menuIconPath: AppIcons.menuIcons,
-        onMenuTap: () => scaffoldKey?.currentState?.openDrawer(),
+        onMenuTap: () => widget.scaffoldKey?.currentState?.openDrawer(),
       ),
-      backgroundColor: AppColors.orange600,
-      body: Center(
-        child: Text(
-          "Community Screen",
-          style: TextStyle(
-            color: AppColors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+      backgroundColor: AppColors.white,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: AppSize.height(value: 110),
+            collapsedHeight: AppSize.height(value: 110),
+            backgroundColor: AppColors.white,
+            automaticallyImplyLeading: false,
+            flexibleSpace: Container(
+              color: AppColors.white,
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSize.width(value: 20),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GetBuilder<CommunityScreenController>(
+                    builder: (controller) => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SelectableIconAppButton(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSize.width(value: 10),
+                            vertical: AppSize.height(value: 5.5),
+                          ),
+                          iconAlignment: CustomIconAlignment.left,
+                          icon: AppStaticImages.peerforum,
+                          height: AppSize.width(value: 36),
+                          width: AppSize.height(value: 165),
+                          selectedBackgroundColor: AppColors.t3,
+                          selectedTitleColor: AppColors.white,
+                          title: "Peer Forum",
+                          backgroundColor:
+                              controller.isTabSelected(CommunityTab.peerForum)
+                              ? AppColors.t3
+                              : AppColors.white500,
+                          titleColor:
+                              controller.isTabSelected(CommunityTab.peerForum)
+                              ? AppColors.white
+                              : AppColors.black,
+                          onTap: () =>
+                              controller.selectTab(CommunityTab.peerForum),
+                          borderColor: AppColors.grey100,
+                          borderRadius: 12,
+                        ),
+                        SelectableIconAppButton(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSize.width(value: 10),
+                            vertical: AppSize.height(value: 5.5),
+                          ),
+                          iconAlignment: CustomIconAlignment.left,
+                          icon: AppStaticImages.communityArticle,
+                          height: AppSize.width(value: 36),
+                          width: AppSize.height(value: 165),
+                          selectedBackgroundColor: AppColors.t3,
+                          selectedTitleColor: AppColors.white,
+                          title: "Article",
+                          backgroundColor:
+                              controller.isTabSelected(CommunityTab.article)
+                              ? AppColors.t3
+                              : AppColors.white500,
+                          titleColor:
+                              controller.isTabSelected(CommunityTab.article)
+                              ? AppColors.white
+                              : AppColors.black,
+                          onTap: () =>
+                              controller.selectTab(CommunityTab.article),
+                          borderColor: AppColors.grey100,
+                          borderRadius: 12,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Gap(height: 15),
+                  // Only show filter buttons for Peer Forum
+                  GetBuilder<CommunityScreenController>(
+                    builder: (controller) =>
+                        controller.selectedTab == CommunityTab.peerForum
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              //! Recent Button
+                              SelectableIconAppButton(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppSize.width(value: 10),
+                                  vertical: AppSize.height(value: 5.5),
+                                ),
+                                iconAlignment: CustomIconAlignment.left,
+                                icon: AppStaticImages.communityRecent,
+                                height: AppSize.width(value: 36),
+                                width: AppSize.height(value: 110),
+                                selectedBackgroundColor: AppColors.iconWarming,
+                                selectedTitleColor: AppColors.black,
+                                title: "Recent",
+                                backgroundColor:
+                                    controller.isFilterSelected(
+                                      ForumFilter.recent,
+                                    )
+                                    ? AppColors.iconWarming
+                                    : AppColors.white500,
+                                titleColor: AppColors.black,
+                                onTap: () =>
+                                    controller.selectFilter(ForumFilter.recent),
+                                borderColor: AppColors.grey100,
+                                borderRadius: 12,
+                              ),
+                              //! Highlight Button
+                              SelectableIconAppButton(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppSize.width(value: 10),
+                                  vertical: AppSize.height(value: 5.5),
+                                ),
+                                iconAlignment: CustomIconAlignment.left,
+                                icon: AppStaticImages.communityHighlight,
+                                height: AppSize.width(value: 36),
+                                width: AppSize.height(value: 130),
+                                selectedBackgroundColor: AppColors.iconWarming,
+                                selectedTitleColor: AppColors.black,
+                                title: "Highlight",
+                                backgroundColor:
+                                    controller.isFilterSelected(
+                                      ForumFilter.highlight,
+                                    )
+                                    ? AppColors.iconWarming
+                                    : AppColors.white500,
+                                titleColor: AppColors.black,
+                                onTap: () => controller.selectFilter(
+                                  ForumFilter.highlight,
+                                ),
+                                borderColor: AppColors.grey100,
+                                borderRadius: 12,
+                              ),
+                              //! Popular Button
+                              SelectableIconAppButton(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppSize.width(value: 10),
+                                  vertical: AppSize.height(value: 5.5),
+                                ),
+                                iconAlignment: CustomIconAlignment.left,
+                                icon: AppStaticImages.communityRecent,
+                                height: AppSize.width(value: 36),
+                                width: AppSize.height(value: 110),
+                                selectedBackgroundColor: AppColors.iconWarming,
+                                selectedTitleColor: AppColors.black,
+                                title: "Popular",
+                                backgroundColor:
+                                    controller.isFilterSelected(
+                                      ForumFilter.popular,
+                                    )
+                                    ? AppColors.iconWarming
+                                    : AppColors.white500,
+                                titleColor: AppColors.black,
+                                onTap: () => controller.selectFilter(
+                                  ForumFilter.popular,
+                                ),
+                                borderColor: AppColors.grey100,
+                                borderRadius: 12,
+                              ),
+                            ],
+                          )
+                        : SizedBox.shrink(),
+                  ),
+                  Gap(height: 10),
+                ],
+              ),
+            ),
           ),
-        ),
+          GetBuilder<CommunityScreenController>(
+            builder: (controller) => _buildContent(controller, articleImages),
+          ),
+          SliverToBoxAdapter(child: Gap(height: 70)),
+        ],
       ),
     );
+  }
+
+  Widget _buildContent(
+    CommunityScreenController controller,
+    List<String> articleImages,
+  ) {
+    if (controller.selectedTab == CommunityTab.article) {
+      // Show articles when Article tab is selected
+      return SliverList(
+        delegate: SliverChildBuilderDelegate((context, index) {
+          return Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSize.width(value: 20),
+              vertical: AppSize.height(value: 8),
+            ),
+            child: CourseCard(
+              margin: EdgeInsets.only(bottom: 10),
+              cardType: CardType.article,
+              title: "The Science Behind Mindfulness Meditation",
+              instructor: "Dr Rizal Dy Ferrer",
+              timeToread: "5 minutes to read",
+              date: "12 Aug, 2024",
+              imageUrl: articleImages[index % articleImages.length],
+            ),
+          );
+        }, childCount: articleImages.length),
+      );
+    } else {
+      // Show posts for Peer Forum with different content based on filter
+      String postText;
+      switch (controller.selectedFilter) {
+        case ForumFilter.recent:
+          postText = AppString.demoPost;
+          break;
+        case ForumFilter.highlight:
+          postText = "Highlight Selected";
+          break;
+        case ForumFilter.popular:
+          postText = "Popular Selected.";
+          break;
+      }
+
+      return SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSize.width(value: 20),
+                vertical: AppSize.height(value: 8),
+              ),
+              child: SocialMediaPostCard(
+                postText: postText,
+                userName: "User ${index + 1}",
+                userLocation: "Dhaka, Bangladesh",
+                profileImage: AppStaticImages.postProfile,
+                likesCount: 10 + index,
+                commentsCount: 5 + index,
+              ),
+            );
+          },
+          childCount: 10, // Show 10 posts
+        ),
+      );
+    }
   }
 }

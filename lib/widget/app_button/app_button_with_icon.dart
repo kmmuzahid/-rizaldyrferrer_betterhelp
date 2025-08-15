@@ -69,7 +69,7 @@ class IconAppButton extends StatelessWidget {
         iconPath,
         width: iconSize,
         height: iconSize,
-        colorFilter: iconColor != null 
+        colorFilter: iconColor != null
             ? ColorFilter.mode(iconColor!, BlendMode.srcIn)
             : null,
       );
@@ -80,8 +80,6 @@ class IconAppButton extends StatelessWidget {
         width: iconSize,
         height: iconSize,
         fit: BoxFit.contain,
-        // Note: PNG images can't be tinted easily like SVGs
-        // If you need colored PNG icons, you might want to prepare different colored versions
       );
     }
   }

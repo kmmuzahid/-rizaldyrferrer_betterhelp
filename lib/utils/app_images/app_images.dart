@@ -53,4 +53,12 @@ class AppStaticImages {
 
   static const String cat001 = "assets/images/cat.png";
   static const String cat002 = "assets/images/cat1.png";
+
+  static const String peerforum = "assets/images/peerforum.png";
+  static const String communityArticle = "assets/images/communityArticles.png";
+  static const String communityRecent = "assets/images/communityRecent.png";
+  static const String communityHighlight =
+      "assets/images/communityHighlight.png";
+  static const String communityPopular = "assets/images/communityPopular.png";
+  static const String postProfile = "assets/images/postProfile.png";
 }

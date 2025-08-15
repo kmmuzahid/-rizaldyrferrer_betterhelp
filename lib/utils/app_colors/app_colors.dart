@@ -15,6 +15,7 @@ class AppColors {
   static const Color textMain = Color(0xFF393938);
   static const Color yellow50 = Color(0xFFFCF4EC);
   static const Color white500 = Color(0xFFF0F0F0);
+  static const Color grey100 = Color(0xFFBDBDBD);
   static const Color white50 = Color(0xFFF0F0F0);
   static const Color t3 = Color(0xFF032F49);
   static const Color t5 = Color(0xFFE8D5C0);
@@ -27,6 +28,7 @@ class AppColors {
   static const Color questionBG01StatusBarColor = Color(0xFFDD6D08);
   static const Color questionBg01TextColor = Color(0xFFF5841F);
   static const Color questionBg01SelectBox = Color(0xFFDC8C44);
+  static const Color iconWarming = Color(0xFFFFAA00);
 
   static const Color questionBG02 = Color(0xFF032F49);
   static const Color questionBG02StatusBarColor = Color(0xFF021E2E);

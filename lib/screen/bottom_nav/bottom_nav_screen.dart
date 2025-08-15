@@ -1,9 +1,13 @@
 import 'package:better_help/screen/bottom_nav/controller/bottom_nav_screen_controller.dart';
 import 'package:better_help/screen/community_sections/main_community/community_screen.dart';
+import 'package:better_help/screen/community_sections/main_community/controller/community_screen_controller.dart';
 import 'package:better_help/screen/habits_sections/main_habits/habits_screen.dart';
+import 'package:better_help/screen/habits_sections/main_habits/controller/habits_screen_controller.dart';
 import 'package:better_help/screen/learn_sections/main_learn/learn_screen.dart';
+import 'package:better_help/screen/learn_sections/main_learn/controller/learn_screen_controller.dart';
 import 'package:better_help/screen/menu_drawer/user_drawer/user_drawer.dart';
 import 'package:better_help/screen/progress_sections/main_progress/progress_screen.dart';
+import 'package:better_help/screen/progress_sections/main_progress/controller/progress_screen_controller.dart';
 import 'package:better_help/screen/supports_sections/main_supports/support_screen.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
@@ -46,9 +50,10 @@ class BottomNavScreen extends StatelessWidget {
             screens: _buildScreens(scaffoldKey),
             items: _navBarsItems(),
             handleAndroidBackButtonPress: true,
-            resizeToAvoidBottomInset: true,
-            stateManagement: true,
-            hideNavigationBarWhenKeyboardAppears: true,
+            resizeToAvoidBottomInset: false,
+            stateManagement:
+                false, // Disable state management to prevent memory issues
+            hideNavigationBarWhenKeyboardAppears: false,
             popBehaviorOnSelectedNavBarItemPress: PopBehavior.all,
             padding: EdgeInsets.only(
               top: AppSize.height(value: 2),
@@ -72,12 +77,48 @@ class BottomNavScreen extends StatelessWidget {
             navBarHeight: AppSize.height(value: 75),
             navBarStyle: NavBarStyle.style3,
             onItemSelected: (index) {
+              // Clean up previous screen controllers before switching
+              _cleanupControllers(controller.selectedIndex.value);
               controller.changeIndex(index);
             },
           ),
         ),
       ),
     );
+  }
+
+  void _cleanupControllers(int previousIndex) {
+    // Clean up controllers based on the previous screen
+    try {
+      switch (previousIndex) {
+        case 0: // Habits
+          if (Get.isRegistered<HabitsScreenController>()) {
+            Get.delete<HabitsScreenController>();
+          }
+          break;
+        case 1: // Learn
+          if (Get.isRegistered<LearnScreenController>()) {
+            Get.delete<LearnScreenController>();
+          }
+          break;
+        case 2: // Support
+          // Support screen doesn't have a controller, skip
+          break;
+        case 3: // Progress
+          if (Get.isRegistered<ProgressScreenController>()) {
+            Get.delete<ProgressScreenController>();
+          }
+          break;
+        case 4: // Community
+          if (Get.isRegistered<CommunityScreenController>()) {
+            Get.delete<CommunityScreenController>();
+          }
+          break;
+      }
+    } catch (e) {
+      // Ignore cleanup errors
+      print('Controller cleanup error: $e');
+    }
   }
 
   List<Widget> _buildScreens(GlobalKey<ScaffoldState> scaffoldKey) {

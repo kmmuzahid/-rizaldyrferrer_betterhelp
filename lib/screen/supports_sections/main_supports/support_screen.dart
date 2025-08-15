@@ -1,11 +1,13 @@
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
+import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
 import 'package:better_help/widget/app_chat_widget/app_chat_widget.dart';
+import 'package:better_help/widget/app_chat_widget/models/chat_models.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +21,9 @@ class SupportScreen extends StatefulWidget {
 }
 
 class _SupportScreenState extends State<SupportScreen> {
+  // Chat widget key to prevent rebuilds
+  final GlobalKey _chatKey = GlobalKey();
+
   // Mock data for chat
   final List<ChatMessage> _mockMessages = [
     ChatMessage(
@@ -63,6 +68,7 @@ class _SupportScreenState extends State<SupportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: FlexibleCustomAppBar(
         title: AppString.seekExpartSupports,
         subtitle: AppString.directContactWithBha,
@@ -74,41 +80,53 @@ class _SupportScreenState extends State<SupportScreen> {
       ),
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          // Changed from SingleChildScrollView to Column
           children: [
-            Gap(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildQuickActionCard(
-                    icon: Icons.calendar_today,
-                    title: 'Book Session',
-                    color: Color(0xFF0095FF),
-                    backgroundColor: Color(0xFFF2F7FF),
-                    onTap: () {
-                      // Handle booking
-                    },
-                  ),
-                ),
-                Gap(width: 12),
-                Expanded(
-                  child: _buildQuickActionCard(
-                    icon: Icons.report_problem,
-                    title: 'Report Problem',
-                    color: Color(0xFFEE443F),
-                    backgroundColor: Color(0xFFFFF3F2),
-                    onTap: () {
-                      // Handle report
-                    },
-                  ),
-                ),
-              ],
-            ),
+            // Quick action buttons - wrapped in container with fixed height
             Container(
-              height: 500, // Fixed height for the chat
-              margin: EdgeInsets.only(top: 20),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSize.width(value: 20),
+                vertical: 20,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _buildQuickActionCard(
+                      icon: Icons.calendar_today,
+                      title: 'Book Session',
+                      color: Color(0xFF0095FF),
+                      backgroundColor: Color(0xFFF2F7FF),
+                      onTap: () {
+                        // Handle booking
+                      },
+                    ),
+                  ),
+                  Gap(width: 12),
+                  Expanded(
+                    child: _buildQuickActionCard(
+                      icon: Icons.report_problem,
+                      title: 'Report Problem',
+                      color: Color(0xFFEE443F),
+                      backgroundColor: Color(0xFFFFF3F2),
+                      onTap: () {
+                        // Handle report
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Chat widget - takes remaining space
+            Container(
+              height: MediaQuery.of(context).size.height * 0.65,
+              margin: EdgeInsets.fromLTRB(
+                AppSize.width(value: 20),
+                0,
+                AppSize.width(value: 20),
+                20,
+              ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
@@ -121,29 +139,35 @@ class _SupportScreenState extends State<SupportScreen> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: ModernChatScreen(
+                child: ModernChatWidget(
+                  key: _chatKey, // Add key to prevent rebuilds
                   title: 'Health Assistant',
                   subtitle: 'Online',
-                  chatId: 'health_assistant_chat',
+                  chatId:
+                      'health_assistant_chat_${widget.hashCode}', // Make unique
                   recipientAvatar:
                       'https://via.placeholder.com/40/4DB6AC/FFFFFF?text=HA',
                   showOnlineStatus: true,
                   primaryColor: Color(0xFF4DB6AC),
                   backgroundColor: Color(0xFFF5F7FA),
                   initialMessages: _mockMessages,
+                  showHeader: true,
                   onMessageSent: (message) {
                     // Mock response - simulate bot reply
                     Future.delayed(Duration(seconds: 2), () {
                       // In a real app, this would send to your API
-                      print('User sent: $message');
+                      appLog('User sent: $message');
                     });
                   },
                 ),
               ),
             ),
-            Gap(height: 70),
           ],
         ),
+      ),
+      bottomNavigationBar: Container(
+        height: AppSize.height(value: 70),
+        decoration: BoxDecoration(color: Colors.transparent),
       ),
     );
   }

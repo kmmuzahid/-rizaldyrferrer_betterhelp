@@ -13,17 +13,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-class ProgressScreen extends StatelessWidget {
+class ProgressScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
 
   const ProgressScreen({super.key, this.scaffoldKey});
 
   @override
-  Widget build(BuildContext context) {
-    final ProgressScreenController controller = Get.put(
-      ProgressScreenController(),
-    );
+  State<ProgressScreen> createState() => _ProgressScreenState();
+}
 
+class _ProgressScreenState extends State<ProgressScreen> {
+  late final ProgressScreenController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(ProgressScreenController(), permanent: false);
+  }
+
+  @override
+  void dispose() {
+    Get.delete<ProgressScreenController>();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: FlexibleCustomAppBar(
         title: AppString.trackProgress,
@@ -32,7 +47,7 @@ class ProgressScreen extends StatelessWidget {
         appBarHeight: AppSize.height(value: 70),
         notificationIconPath: AppIcons.notificationIcons,
         menuIconPath: AppIcons.menuIcons,
-        onMenuTap: () => scaffoldKey?.currentState?.openDrawer(),
+        onMenuTap: () => widget.scaffoldKey?.currentState?.openDrawer(),
       ),
       backgroundColor: AppColors.white,
       body: Obx(() {

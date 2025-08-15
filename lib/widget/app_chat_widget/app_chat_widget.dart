@@ -1,65 +1,12 @@
-import 'dart:io';
+import 'package:better_help/utils/app_colors/app_colors.dart';
+import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/widget/app_chat_widget/controller/app_chat_widget_controller.dart';
+import 'package:better_help/widget/app_chat_widget/models/chat_models.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-// Chat Message Model
-class ChatMessage {
-  final String id;
-  final String text;
-  final bool isMe;
-  final DateTime timestamp;
-  final String? senderName;
-  final String? senderAvatar;
-  final List<String>? images;
-  final MessageStatus status;
-
-  ChatMessage({
-    required this.id,
-    required this.text,
-    required this.isMe,
-    required this.timestamp,
-    this.senderName,
-    this.senderAvatar,
-    this.images,
-    this.status = MessageStatus.sent,
-  });
-
-  factory ChatMessage.fromJson(Map<String, dynamic> json) {
-    return ChatMessage(
-      id: json['id'],
-      text: json['text'] ?? '',
-      isMe: json['isMe'] ?? false,
-      timestamp: DateTime.parse(json['timestamp']),
-      senderName: json['senderName'],
-      senderAvatar: json['senderAvatar'],
-      images: json['images']?.cast<String>(),
-      status: MessageStatus.values.firstWhere(
-        (status) => status.name == json['status'],
-        orElse: () => MessageStatus.sent,
-      ),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'text': text,
-      'isMe': isMe,
-      'timestamp': timestamp.toIso8601String(),
-      'senderName': senderName,
-      'senderAvatar': senderAvatar,
-      'images': images,
-      'status': status.name,
-    };
-  }
-}
-
-enum MessageStatus { sending, sent, delivered, read, failed }
-
-// Modern Chat Screen Widget
-class ModernChatScreen extends StatelessWidget {
+// Modern Chat Widget (Embeddable) - Fixed Version
+class ModernChatWidget extends StatefulWidget {
   final String title;
   final String? subtitle;
   final String? chatId;
@@ -71,8 +18,9 @@ class ModernChatScreen extends StatelessWidget {
   final Function(List<String> imagePaths)? onImagesSent;
   final Function()? onTypingChanged;
   final List<ChatMessage>? initialMessages;
+  final bool showHeader;
 
-  const ModernChatScreen({
+  const ModernChatWidget({
     super.key,
     required this.title,
     this.subtitle,
@@ -85,59 +33,95 @@ class ModernChatScreen extends StatelessWidget {
     this.onImagesSent,
     this.onTypingChanged,
     this.initialMessages,
+    this.showHeader = true,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Get.put(
-      ModernChatController(
-        chatId: chatId,
-        onMessageSent: onMessageSent,
-        onImagesSent: onImagesSent,
-        onTypingChanged: onTypingChanged,
-        initialMessages: initialMessages,
-        primaryColor: primaryColor,
-      ),
-      tag: chatId ?? 'default_chat',
-    );
+  State<ModernChatWidget> createState() => _ModernChatWidgetState();
+}
 
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: _buildAppBar(context, controller),
-      body: Expanded(
-        child: Column(
-          children: [
-            Expanded(child: _buildMessageList(controller)),
-            _buildTypingIndicator(controller),
-            _buildInputArea(controller),
-          ],
+class _ModernChatWidgetState extends State<ModernChatWidget>
+    with AutomaticKeepAliveClientMixin {
+  late ModernChatController controller;
+  final String _controllerTag = DateTime.now().millisecondsSinceEpoch
+      .toString();
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeController();
+  }
+
+  void _initializeController() {
+    // Use find if exists, otherwise create new
+    if (Get.isRegistered<ModernChatController>(tag: widget.chatId)) {
+      controller = Get.find<ModernChatController>(tag: widget.chatId);
+    } else {
+      controller = Get.put(
+        ModernChatController(
+          chatId: widget.chatId,
+          onMessageSent: widget.onMessageSent,
+          onImagesSent: widget.onImagesSent,
+          onTypingChanged: widget.onTypingChanged,
+          initialMessages: widget.initialMessages,
+          primaryColor: widget.primaryColor,
         ),
+        tag: widget.chatId ?? _controllerTag,
+        permanent: true, // Make controller permanent
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    // Don't delete the controller here to maintain state
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: widget.backgroundColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          if (widget.showHeader) _buildChatHeader(context),
+          Expanded(child: _buildMessageList()),
+          _buildTypingIndicator(),
+          _buildInputArea(),
+        ],
       ),
     );
   }
 
-  PreferredSizeWidget _buildAppBar(
-    BuildContext context,
-    ModernChatController controller,
-  ) {
-    return AppBar(
-      backgroundColor: primaryColor,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Navigator.pop(context),
+  Widget _buildChatHeader(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.primary500 ?? widget.primaryColor,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
       ),
-      title: Row(
+      child: Row(
         children: [
-          if (recipientAvatar != null)
+          if (widget.recipientAvatar != null)
             Stack(
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundImage: NetworkImage(recipientAvatar!),
+                  backgroundImage: NetworkImage(widget.recipientAvatar!),
                   backgroundColor: Colors.grey[300],
                 ),
-                if (showOnlineStatus)
+                if (widget.showOnlineStatus)
                   Positioned(
                     bottom: 0,
                     right: 0,
@@ -159,19 +143,21 @@ class ModernChatScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  widget.title,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                if (subtitle != null)
+                if (widget.subtitle != null)
                   Obx(
                     () => Text(
-                      controller.isTyping.value ? 'Typing...' : subtitle!,
+                      controller.isTyping.value
+                          ? 'Typing...'
+                          : widget.subtitle!,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: .8),
                         fontSize: 14,
                       ),
                     ),
@@ -179,20 +165,18 @@ class ModernChatScreen extends StatelessWidget {
               ],
             ),
           ),
+          IconButton(
+            icon: const Icon(Icons.more_vert, color: Colors.white),
+            onPressed: () {
+              // Show more options
+            },
+          ),
         ],
       ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.more_vert, color: Colors.white),
-          onPressed: () {
-            // Show more options
-          },
-        ),
-      ],
     );
   }
 
-  Widget _buildMessageList(ModernChatController controller) {
+  Widget _buildMessageList() {
     return Obx(() {
       if (controller.messages.isEmpty) {
         return Center(
@@ -230,8 +214,7 @@ class ModernChatScreen extends StatelessWidget {
               if (group['showDate']) _buildDateHeader(group['date']),
               ...group['messages']
                   .map<Widget>(
-                    (message) =>
-                        _buildMessageBubble(context, message, controller),
+                    (message) => _buildMessageBubble(context, message),
                   )
                   .toList(),
             ],
@@ -274,17 +257,14 @@ class ModernChatScreen extends StatelessWidget {
     final messageDate = DateTime(date.year, date.month, date.day);
 
     if (messageDate == today) return 'Today';
-    if (messageDate == today.subtract(const Duration(days: 1)))
+    if (messageDate == today.subtract(const Duration(days: 1))) {
       return 'Yesterday';
+    }
 
     return '${date.day}/${date.month}/${date.year}';
   }
 
-  Widget _buildMessageBubble(
-    BuildContext context,
-    ChatMessage message,
-    ModernChatController controller,
-  ) {
+  Widget _buildMessageBubble(BuildContext context, ChatMessage message) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -309,7 +289,7 @@ class ModernChatScreen extends StatelessWidget {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: message.isMe ? primaryColor : Colors.white,
+                color: message.isMe ? widget.primaryColor : Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(20),
                   topRight: const Radius.circular(20),
@@ -318,7 +298,7 @@ class ModernChatScreen extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: .05),
                     blurRadius: 5,
                     offset: const Offset(0, 2),
                   ),
@@ -468,7 +448,7 @@ class ModernChatScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildTypingIndicator(ModernChatController controller) {
+  Widget _buildTypingIndicator() {
     return Obx(() {
       if (!controller.isTyping.value) return const SizedBox.shrink();
 
@@ -478,8 +458,8 @@ class ModernChatScreen extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 16,
-              backgroundImage: recipientAvatar != null
-                  ? NetworkImage(recipientAvatar!)
+              backgroundImage: widget.recipientAvatar != null
+                  ? NetworkImage(widget.recipientAvatar!)
                   : null,
               backgroundColor: Colors.grey[300],
             ),
@@ -491,7 +471,7 @@ class ModernChatScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: .05),
                     blurRadius: 5,
                     offset: const Offset(0, 2),
                   ),
@@ -500,11 +480,11 @@ class ModernChatScreen extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildTypingDot(0, controller),
-                  const SizedBox(width: 4),
-                  _buildTypingDot(1, controller),
-                  const SizedBox(width: 4),
-                  _buildTypingDot(2, controller),
+                  _buildTypingDot(0),
+                  const Gap(width: 4),
+                  _buildTypingDot(1),
+                  const Gap(width: 4),
+                  _buildTypingDot(2),
                 ],
               ),
             ),
@@ -514,7 +494,7 @@ class ModernChatScreen extends StatelessWidget {
     });
   }
 
-  Widget _buildTypingDot(int index, ModernChatController controller) {
+  Widget _buildTypingDot(int index) {
     return Obx(() {
       final opacity = controller.typingAnimation.value > (index * 0.3)
           ? 1.0
@@ -534,14 +514,14 @@ class ModernChatScreen extends StatelessWidget {
     });
   }
 
-  Widget _buildInputArea(ModernChatController controller) {
+  Widget _buildInputArea() {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: .05),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -553,7 +533,7 @@ class ModernChatScreen extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: backgroundColor,
+                  color: widget.backgroundColor,
                   borderRadius: BorderRadius.circular(25),
                   border: Border.all(color: Colors.grey[300]!),
                 ),
@@ -573,6 +553,10 @@ class ModernChatScreen extends StatelessWidget {
                         onChanged: controller.onTextChanged,
                         onSubmitted: (_) => controller.sendMessage(),
                         maxLines: null,
+                        textInputAction: TextInputAction.newline,
+                        enableInteractiveSelection: true,
+                        autocorrect: true,
+                        enableSuggestions: true,
                       ),
                     ),
                     IconButton(
@@ -591,7 +575,7 @@ class ModernChatScreen extends StatelessWidget {
                 height: 50,
                 decoration: BoxDecoration(
                   color: controller.hasText.value
-                      ? primaryColor
+                      ? widget.primaryColor
                       : Colors.grey[400],
                   shape: BoxShape.circle,
                 ),

@@ -5,11 +5,13 @@ import 'package:better_help/screen/auth_screen/login_screen/login_screen.dart';
 import 'package:better_help/screen/auth_screen/otp_verification_screen/otp_verification_screen.dart';
 import 'package:better_help/screen/auth_screen/signup_screen/signup_screen.dart';
 import 'package:better_help/screen/bottom_nav/bottom_nav_screen.dart';
+import 'package:better_help/screen/community_sections/creating_post/creating_post.dart';
 import 'package:better_help/screen/community_sections/main_community/community_screen.dart';
 import 'package:better_help/screen/habits_sections/home_screen.dart';
 import 'package:better_help/screen/habits_sections/main_habits/habits_screen.dart';
 import 'package:better_help/screen/habits_sections/my_task/my_task.dart';
 import 'package:better_help/screen/habits_sections/timer_screen/timer_screen.dart';
+import 'package:better_help/screen/learn_sections/article_details/articles_details.dart';
 import 'package:better_help/screen/learn_sections/categories_screen/categories_screen.dart';
 import 'package:better_help/screen/learn_sections/main_learn/learn_screen.dart';
 import 'package:better_help/screen/learn_sections/trending_course/tranding_course.dart';
@@ -62,6 +64,8 @@ class AppRoute {
 
   //! Learn Screen Route
   static const String allCategoriesScreen = '/allCategoriesScreen';
+  static const String courseScreen = '/courseScreen';
+  static const String articleScreen = '/articleScreen';
 
   //! User Menu Drawer Screen Route
   static const String userMenuDrawerScreen = '/userMenuDrawerScreen';
@@ -74,6 +78,9 @@ class AppRoute {
   static const String savedArticleScreen = "/savedArticleScreen";
   static const String talkToSupportScreen = "/talkToSupportScreen";
   static const String termsAndConditionsScreen = "/termsAndConditionsScreen";
+
+  //! Community Screen Route
+  static const String creatingPost = "/creatingpost";
 
   //! Get Pages for all the Screen
   static List<GetPage> appRoutes = [
@@ -179,6 +186,20 @@ class AppRoute {
     GetPage(
       name: AppRoute.learnScreen,
       page: () => const LearnScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
+    ),
+    //! Article Details Screen Route
+    GetPage(
+      name: AppRoute.articleScreen,
+      page: () => const ArticlesDetailsScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
+    ),
+    //! Community Screen Route
+    GetPage(
+      name: AppRoute.creatingPost,
+      page: () => const CreatingPostScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
     ),

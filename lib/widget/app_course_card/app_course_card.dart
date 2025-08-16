@@ -180,6 +180,7 @@ class CourseCard extends StatelessWidget {
       color: AppColors.textPrimaryBlack,
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.start,
       fontFamilyIndex: 2,
     );
   }

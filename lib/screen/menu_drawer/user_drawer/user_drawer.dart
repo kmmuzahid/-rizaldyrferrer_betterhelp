@@ -77,10 +77,12 @@ class UserDrawer extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(
-                    AppStaticImages.drawerImage,
-                    width: AppSize.width(value: 239),
-                    height: AppSize.height(value: 90),
+                  Center(
+                    child: Image.asset(
+                      AppStaticImages.drawerImage,
+                      width: AppSize.width(value: 200),
+                      height: AppSize.height(value: 75),
+                    ),
                   ),
                   Gap(height: 20),
                   AppText(
@@ -118,8 +120,8 @@ class UserDrawer extends StatelessWidget {
                           children: [
                             SvgPicture.asset(
                               generalSettingsIcons[index],
-                              height: AppSize.height(value: 10),
-                              width: AppSize.width(value: 10),
+                              // height: AppSize.height(value: 10),
+                              // width: AppSize.width(value: 10),
                             ),
                             Gap(width: 10),
                             AppText(
@@ -172,8 +174,8 @@ class UserDrawer extends StatelessWidget {
                           children: [
                             SvgPicture.asset(
                               accountSettingsIcons[index],
-                              height: AppSize.height(value: 10),
-                              width: AppSize.width(value: 10),
+                              // height: AppSize.height(value: 10),
+                              // width: AppSize.width(value: 10),
                             ),
                             Gap(width: 10),
                             AppText(
@@ -202,7 +204,7 @@ class UserDrawer extends StatelessWidget {
                     child: AppText(
                       text: "Copyright@BetterHabbitsforLife",
                       color: Colors.white,
-                      fontSize: AppSize.width(value: 14),
+                      fontSize: AppSize.width(value: 12 ),
                       fontFamilyIndex: 2,
                       fontWeight: FontWeight.w600,
                     ),

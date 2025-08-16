@@ -1,3 +1,4 @@
+import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/community_sections/main_community/controller/community_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
@@ -6,7 +7,9 @@ import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
+import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_button/selectable_icon_app_button.dart';
+import 'package:better_help/widget/app_comments_widget/app_comments_widget.dart';
 import 'package:better_help/widget/app_course_card/app_course_card.dart';
 import 'package:better_help/widget/app_post_card/app_post_card.dart';
 import 'package:flutter/material.dart';
@@ -69,178 +72,249 @@ class _CommunityScreenState extends State<CommunityScreen> {
         onMenuTap: () => widget.scaffoldKey?.currentState?.openDrawer(),
       ),
       backgroundColor: AppColors.white,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            pinned: true,
-            expandedHeight: AppSize.height(value: 110),
-            collapsedHeight: AppSize.height(value: 110),
-            backgroundColor: AppColors.white,
-            automaticallyImplyLeading: false,
-            flexibleSpace: Container(
-              color: AppColors.white,
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSize.width(value: 20),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GetBuilder<CommunityScreenController>(
-                    builder: (controller) => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SelectableIconAppButton(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppSize.width(value: 10),
-                            vertical: AppSize.height(value: 5.5),
-                          ),
-                          iconAlignment: CustomIconAlignment.left,
-                          icon: AppStaticImages.peerforum,
-                          height: AppSize.width(value: 36),
-                          width: AppSize.height(value: 165),
-                          selectedBackgroundColor: AppColors.t3,
-                          selectedTitleColor: AppColors.white,
-                          title: "Peer Forum",
-                          backgroundColor:
-                              controller.isTabSelected(CommunityTab.peerForum)
-                              ? AppColors.t3
-                              : AppColors.white500,
-                          titleColor:
-                              controller.isTabSelected(CommunityTab.peerForum)
-                              ? AppColors.white
-                              : AppColors.black,
-                          onTap: () =>
-                              controller.selectTab(CommunityTab.peerForum),
-                          borderColor: AppColors.grey100,
-                          borderRadius: 12,
-                        ),
-                        SelectableIconAppButton(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppSize.width(value: 10),
-                            vertical: AppSize.height(value: 5.5),
-                          ),
-                          iconAlignment: CustomIconAlignment.left,
-                          icon: AppStaticImages.communityArticle,
-                          height: AppSize.width(value: 36),
-                          width: AppSize.height(value: 165),
-                          selectedBackgroundColor: AppColors.t3,
-                          selectedTitleColor: AppColors.white,
-                          title: "Article",
-                          backgroundColor:
-                              controller.isTabSelected(CommunityTab.article)
-                              ? AppColors.t3
-                              : AppColors.white500,
-                          titleColor:
-                              controller.isTabSelected(CommunityTab.article)
-                              ? AppColors.white
-                              : AppColors.black,
-                          onTap: () =>
-                              controller.selectTab(CommunityTab.article),
-                          borderColor: AppColors.grey100,
-                          borderRadius: 12,
-                        ),
-                      ],
+      body: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              GetBuilder<CommunityScreenController>(
+                builder: (controller) => SliverAppBar(
+                  pinned: true,
+                  expandedHeight: controller.selectedTab == CommunityTab.article
+                      ? AppSize.height(value: 70)
+                      : AppSize.height(value: 115),
+                  collapsedHeight:
+                      controller.selectedTab == CommunityTab.article
+                      ? AppSize.height(value: 70)
+                      : AppSize.height(value: 115),
+                  backgroundColor: AppColors.white,
+                  automaticallyImplyLeading: false,
+                  flexibleSpace: Container(
+                    color: AppColors.white,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSize.width(value: 20),
                     ),
-                  ),
-                  Gap(height: 15),
-                  // Only show filter buttons for Peer Forum
-                  GetBuilder<CommunityScreenController>(
-                    builder: (controller) =>
-                        controller.selectedTab == CommunityTab.peerForum
-                        ? Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GetBuilder<CommunityScreenController>(
+                          builder: (controller) => Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              //! Recent Button
                               SelectableIconAppButton(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: AppSize.width(value: 10),
                                   vertical: AppSize.height(value: 5.5),
                                 ),
                                 iconAlignment: CustomIconAlignment.left,
-                                icon: AppStaticImages.communityRecent,
+                                icon: AppStaticImages.peerforum,
                                 height: AppSize.width(value: 36),
-                                width: AppSize.height(value: 110),
-                                selectedBackgroundColor: AppColors.iconWarming,
-                                selectedTitleColor: AppColors.black,
-                                title: "Recent",
+                                width: AppSize.height(value: 165),
+                                selectedBackgroundColor: AppColors.t3,
+                                selectedTitleColor: AppColors.white,
+                                title: "Peer Forum",
                                 backgroundColor:
-                                    controller.isFilterSelected(
-                                      ForumFilter.recent,
+                                    controller.isTabSelected(
+                                      CommunityTab.peerForum,
                                     )
-                                    ? AppColors.iconWarming
+                                    ? AppColors.t3
                                     : AppColors.white500,
-                                titleColor: AppColors.black,
+                                titleColor:
+                                    controller.isTabSelected(
+                                      CommunityTab.peerForum,
+                                    )
+                                    ? AppColors.white
+                                    : AppColors.black,
+                                onTap: () => controller.selectTab(
+                                  CommunityTab.peerForum,
+                                ),
+                                borderColor: AppColors.grey100,
+                                borderRadius: 12,
+                              ),
+                              SelectableIconAppButton(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppSize.width(value: 10),
+                                  vertical: AppSize.height(value: 5.5),
+                                ),
+                                iconAlignment: CustomIconAlignment.left,
+                                icon: AppStaticImages.communityArticle,
+                                height: AppSize.width(value: 36),
+                                width: AppSize.height(value: 165),
+                                selectedBackgroundColor: AppColors.t3,
+                                selectedTitleColor: AppColors.white,
+                                title: "Article",
+                                backgroundColor:
+                                    controller.isTabSelected(
+                                      CommunityTab.article,
+                                    )
+                                    ? AppColors.t3
+                                    : AppColors.white500,
+                                titleColor:
+                                    controller.isTabSelected(
+                                      CommunityTab.article,
+                                    )
+                                    ? AppColors.white
+                                    : AppColors.black,
                                 onTap: () =>
-                                    controller.selectFilter(ForumFilter.recent),
-                                borderColor: AppColors.grey100,
-                                borderRadius: 12,
-                              ),
-                              //! Highlight Button
-                              SelectableIconAppButton(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: AppSize.width(value: 10),
-                                  vertical: AppSize.height(value: 5.5),
-                                ),
-                                iconAlignment: CustomIconAlignment.left,
-                                icon: AppStaticImages.communityHighlight,
-                                height: AppSize.width(value: 36),
-                                width: AppSize.height(value: 130),
-                                selectedBackgroundColor: AppColors.iconWarming,
-                                selectedTitleColor: AppColors.black,
-                                title: "Highlight",
-                                backgroundColor:
-                                    controller.isFilterSelected(
-                                      ForumFilter.highlight,
-                                    )
-                                    ? AppColors.iconWarming
-                                    : AppColors.white500,
-                                titleColor: AppColors.black,
-                                onTap: () => controller.selectFilter(
-                                  ForumFilter.highlight,
-                                ),
-                                borderColor: AppColors.grey100,
-                                borderRadius: 12,
-                              ),
-                              //! Popular Button
-                              SelectableIconAppButton(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: AppSize.width(value: 10),
-                                  vertical: AppSize.height(value: 5.5),
-                                ),
-                                iconAlignment: CustomIconAlignment.left,
-                                icon: AppStaticImages.communityRecent,
-                                height: AppSize.width(value: 36),
-                                width: AppSize.height(value: 110),
-                                selectedBackgroundColor: AppColors.iconWarming,
-                                selectedTitleColor: AppColors.black,
-                                title: "Popular",
-                                backgroundColor:
-                                    controller.isFilterSelected(
-                                      ForumFilter.popular,
-                                    )
-                                    ? AppColors.iconWarming
-                                    : AppColors.white500,
-                                titleColor: AppColors.black,
-                                onTap: () => controller.selectFilter(
-                                  ForumFilter.popular,
-                                ),
+                                    controller.selectTab(CommunityTab.article),
                                 borderColor: AppColors.grey100,
                                 borderRadius: 12,
                               ),
                             ],
-                          )
-                        : SizedBox.shrink(),
+                          ),
+                        ),
+                        Gap(height: 15),
+                        // Only show filter buttons for Peer Forum
+                        GetBuilder<CommunityScreenController>(
+                          builder: (controller) =>
+                              controller.selectedTab == CommunityTab.peerForum
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    //! Recent Button
+                                    SelectableIconAppButton(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: AppSize.width(value: 08),
+                                        vertical: AppSize.height(value: 5.5),
+                                      ),
+                                      iconAlignment: CustomIconAlignment.left,
+                                      icon: AppStaticImages.communityRecent,
+                                      height: AppSize.width(value: 36),
+                                      width: AppSize.height(value: 105),
+                                      selectedBackgroundColor:
+                                          AppColors.iconWarming,
+                                      selectedTitleColor: AppColors.black,
+                                      title: "Recent",
+                                      backgroundColor:
+                                          controller.isFilterSelected(
+                                            ForumFilter.recent,
+                                          )
+                                          ? AppColors.iconWarming
+                                          : AppColors.white500,
+                                      titleColor: AppColors.black,
+                                      onTap: () => controller.selectFilter(
+                                        ForumFilter.recent,
+                                      ),
+                                      borderColor: AppColors.grey100,
+                                      borderRadius: 12,
+                                    ),
+                                    //! Highlight Button
+                                    SelectableIconAppButton(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: AppSize.width(value: 10),
+                                        vertical: AppSize.height(value: 5.5),
+                                      ),
+                                      iconAlignment: CustomIconAlignment.left,
+                                      icon: AppStaticImages.communityHighlight,
+                                      height: AppSize.width(value: 36),
+                                      width: AppSize.height(value: 125),
+                                      selectedBackgroundColor:
+                                          AppColors.iconWarming,
+                                      selectedTitleColor: AppColors.black,
+                                      title: "Highlight",
+                                      backgroundColor:
+                                          controller.isFilterSelected(
+                                            ForumFilter.highlight,
+                                          )
+                                          ? AppColors.iconWarming
+                                          : AppColors.white500,
+                                      titleColor: AppColors.black,
+                                      onTap: () => controller.selectFilter(
+                                        ForumFilter.highlight,
+                                      ),
+                                      borderColor: AppColors.grey100,
+                                      borderRadius: 12,
+                                    ),
+                                    //! Popular Button
+                                    SelectableIconAppButton(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: AppSize.width(value: 05),
+                                        vertical: AppSize.height(value: 5.5),
+                                      ),
+                                      iconAlignment: CustomIconAlignment.left,
+                                      icon: AppStaticImages.communityRecent,
+                                      height: AppSize.width(value: 36),
+                                      width: AppSize.height(value: 105),
+                                      selectedBackgroundColor:
+                                          AppColors.iconWarming,
+                                      selectedTitleColor: AppColors.black,
+                                      title: "Popular",
+                                      backgroundColor:
+                                          controller.isFilterSelected(
+                                            ForumFilter.popular,
+                                          )
+                                          ? AppColors.iconWarming
+                                          : AppColors.white500,
+                                      titleColor: AppColors.black,
+                                      onTap: () => controller.selectFilter(
+                                        ForumFilter.popular,
+                                      ),
+                                      borderColor: AppColors.grey100,
+                                      borderRadius: 12,
+                                    ),
+                                  ],
+                                )
+                              : SizedBox.shrink(),
+                        ),
+                        Gap(height: 10),
+                      ],
+                    ),
                   ),
-                  Gap(height: 10),
-                ],
+                ),
               ),
-            ),
+              GetBuilder<CommunityScreenController>(
+                builder: (controller) =>
+                    _buildContent(controller, articleImages),
+              ),
+              GetBuilder<CommunityScreenController>(
+                builder: (controller) => SliverToBoxAdapter(
+                  child: controller.selectedTab == CommunityTab.article
+                      ? Gap(height: 70)
+                      : Gap(height: 120),
+                ),
+              ), // Extra space for fixed button
+            ],
           ),
+          // Fixed Create Post Button at bottom (only for Peer Forum)
           GetBuilder<CommunityScreenController>(
-            builder: (controller) => _buildContent(controller, articleImages),
+            builder: (controller) =>
+                controller.selectedTab == CommunityTab.peerForum
+                ? Positioned(
+                    bottom: 70,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSize.width(value: 20),
+                        vertical: AppSize.height(value: 10),
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 8,
+                            offset: Offset(0, -2),
+                          ),
+                        ],
+                      ),
+                      child: SafeArea(
+                        child: AppButton(
+                          onTap: () {
+                            Get.toNamed(AppRoute.creatingPost);
+                          },
+                          title: "Create Post",
+                          backgroundColor: AppColors.primary500,
+                          titleColor: AppColors.white,
+                          height: AppSize.height(value: 40),
+                          borderradius: 12,
+                        ),
+                      ),
+                    ),
+                  )
+                : SizedBox.shrink(),
           ),
-          SliverToBoxAdapter(child: Gap(height: 70)),
         ],
       ),
     );
@@ -260,7 +334,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
               vertical: AppSize.height(value: 8),
             ),
             child: CourseCard(
-              margin: EdgeInsets.only(bottom: 10),
+              onTap: () {
+                Get.toNamed(AppRoute.articleScreen);
+              },
+              margin: EdgeInsets.only(bottom: 08),
               cardType: CardType.article,
               title: "The Science Behind Mindfulness Meditation",
               instructor: "Dr Rizal Dy Ferrer",
@@ -279,10 +356,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
           postText = AppString.demoPost;
           break;
         case ForumFilter.highlight:
-          postText = "Highlight Selected";
+          postText = AppString.demoHighLightPost;
           break;
         case ForumFilter.popular:
-          postText = "Popular Selected.";
+          postText = AppString.demoPopularPost;
           break;
       }
 
@@ -301,6 +378,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 profileImage: AppStaticImages.postProfile,
                 likesCount: 10 + index,
                 commentsCount: 5 + index,
+                onCommentTap: () {
+                  showCommentsBottomSheet();
+                },
               ),
             );
           },
@@ -308,5 +388,13 @@ class _CommunityScreenState extends State<CommunityScreen> {
         ),
       );
     }
+  }
+
+  void showCommentsBottomSheet() {
+    Get.bottomSheet(
+      CommentsBottomSheet(),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+    );
   }
 }

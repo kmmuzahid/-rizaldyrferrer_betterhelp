@@ -17,24 +17,27 @@ class AppBarWithBack extends StatelessWidget implements PreferredSizeWidget {
       preferredSize: Size.fromHeight(kToolbarHeight),
       child: AppBar(
         backgroundColor: backgroundColor ?? AppColors.white,
-        elevation: 0,
         automaticallyImplyLeading: false,
-        leading: Padding(
-          padding: EdgeInsets.only(left: 05, top: 04, bottom: 05),
+        leading: Container(
+          margin: EdgeInsets.only(left: 20, top: 8, bottom: 8),
           child: GestureDetector(
             onTap: () {
               Get.back();
             },
             child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSize.width(value: 05),
-                vertical: AppSize.height(value: 05),
-              ),
+              height: AppSize.height(value: 10),
               decoration: BoxDecoration(
                 color: AppColors.t3,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Center(child: SvgPicture.asset(AppIcons.appBackUptton)),
+              child: Center(
+                child: SvgPicture.asset(
+                  AppIcons.appBackUptton,
+                  height: 10,
+                  width: 10,
+                  fit: BoxFit.contain,
+                ),
+              ),
             ),
           ),
         ),

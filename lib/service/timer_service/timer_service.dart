@@ -17,7 +17,7 @@ class TimerService extends GetxService {
   // Reactive variables
   RxInt remainingSeconds = 300.obs;
   RxBool isRunning = false.obs;
-  final int totalDuration = 300; // 5 minutes
+  RxInt totalDuration = 300.obs; // 5 minutes (now dynamic)
 
   @override
   void onInit() {
@@ -28,7 +28,11 @@ class TimerService extends GetxService {
 
   void _loadTimerState() {
     // Load saved timer state
-    int savedRemaining = _storage.read(_keyRemainingSeconds) ?? totalDuration;
+    int savedTotalDuration = _storage.read(_keyTotalDuration) ?? 300;
+    totalDuration.value = savedTotalDuration;
+
+    int savedRemaining =
+        _storage.read(_keyRemainingSeconds) ?? totalDuration.value;
     bool savedIsRunning = _storage.read(_keyIsRunning) ?? false;
     int? savedStartTime = _storage.read(_keyStartTime);
 
@@ -83,8 +87,22 @@ class TimerService extends GetxService {
 
   void resetTimer() {
     isRunning.value = false;
-    remainingSeconds.value = totalDuration;
+    remainingSeconds.value = totalDuration.value;
     _clearTimerState();
+  }
+
+  void setCustomTime(int seconds) {
+    // Stop the timer if it's running
+    if (isRunning.value) {
+      pauseTimer();
+    }
+
+    // Set new total duration and remaining seconds
+    totalDuration.value = seconds;
+    remainingSeconds.value = seconds;
+
+    // Save the new state
+    _saveTimerState();
   }
 
   void completeTimer() {
@@ -95,7 +113,7 @@ class TimerService extends GetxService {
     // Show completion notification
     Get.snackbar(
       'Timer Complete!',
-      'Your 5-minute session is finished!',
+      'Your timer session is finished!',
       snackPosition: SnackPosition.TOP,
       backgroundColor: Get.theme.colorScheme.primary,
       colorText: Get.theme.colorScheme.onPrimary,
@@ -105,7 +123,7 @@ class TimerService extends GetxService {
   void _saveTimerState() {
     _storage.write(_keyRemainingSeconds, remainingSeconds.value);
     _storage.write(_keyIsRunning, isRunning.value);
-    _storage.write(_keyTotalDuration, totalDuration);
+    _storage.write(_keyTotalDuration, totalDuration.value);
   }
 
   void _clearTimerState() {
@@ -122,7 +140,7 @@ class TimerService extends GetxService {
   }
 
   double get progressPercentage {
-    return (remainingSeconds.value / totalDuration) * 100;
+    return (remainingSeconds.value / totalDuration.value) * 100;
   }
 
   @override

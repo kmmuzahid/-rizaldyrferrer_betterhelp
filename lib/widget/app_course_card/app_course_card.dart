@@ -14,7 +14,7 @@ class CourseCard extends StatelessWidget {
   final String? views;
   final String? date;
   final String? timeToread;
-  final CardType cardType; // Now properly handled as a parameter
+  final CardType cardType;
   final VoidCallback? onTap;
   final VoidCallback? onFavoritePressed;
   final bool isFavorited;
@@ -30,7 +30,7 @@ class CourseCard extends StatelessWidget {
     this.views,
     this.date,
     this.timeToread,
-    this.cardType = CardType.course, // Default to course type
+    this.cardType = CardType.course,
     this.onTap,
     this.onFavoritePressed,
     this.isFavorited = false,
@@ -175,10 +175,10 @@ class CourseCard extends StatelessWidget {
   Widget _buildTitle() {
     return AppText(
       text: title,
-      fontSize: AppSize.width(value: 16),
+      fontSize: AppSize.width(value: 14),
       fontWeight: FontWeight.w600,
       color: AppColors.textPrimaryBlack,
-      maxLines: 2,
+      maxLines: 1,
       overflow: TextOverflow.ellipsis,
       textAlign: TextAlign.start,
       fontFamilyIndex: 2,
@@ -190,16 +190,18 @@ class CourseCard extends StatelessWidget {
     String displayText = '';
     switch (cardType) {
       case CardType.course:
-        displayText = instructor; // Show instructor for courses
+        // Show instructor for courses
+        displayText = instructor;
         break;
       case CardType.article:
-        displayText = 'By $instructor'; // Show author for articles
+        // Show author for articles
+        displayText = 'By $instructor';
         break;
     }
 
     return AppText(
       text: displayText,
-      fontSize: AppSize.width(value: 14),
+      fontSize: AppSize.width(value: 12),
       color: AppColors.grey500,
       fontWeight: FontWeight.w500,
       fontFamilyIndex: 2,
@@ -224,7 +226,8 @@ class CourseCard extends StatelessWidget {
         _buildRatingText(),
         Spacer(),
         AppText(
-          text: date ?? 'No date', // Date with fallback
+          // Date with fallback
+          text: date ?? 'No date',
           fontSize: AppSize.width(value: 12),
           color: AppColors.grey500,
           fontWeight: FontWeight.w400,

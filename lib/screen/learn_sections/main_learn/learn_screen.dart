@@ -7,6 +7,7 @@ import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
+import 'package:better_help/widget/app_course_card/app_course_card.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/app_text_input/app_text_input.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -331,126 +332,14 @@ class _LearnScreenState extends State<LearnScreen> {
                   return Container(
                     width: AppSize.width(value: 240),
                     margin: EdgeInsets.only(right: AppSize.width(value: 16)),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.t5),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 8,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(12),
-                              ),
-                              child: Image.asset(
-                                controller.trendingCourseImages[index],
-                                height: AppSize.height(value: 140),
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Positioned(
-                              top: 8,
-                              right: 8,
-                              child: Container(
-                                padding: EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withValues(alpha: 0.3),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.favorite_border,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 8,
-                              right: 8,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withValues(alpha: 0.7),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: AppText(
-                                  text: controller.trendingCourseViews[index],
-                                  fontSize: AppSize.width(value: 12),
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AppText(
-                                text: controller.trendingCourseTitles[index],
-                                fontSize: AppSize.width(value: 16),
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.textPrimaryBlack,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Gap(height: 4),
-                              AppText(
-                                text:
-                                    controller.trendingCourseInstructors[index],
-                                fontSize: AppSize.width(value: 14),
-                                color: AppColors.grey500,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              Gap(height: 8),
-                              Row(
-                                children: [
-                                  Row(
-                                    children: List.generate(5, (starIndex) {
-                                      return Icon(
-                                        starIndex <
-                                                controller
-                                                    .trendingCourseRatings[index]
-                                                    .floor()
-                                            ? Icons.star
-                                            : Icons.star_border,
-                                        color: Colors.amber,
-                                        size: 16,
-                                      );
-                                    }),
-                                  ),
-                                  Gap(width: 4),
-                                  AppText(
-                                    text: controller
-                                        .trendingCourseRatings[index]
-                                        .toString(),
-                                    fontSize: AppSize.width(value: 14),
-                                    color: AppColors.grey500,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamilyIndex: 2,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    child: CourseCard(
+                      onTap: () {},
+                      imageUrl: controller.trendingCourseImages[index],
+                      title: controller.trendingCourseTitles[index],
+                      instructor: controller.trendingCourseInstructors[index],
+                      rating: 4.8,
+                      views: "3445 views",
+                      date: "2 Aug, 2025",
                     ),
                   );
                 },
@@ -512,129 +401,14 @@ class _LearnScreenState extends State<LearnScreen> {
                   return Container(
                     width: AppSize.width(value: 240),
                     margin: EdgeInsets.only(right: AppSize.width(value: 16)),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.t5),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 8,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(12),
-                              ),
-                              child: Image.asset(
-                                controller.trendingCourseImages[index],
-                                height: AppSize.height(value: 140),
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Positioned(
-                              top: 8,
-                              right: 8,
-                              child: Container(
-                                padding: EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withValues(alpha: 0.3),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.favorite_border,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 8,
-                              right: 8,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withValues(alpha: 0.7),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: AppText(
-                                  text: controller.trendingCourseViews[index],
-                                  fontSize: AppSize.width(value: 12),
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamilyIndex: 2,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AppText(
-                                text: controller.trendingCourseTitles[index],
-                                fontSize: AppSize.width(value: 16),
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.textPrimaryBlack,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                fontFamilyIndex: 2,
-                              ),
-                              Gap(height: 4),
-                              AppText(
-                                text:
-                                    controller.trendingCourseInstructors[index],
-                                fontSize: AppSize.width(value: 14),
-                                color: AppColors.grey500,
-                                fontWeight: FontWeight.w500,
-                                fontFamilyIndex: 2,
-                              ),
-                              Gap(height: 8),
-                              Row(
-                                children: [
-                                  Row(
-                                    children: List.generate(5, (starIndex) {
-                                      return Icon(
-                                        starIndex <
-                                                controller
-                                                    .trendingCourseRatings[index]
-                                                    .floor()
-                                            ? Icons.star
-                                            : Icons.star_border,
-                                        color: Colors.amber,
-                                        size: 16,
-                                      );
-                                    }),
-                                  ),
-                                  Gap(width: 4),
-                                  AppText(
-                                    text: controller
-                                        .trendingCourseRatings[index]
-                                        .toString(),
-                                    fontSize: AppSize.width(value: 14),
-                                    color: AppColors.grey500,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamilyIndex: 2,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    child: CourseCard(
+                      onTap: () {},
+                      imageUrl: controller.trendingCourseImages[index],
+                      title: controller.trendingCourseTitles[index],
+                      instructor: controller.trendingCourseInstructors[index],
+                      rating: 4.8,
+                      views: "3445 views",
+                      date: "2 Aug, 2025",
                     ),
                   );
                 },

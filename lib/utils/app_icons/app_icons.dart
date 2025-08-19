@@ -55,4 +55,5 @@ class AppIcons {
   static const String reportProblem = "assets/icons/reportProblem.svg";
   static const String closeComments = "assets/icons/closeComment.svg";
   static const String commentLikes = "assets/icons/commentsLIke.svg";
+  static const String winnder = "assets/icons/winner.svg";
 }

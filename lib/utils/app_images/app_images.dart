@@ -62,4 +62,6 @@ class AppStaticImages {
   static const String communityPopular = "assets/images/communityPopular.png";
   static const String postProfile = "assets/images/postProfile.png";
   static const String postComment = "assets/images/communityComments.png";
+  static const String winner = "assets/images/winner.png";
+  static const String pentagon = "assets/images/pentagone.png";
 }

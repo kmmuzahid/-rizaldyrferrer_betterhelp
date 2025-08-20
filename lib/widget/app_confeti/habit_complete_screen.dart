@@ -1,25 +1,31 @@
+import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
+import 'package:better_help/widget/app_button/app_button.dart';
+import 'package:better_help/widget/app_confeti/controller/congratulaiton_screen_controller.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-class HabitCompleteScreen extends StatefulWidget {
-  const HabitCompleteScreen({super.key});
+import 'package:get/get.dart';
+
+class CongratulationScreen extends StatefulWidget {
+  const CongratulationScreen({super.key});
 
   @override
-  State<HabitCompleteScreen> createState() => _HabitCompleteScreenState();
+  State<CongratulationScreen> createState() => _CongratulationScreenState();
 }
 
 // We use SingleTickerProviderStateMixin to provide the ticker for the AnimationController
-class _HabitCompleteScreenState extends State<HabitCompleteScreen>
+class _CongratulationScreenState extends State<CongratulationScreen>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _trophyScaleAnimation;
   late Animation<double> _trophyFadeAnimation;
-  late Animation<double> _rotationAnimation;
+  late AnimationController _rotationAnimationController;
+  final controller = Get.put(CongratulaitonScreenController());
 
   @override
   void initState() {
@@ -54,7 +60,7 @@ class _HabitCompleteScreenState extends State<HabitCompleteScreen>
     );
 
     // Animation for the sunburst rotation
-    _rotationAnimation = AnimationController(
+    _rotationAnimationController = AnimationController(
       duration: Duration(seconds: 8),
       vsync: this,
     )..repeat();
@@ -66,6 +72,7 @@ class _HabitCompleteScreenState extends State<HabitCompleteScreen>
   @override
   void dispose() {
     _controller.dispose();
+    _rotationAnimationController.dispose();
     super.dispose();
   }
 
@@ -74,12 +81,12 @@ class _HabitCompleteScreenState extends State<HabitCompleteScreen>
     return Scaffold(
       body: Container(
         // The background gradient
-        decoration: const BoxDecoration(color: Color(0xFFFFC148)),
+        decoration: const BoxDecoration(color: Color(0xFF4E61F6)),
         child: Stack(
           children: [
             // Layer 1: The animated rotating sunburst
             RotationTransition(
-              turns: _rotationAnimation,
+              turns: _rotationAnimationController,
               child: CustomPaint(
                 painter: SunburstPainter(),
                 child: Container(),
@@ -123,7 +130,7 @@ class _HabitCompleteScreenState extends State<HabitCompleteScreen>
             Column(
               children: [
                 const Spacer(),
-                const SizedBox(height: 500), // Space for the trophy container
+                const Gap(height: 500), // Space for the trophy container
                 // The text content
                 const AppText(
                   text: 'Congratulations!',
@@ -131,54 +138,56 @@ class _HabitCompleteScreenState extends State<HabitCompleteScreen>
                   fontFamilyIndex: 3,
                   fontWeight: FontWeight.w700,
                   lineHeight: 1.70,
-                  color: Color(0xFFB24E00),
+                  color: AppColors.white,
                   letterSpacing: -1,
                 ),
-                Gap(height: 15,),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 40.0),
-                  child: Text(
-                    'You just completed your habit goal! This badge is a symbol of your commitment to yourself. Keep going and earn more badges along the way.',
+                Gap(height: 15),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 30.0),
+                  child: AppText(
+                    text: 'You just completed your habit goal!',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFFA16C04),
-                      height: 1.5,
-                    ),
+                    fontSize: AppSize.width(value: 24),
+                    color: AppColors.white,
+                    fontWeight: FontWeight.w800,
+                    fontFamilyIndex: 4,
+                    lineHeight: 1.5,
+                  ),
+                ),
+                Gap(height: 05),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 30.0),
+                  child: AppText(
+                    text:
+                        ' This badge is a symbol of your commitment to yourself. Keep going and earn more badges along the way.',
+                    textAlign: TextAlign.center,
+                    fontSize: AppSize.width(value: 14),
+                    color: AppColors.white,
+                    maxLines: 4,
+                    fontWeight: FontWeight.w500,
+                    fontFamilyIndex: 4,
+                    overflow: TextOverflow.ellipsis,
+                    lineHeight: 1.5,
                   ),
                 ),
                 const Spacer(),
 
                 // The "Next" button
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 50.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Restart the animation on tap for demo purposes
-                      if (_controller.isCompleted) {
-                        _controller.reset();
-                        _controller.forward();
-                      }
+                  padding: EdgeInsets.only(
+                    bottom: AppSize.height(value: 50),
+                    left: AppSize.width(value: 25),
+                    right: AppSize.width(value: 25),
+                  ),
+                  child: AppButton(
+                    title: "Next",
+                    titleColor: AppColors.black,
+                    backgroundColor: AppColors.white,
+                    borderradius: 15,
+                    onTap: () {
+                      // Navigate back to the previous screen
+                      Get.back();
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black87,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 100,
-                        vertical: 20,
-                      ),
-                      elevation: 5,
-                    ),
-                    child: const Text(
-                      'Next',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
                   ),
                 ),
               ],
@@ -197,7 +206,7 @@ class SunburstPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width * 2.5;
     final paint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.15)
+      ..color = Colors.white.withValues(alpha: 0.28)
       ..style = PaintingStyle.fill;
 
     const int rayCount = 08;

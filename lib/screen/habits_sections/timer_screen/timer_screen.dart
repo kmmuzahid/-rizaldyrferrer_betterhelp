@@ -139,7 +139,7 @@ class TimerScreen extends StatelessWidget {
               titleColor: AppColors.blue500,
               borderColor: AppColors.blue500,
               onTap: () {
-                Get.to(HabitCompleteScreen());
+                //Get.to(HabitCompleteScreen());
               },
               borderradius: 12,
             ),
@@ -191,7 +191,7 @@ class TimerScreen extends StatelessWidget {
                             },
                             icon: Icon(Icons.remove, color: AppColors.blue500),
                           ),
-                          Container(
+                          SizedBox(
                             width: 50,
                             child: AppText(
                               text: selectedMinutes.toString(),
@@ -234,7 +234,7 @@ class TimerScreen extends StatelessWidget {
                             },
                             icon: Icon(Icons.remove, color: AppColors.blue500),
                           ),
-                          Container(
+                          SizedBox(
                             width: 50,
                             child: AppText(
                               text: selectedSeconds.toString(),

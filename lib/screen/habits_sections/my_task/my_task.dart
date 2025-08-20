@@ -4,6 +4,7 @@ import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
+import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -95,6 +96,21 @@ class MyTaskScreeen extends StatelessWidget {
                     AppString.strechEverydayfor,
                   ),
                 ],
+              ),
+            ),
+            Gap(height: 20),
+            Obx(
+              () => AppButton(
+                title: controller.isAllCompleted
+                    ? "Mark As Completed"
+                    : "Complete All Tasks (${(controller.completionPercentage * 100).toInt()}%)",
+                backgroundColor: controller.isAllCompleted
+                    ? AppColors.primary500
+                    : AppColors.grey400,
+                titleColor: controller.isAllCompleted
+                    ? AppColors.white
+                    : AppColors.black,
+                onTap: () => controller.markAsCompleted(),
               ),
             ),
           ],

@@ -87,7 +87,7 @@ class ArticlesDetailsScreen extends StatelessWidget {
                 horizontal: AppSize.width(value: 20),
                 vertical: 8,
               ),
-              title: Container(
+              title: SizedBox(
                 width: double.infinity,
                 child: AppText(
                   text: "What's causing E. Coli Outbreaks? ",

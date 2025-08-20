@@ -31,6 +31,7 @@ import 'package:better_help/screen/questionnaries_screen/questionnaries_screen.d
 import 'package:better_help/screen/splash_screen/splash_screen.dart';
 import 'package:better_help/screen/subscription/subscription_and_payment.dart';
 import 'package:better_help/screen/supports_sections/main_supports/support_screen.dart';
+import 'package:better_help/widget/app_confeti/habit_complete_screen.dart';
 import 'package:get/get.dart';
 
 class AppRoute {
@@ -81,6 +82,9 @@ class AppRoute {
 
   //! Community Screen Route
   static const String creatingPost = "/creatingpost";
+
+  //! Congratulation Screen
+  static const String congratulationScreen = "/congratulationScreen";
 
   //! Get Pages for all the Screen
   static List<GetPage> appRoutes = [
@@ -312,6 +316,13 @@ class AppRoute {
     GetPage(
       name: AppRoute.termsAndConditionsScreen,
       page: () => TermsConditionsScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 400),
+    ),
+    //! congratulation screen
+    GetPage(
+      name: AppRoute.congratulationScreen,
+      page: () => CongratulationScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
     ),

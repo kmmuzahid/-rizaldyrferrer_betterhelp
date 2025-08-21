@@ -6,7 +6,6 @@ import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
-import 'package:better_help/widget/app_confeti/habit_complete_screen.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -53,16 +52,11 @@ class TimerScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SvgPicture.asset(
-                  AppIcons.timerAppSchedule,
-                  height: AppSize.height(value: 45),
-                  width: AppSize.width(value: 45),
-                ),
+                SvgPicture.asset(AppIcons.timerAppSchedule),
               ],
             ),
-            Gap(height: 60),
             SizedBox(
-              height: AppSize.height(value: 230),
+              height: AppSize.height(value: 280),
               width: AppSize.width(value: 230),
               child: Stack(
                 alignment: Alignment.center,
@@ -94,11 +88,15 @@ class TimerScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Gap(height: 40),
+            Gap(height: 20),
             Obx(
               () => AppButton(
                 title: controller.isRunning.value ? "Pause" : "Start",
+                padding: EdgeInsets.symmetric(
+                  vertical: AppSize.height(value: 05),
+                ),
                 backgroundColor: AppColors.blue500,
+                fontSize: AppSize.width(value: 14),
                 titleColor: AppColors.white,
                 onTap: () {
                   if (controller.isRunning.value) {
@@ -113,6 +111,10 @@ class TimerScreen extends StatelessWidget {
             Gap(height: 20),
             AppButton(
               title: "Reset",
+              padding: EdgeInsets.symmetric(
+                vertical: AppSize.height(value: 05),
+              ),
+              fontSize: AppSize.width(value: 14),
               backgroundColor: AppColors.white,
               titleColor: AppColors.black,
               borderColor: AppColors.black,
@@ -124,6 +126,10 @@ class TimerScreen extends StatelessWidget {
             Gap(height: 20),
             AppButton(
               title: "Set Custom Time",
+              padding: EdgeInsets.symmetric(
+                vertical: AppSize.height(value: 05),
+              ),
+              fontSize: AppSize.width(value: 14),
               backgroundColor: AppColors.white,
               titleColor: AppColors.blue500,
               borderColor: AppColors.blue500,

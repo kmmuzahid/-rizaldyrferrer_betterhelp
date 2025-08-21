@@ -35,7 +35,9 @@ class SubscriptionAndPayment extends StatelessWidget {
                 child: InkWell(
                   splashColor: Colors.transparent,
                   highlightColor: Colors.transparent,
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed(AppRoute.signupScreen); 
+                  },
                   child: AppText(
                     text: AppString.skip,
                     fontSize: AppSize.width(value: 20),
@@ -737,7 +739,7 @@ Widget _buildDateContainer(
     child: Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSize.width(value: 8),
-        vertical: AppSize.height(value: 10),
+        vertical: AppSize.height(value: 01),
       ),
       decoration: BoxDecoration(
         color: isSelected

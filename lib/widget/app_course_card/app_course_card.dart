@@ -43,8 +43,9 @@ class CourseCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        height: AppSize.height(value: 200),
         width: width ?? double.infinity,
-        margin: margin ?? EdgeInsets.only(right: AppSize.width(value: 16)),
+        //margin: margin ?? EdgeInsets.only(right: AppSize.width(value: 16)),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(12),
@@ -59,7 +60,10 @@ class CourseCard extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [_buildImageSection(), _buildContentSection()],
+          children: [
+            _buildImageSection(),
+            Flexible(child: _buildContentSection()),
+          ],
         ),
       ),
     );
@@ -73,7 +77,7 @@ class CourseCard extends StatelessWidget {
           child: imageUrl.isNotEmpty && imageUrl != "imageUrl"
               ? Image.asset(
                   imageUrl,
-                  height: AppSize.height(value: 140),
+                  height: AppSize.height(value: 120),
                   width: double.infinity,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
@@ -158,7 +162,7 @@ class CourseCard extends StatelessWidget {
 
   Widget _buildContentSection() {
     return Padding(
-      padding: EdgeInsets.all(12),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

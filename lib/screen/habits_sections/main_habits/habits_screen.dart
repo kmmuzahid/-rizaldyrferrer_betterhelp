@@ -181,9 +181,6 @@ class _HabitsScreenState extends State<HabitsScreen> {
             ),
             Gap(height: 16),
             Container(
-              // margin: EdgeInsets.symmetric(
-              //   horizontal: AppSize.width(value: 16),
-              // ),
               decoration: BoxDecoration(
                 color: AppColors.white,
                 borderRadius: BorderRadius.circular(16),
@@ -317,7 +314,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
               }
               return SizedBox(
                 height: AppSize.height(
-                  value: 200,
+                  value: 220,
                 ), // Fixed height for horizontal scroll
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
@@ -333,9 +330,8 @@ class _HabitsScreenState extends State<HabitsScreen> {
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       child: Container(
-                        width: AppSize.width(
-                          value: 300,
-                        ), // Fixed width for each container
+                        width: 300,
+
                         margin: EdgeInsets.only(
                           right: index < schedules.length - 1
                               ? AppSize.width(value: 12)
@@ -423,6 +419,10 @@ class _HabitsScreenState extends State<HabitsScreen> {
                 horizontal: AppSize.width(value: 20),
               ),
               child: IconAppButton(
+                padding: EdgeInsets.symmetric(
+                  vertical: AppSize.height(value: 12),
+                ),
+                height: AppSize.height(value: 50),
                 iconAlignment: CustomIconAlignment.left,
                 title: AppString.startTimer,
                 fontSize: AppSize.width(value: 16),
@@ -434,9 +434,12 @@ class _HabitsScreenState extends State<HabitsScreen> {
                 },
               ),
             ),
-            Gap(height: 100),
           ],
         ),
+      ),
+      bottomNavigationBar: Container(
+        height: AppSize.height(value: 85),
+        decoration: BoxDecoration(color: Colors.transparent),
       ),
     );
   }
@@ -447,7 +450,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(13),
+      padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: AppColors.white,
         border: Border.all(width: 0.87, color: const Color(0xFFF0F0F0)),
@@ -490,15 +493,14 @@ class _HabitsScreenState extends State<HabitsScreen> {
                 ),
                 SvgPicture.asset(
                   AppIcons.threedots,
-                  height: AppSize.height(value: 24),
-                  width: AppSize.width(value: 24),
+                  // height: AppSize.height(value: 24),
+                  // width: AppSize.width(value: 24),
                 ),
               ],
             ),
           ),
-          Gap(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Gap(height: 10),
+          Column(
             children: [
               Row(
                 children: [
@@ -513,6 +515,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
                   ),
                 ],
               ),
+              Gap(height: 08),
               Row(
                 children: [
                   SvgPicture.asset(AppIcons.scheduleTime),
@@ -523,16 +526,20 @@ class _HabitsScreenState extends State<HabitsScreen> {
                     fontSize: AppSize.width(value: 12),
                     fontWeight: FontWeight.w500,
                     color: AppColors.textPrimaryBlack,
+                    maxLines: 1,
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
             ],
           ),
-          Gap(height: 20),
+          Gap(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               AppButton(
+                height: AppSize.height(value: 36),
                 width: AppSize.width(value: 130),
                 title: AppString.startNow,
                 backgroundColor: AppColors.blue500,
@@ -543,7 +550,8 @@ class _HabitsScreenState extends State<HabitsScreen> {
                 },
               ),
               AppButton(
-                width: AppSize.width(value: 130),
+                height: AppSize.height(value: 35),
+                width: AppSize.width(value: 120),
                 title: AppString.talkTobhaa,
                 fontSize: AppSize.width(value: 12),
                 backgroundColor: AppColors.white50,

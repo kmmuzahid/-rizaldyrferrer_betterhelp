@@ -22,11 +22,12 @@ class BookingsSessionsScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Gap(height: 30),
             ...List.generate(10, (index) {
               return Container(
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.all(10),
                 margin: EdgeInsets.only(bottom: AppSize.height(value: 15)),
                 decoration: ShapeDecoration(
                   color: Colors.white,
@@ -49,8 +50,8 @@ class BookingsSessionsScreen extends StatelessWidget {
                       children: [
                         Image.asset(
                           AppStaticImages.bookingImages,
-                          height: AppSize.height(value: 88),
-                          width: AppSize.width(value: 93),
+                          height: AppSize.height(value: 78),
+                          width: AppSize.width(value: 83),
                         ),
                         Gap(width: 13),
                         Column(
@@ -96,47 +97,50 @@ class BookingsSessionsScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Gap(height: 18),
+                    Gap(height: 10),
                     Container(
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSize.width(value: 05),
+                      ),
                       height: AppSize.height(value: 60),
-                      decoration: ShapeDecoration(
+                      decoration: BoxDecoration(
                         color: const Color(0xFFEAF5F7),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
+                        borderRadius: BorderRadius.circular(9.27),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AppText(
-                                text: 'Upcoming Sessions ',
-                                color: const Color(0xFF309AAD),
-                                fontSize: 16,
-                                fontFamilyIndex: 2,
-                                fontWeight: FontWeight.w500,
-                                letterSpacing: -0.35,
-                              ),
-                              Gap(height: 03),
-                              AppText(
-                                text: "10:00 AM Tues, 23rd June",
-                                fontFamilyIndex: 2,
-                                fontSize: AppSize.width(value: 12),
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF677294),
-                              ),
-                            ],
+                          Flexible(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                AppText(
+                                  text: 'Upcoming Sessions ',
+                                  color: const Color(0xFF309AAD),
+                                  fontSize: 16,
+                                  fontFamilyIndex: 2,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: -0.35,
+                                ),
+                                Gap(height: 03),
+                                AppText(
+                                  text: "10:00 AM Tues, 23rd June",
+                                  fontFamilyIndex: 2,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xFF677294),
+                                ),
+                              ],
+                            ),
                           ),
                           AppButton(
                             title: "Set Reminder",
                             titleColor: AppColors.white,
-                            fontSize: AppSize.width(value: 14),
+                            padding: EdgeInsets.all(5),
+                            fontSize: 10,
                             backgroundColor: AppColors.primary500,
-                            height: AppSize.height(value: 36),
-                            width: AppSize.width(value: 110),
+                            height: AppSize.height(value: 30),
+                            width: AppSize.width(value: 100),
                             onTap: () {
                               AppSnackBar.message(
                                 "This Feature will implemented sooned",

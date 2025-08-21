@@ -125,7 +125,7 @@ class IconAppButton extends StatelessWidget {
                 children: [
                   if (icon != null && iconAlignment == CustomIconAlignment.left)
                     Padding(
-                      padding: EdgeInsets.only(right: 8.0),
+                      padding: EdgeInsets.only(right: 08.0),
                       child: _buildIconWidget(icon!),
                     ),
                   // Text and the space between the text and the icon

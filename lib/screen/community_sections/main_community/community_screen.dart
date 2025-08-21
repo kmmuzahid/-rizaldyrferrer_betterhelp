@@ -8,7 +8,9 @@ import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
-import 'package:better_help/widget/app_button/selectable_icon_app_button.dart';
+import 'package:better_help/widget/app_button/app_button_with_icon.dart';
+import 'package:better_help/widget/app_button/selectable_icon_app_button.dart'
+    hide CustomIconAlignment;
 import 'package:better_help/widget/app_comments_widget/app_comments_widget.dart';
 import 'package:better_help/widget/app_course_card/app_course_card.dart';
 import 'package:better_help/widget/app_post_card/app_post_card.dart';
@@ -99,39 +101,42 @@ class _CommunityScreenState extends State<CommunityScreen> {
                       children: [
                         GetBuilder<CommunityScreenController>(
                           builder: (controller) => Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              SelectableIconAppButton(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: AppSize.width(value: 10),
-                                  vertical: AppSize.height(value: 5.5),
-                                ),
-                                iconAlignment: CustomIconAlignment.left,
-                                icon: AppStaticImages.peerforum,
-                                height: AppSize.width(value: 36),
-                                width: AppSize.height(value: 165),
-                                selectedBackgroundColor: AppColors.t3,
-                                selectedTitleColor: AppColors.white,
+                              //! Peer Forum Button
+                              IconAppButton(
                                 title: "Peer Forum",
-                                backgroundColor:
-                                    controller.isTabSelected(
-                                      CommunityTab.peerForum,
-                                    )
-                                    ? AppColors.t3
-                                    : AppColors.white500,
+                                fontSize: 12,
+                                iconSize: 15,
                                 titleColor:
                                     controller.isTabSelected(
                                       CommunityTab.peerForum,
                                     )
                                     ? AppColors.white
                                     : AppColors.black,
+                                backgroundColor:
+                                    controller.isTabSelected(
+                                      CommunityTab.peerForum,
+                                    )
+                                    ? AppColors.t3
+                                    : AppColors.white500,
+                                borderColor: AppColors.grey100,
+                                borderRadius: 12,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppSize.width(value: 10),
+                                  vertical: AppSize.height(value: 5.5),
+                                ),
+                                height: AppSize.width(value: 36),
+                                width: AppSize.height(value: 165),
+                                icon: AppStaticImages.peerforum,
+                                iconAlignment: CustomIconAlignment.left,
+                                // Add this missing onTap callback
                                 onTap: () => controller.selectTab(
                                   CommunityTab.peerForum,
                                 ),
-                                borderColor: AppColors.grey100,
-                                borderRadius: 12,
                               ),
-                              SelectableIconAppButton(
+                              //! Article Button
+                              IconAppButton(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: AppSize.width(value: 10),
                                   vertical: AppSize.height(value: 5.5),
@@ -140,8 +145,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                 icon: AppStaticImages.communityArticle,
                                 height: AppSize.width(value: 36),
                                 width: AppSize.height(value: 165),
-                                selectedBackgroundColor: AppColors.t3,
-                                selectedTitleColor: AppColors.white,
+                                fontSize: 12,
+                                iconSize: 15,
                                 title: "Article",
                                 backgroundColor:
                                     controller.isTabSelected(
@@ -173,18 +178,18 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     //! Recent Button
-                                    SelectableIconAppButton(
+                                    IconAppButton(
                                       padding: EdgeInsets.symmetric(
                                         horizontal: AppSize.width(value: 08),
                                         vertical: AppSize.height(value: 5.5),
                                       ),
                                       iconAlignment: CustomIconAlignment.left,
                                       icon: AppStaticImages.communityRecent,
+                                      borderRadius: 12,
                                       height: AppSize.width(value: 36),
-                                      width: AppSize.height(value: 105),
-                                      selectedBackgroundColor:
-                                          AppColors.iconWarming,
-                                      selectedTitleColor: AppColors.black,
+                                      width: AppSize.height(value: 110),
+                                      fontSize: 12,
+                                      iconSize: 15,
                                       title: "Recent",
                                       backgroundColor:
                                           controller.isFilterSelected(
@@ -196,11 +201,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                       onTap: () => controller.selectFilter(
                                         ForumFilter.recent,
                                       ),
-                                      borderColor: AppColors.grey100,
-                                      borderRadius: 12,
                                     ),
                                     //! Highlight Button
-                                    SelectableIconAppButton(
+                                    IconAppButton(
                                       padding: EdgeInsets.symmetric(
                                         horizontal: AppSize.width(value: 10),
                                         vertical: AppSize.height(value: 5.5),
@@ -208,10 +211,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                       iconAlignment: CustomIconAlignment.left,
                                       icon: AppStaticImages.communityHighlight,
                                       height: AppSize.width(value: 36),
-                                      width: AppSize.height(value: 125),
-                                      selectedBackgroundColor:
-                                          AppColors.iconWarming,
-                                      selectedTitleColor: AppColors.black,
+                                      width: AppSize.height(value: 140),
+                                      fontSize: 12,
+                                      iconSize: 15,
                                       title: "Highlight",
                                       backgroundColor:
                                           controller.isFilterSelected(
@@ -227,7 +229,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                       borderRadius: 12,
                                     ),
                                     //! Popular Button
-                                    SelectableIconAppButton(
+                                    IconAppButton(
                                       padding: EdgeInsets.symmetric(
                                         horizontal: AppSize.width(value: 05),
                                         vertical: AppSize.height(value: 5.5),
@@ -235,10 +237,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                       iconAlignment: CustomIconAlignment.left,
                                       icon: AppStaticImages.communityRecent,
                                       height: AppSize.width(value: 36),
-                                      width: AppSize.height(value: 105),
-                                      selectedBackgroundColor:
-                                          AppColors.iconWarming,
-                                      selectedTitleColor: AppColors.black,
+                                      width: AppSize.height(value: 110),
+                                      fontSize: 12,
+                                      iconSize: 15,
                                       title: "Popular",
                                       backgroundColor:
                                           controller.isFilterSelected(
@@ -257,7 +258,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                 )
                               : SizedBox.shrink(),
                         ),
-                        Gap(height: 10),
+                        Gap(height: 03),
                       ],
                     ),
                   ),

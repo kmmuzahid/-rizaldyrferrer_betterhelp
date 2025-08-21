@@ -481,6 +481,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
           ),
         );
       }),
+      bottomNavigationBar: Container(
+        height: AppSize.height(value: 100),
+        decoration: BoxDecoration(color: Colors.transparent),
+      ),
     );
   }
 }

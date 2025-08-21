@@ -74,7 +74,7 @@ class BottomNavScreen extends StatelessWidget {
               ),
             ),
             confineToSafeArea: true,
-            navBarHeight: AppSize.height(value: 75),
+            navBarHeight: AppSize.height(value: 85),
             navBarStyle: NavBarStyle.style3,
             onItemSelected: (index) {
               // Clean up previous screen controllers before switching
@@ -137,14 +137,14 @@ class BottomNavScreen extends StatelessWidget {
       PersistentBottomNavBarItem(
         icon: SvgPicture.asset(
           AppIcons.habitsFill,
-          width: AppSize.width(value: 25),
-          height: AppSize.height(value: 25),
+          // width: AppSize.width(value: 25),
+          // height: AppSize.height(value: 25),
           colorFilter: ColorFilter.mode(AppColors.primary500, BlendMode.srcIn),
         ),
         inactiveIcon: SvgPicture.asset(
           AppIcons.habits,
-          width: AppSize.width(value: 25),
-          height: AppSize.height(value: 25),
+          // width: AppSize.width(value: 25),
+          // height: AppSize.height(value: 25),
           colorFilter: ColorFilter.mode(
             AppColors.secondary500,
             BlendMode.srcIn,
@@ -158,14 +158,14 @@ class BottomNavScreen extends StatelessWidget {
       PersistentBottomNavBarItem(
         icon: SvgPicture.asset(
           AppIcons.learnFill,
-          width: AppSize.width(value: 25),
-          height: AppSize.height(value: 25),
+          // width: AppSize.width(value: 25),
+          // height: AppSize.height(value: 25),
           colorFilter: ColorFilter.mode(AppColors.primary500, BlendMode.srcIn),
         ),
         inactiveIcon: SvgPicture.asset(
           AppIcons.learn,
-          width: AppSize.width(value: 25),
-          height: AppSize.height(value: 25),
+          // width: AppSize.width(value: 25),
+          // height: AppSize.height(value: 25),
           colorFilter: ColorFilter.mode(
             AppColors.secondary500,
             BlendMode.srcIn,
@@ -179,14 +179,14 @@ class BottomNavScreen extends StatelessWidget {
       PersistentBottomNavBarItem(
         icon: SvgPicture.asset(
           AppIcons.supportFill,
-          width: AppSize.width(value: 25),
-          height: AppSize.height(value: 25),
+          // width: AppSize.width(value: 25),
+          // height: AppSize.height(value: 25),
           colorFilter: ColorFilter.mode(AppColors.primary500, BlendMode.srcIn),
         ),
         inactiveIcon: SvgPicture.asset(
           AppIcons.support,
-          width: AppSize.width(value: 25),
-          height: AppSize.height(value: 25),
+          // width: AppSize.width(value: 25),
+          // height: AppSize.height(value: 25),
           colorFilter: ColorFilter.mode(
             AppColors.secondary500,
             BlendMode.srcIn,
@@ -200,14 +200,14 @@ class BottomNavScreen extends StatelessWidget {
       PersistentBottomNavBarItem(
         icon: SvgPicture.asset(
           AppIcons.progressFill,
-          width: AppSize.width(value: 25),
-          height: AppSize.height(value: 25),
+          // width: AppSize.width(value: 25),
+          // height: AppSize.height(value: 25),
           colorFilter: ColorFilter.mode(AppColors.primary500, BlendMode.srcIn),
         ),
         inactiveIcon: SvgPicture.asset(
           AppIcons.progress,
-          width: AppSize.width(value: 25),
-          height: AppSize.height(value: 25),
+          // width: AppSize.width(value: 25),
+          // height: AppSize.height(value: 25),
           colorFilter: ColorFilter.mode(
             AppColors.secondary500,
             BlendMode.srcIn,
@@ -221,14 +221,14 @@ class BottomNavScreen extends StatelessWidget {
       PersistentBottomNavBarItem(
         icon: SvgPicture.asset(
           AppIcons.communityFill,
-          width: AppSize.width(value: 25),
-          height: AppSize.height(value: 25),
+          // width: AppSize.width(value: 25),
+          // height: AppSize.height(value: 25),
           colorFilter: ColorFilter.mode(AppColors.primary500, BlendMode.srcIn),
         ),
         inactiveIcon: SvgPicture.asset(
           AppIcons.community,
-          width: AppSize.width(value: 25),
-          height: AppSize.height(value: 25),
+          // width: AppSize.width(value: 25),
+          // height: AppSize.height(value: 25),
           colorFilter: ColorFilter.mode(
             AppColors.secondary500,
             BlendMode.srcIn,

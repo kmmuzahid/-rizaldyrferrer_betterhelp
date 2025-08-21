@@ -7,13 +7,10 @@ import 'package:get_storage/get_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
   // Initialize GetStorage
   await GetStorage.init();
-  
   // Initialize TimerService as a service
   Get.put(TimerService(), permanent: true);
-  
   DeviceUtils.lockDevicePortrait();
   runApp(const MyApp());
 }

@@ -166,7 +166,7 @@ class _SupportScreenState extends State<SupportScreen> {
         ),
       ),
       bottomNavigationBar: Container(
-        height: AppSize.height(value: 70),
+        height: AppSize.height(value: 85),
         decoration: BoxDecoration(color: Colors.transparent),
       ),
     );

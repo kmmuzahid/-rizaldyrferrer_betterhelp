@@ -399,7 +399,8 @@ class _LearnScreenState extends State<LearnScreen> {
                 itemCount: controller.trendingCourseImages.length,
                 itemBuilder: (context, index) {
                   return Container(
-                    width: AppSize.width(value: 240),
+                    width: 240,
+                    height: AppSize.height(value: 300),
                     margin: EdgeInsets.only(right: AppSize.width(value: 16)),
                     child: CourseCard(
                       onTap: () {},
@@ -415,7 +416,7 @@ class _LearnScreenState extends State<LearnScreen> {
               ),
             ),
           ),
-          SliverToBoxAdapter(child: Gap(height: 100)),
+          SliverToBoxAdapter(child: SizedBox(height: 100)),
         ],
       ),
     );

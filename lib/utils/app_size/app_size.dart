@@ -8,16 +8,15 @@ class AppSize {
   static const double _xdWidth = 375;
 
   static double height({required num value}) {
-    double percentage = (value / _xdHeight * 100).roundToDouble() / 100;
+    double percentage = (value / _xdHeight * 100) / 100;
     return size.height * percentage;
   }
 
   static double width({required num value}) {
-    double percentage = (value / _xdWidth * 100).roundToDouble() / 100;
+    double percentage = (value / _xdWidth * 100) / 100;
     return size.width * percentage;
   }
 }
-
 
 class ResponsiveUtils {
   ResponsiveUtils._();

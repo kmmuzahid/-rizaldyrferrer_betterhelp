@@ -102,7 +102,7 @@ class BookingsSessionsScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                         horizontal: AppSize.width(value: 05),
                       ),
-                      height: AppSize.height(value: 60),
+                      height: AppSize.height(value: 65),
                       decoration: BoxDecoration(
                         color: const Color(0xFFEAF5F7),
                         borderRadius: BorderRadius.circular(9.27),

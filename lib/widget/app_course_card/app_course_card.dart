@@ -20,6 +20,7 @@ class CourseCard extends StatelessWidget {
   final bool isFavorited;
   final double? width;
   final EdgeInsets? margin;
+  final double? height;
 
   const CourseCard({
     super.key,
@@ -36,16 +37,22 @@ class CourseCard extends StatelessWidget {
     this.isFavorited = false,
     this.width,
     this.margin,
+    this.height,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Use custom height if provided, otherwise use default based on card type
+    double cardHeight =
+        height ??
+        (cardType == CardType.article
+            ? AppSize.height(value: 230) // Default height for articles
+            : AppSize.height(value: 200)); // Default height for courses
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: AppSize.height(value: 200),
+        height: cardHeight,
         width: width ?? double.infinity,
-        //margin: margin ?? EdgeInsets.only(right: AppSize.width(value: 16)),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(12),

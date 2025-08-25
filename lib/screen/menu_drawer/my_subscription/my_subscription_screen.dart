@@ -48,7 +48,6 @@ class MySubscriptionScreen extends StatelessWidget {
             ),
             Gap(height: 12),
             Container(
-              height: AppSize.height(value: 276),
               padding: const EdgeInsets.all(20),
               decoration: ShapeDecoration(
                 color: Colors.white /* Surface-Color-surface-white */,
@@ -150,6 +149,7 @@ class MySubscriptionScreen extends StatelessWidget {
               backgroundColor: AppColors.primary500,
               titleColor: AppColors.white,
               borderradius: 10,
+              fontSize: AppSize.height(value: 16),
               onTap: () {},
             ),
             Gap(height: 16),
@@ -159,6 +159,7 @@ class MySubscriptionScreen extends StatelessWidget {
               titleColor: Color(0xFFEE443F),
               borderradius: 10,
               borderColor: Color(0xFFEE443F),
+              fontSize: AppSize.height(value: 16),
               onTap: () {
                 cancelSubscription(context);
               },
@@ -213,7 +214,7 @@ Future<void> cancelSubscription(BuildContext context) {
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                        ),
+                  ),
                   Gap(height: 20),
                   _buildStep(
                     icon: AppIcons.mySubscriptionConfirm,

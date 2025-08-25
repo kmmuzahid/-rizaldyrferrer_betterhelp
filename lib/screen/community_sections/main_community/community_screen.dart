@@ -3,14 +3,13 @@ import 'package:better_help/screen/community_sections/main_community/controller/
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
+import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_button/app_button_with_icon.dart';
-import 'package:better_help/widget/app_button/selectable_icon_app_button.dart'
-    hide CustomIconAlignment;
 import 'package:better_help/widget/app_comments_widget/app_comments_widget.dart';
 import 'package:better_help/widget/app_course_card/app_course_card.dart';
 import 'package:better_help/widget/app_post_card/app_post_card.dart';
@@ -82,12 +81,15 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 builder: (controller) => SliverAppBar(
                   pinned: true,
                   expandedHeight: controller.selectedTab == CommunityTab.article
-                      ? AppSize.height(value: 70)
-                      : AppSize.height(value: 115),
+                      ? AppSize.height(value: 80)
+                      : AppSize.height(value: 120),
                   collapsedHeight:
                       controller.selectedTab == CommunityTab.article
-                      ? AppSize.height(value: 70)
-                      : AppSize.height(value: 115),
+                      ? AppSize.height(value: 80)
+                      : AppSize.height(value: 120),
+                  toolbarHeight: controller.selectedTab == CommunityTab.article
+                      ? AppSize.height(value: 80)
+                      : AppSize.height(value: 120),
                   backgroundColor: AppColors.white,
                   automaticallyImplyLeading: false,
                   flexibleSpace: Container(
@@ -101,7 +103,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                       children: [
                         GetBuilder<CommunityScreenController>(
                           builder: (controller) => Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               //! Peer Forum Button
                               IconAppButton(
@@ -211,7 +213,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                       iconAlignment: CustomIconAlignment.left,
                                       icon: AppStaticImages.communityHighlight,
                                       height: AppSize.width(value: 36),
-                                      width: AppSize.height(value: 140),
+                                      width: AppSize.height(value: 134),
                                       fontSize: 12,
                                       iconSize: 15,
                                       title: "Highlight",
@@ -264,20 +266,118 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   ),
                 ),
               ),
+              //! Fixed: Move GetBuilder inside the sliver content
               GetBuilder<CommunityScreenController>(
-                builder: (controller) =>
-                    _buildContent(controller, articleImages),
+                builder: (controller) {
+                  appLog(
+                    'Building content for tab: ${controller.selectedTab}',
+                  ); // Debug log
+
+                  if (controller.selectedTab == CommunityTab.article) {
+                    appLog(
+                      'Rendering articles list with ${articleImages.length} items',
+                    ); // Debug log
+                    // Show articles when Article tab is selected
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        // Add null safety checks
+                        if (index >= articleImages.length) {
+                          return SizedBox.shrink();
+                        }
+
+                        appLog(
+                          'Building article item at index: $index',
+                        ); // Debug log
+
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSize.width(value: 20),
+                            vertical: AppSize.height(value: 8),
+                          ),
+                          child: CourseCard(
+                            onTap: () {
+                              Get.toNamed(AppRoute.articleScreen);
+                            },
+                            margin: EdgeInsets.only(bottom: 08),
+                            height: AppSize.height(value: 245),
+                            cardType: CardType.article,
+                            title:
+                                "The Science Behind Mindfulness Meditation ${index + 1}",
+                            instructor: "Dr Rizal Dy Ferrer",
+                            timeToread: "5 minutes to read",
+                            date: "12 Aug, 2024",
+                            imageUrl:
+                                articleImages[index % articleImages.length],
+                          ),
+                        );
+                      }, childCount: articleImages.length),
+                    );
+                  } else {
+                    appLog(
+                      'Rendering posts list with 10 items for filter: ${controller.selectedFilter}',
+                    ); // Debug log
+                    // Show posts for Peer Forum with different content based on filter
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          // Add null safety check
+                          if (index >= 10) {
+                            return SizedBox.shrink();
+                          }
+
+                          String postText;
+                          switch (controller.selectedFilter) {
+                            case ForumFilter.recent:
+                              postText =
+                                  AppString.demoPost ??
+                                  "Default recent post text";
+                              break;
+                            case ForumFilter.highlight:
+                              postText =
+                                  AppString.demoHighLightPost ??
+                                  "Default highlight post text";
+                              break;
+                            case ForumFilter.popular:
+                              postText =
+                                  AppString.demoPopularPost ??
+                                  "Default popular post text";
+                              break;
+                          }
+
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppSize.width(value: 20),
+                              vertical: AppSize.height(value: 8),
+                            ),
+                            child: SocialMediaPostCard(
+                              postText: postText,
+                              userName: "User ${index + 1}",
+                              userLocation: "Dhaka, Bangladesh",
+                              profileImage: AppStaticImages.postProfile,
+                              likesCount: 10 + index,
+                              commentsCount: 5 + index,
+                              onCommentTap: () {
+                                showCommentsBottomSheet();
+                              },
+                            ),
+                          );
+                        },
+                        childCount: 10, // Show 10 posts
+                      ),
+                    );
+                  }
+                },
               ),
               GetBuilder<CommunityScreenController>(
                 builder: (controller) => SliverToBoxAdapter(
                   child: controller.selectedTab == CommunityTab.article
-                      ? Gap(height: 70)
-                      : Gap(height: 120),
+                      ? Gap(height: 80)
+                      : Gap(height: 130),
                 ),
-              ), // Extra space for fixed button
+              ), //! Extra space for fixed button
             ],
           ),
-          // Fixed Create Post Button at bottom (only for Peer Forum)
+          //! Fixed Create Post Button at bottom (only for Peer Forum)
           GetBuilder<CommunityScreenController>(
             builder: (controller) =>
                 controller.selectedTab == CommunityTab.peerForum
@@ -310,6 +410,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                           titleColor: AppColors.white,
                           height: AppSize.height(value: 40),
                           borderradius: 12,
+                          fontSize: AppSize.width(value: 12),
                         ),
                       ),
                     ),
@@ -319,76 +420,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
         ],
       ),
     );
-  }
-
-  Widget _buildContent(
-    CommunityScreenController controller,
-    List<String> articleImages,
-  ) {
-    if (controller.selectedTab == CommunityTab.article) {
-      // Show articles when Article tab is selected
-      return SliverList(
-        delegate: SliverChildBuilderDelegate((context, index) {
-          return Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppSize.width(value: 20),
-              vertical: AppSize.height(value: 8),
-            ),
-            child: CourseCard(
-              onTap: () {
-                Get.toNamed(AppRoute.articleScreen);
-              },
-              margin: EdgeInsets.only(bottom: 08),
-              cardType: CardType.article,
-              title: "The Science Behind Mindfulness Meditation",
-              instructor: "Dr Rizal Dy Ferrer",
-              timeToread: "5 minutes to read",
-              date: "12 Aug, 2024",
-              imageUrl: articleImages[index % articleImages.length],
-            ),
-          );
-        }, childCount: articleImages.length),
-      );
-    } else {
-      // Show posts for Peer Forum with different content based on filter
-      String postText;
-      switch (controller.selectedFilter) {
-        case ForumFilter.recent:
-          postText = AppString.demoPost;
-          break;
-        case ForumFilter.highlight:
-          postText = AppString.demoHighLightPost;
-          break;
-        case ForumFilter.popular:
-          postText = AppString.demoPopularPost;
-          break;
-      }
-
-      return SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            return Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSize.width(value: 20),
-                vertical: AppSize.height(value: 8),
-              ),
-              child: SocialMediaPostCard(
-                postText: postText,
-                userName: "User ${index + 1}",
-                userLocation: "Dhaka, Bangladesh",
-                profileImage: AppStaticImages.postProfile,
-                likesCount: 10 + index,
-                commentsCount: 5 + index,
-                onCommentTap: () {
-                  showCommentsBottomSheet();
-                },
-              ),
-            );
-          },
-          childCount: 10, // Show 10 posts
-        ),
-      );
-    }
   }
 
   void showCommentsBottomSheet() {

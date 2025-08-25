@@ -28,42 +28,63 @@ class CommunityScreenController extends GetxController {
   // Method to select tab (Peer Forum or Article)
   void selectTab(CommunityTab tab) {
     // Prevent multiple simultaneous updates
-    if (_isUpdating || selectedTab == tab) return;
+    if (_isUpdating || selectedTab == tab) {
+      appLog('Tab selection ignored - already updating or same tab');
+      return;
+    }
     
     _isUpdating = true;
-    appLog('Selecting tab: $tab');
+    appLog('Selecting tab: $tab (from: $selectedTab)');
     selectedTab = tab;
     // Reset filter to recent when switching tabs
     selectedFilter = ForumFilter.recent;
     appLog('Tab selected: $selectedTab, Filter reset to: $selectedFilter');
     
-    // Use post-frame callback to ensure update happens after current frame
+    // Force immediate update for tab switching
+    update();
+    
+    // Use post-frame callback to reset the updating flag
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _isUpdating = false;
-      update();
+      appLog('Tab update completed, _isUpdating reset to false');
     });
   }
 
   // Method to select filter (Recent, Highlight, Popular)
   void selectFilter(ForumFilter filter) {
     // Prevent multiple simultaneous updates
-    if (_isUpdating || selectedFilter == filter) return;
+    if (_isUpdating || selectedFilter == filter) {
+      appLog('Filter selection ignored - already updating or same filter');
+      return;
+    }
     
     _isUpdating = true;
-    appLog('Selecting filter: $filter');
+    appLog('Selecting filter: $filter (from: $selectedFilter)');
     selectedFilter = filter;
     appLog('Filter selected: $selectedFilter');
     
-    // Use post-frame callback to ensure update happens after current frame
+    // Force immediate update for filter switching
+    update();
+    
+    // Use post-frame callback to reset the updating flag
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _isUpdating = false;
-      update();
+      appLog('Filter update completed, _isUpdating reset to false');
     });
   }
 
   // Helper methods to check current selections
-  bool isTabSelected(CommunityTab tab) => selectedTab == tab;
-  bool isFilterSelected(ForumFilter filter) => selectedFilter == filter;
+  bool isTabSelected(CommunityTab tab) {
+    bool result = selectedTab == tab;
+    appLog('isTabSelected($tab): $result (current: $selectedTab)');
+    return result;
+  }
+  
+  bool isFilterSelected(ForumFilter filter) {
+    bool result = selectedFilter == filter;
+    appLog('isFilterSelected($filter): $result (current: $selectedFilter)');
+    return result;
+  }
 
   @override
   void onClose() {

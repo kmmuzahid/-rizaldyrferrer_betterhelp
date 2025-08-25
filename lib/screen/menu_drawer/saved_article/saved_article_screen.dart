@@ -38,14 +38,18 @@ class SavedArticleScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
         child: Column(
           children: List.generate(articleImages.length, (index) {
-            return CourseCard(
-              margin: EdgeInsets.only(bottom: 10),
-              cardType: CardType.article,
-              title: "The Science Behind Mindfulness Meditation",
-              instructor: "Dr Rizal Dy Ferrer",
-              timeToread: "5 minutes to read",
-              date: "12 Aug, 2024",
-              imageUrl: articleImages[index],
+            return Padding(
+              padding: EdgeInsets.only(bottom: AppSize.height(value: 12)),
+              child: CourseCard(
+                margin: EdgeInsets.only(bottom: 10),
+                cardType: CardType.article,
+                height: AppSize.height(value: 245),
+                title: "The Science Behind Mindfulness Meditation",
+                instructor: "Dr Rizal Dy Ferrer",
+                timeToread: "5 minutes to read",
+                date: "12 Aug, 2024",
+                imageUrl: articleImages[index],
+              ),
             );
           }),
         ),

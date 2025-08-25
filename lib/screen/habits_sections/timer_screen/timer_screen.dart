@@ -139,16 +139,17 @@ class TimerScreen extends StatelessWidget {
               borderradius: 12,
             ),
             Gap(height: 30),
-            AppButton(
-              title: "Set Custom Time",
-              backgroundColor: AppColors.white,
-              titleColor: AppColors.blue500,
-              borderColor: AppColors.blue500,
-              onTap: () {
-                //Get.to(HabitCompleteScreen());
-              },
-              borderradius: 12,
-            ),
+
+            // AppButton(
+            //   title: "Set Custom Time",
+            //   backgroundColor: AppColors.white,
+            //   titleColor: AppColors.blue500,
+            //   borderColor: AppColors.blue500,
+            //   onTap: () {
+            //     //Get.to(HabitCompleteScreen());
+            //   },
+            //   borderradius: 12,
+            // ),
           ],
         ),
       ),
@@ -168,6 +169,7 @@ class TimerScreen extends StatelessWidget {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
+              backgroundColor: AppColors.white,
               title: AppText(
                 text: "Set Custom Time",
                 fontSize: AppSize.width(value: 18),

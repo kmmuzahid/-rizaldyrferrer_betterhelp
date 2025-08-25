@@ -38,13 +38,15 @@ class ArticlesDetailsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Gap(height: 20),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Image.asset(
-                      AppStaticImages.habits04,
-                      height: AppSize.height(value: 250),
+                  Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Image.asset(
+                        AppStaticImages.habits04,
+                        height: AppSize.height(value: 250),
+                      ),
                     ),
                   ),
                   Gap(height: 12),
@@ -68,7 +70,7 @@ class ArticlesDetailsScreen extends StatelessWidget {
             backgroundColor: AppColors.white,
             surfaceTintColor: AppColors.white,
             elevation: 2,
-            shadowColor: Colors.grey.withOpacity(0.3),
+            shadowColor: Colors.grey.withValues(alpha: 0.3),
             expandedHeight: AppSize.height(value: 100),
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
@@ -173,21 +175,25 @@ class ArticlesDetailsScreen extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: Container(
-        height: AppSize.height(value: 60),
-        padding: EdgeInsets.only(bottom: 20, top: 05),
+        height: AppSize.height(value: 80),
         decoration: BoxDecoration(color: AppColors.white),
         child: Obx(
-          () => AppButton(
-            title: controller.isLoading.value ? "Saving..." : "Saved Articles",
-            titleColor: AppColors.white,
-            backgroundColor: controller.isLoading.value
-                ? AppColors.primary500.withValues(alpha: 0.7)
-                : AppColors.primary500,
-            onTap: controller.isLoading.value
-                ? null
-                : controller.toggleSaveArticle,
-            fontSize: AppSize.width(value: 12),
-            height: AppSize.height(value: 48),
+          () => Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: AppButton(
+              title: controller.isLoading.value
+                  ? "Saving..."
+                  : "Saved Articles",
+              titleColor: AppColors.white,
+              backgroundColor: controller.isLoading.value
+                  ? AppColors.primary500.withValues(alpha: 0.7)
+                  : AppColors.primary500,
+              onTap: controller.isLoading.value
+                  ? null
+                  : controller.toggleSaveArticle,
+              fontSize: AppSize.width(value: 12),
+              height: AppSize.height(value: 48),
+            ),
           ),
         ),
       ),

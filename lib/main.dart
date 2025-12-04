@@ -1,8 +1,6 @@
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/service/timer_service/timer_service.dart';
 import 'package:better_help/widget/app_deviceutils/app_device_utils.dart';
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -14,9 +12,7 @@ void main() async {
   // Initialize TimerService as a service
   Get.put(TimerService(), permanent: true);
   DeviceUtils.lockDevicePortrait();
-  runApp(
-    DevicePreview(enabled: !kReleaseMode, builder: (context) => const MyApp(),),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -25,8 +21,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       useInheritedMediaQuery: true,
-      locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
       defaultTransition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 200),

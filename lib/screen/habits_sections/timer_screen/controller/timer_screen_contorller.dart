@@ -52,6 +52,7 @@ class TimerScreenController extends GetxController
 
     //! Listen to timer service changes
     _progressWorker = ever(_timerService.remainingSeconds, (int remaining) {
+      // ignore: invalid_use_of_protected_member
       if (_valueNotifier != null && !_valueNotifier!.hasListeners) {
         //! ValueNotifier has been disposed, don't update
         return;

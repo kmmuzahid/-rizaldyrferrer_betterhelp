@@ -105,7 +105,7 @@ class _ModernChatWidgetState extends State<ModernChatWidget>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.primary500 ?? widget.primaryColor,
+        color: AppColors.primary500,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(12),
           topRight: Radius.circular(12),

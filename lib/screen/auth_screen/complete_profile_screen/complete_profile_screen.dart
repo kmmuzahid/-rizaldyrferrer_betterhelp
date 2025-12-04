@@ -137,7 +137,7 @@ class CompleteProfileScreen extends StatelessWidget {
                             ),
                             borderRadius: BorderRadius.circular(8),
                             color: controller.selectedGender.value == 'Male'
-                                ? AppColors.blue900.withOpacity(0.1)
+                                ? AppColors.blue900.withValues(alpha: 0.1)
                                 : AppColors.white,
                           ),
                           child: Center(
@@ -171,7 +171,7 @@ class CompleteProfileScreen extends StatelessWidget {
                             ),
                             borderRadius: BorderRadius.circular(8),
                             color: controller.selectedGender.value == 'Female'
-                                ? AppColors.blue900.withOpacity(0.1)
+                                ? AppColors.blue900.withValues(alpha: .1)
                                 : AppColors.white,
                           ),
                           child: Center(

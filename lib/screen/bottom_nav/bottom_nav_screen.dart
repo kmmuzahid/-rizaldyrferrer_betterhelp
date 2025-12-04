@@ -11,6 +11,7 @@ import 'package:better_help/screen/progress_sections/main_progress/controller/pr
 import 'package:better_help/screen/supports_sections/main_supports/support_screen.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
+import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +118,7 @@ class BottomNavScreen extends StatelessWidget {
       }
     } catch (e) {
       // Ignore cleanup errors
-      print('Controller cleanup error: $e');
+      appLog('Controller cleanup error: $e');
     }
   }
 

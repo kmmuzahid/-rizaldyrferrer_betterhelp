@@ -328,19 +328,13 @@ class _CommunityScreenState extends State<CommunityScreen> {
                           String postText;
                           switch (controller.selectedFilter) {
                             case ForumFilter.recent:
-                              postText =
-                                  AppString.demoPost ??
-                                  "Default recent post text";
+                              postText = AppString.demoPost;
                               break;
                             case ForumFilter.highlight:
-                              postText =
-                                  AppString.demoHighLightPost ??
-                                  "Default highlight post text";
+                              postText = AppString.demoHighLightPost;
                               break;
                             case ForumFilter.popular:
-                              postText =
-                                  AppString.demoPopularPost ??
-                                  "Default popular post text";
+                              postText = AppString.demoPopularPost;
                               break;
                           }
 

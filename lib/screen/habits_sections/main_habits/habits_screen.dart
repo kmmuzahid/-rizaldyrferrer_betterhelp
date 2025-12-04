@@ -438,7 +438,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
         ),
       ),
       bottomNavigationBar: Container(
-        height: AppSize.height(value: 85),
+        height: AppSize.height(value: 110),
         decoration: BoxDecoration(color: Colors.transparent),
       ),
     );
@@ -457,61 +457,70 @@ class _HabitsScreenState extends State<HabitsScreen> {
         borderRadius: BorderRadius.circular(10.39),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppSize.width(value: 13),
-              vertical: AppSize.height(value: 10),
-            ),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(7),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppText(
-                        text: schedule['title'],
-                        fontFamilyIndex: 2,
-                        fontSize: AppSize.width(value: 14),
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.grey500,
-                      ),
-                      AppText(
-                        text: schedule['subtitle'],
-                        fontFamilyIndex: 2,
-                        fontSize: AppSize.width(value: 12),
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.primary900,
-                      ),
-                    ],
+          Flexible(
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSize.width(value: 13),
+                vertical: AppSize.height(value: 10),
+              ),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(7),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AppText(
+                          text: schedule['title'],
+                          fontFamilyIndex: 2,
+                          fontSize: AppSize.width(value: 14),
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.grey500,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        AppText(
+                          text: schedule['subtitle'],
+                          fontFamilyIndex: 2,
+                          fontSize: AppSize.width(value: 12),
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.primary900,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SvgPicture.asset(
-                  AppIcons.threedots,
-                  // height: AppSize.height(value: 24),
-                  // width: AppSize.width(value: 24),
-                ),
-              ],
+                  SvgPicture.asset(AppIcons.threedots),
+                ],
+              ),
             ),
           ),
           Gap(height: 10),
           Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 children: [
                   SvgPicture.asset(AppIcons.minuteMeditation),
                   Gap(width: 4),
-                  AppText(
-                    text: schedule['duration'],
-                    fontFamilyIndex: 2,
-                    fontSize: AppSize.width(value: 12),
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.textPrimaryBlack,
+                  Expanded(
+                    child: AppText(
+                      text: schedule['duration'],
+                      fontFamilyIndex: 2,
+                      fontSize: AppSize.width(value: 12),
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textPrimaryBlack,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),
@@ -520,15 +529,17 @@ class _HabitsScreenState extends State<HabitsScreen> {
                 children: [
                   SvgPicture.asset(AppIcons.scheduleTime),
                   Gap(width: 4),
-                  AppText(
-                    text: schedule['time'],
-                    fontFamilyIndex: 2,
-                    fontSize: AppSize.width(value: 12),
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.textPrimaryBlack,
-                    maxLines: 1,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.ellipsis,
+                  Expanded(
+                    child: AppText(
+                      text: schedule['time'],
+                      fontFamilyIndex: 2,
+                      fontSize: AppSize.width(value: 12),
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textPrimaryBlack,
+                      maxLines: 1,
+                      textAlign: TextAlign.start,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),
@@ -538,27 +549,29 @@ class _HabitsScreenState extends State<HabitsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              AppButton(
-                height: AppSize.height(value: 36),
-                width: AppSize.width(value: 130),
-                title: AppString.startNow,
-                backgroundColor: AppColors.blue500,
-                fontSize: AppSize.width(value: 12),
-                titleColor: AppColors.white,
-                onTap: () {
-                  // Handle start now action
-                },
+              Flexible(
+                child: AppButton(
+                  height: AppSize.height(value: 36),
+                  width: AppSize.width(value: 130),
+                  title: AppString.startNow,
+                  backgroundColor: AppColors.blue500,
+                  fontSize: AppSize.width(value: 12),
+                  titleColor: AppColors.white,
+                  onTap: () {},
+                ),
               ),
-              AppButton(
-                height: AppSize.height(value: 35),
-                width: AppSize.width(value: 120),
-                title: AppString.talkTobhaa,
-                fontSize: AppSize.width(value: 12),
-                backgroundColor: AppColors.white50,
-                titleColor: const Color.fromARGB(255, 168, 129, 129),
-                onTap: () {
-                  // Handle talk to BHA action
-                },
+              Flexible(
+                child: AppButton(
+                  height: AppSize.height(value: 35),
+                  width: AppSize.width(value: 120),
+                  title: AppString.talkTobhaa,
+                  fontSize: AppSize.width(value: 12),
+                  backgroundColor: AppColors.white50,
+                  titleColor: const Color.fromARGB(255, 168, 129, 129),
+                  onTap: () {
+                    // Handle talk to BHA action
+                  },
+                ),
               ),
             ],
           ),

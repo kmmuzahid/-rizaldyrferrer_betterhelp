@@ -62,7 +62,7 @@ class OnbardingScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Gap(height: AppSize.height(value: 42)),
+            Gap(height: AppSize.height(value: 20)),
 
             // PageView
             Expanded(
@@ -78,6 +78,7 @@ class OnbardingScreen extends StatelessWidget {
                 ],
               ),
             ),
+            Gap(height: AppSize.height(value: 20)),
           ],
         ),
       ),
@@ -101,7 +102,15 @@ class OnbardingScreen extends StatelessWidget {
 
 Widget onBoadingPage1() => Padding(
   padding: const EdgeInsets.symmetric(horizontal: 17),
-  child: Column(
+  child: Container(
+    height: AppSize.height(value: 650),
+    decoration: BoxDecoration(
+      color: AppColors.white,
+      borderRadius: BorderRadius.circular(35),
+    ),
+    child: Image.asset(AppStaticImages.onboardingGif1, fit: BoxFit.contain),
+  ),
+  /*  Column(
     children: [
       Image.asset(
         AppStaticImages.on01,
@@ -131,12 +140,21 @@ Widget onBoadingPage1() => Padding(
         overflow: TextOverflow.ellipsis,
       ),
     ],
-  ),
+  ), */
 );
 
 Widget onBoadingPage2() => Padding(
   padding: const EdgeInsets.symmetric(horizontal: 17),
-  child: Column(
+  child: Container(
+    height: AppSize.height(value: 650),
+    decoration: BoxDecoration(
+      color: AppColors.white,
+      borderRadius: BorderRadius.circular(35),
+    ),
+    child: Image.asset(AppStaticImages.onboardingGif2, fit: BoxFit.contain),
+  ),
+  /*
+   olumn(
     children: [
       Image.asset(
         AppStaticImages.on02,
@@ -167,10 +185,19 @@ Widget onBoadingPage2() => Padding(
       ),
     ],
   ),
+   */
 );
 Widget onBoadingPage3() => Padding(
   padding: const EdgeInsets.symmetric(horizontal: 17),
-  child: Column(
+  child: Container(
+    height: AppSize.height(value: 650),
+    decoration: BoxDecoration(
+      color: AppColors.white,
+      borderRadius: BorderRadius.circular(35),
+    ),
+    child: Image.asset(AppStaticImages.onboardingGif3, fit: BoxFit.contain),
+  ),
+  /* Column(
     children: [
       Image.asset(
         AppStaticImages.on03,
@@ -201,11 +228,20 @@ Widget onBoadingPage3() => Padding(
       ),
     ],
   ),
+   */
 );
 
 Widget onBoadingPage4() => Padding(
   padding: const EdgeInsets.symmetric(horizontal: 17),
-  child: Column(
+  child: Container(
+    height: AppSize.height(value: 650),
+    decoration: BoxDecoration(
+      color: AppColors.white,
+      borderRadius: BorderRadius.circular(35),
+    ),
+    child: Image.asset(AppStaticImages.onboardingGif4, fit: BoxFit.contain),
+  ),
+  /* Column(
     children: [
       Image.asset(
         AppStaticImages.on04,
@@ -235,12 +271,20 @@ Widget onBoadingPage4() => Padding(
         overflow: TextOverflow.ellipsis,
       ),
     ],
-  ),
+  ), */
 );
 
 Widget onBoadingPage5() => Padding(
   padding: const EdgeInsets.symmetric(horizontal: 17),
-  child: Column(
+  child: Container(
+    height: AppSize.height(value: 650),
+    decoration: BoxDecoration(
+      color: AppColors.white,
+      borderRadius: BorderRadius.circular(35),
+    ),
+    child: Image.asset(AppStaticImages.onboardingGif5, fit: BoxFit.contain),
+  ),
+  /* Column(
     children: [
       Image.asset(
         AppStaticImages.on05,
@@ -274,5 +318,5 @@ Widget onBoadingPage5() => Padding(
         overflow: TextOverflow.ellipsis,
       ),
     ],
-  ),
+  ), */
 );

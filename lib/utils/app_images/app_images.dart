@@ -64,4 +64,12 @@ class AppStaticImages {
   static const String postComment = "assets/images/communityComments.png";
   static const String winner = "assets/images/winner.png";
   static const String pentagon = "assets/images/pentagone.png";
+
+  static const String onboardingGif = "assets/images/num_001.gif";
+  static const String onboardingGif1 = "assets/images/1a Splash 1.gif";
+  static const String onboardingGif2 = "assets/images/1b Splash 2.gif";
+
+  static const String onboardingGif3 = "assets/images/1c Splash 3.gif";
+  static const String onboardingGif4 = "assets/images/1d Splash 4-gif.gif";
+  static const String onboardingGif5 = "assets/images/1d Splash 5-gif_1.gif";
 }

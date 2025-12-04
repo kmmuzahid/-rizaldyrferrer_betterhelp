@@ -111,13 +111,7 @@ class TimerService extends GetxService {
     _clearTimerState();
 
     // Show completion notification
-    Get.snackbar(
-      'Timer Complete!',
-      'Your timer session is finished!',
-      snackPosition: SnackPosition.TOP,
-      backgroundColor: Get.theme.colorScheme.primary,
-      colorText: Get.theme.colorScheme.onPrimary,
-    );
+    //
   }
 
   void _saveTimerState() {

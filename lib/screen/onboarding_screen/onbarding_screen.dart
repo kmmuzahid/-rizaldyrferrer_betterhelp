@@ -102,13 +102,9 @@ class OnbardingScreen extends StatelessWidget {
 
 Widget onBoadingPage1() => Padding(
   padding: const EdgeInsets.symmetric(horizontal: 17),
-  child: Container(
-    height: AppSize.height(value: 650),
-    decoration: BoxDecoration(
-      color: AppColors.white,
-      borderRadius: BorderRadius.circular(35),
-    ),
-    child: Image.asset(AppStaticImages.onboardingGif1, fit: BoxFit.contain),
+  child: SizedBox(
+    height: AppSize.height(value: 550),
+    child: FittedBox(child: Image.asset(AppStaticImages.onboardingGif1)),
   ),
   /*  Column(
     children: [
@@ -145,13 +141,12 @@ Widget onBoadingPage1() => Padding(
 
 Widget onBoadingPage2() => Padding(
   padding: const EdgeInsets.symmetric(horizontal: 17),
-  child: Container(
-    height: AppSize.height(value: 650),
-    decoration: BoxDecoration(
-      color: AppColors.white,
-      borderRadius: BorderRadius.circular(35),
+  child: SizedBox(
+    height: AppSize.height(value: 550),
+    child: FittedBox(
+      fit: BoxFit.contain,
+      child: Image.asset(AppStaticImages.onboardingGif2),
     ),
-    child: Image.asset(AppStaticImages.onboardingGif2, fit: BoxFit.contain),
   ),
   /*
    olumn(
@@ -189,13 +184,13 @@ Widget onBoadingPage2() => Padding(
 );
 Widget onBoadingPage3() => Padding(
   padding: const EdgeInsets.symmetric(horizontal: 17),
-  child: Container(
-    height: AppSize.height(value: 650),
-    decoration: BoxDecoration(
-      color: AppColors.white,
-      borderRadius: BorderRadius.circular(35),
+  child: SizedBox(
+    height: AppSize.height(value: 550),
+
+    child: FittedBox(
+      fit: BoxFit.contain,
+      child: Image.asset(AppStaticImages.onboardingGif3),
     ),
-    child: Image.asset(AppStaticImages.onboardingGif3, fit: BoxFit.contain),
   ),
   /* Column(
     children: [
@@ -233,13 +228,13 @@ Widget onBoadingPage3() => Padding(
 
 Widget onBoadingPage4() => Padding(
   padding: const EdgeInsets.symmetric(horizontal: 17),
-  child: Container(
-    height: AppSize.height(value: 650),
-    decoration: BoxDecoration(
-      color: AppColors.white,
-      borderRadius: BorderRadius.circular(35),
+  child: SizedBox(
+    height: AppSize.height(value: 550),
+
+    child: FittedBox(
+      fit: BoxFit.contain,
+      child: Image.asset(AppStaticImages.onboardingGif4),
     ),
-    child: Image.asset(AppStaticImages.onboardingGif4, fit: BoxFit.contain),
   ),
   /* Column(
     children: [
@@ -276,13 +271,12 @@ Widget onBoadingPage4() => Padding(
 
 Widget onBoadingPage5() => Padding(
   padding: const EdgeInsets.symmetric(horizontal: 17),
-  child: Container(
-    height: AppSize.height(value: 650),
-    decoration: BoxDecoration(
-      color: AppColors.white,
-      borderRadius: BorderRadius.circular(35),
+  child: SizedBox(
+    height: AppSize.height(value: 550),
+    child: FittedBox(
+      fit: BoxFit.contain,
+      child: Image.asset(AppStaticImages.onboardingGif5),
     ),
-    child: Image.asset(AppStaticImages.onboardingGif5, fit: BoxFit.contain),
   ),
   /* Column(
     children: [

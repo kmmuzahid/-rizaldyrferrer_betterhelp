@@ -177,4 +177,11 @@ class AppColors {
 
   //! Habits Screen Color
   static const Color habitBackground = Color(0xFFFEFEFE);
+
+  //! Onboarding Screen Background Color
+  static const Color onboardingBackground01 = Color(0xFFEAF4FD);
+  static const Color onboardingBackground02 = Color(0xFFF4F4F4);
+  static const Color onboardingBackground03 = Color(0xFFFFFFFE);
+  static const Color onboardingBackground04 = Color(0xFFE6F1F8);
+  static const Color onboardingBackground05 = Color(0xFFD1EDFD);
 }

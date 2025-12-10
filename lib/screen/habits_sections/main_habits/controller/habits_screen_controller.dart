@@ -32,6 +32,17 @@ class HabitsScreenController extends GetxController {
     AppStaticImages.habits04,
   ];
 
+  RxList dailyAffermationList = [
+    AppStaticImages.dailyAffermation01,
+    AppStaticImages.dailyAffermation02,
+    AppStaticImages.dailyAffermation03,
+    AppStaticImages.dailyAffermation04,
+    AppStaticImages.dailyAffermation05,
+    AppStaticImages.dailyAffermation06,
+    AppStaticImages.dailyAffermation07,
+    AppStaticImages.dailyAffermation08,
+  ].obs;
+
   // Method to update current index
   void updateCurrentIndex(int index) {
     currentIndex.value = index;

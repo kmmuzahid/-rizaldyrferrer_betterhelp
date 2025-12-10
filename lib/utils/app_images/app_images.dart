@@ -72,4 +72,22 @@ class AppStaticImages {
   static const String onboardingGif3 = "assets/images/1c Splash 3.gif";
   static const String onboardingGif4 = "assets/images/1d Splash 4-gif.gif";
   static const String onboardingGif5 = "assets/images/1d Splash 5-gif_1.gif";
+
+  //Daily Affermation animated gif
+  static const String dailyAffermation01 =
+      "assets/animated/daily_affermation/SPLASH 23.gif";
+  static const String dailyAffermation02 =
+      "assets/animated/daily_affermation/SPLASH 24.gif";
+  static const String dailyAffermation03 =
+      "assets/animated/daily_affermation/SPLASH 25.gif";
+  static const String dailyAffermation04 =
+      "assets/animated/daily_affermation/SPLASH 26.gif";
+  static const String dailyAffermation05 =
+      "assets/animated/daily_affermation/SPLASH 27.gif";
+  static const String dailyAffermation06 =
+      "assets/animated/daily_affermation/SPLASH 28.gif";
+  static const String dailyAffermation07 =
+      "assets/animated/daily_affermation/SPLASH 29.gif";
+  static const String dailyAffermation08 =
+      "assets/animated/daily_affermation/SPLASH 30.gif";
 }

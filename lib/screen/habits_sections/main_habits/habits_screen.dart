@@ -71,84 +71,40 @@ class _HabitsScreenState extends State<HabitsScreen> {
               ),
             ),
             Gap(height: 08),
-            CarouselSlider(
-              carouselController: controller.carouselController,
-              items: controller.backgroundImages.asMap().entries.map((entry) {
-                int index = entry.key;
-                String imagePath = entry.value;
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(imagePath),
-                        fit: BoxFit.cover,
+            Obx(
+              () => CarouselSlider(
+                carouselController: controller.carouselController,
+                items: controller.dailyAffermationList.map<Widget>((imagePath) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: RotatedBox(
+                      quarterTurns:
+                          -1, // 90 degrees clockwise (use 3 for counter-clockwise)
+                      child: Image.asset(
+                        imagePath,
+                        fit: BoxFit.contain,
+                        width: double.infinity,
+                        height: double.infinity,
                       ),
                     ),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: AppSize.width(value: 22),
-                        vertical: AppSize.height(value: 21),
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Colors.black.withValues(alpha: 0.3),
-                          ],
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: AppText(
-                              text: controller.quoteList[index],
-                              fontFamilyIndex: 4,
-                              fontSize: AppSize.width(value: 16),
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.white,
-                              maxLines: 3,
-                              textAlign: TextAlign.start,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          Gap(height: 12),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: AppText(
-                              text: controller.quoteAuthorList[index],
-                              fontFamilyIndex: 4,
-                              fontSize: AppSize.width(value: 14),
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
-              options: CarouselOptions(
-                height: AppSize.height(value: 137),
-                aspectRatio: 16 / 9,
-                viewportFraction: 0.85,
-                initialPage: 0,
-                enableInfiniteScroll: true,
-                autoPlay: true,
-                autoPlayInterval: const Duration(seconds: 4),
-                autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                autoPlayCurve: Curves.linear,
-                enlargeCenterPage: true,
-                enlargeFactor: 0.2,
-                scrollDirection: Axis.horizontal,
-                onPageChanged: (index, reason) {
-                  controller.updateCurrentIndex(index);
-                },
+                  );
+                }).toList(),
+                options: CarouselOptions(
+                  height: AppSize.height(value: 200),
+                  viewportFraction: 0.85,
+                  initialPage: 0,
+                  enableInfiniteScroll: true,
+                  autoPlay: true,
+                  autoPlayInterval: const Duration(seconds: 4),
+                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                  autoPlayCurve: Curves.linear,
+                  enlargeCenterPage: true,
+                  enlargeFactor: 0.2,
+                  scrollDirection: Axis.horizontal,
+                  onPageChanged: (index, reason) {
+                    controller.updateCurrentIndex(index);
+                  },
+                ),
               ),
             ),
             Gap(height: 16),
@@ -156,26 +112,27 @@ class _HabitsScreenState extends State<HabitsScreen> {
               child: Obx(
                 () => Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: List.generate(controller.backgroundImages.length, (
-                    index,
-                  ) {
-                    return GestureDetector(
-                      onTap: () => controller.goToSlide(index),
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: AppSize.width(value: 3),
+                  children: List.generate(
+                    controller.dailyAffermationList.length,
+                    (index) {
+                      return GestureDetector(
+                        onTap: () => controller.goToSlide(index),
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: AppSize.width(value: 3),
+                          ),
+                          height: AppSize.height(value: 8),
+                          width: AppSize.width(value: 32),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.5),
+                            color: controller.currentIndex.value == index
+                                ? AppColors.secondary900
+                                : AppColors.iconLightgrey,
+                          ),
                         ),
-                        height: AppSize.height(value: 8),
-                        width: AppSize.width(value: 32),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.5),
-                          color: controller.currentIndex.value == index
-                              ? AppColors.secondary900
-                              : AppColors.iconLightgrey,
-                        ),
-                      ),
-                    );
-                  }),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),

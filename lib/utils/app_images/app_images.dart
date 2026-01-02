@@ -11,6 +11,8 @@ class AppStaticImages {
   static const String on05 = "assets/images/onboarding05.png";
 
   //! ============== Question Screen Images ==============
+  static const String beforeQuestionImage =
+      "assets/images/beforequestionimage.png";
   static const String qusDoddle01 = "assets/images/questionDoddle01.png";
   static const String qusDoddle02 = "assets/images/questionDoddle02.png";
   static const String qusDoddle03 = "assets/images/questionDoddle03.png";

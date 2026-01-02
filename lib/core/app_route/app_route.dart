@@ -34,6 +34,8 @@ import 'package:better_help/screen/supports_sections/main_supports/support_scree
 import 'package:better_help/widget/app_confeti/habit_complete_screen.dart';
 import 'package:get/get.dart';
 
+import '../../screen/questionnaries_screen/before_question_screen/before_question_screen.dart';
+
 class AppRoute {
   AppRoute._();
   static const String splashscreen = '/splashscreen';
@@ -41,6 +43,7 @@ class AppRoute {
   static const String subscriptionscreen = '/subscriptionscreen';
   static const String homescreen = '/homescreen';
   static const String questionariescreen = '/questionariescreen';
+  static const String beforeQuestionScreen = '/beforeQuestionScreen';
 
   //! Authentication Screen Route
   static const String loginScreen = '/loginScreen';
@@ -106,6 +109,13 @@ class AppRoute {
     GetPage(
       name: AppRoute.subscriptionscreen,
       page: () => const SubscriptionAndPayment(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
+    ),
+    //! Before Question Screen Route
+    GetPage(
+      name: AppRoute.beforeQuestionScreen,
+      page: () => BeforeQuestionScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
     ),

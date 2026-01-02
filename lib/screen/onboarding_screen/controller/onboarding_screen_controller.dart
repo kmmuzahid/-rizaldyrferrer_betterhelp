@@ -49,7 +49,7 @@ class OnboardingScreenController extends GetxController {
   void goToSubscriptionScreen() {
     //!  Replace with your actual subscription screen route
     //! Get.offNamed('/subscription');
-    Get.offAllNamed(AppRoute.questionariescreen);
+    Get.offAllNamed(AppRoute.beforeQuestionScreen);
     appLog('Navigate to subscription screen');
   }
 

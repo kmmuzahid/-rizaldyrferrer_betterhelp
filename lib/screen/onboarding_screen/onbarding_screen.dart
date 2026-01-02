@@ -120,37 +120,6 @@ Widget onBoadingPage1() => Padding(
     height: AppSize.height(value: 550),
     child: FittedBox(child: Image.asset(AppStaticImages.onboardingGif2)),
   ),
-  /*  Column(
-    children: [
-      Image.asset(
-        AppStaticImages.on01,
-        width: AppSize.width(value: 326),
-        height: AppSize.height(value: 356),
-      ),
-      Gap(height: AppSize.height(value: 32)),
-      AppText(
-        text: AppString.onPage1Title,
-        fontSize: AppSize.width(value: 24),
-        fontFamilyIndex: 2,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.24,
-        lineHeight: 1.33,
-        color: AppColors.grey500,
-      ),
-      Gap(height: AppSize.height(value: 12)),
-      AppText(
-        text: AppString.onPage1Subtitle,
-        color: AppColors.textMain,
-        fontFamilyIndex: 2,
-        fontSize: AppSize.width(value: 16),
-        fontWeight: FontWeight.w500,
-        lineHeight: 1.5,
-        maxLines: 2,
-        textAlign: TextAlign.justify,
-        overflow: TextOverflow.ellipsis,
-      ),
-    ],
-  ), */
 );
 
 Widget onBoadingPage2() => Padding(
@@ -162,40 +131,8 @@ Widget onBoadingPage2() => Padding(
       child: Image.asset(AppStaticImages.onboardingGif3),
     ),
   ),
-  /*
-   olumn(
-    children: [
-      Image.asset(
-        AppStaticImages.on02,
-        width: AppSize.width(value: 326),
-        height: AppSize.height(value: 356),
-      ),
-      Gap(height: AppSize.height(value: 32)),
-      AppText(
-        text: AppString.onPage2Title,
-        fontSize: AppSize.width(value: 24),
-        fontFamilyIndex: 2,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.24,
-        lineHeight: 1.33,
-        color: AppColors.grey500,
-      ),
-      Gap(height: AppSize.height(value: 12)),
-      AppText(
-        text: AppString.onPage2Subtitle,
-        color: AppColors.textMain,
-        fontFamilyIndex: 2,
-        fontSize: AppSize.width(value: 16),
-        fontWeight: FontWeight.w500,
-        lineHeight: 1.5,
-        maxLines: 3,
-        textAlign: TextAlign.justify,
-        overflow: TextOverflow.ellipsis,
-      ),
-    ],
-  ),
-   */
 );
+
 Widget onBoadingPage3() => Padding(
   padding: const EdgeInsets.symmetric(horizontal: 17),
   child: SizedBox(
@@ -206,38 +143,6 @@ Widget onBoadingPage3() => Padding(
       child: Image.asset(AppStaticImages.onboardingGif4),
     ),
   ),
-  /* Column(
-    children: [
-      Image.asset(
-        AppStaticImages.on03,
-        width: AppSize.width(value: 326),
-        height: AppSize.height(value: 356),
-      ),
-      Gap(height: AppSize.height(value: 32)),
-      AppText(
-        text: AppString.onPage3Title,
-        fontSize: AppSize.width(value: 24),
-        fontFamilyIndex: 2,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.24,
-        lineHeight: 1.33,
-        color: AppColors.grey500,
-      ),
-      Gap(height: AppSize.height(value: 12)),
-      AppText(
-        text: AppString.onPage3Subtitle,
-        color: AppColors.textMain,
-        fontFamilyIndex: 2,
-        fontSize: AppSize.width(value: 16),
-        fontWeight: FontWeight.w500,
-        lineHeight: 1.5,
-        maxLines: 2,
-        textAlign: TextAlign.justify,
-        overflow: TextOverflow.ellipsis,
-      ),
-    ],
-  ),
-   */
 );
 
 Widget onBoadingPage4() => Padding(
@@ -250,37 +155,6 @@ Widget onBoadingPage4() => Padding(
       child: Image.asset(AppStaticImages.onboardingGif2),
     ),
   ),
-  /* Column(
-    children: [
-      Image.asset(
-        AppStaticImages.on04,
-        width: AppSize.width(value: 326),
-        height: AppSize.height(value: 356),
-      ),
-      Gap(height: AppSize.height(value: 32)),
-      AppText(
-        text: AppString.onPage4Title,
-        fontSize: AppSize.width(value: 24),
-        fontFamilyIndex: 2,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.24,
-        lineHeight: 1.33,
-        color: AppColors.grey500,
-      ),
-      Gap(height: AppSize.height(value: 12)),
-      AppText(
-        text: AppString.onPage4Subtitle,
-        color: AppColors.textMain,
-        fontFamilyIndex: 2,
-        fontSize: AppSize.width(value: 16),
-        fontWeight: FontWeight.w500,
-        lineHeight: 1.5,
-        maxLines: 2,
-        textAlign: TextAlign.justify,
-        overflow: TextOverflow.ellipsis,
-      ),
-    ],
-  ), */
 );
 
 Widget onBoadingPage5() => Padding(
@@ -292,39 +166,4 @@ Widget onBoadingPage5() => Padding(
       child: Image.asset(AppStaticImages.onboardingGif1),
     ),
   ),
-  /* Column(
-    children: [
-      Image.asset(
-        AppStaticImages.on05,
-        width: AppSize.width(value: 326),
-        height: AppSize.height(value: 356),
-      ),
-      Gap(height: AppSize.height(value: 32)),
-      AppText(
-        text: AppString.onPage5Title,
-        fontSize: AppSize.width(value: 24),
-        fontFamilyIndex: 2,
-        fontWeight: FontWeight.w600,
-        maxLines: 2,
-        textAlign: TextAlign.center,
-        overflow: TextOverflow.ellipsis,
-        letterSpacing: 0.24,
-        lineHeight: 1.33,
-        color: AppColors.grey500,
-      ),
-      Gap(height: AppSize.height(value: 12)),
-      AppText(
-        text: AppString.onPage5Subtitle,
-        color: AppColors.textMain,
-        fontFamilyIndex: 2,
-        fontSize: AppSize.width(value: 16),
-        fontWeight: FontWeight.w500,
-        lineHeight: 1.5,
-        letterSpacing: 0.16,
-        maxLines: 3,
-        textAlign: TextAlign.justify,
-        overflow: TextOverflow.ellipsis,
-      ),
-    ],
-  ), */
 );

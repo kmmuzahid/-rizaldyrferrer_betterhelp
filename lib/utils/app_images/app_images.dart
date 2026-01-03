@@ -13,11 +13,13 @@ class AppStaticImages {
   //! ============== Question Screen Images ==============
   static const String beforeQuestionImage =
       "assets/images/beforequestionimage.png";
-  static const String qusDoddle01 = "assets/images/questionDoddle01.png";
-  static const String qusDoddle02 = "assets/images/questionDoddle02.png";
-  static const String qusDoddle03 = "assets/images/questionDoddle03.png";
+  static const String qusDoddle01 = "assets/images/2b QSet 1.png";
+  static const String qusDoddle02 = "assets/images/2c QSet 2.png";
+  static const String qusDoddle03 = "assets/images/2d QSet 3.png";
   static const String qusDoddle04 = "assets/images/questionDoddle04.png";
   static const String qusDoddle05 = "assets/images/questionDoddle05.png";
+  static const String goalPageImage = "assets/images/goal_images.png";
+  static const String resultImage = "assets/images/2f Goal.png";
 
   //! ============== Subscription Screen Images ==============
   static const String subscription01 = "assets/images/subscription01.png";

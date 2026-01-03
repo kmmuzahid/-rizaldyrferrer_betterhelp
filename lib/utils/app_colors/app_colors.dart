@@ -35,6 +35,7 @@ class AppColors {
   static const Color questionBg02TextColor = Color(0xFF032F49);
   static const Color questionBg02SelectBox = Color(0xFF032F49);
   static const Color questionBg02CardOptionBg = Color(0xFFE7F2FF);
+  static const Color answerCardBgColor = Color(0xFFE7F2FF);
 
   static const Color questionBG03 = Color(0xFF4E61F6);
   static const Color questionBG03StatusBarColor = Color(0xFF001DFF);
@@ -57,6 +58,7 @@ class AppColors {
   static const Color habitsCalendarBorder = Color(0xFF393433);
 
   static const Color resultBg = Color(0xFFFCF7FA);
+  static const Color ratingBg = Color(0xFFF3EFEF);
 
   static const Color momentumBg = Color(0xFFEFFFE6);
   static const Color momentumButton = Color(0xFF309AAD);

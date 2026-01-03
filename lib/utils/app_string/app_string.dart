@@ -81,6 +81,8 @@ class AppString {
       "If 10 means thriving, how well do you feel in life?  Scale of 1-10";
   static const String answer =
       "You Crushed It! You're closer than ever. Let's go!";
+  static const String youCrusedIt = "You Crushed It!";
+  static const String youAreCloser = "You're closer than ever. Let's go!";
 
   //! ============== Subscription Screen ==============
   static const String enrollment = "Enrollment";

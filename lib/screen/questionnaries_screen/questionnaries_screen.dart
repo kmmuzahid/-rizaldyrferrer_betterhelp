@@ -23,163 +23,23 @@ class QuestionnariesScreen extends StatelessWidget {
       QuestionnariesScreenController(),
       tag: 'questionnaires',
     );
+
     return Obx(
       () => Scaffold(
-        backgroundColor: getBackgroundColors(controller.currentPageIndex.value),
+        backgroundColor: _getBackgroundColor(controller.currentPageIndex.value),
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 12)),
             child: Column(
               children: [
-                // Conditionally show header elements (hide on result page)
-                if (controller.currentPageIndex.value !=
-                    controller.totalPages - 1) ...[
-                  Gap(height: AppSize.height(value: 32)),
-                  Row(
-                    children: [
-                      InkWell(
-                        splashColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        onTap: () {},
-                        child: SvgPicture.asset(
-                          AppIcons.questionPageBack,
-                          height: AppSize.height(value: 24),
-                          width: AppSize.width(value: 24),
-                        ),
-                      ),
-                      Gap(width: AppSize.width(value: 08)),
-                      Flexible(
-                        child: AppText(
-                          text: AppString.questionTitle,
-                          color: AppColors.white500,
-                          lineHeight: 1.3,
-                          fontSize: AppSize.width(value: 16),
-                          fontFamilyIndex: 2,
-                          fontWeight: FontWeight.w600,
-                          maxLines: 3,
-                          textAlign: TextAlign.justify,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Gap(height: AppSize.height(value: 26)),
-                  //! Questionnaries Step
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSize.width(value: 12),
-                      vertical: AppSize.height(value: 9),
-                    ),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(AppSize.width(value: 12)),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Obx(
-                          () => AppText(
-                            text:
-                                "${AppString.step} ${controller.getCurrentStepText()}",
-                            fontSize: AppSize.width(value: 12),
-                            fontFamilyIndex: 4,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.black,
-                          ),
-                        ),
-                        Expanded(
-                          child: Obx(() {
-                            return SliderTheme(
-                              data: SliderTheme.of(context).copyWith(
-                                trackHeight: AppSize.height(value: 6),
-                                activeTrackColor:
-                                    AppColors.questionBG01StatusBarColor,
-                                inactiveTickMarkColor: AppColors
-                                    .questionBG01StatusBarColor
-                                    .withValues(alpha: 0.3),
-                                thumbShape: RoundSliderThumbShape(
-                                  enabledThumbRadius: 0,
-                                ),
-                              ),
-                              child: Slider(
-                                autofocus: false,
-                                value: controller.progressValue.value,
-                                onChanged: (value) {
-                                  // Disabled - progress is controlled by questions
-                                },
-                                max: 6,
-                                min: 1,
-                                activeColor: _getActiveSliderColor(
-                                  controller.currentPageIndex.value,
-                                ),
-                                inactiveColor: _getInactiveSliderColor(
-                                  controller.currentPageIndex.value,
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Gap(height: AppSize.height(value: 18)),
+                if (!controller.isResultPage) ...[
+                  _buildHeader(controller, context),
                 ] else ...[
-                  // Show minimal spacing for result page
                   Gap(height: AppSize.height(value: 20)),
                 ],
-                // PageView
-                Expanded(
-                  child: PageView(
-                    controller: controller.pageController,
-                    onPageChanged: controller.onPageChanged,
-                    children: [
-                      SingleChildScrollView(child: questionPage01(controller)),
-                      SingleChildScrollView(child: questionPage02(controller)),
-                      SingleChildScrollView(child: questionPage03(controller)),
-                      SingleChildScrollView(child: questionPage04(controller)),
-                      SingleChildScrollView(child: questionPage05(controller)),
-                      SingleChildScrollView(child: resultPage()),
-                    ],
-                  ),
-                ),
+                _buildPageView(controller),
                 Gap(height: AppSize.height(value: 20)),
-                Obx(
-                  () => AppButton(
-                    title:
-                        controller.currentPageIndex.value ==
-                            controller.totalPages - 1
-                        ? 'Continue'
-                        : controller.currentPageIndex.value ==
-                              controller.totalPages - 2
-                        ? 'See Results'
-                        : AppString.next,
-                    titleColor:
-                        controller.currentPageIndex.value ==
-                            controller.totalPages - 1
-                        ? AppColors.white
-                        : AppColors.black,
-                    backgroundColor:
-                        controller.currentPageIndex.value ==
-                            controller.totalPages - 1
-                        ? Colors.red
-                        : AppColors.white,
-                    onTap:
-                        controller.currentPageIndex.value ==
-                            controller.totalPages - 1
-                        ? () {
-                            try {
-                              // Navigate to subscription screen
-                              Get.offNamed(AppRoute.subscriptionscreen);
-                              appLog('Navigate to subscription screen');
-                            } catch (e) {
-                              appLog('Navigation error: $e');
-                            }
-                          }
-                        : controller.nextPage,
-                  ),
-                ),
+                _buildBottomButton(controller),
                 Gap(height: AppSize.height(value: 20)),
               ],
             ),
@@ -188,291 +48,472 @@ class QuestionnariesScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-Widget questionPage01(QuestionnariesScreenController controller) => Column(
-  children: [
-    Gap(height: AppSize.height(value: 18)),
-    CustomQuestionContainer(
-      controller: controller,
-      questionImage: AppStaticImages.qusDoddle01,
-      questionText: AppString.question1,
-      questionNumber: 1,
-      totalQuestions: 15,
-    ),
-    Gap(height: AppSize.height(value: 12)),
-    CustomQuestionContainer(
-      controller: controller,
-      questionImage: AppStaticImages.qusDoddle01,
-      questionText: AppString.question2,
-      questionNumber: 2,
-      totalQuestions: 15,
-    ),
-    Gap(height: AppSize.height(value: 12)),
-    CustomQuestionContainer(
-      controller: controller,
-      questionImage: AppStaticImages.qusDoddle01,
-      questionText: AppString.question3,
-      questionNumber: 3,
-      totalQuestions: 15,
-    ),
-    Gap(height: AppSize.height(value: 30)),
-  ],
-);
-
-Widget questionPage02(QuestionnariesScreenController controller) => Column(
-  children: [
-    Gap(height: AppSize.height(value: 18)),
-    CustomQuestionContainer(
-      controller: controller,
-      questionImage: AppStaticImages.qusDoddle02,
-      questionText: AppString.question4,
-      questionNumber: 4,
-      totalQuestions: 15,
-      badgeBackgroundColor: AppColors.questionBG02,
-      selectedAnswerColor: AppColors.questionBG02,
-      answerCardBg: AppColors.questionBg02CardOptionBg,
-    ),
-    Gap(height: AppSize.height(value: 12)),
-    CustomQuestionContainer(
-      controller: controller,
-      questionImage: AppStaticImages.qusDoddle02,
-      questionText: AppString.question5,
-      questionNumber: 5,
-      totalQuestions: 15,
-      badgeBackgroundColor: AppColors.questionBG02,
-      selectedAnswerColor: AppColors.questionBG02,
-      answerCardBg: AppColors.questionBg02CardOptionBg,
-    ),
-    Gap(height: AppSize.height(value: 12)),
-    CustomQuestionContainer(
-      controller: controller,
-      questionImage: AppStaticImages.qusDoddle02,
-      questionText: AppString.question6,
-      questionNumber: 6,
-      totalQuestions: 15,
-      badgeBackgroundColor: AppColors.questionBG02,
-      selectedAnswerColor: AppColors.questionBG02,
-      answerCardBg: AppColors.questionBg02CardOptionBg,
-    ),
-    Gap(height: AppSize.height(value: 30)),
-  ],
-);
-Widget questionPage03(QuestionnariesScreenController controller) => Column(
-  children: [
-    Gap(height: AppSize.height(value: 18)),
-    CustomQuestionContainer(
-      controller: controller,
-      questionImage: AppStaticImages.qusDoddle03,
-      questionText: AppString.question7,
-      questionNumber: 7,
-      totalQuestions: 15,
-      badgeBackgroundColor: AppColors.questionBG03,
-      selectedAnswerColor: AppColors.questionBG03,
-      answerCardBg: AppColors.questionBg03CardOptionBg,
-    ),
-    Gap(height: AppSize.height(value: 12)),
-    CustomQuestionContainer(
-      controller: controller,
-      questionImage: AppStaticImages.qusDoddle03,
-      questionText: AppString.question8,
-      questionNumber: 8,
-      totalQuestions: 15,
-      badgeBackgroundColor: AppColors.questionBG03,
-      selectedAnswerColor: AppColors.questionBG03,
-      answerCardBg: AppColors.questionBg03CardOptionBg,
-    ),
-    Gap(height: AppSize.height(value: 12)),
-    CustomQuestionContainer(
-      controller: controller,
-      questionImage: AppStaticImages.qusDoddle03,
-      questionText: AppString.question9,
-      questionNumber: 9,
-      totalQuestions: 15,
-      badgeBackgroundColor: AppColors.questionBG03,
-      selectedAnswerColor: AppColors.questionBG03,
-      answerCardBg: AppColors.questionBg03CardOptionBg,
-    ),
-    Gap(height: AppSize.height(value: 30)),
-  ],
-);
-Widget questionPage04(QuestionnariesScreenController controller) => Column(
-  children: [
-    Gap(height: AppSize.height(value: 18)),
-    CustomQuestionContainer(
-      controller: controller,
-      questionImage: AppStaticImages.qusDoddle04,
-      questionText: AppString.question10,
-      questionNumber: 10,
-      totalQuestions: 15,
-      badgeBackgroundColor: AppColors.questionBG04,
-      selectedAnswerColor: AppColors.questionBG04,
-      answerCardBg: AppColors.questionBg04CardOptionBg,
-    ),
-    Gap(height: AppSize.height(value: 12)),
-    CustomQuestionContainer(
-      controller: controller,
-      questionImage: AppStaticImages.qusDoddle04,
-      questionText: AppString.question11,
-      questionNumber: 11,
-      totalQuestions: 15,
-      badgeBackgroundColor: AppColors.questionBG04,
-      selectedAnswerColor: AppColors.questionBG04,
-      answerCardBg: AppColors.questionBg04CardOptionBg,
-    ),
-    Gap(height: AppSize.height(value: 12)),
-    CustomQuestionContainer(
-      controller: controller,
-      questionImage: AppStaticImages.qusDoddle04,
-      questionText: AppString.question12,
-      questionNumber: 12,
-      totalQuestions: 15,
-      badgeBackgroundColor: AppColors.questionBG04,
-      selectedAnswerColor: AppColors.questionBG04,
-      answerCardBg: AppColors.questionBg04CardOptionBg,
-    ),
-    Gap(height: AppSize.height(value: 30)),
-  ],
-);
-
-Widget questionPage05(QuestionnariesScreenController controller) {
-  List<String> selectPageOption = [
-    AppString.buildingBetterHabits,
-    AppString.boostingProductivity,
-    AppString.stayingActiveandEngergized,
-    AppString.sharperningFocus,
-    AppString.strengtheingDiscipline,
-    AppString.livingMoreMidfully,
-    AppString.mangingTimeBetter,
-    AppString.mangingTimeBetter,
-    AppString.reducingOverwhelm,
-    AppString.followingThoughonGoals,
-    AppString.feelingEmotionallyBalanced,
-    AppString.improvingSelfawreness,
-    AppString.improvingSelfawreness,
-    AppString.creatingAhealthierRoutine,
-  ];
-
-  return Obx(
-    () => Column(
+  Widget _buildHeader(
+    QuestionnariesScreenController controller,
+    BuildContext context,
+  ) {
+    return Column(
       children: [
+        Gap(height: AppSize.height(value: 32)),
+        Row(
+          children: [
+            InkWell(
+              splashColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              onTap: controller.previousPage,
+              child: SvgPicture.asset(
+                AppIcons.questionPageBack,
+                height: AppSize.height(value: 24),
+                width: AppSize.width(value: 24),
+              ),
+            ),
+            Gap(width: AppSize.width(value: 8)),
+            Flexible(
+              child: AppText(
+                text: AppString.questionTitle,
+                color: AppColors.white500,
+                lineHeight: 1.3,
+                fontSize: AppSize.width(value: 16),
+                fontFamilyIndex: 2,
+                fontWeight: FontWeight.w600,
+                maxLines: 3,
+                textAlign: TextAlign.justify,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+        Gap(height: AppSize.height(value: 26)),
+        _buildProgressIndicator(controller, context),
+        Gap(height: AppSize.height(value: 18)),
+      ],
+    );
+  }
+
+  Widget _buildProgressIndicator(
+    QuestionnariesScreenController controller,
+    BuildContext context,
+  ) {
+    final pageIndex = controller.currentPageIndex.value;
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSize.width(value: 12),
+        vertical: AppSize.height(value: 9),
+      ),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(AppSize.width(value: 12)),
+      ),
+      child: Row(
+        children: [
+          Obx(
+            () => AppText(
+              text: "${AppString.step} ${controller.getCurrentStepText()}",
+              fontSize: AppSize.width(value: 12),
+              fontFamilyIndex: 4,
+              fontWeight: FontWeight.w600,
+              color: AppColors.black,
+            ),
+          ),
+          Expanded(
+            child: Obx(() {
+              return SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  trackHeight: AppSize.height(value: 6),
+                  thumbShape: const RoundSliderThumbShape(
+                    enabledThumbRadius: 0,
+                  ),
+                ),
+                child: Slider(
+                  value: controller.progressValue.value,
+                  onChanged: (_) {},
+                  max: QuestionnariesScreenController.totalPages.toDouble(),
+                  min: 1,
+                  activeColor: _getActiveSliderColor(pageIndex),
+                  inactiveColor: _getInactiveSliderColor(pageIndex),
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPageView(QuestionnariesScreenController controller) {
+    return Expanded(
+      child: PageView(
+        controller: controller.pageController,
+        onPageChanged: controller.onPageChanged,
+        children: [
+          SingleChildScrollView(child: _buildQuestionPage(controller, 0)),
+          SingleChildScrollView(child: _buildQuestionPage(controller, 1)),
+          SingleChildScrollView(child: _buildQuestionPage(controller, 2)),
+          SingleChildScrollView(child: _buildGoalsPage(controller)),
+          SingleChildScrollView(child: _buildResultPage()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuestionPage(
+    QuestionnariesScreenController controller,
+    int pageIndex,
+  ) {
+    final questions = controller.questionsByPage[pageIndex];
+    final pageConfig = _getPageConfig(pageIndex);
+    final startQuestionNumber =
+        pageIndex * QuestionnariesScreenController.questionsPerPage + 1;
+
+    return Container(
+      padding: EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Image.asset(
+            _getQuestionImage(pageIndex),
+            height: AppSize.height(value: 200),
+            width: AppSize.width(value: 200),
+          ),
+
+          Gap(height: AppSize.height(value: 18)),
+          ...List.generate(questions.length, (index) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: AppSize.height(value: 12)),
+              child: CustomQuestionContainer(
+                controller: controller,
+                questionText: questions[index],
+                questionNumber: startQuestionNumber + index,
+                selectedAnswerColor: pageConfig.selectedColor,
+                answerCardBg: pageConfig.cardBgColor,
+              ),
+            );
+          }),
+          Gap(height: AppSize.height(value: 18)),
+        ],
+      ),
+    );
+  }
+
+  String _getQuestionImage(int pageIndex) {
+    switch (pageIndex) {
+      case 0:
+        return AppStaticImages.qusDoddle01;
+      case 1:
+        return AppStaticImages.qusDoddle02;
+      case 2:
+        return AppStaticImages.qusDoddle03;
+      default:
+        return AppStaticImages.qusDoddle01;
+    }
+  }
+
+  Widget _buildResultPage() {
+    final controller = Get.find<QuestionnariesScreenController>(
+      tag: 'questionnaires',
+    );
+
+    return Column(
+      children: [
+        Center(
+          child: AppText(
+            text: AppString.youCrusedIt,
+            fontWeight: FontWeight.w600,
+            fontSize: AppSize.width(value: 24),
+            color: AppColors.black,
+            fontFamilyIndex: 2,
+          ),
+        ),
+        Gap(height: AppSize.height(value: 08)),
+        Center(
+          child: AppText(
+            text: AppString.youAreCloser,
+            color: AppColors.black,
+            fontFamilyIndex: 2,
+            fontSize: AppSize.width(value: 16),
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        Gap(height: AppSize.height(value: 16)),
+        Image.asset(
+          AppStaticImages.resultImage,
+          height: AppSize.height(value: 250),
+          width: AppSize.width(value: 250),
+        ),
+        Gap(height: AppSize.height(value: 11)),
         Container(
           padding: EdgeInsets.symmetric(
-            horizontal: AppSize.width(value: 12),
-            vertical: AppSize.height(value: 9),
+            vertical: AppSize.height(value: 24),
+            horizontal: AppSize.width(value: 16),
           ),
-          width: double.infinity,
           decoration: BoxDecoration(
             color: AppColors.white,
-            borderRadius: BorderRadius.all(
-              Radius.circular(AppSize.width(value: 12)),
-            ),
+            borderRadius: BorderRadius.circular(AppSize.width(value: 08)),
           ),
           child: Column(
             children: [
-              Image.asset(
-                AppStaticImages.qusDoddle05,
-                height: AppSize.height(value: 115),
-                width: AppSize.width(value: 115),
+              Center(
+                child: AppText(
+                  text: "Scale of 1-10",
+                  fontFamilyIndex: 2,
+                  fontSize: AppSize.width(value: 24),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.black,
+                ),
               ),
-              Gap(height: AppSize.height(value: 14)),
-              AppText(
-                text: AppString.whatdoYouwanttoAchieve,
-                fontSize: AppSize.width(value: 16),
-                fontFamilyIndex: 5,
-                fontWeight: FontWeight.w600,
-                color: AppColors.black,
-                textAlign: TextAlign.center,
+              Center(
+                child: AppText(
+                  text: "You're closer than ever. Let's go!",
+                  fontFamilyIndex: 2,
+                  fontSize: AppSize.width(value: 16),
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.grey400,
+                ),
               ),
-              Gap(height: AppSize.height(value: 14)),
-              ...List.generate(selectPageOption.length, (index) {
-                bool isSelected = controller.selectedOptions.contains(index);
-                return Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSize.width(value: 18),
-                    vertical: AppSize.height(value: 8),
-                  ),
-                  margin: EdgeInsets.only(bottom: AppSize.height(value: 8)),
-                  height: AppSize.height(value: 44),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: AppColors.blue50,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(AppSize.width(value: 12)),
-                    ),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          controller.toggleOption(index);
-                        },
-                        child: Icon(
-                          Icons.check_circle,
-                          color: isSelected
-                              ? AppColors.questionBG05
-                              : AppColors.white900,
-                          size: AppSize.width(value: 20),
-                        ),
-                      ),
-                      Gap(width: AppSize.width(value: 12)),
-                      AppText(
-                        text: selectPageOption[index],
-                        fontSize: AppSize.width(value: 14),
-                        fontFamilyIndex: 4,
-                        fontWeight: FontWeight.w600,
-                        color: isSelected
-                            ? AppColors.questionBG05
-                            : AppColors.grey500,
-                      ),
-                    ],
-                  ),
-                );
-              }),
+              Gap(height: AppSize.height(value: 16)),
+              _buildScaleSelector(controller),
             ],
           ),
         ),
       ],
-    ),
-  );
+    );
+  }
+
+  Widget _buildScaleSelector(QuestionnariesScreenController controller) {
+    return Obx(
+      () => Column(
+        children: [
+          // First row: 1-5
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(5, (index) {
+              final number = index + 1;
+              final isSelected = controller.isScaleNumberSelected(number);
+              return GestureDetector(
+                onTap: () => controller.selectScaleNumber(number),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.width(value: 14),
+                    vertical: AppSize.height(value: 8),
+                  ),
+                  decoration: BoxDecoration(
+                    color: isSelected ? Colors.redAccent : AppColors.resultBg,
+                    borderRadius: BorderRadius.circular(
+                      AppSize.width(value: 06),
+                    ),
+                  ),
+                  child: AppText(
+                    text: "$number",
+                    color: isSelected ? AppColors.white : AppColors.black,
+                    fontSize: AppSize.width(value: 20),
+                    fontWeight: FontWeight.w600,
+                    textAlign: TextAlign.center,
+                    fontFamilyIndex: 2,
+                  ),
+                ),
+              );
+            }),
+          ),
+          Gap(height: AppSize.height(value: 12)),
+          // Second row: 6-10
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(5, (index) {
+              final number = index + 6;
+              final isSelected = controller.isScaleNumberSelected(number);
+              return GestureDetector(
+                onTap: () => controller.selectScaleNumber(number),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.width(value: 14),
+                    vertical: AppSize.height(value: 8),
+                  ),
+                  decoration: BoxDecoration(
+                    color: isSelected ? Colors.redAccent : AppColors.resultBg,
+                    borderRadius: BorderRadius.circular(
+                      AppSize.width(value: 06),
+                    ),
+                  ),
+                  child: AppText(
+                    text: "$number",
+                    color: isSelected ? AppColors.white : AppColors.black,
+                    fontSize: AppSize.width(value: 20),
+                    fontWeight: FontWeight.w600,
+                    textAlign: TextAlign.center,
+                    fontFamilyIndex: 2,
+                  ),
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomButton(QuestionnariesScreenController controller) {
+    return Obx(() {
+      final isResult = controller.isResultPage;
+      final isGoals = controller.isGoalsPage;
+
+      return AppButton(
+        title: isResult
+            ? 'Continue'
+            : (isGoals ? 'See Results' : AppString.next),
+        titleColor: isResult ? AppColors.white : AppColors.black,
+        backgroundColor: isResult ? Colors.red : AppColors.white,
+        onTap: isResult
+            ? () {
+                try {
+                  Get.offNamed(AppRoute.freeTrialScreen);
+                  appLog('Navigate to subscription screen');
+                } catch (e) {
+                  appLog('Navigation error: $e');
+                }
+              }
+            : controller.nextPage,
+      );
+    });
+  }
+
+  Widget _buildGoalsPage(QuestionnariesScreenController controller) {
+    return Obx(
+      () => Column(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSize.width(value: 12),
+              vertical: AppSize.height(value: 9),
+            ),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(AppSize.width(value: 12)),
+            ),
+            child: Column(
+              children: [
+                Image.asset(
+                  AppStaticImages.goalPageImage,
+                  height: AppSize.height(value: 115),
+                  width: AppSize.width(value: 115),
+                ),
+                Gap(height: AppSize.height(value: 14)),
+                AppText(
+                  text: AppString.whatdoYouwanttoAchieve,
+                  fontSize: AppSize.width(value: 16),
+                  fontFamilyIndex: 5,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.black,
+                  textAlign: TextAlign.center,
+                ),
+                Gap(height: AppSize.height(value: 14)),
+                ...List.generate(controller.goalOptions.length, (index) {
+                  final isSelected = controller.isGoalSelected(index);
+                  return GestureDetector(
+                    onTap: () => controller.toggleGoal(index),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSize.width(value: 18),
+                        vertical: AppSize.height(value: 8),
+                      ),
+                      margin: EdgeInsets.only(bottom: AppSize.height(value: 8)),
+                      height: AppSize.height(value: 44),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: AppColors.blue50,
+                        borderRadius: BorderRadius.circular(
+                          AppSize.width(value: 12),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.check_circle,
+                            color: isSelected
+                                ? AppColors.questionBG05
+                                : AppColors.white900,
+                            size: AppSize.width(value: 20),
+                          ),
+                          Gap(width: AppSize.width(value: 12)),
+                          AppText(
+                            text: controller.goalOptions[index],
+                            fontSize: AppSize.width(value: 14),
+                            fontFamilyIndex: 4,
+                            fontWeight: FontWeight.w600,
+                            color: isSelected
+                                ? AppColors.questionBG05
+                                : AppColors.grey500,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
-Widget resultPage() => Column(
-  children: [
-    Gap(height: AppSize.height(value: 70)),
-    AppText(
-      text: AppString.resultQuestion,
-      fontFamilyIndex: 3,
-      lineHeight: 1.83,
-      maxLines: 3,
-      textAlign: TextAlign.center,
-      color: AppColors.black,
-      fontSize: AppSize.width(value: 24),
-      overflow: TextOverflow.ellipsis,
-    ),
-    Gap(height: AppSize.height(value: 05)),
-    AppText(
-      text: AppString.answer,
-      fontFamilyIndex: 2,
-      fontSize: AppSize.width(value: 18),
-      fontWeight: FontWeight.w400,
-      lineHeight: 1.5,
-      color: AppColors.black,
-      maxLines: 2,
-      textAlign: TextAlign.center,
-      overflow: TextOverflow.ellipsis,
-    ),
-    Image.asset(
-      AppStaticImages.resultPage,
-      height: AppSize.height(value: 392),
-      width: AppSize.width(value: 262),
-    ),
-    Gap(height: AppSize.height(value: 25)),
-  ],
-);
+// Page configuration model
+class _PageConfig {
+  final Color selectedColor;
+  final Color cardBgColor;
 
-// Helper functions for slider colors
+  const _PageConfig({required this.selectedColor, required this.cardBgColor});
+}
+
+_PageConfig _getPageConfig(int pageIndex) {
+  switch (pageIndex) {
+    case 0:
+      return const _PageConfig(
+        selectedColor: AppColors.questionBG01,
+        cardBgColor: AppColors.answerCardBgColor,
+      );
+    case 1:
+      return const _PageConfig(
+        selectedColor: AppColors.questionBG02,
+        cardBgColor: AppColors.answerCardBgColor,
+      );
+    case 2:
+      return const _PageConfig(
+        selectedColor: AppColors.questionBG03,
+        cardBgColor: AppColors.answerCardBgColor,
+      );
+    default:
+      return const _PageConfig(
+        selectedColor: AppColors.questionBG01,
+        cardBgColor: AppColors.answerCardBgColor,
+      );
+  }
+}
+
+Color _getBackgroundColor(int pageIndex) {
+  switch (pageIndex) {
+    case 0:
+      return AppColors.questionBG01;
+    case 1:
+      return AppColors.questionBG02;
+    case 2:
+      return AppColors.questionBG03;
+    case 3:
+      return AppColors.questionBG05;
+    case 4:
+      return AppColors.resultBg;
+    default:
+      return AppColors.questionBG01;
+  }
+}
+
 Color _getActiveSliderColor(int pageIndex) {
   switch (pageIndex) {
     case 0:
@@ -482,53 +523,14 @@ Color _getActiveSliderColor(int pageIndex) {
     case 2:
       return AppColors.questionBG03StatusBarColor;
     case 3:
-      return AppColors.questionBG04StatusBarColor;
+      return AppColors.questionBG05StatusBarColor;
     case 4:
       return AppColors.questionBG05StatusBarColor;
-    case 5:
-      return AppColors
-          .questionBG05StatusBarColor; // Use same color for result page
     default:
       return AppColors.questionBG01StatusBarColor;
   }
 }
 
-Color getBackgroundColors(int pageIndex) {
-  switch (pageIndex) {
-    case 0:
-      return AppColors.questionBG01;
-    case 1:
-      return AppColors.questionBG02;
-    case 2:
-      return AppColors.questionBG03;
-    case 3:
-      return AppColors.questionBG04;
-    case 4:
-      return AppColors.questionBG05;
-    case 5:
-      return AppColors.resultBg;
-    default:
-      return AppColors.questionBG01;
-  }
-}
-
 Color _getInactiveSliderColor(int pageIndex) {
-  switch (pageIndex) {
-    case 0:
-      return AppColors.questionBG01StatusBarColor.withValues(alpha: 0.3);
-    case 1:
-      return AppColors.questionBG02StatusBarColor.withValues(alpha: 0.3);
-    case 2:
-      return AppColors.questionBG03StatusBarColor.withValues(alpha: 0.3);
-    case 3:
-      return AppColors.questionBG04StatusBarColor.withValues(alpha: 0.3);
-    case 4:
-      return AppColors.questionBG05StatusBarColor.withValues(alpha: 0.3);
-    case 5:
-      return AppColors.questionBG05StatusBarColor.withValues(
-        alpha: 0.3,
-      ); // Use same color for result page
-    default:
-      return AppColors.questionBG01StatusBarColor.withValues(alpha: 0.3);
-  }
+  return _getActiveSliderColor(pageIndex).withValues(alpha: 0.3);
 }

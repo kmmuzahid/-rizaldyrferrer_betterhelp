@@ -371,7 +371,7 @@ class QuestionnariesScreen extends StatelessWidget {
         onTap: isResult
             ? () {
                 try {
-                  Get.offNamed(AppRoute.subscriptionscreen);
+                  Get.offNamed(AppRoute.freeTrialScreen);
                   appLog('Navigate to subscription screen');
                 } catch (e) {
                   appLog('Navigation error: $e');

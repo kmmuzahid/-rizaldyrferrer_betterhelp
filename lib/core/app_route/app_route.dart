@@ -7,6 +7,7 @@ import 'package:better_help/screen/auth_screen/signup_screen/signup_screen.dart'
 import 'package:better_help/screen/bottom_nav/bottom_nav_screen.dart';
 import 'package:better_help/screen/community_sections/creating_post/creating_post.dart';
 import 'package:better_help/screen/community_sections/main_community/community_screen.dart';
+import 'package:better_help/screen/free_trial_screen/free_trial_screen.dart';
 import 'package:better_help/screen/habits_sections/home_screen.dart';
 import 'package:better_help/screen/habits_sections/main_habits/habits_screen.dart';
 import 'package:better_help/screen/habits_sections/my_task/my_task.dart';
@@ -35,6 +36,7 @@ import 'package:better_help/widget/app_confeti/habit_complete_screen.dart';
 import 'package:get/get.dart';
 
 import '../../screen/before_question_screen/before_question_screen.dart';
+import '../../screen/free_trial_screen/free_trial_enroll.dart';
 
 class AppRoute {
   AppRoute._();
@@ -44,6 +46,8 @@ class AppRoute {
   static const String homescreen = '/homescreen';
   static const String questionariescreen = '/questionariescreen';
   static const String beforeQuestionScreen = '/beforeQuestionScreen';
+  static const String freeTrialScreen = "/freeTrialScreen";
+  static const String freeTrialEnrollScreen = "/freeTrialEnrollScreen";
 
   //! Authentication Screen Route
   static const String loginScreen = '/loginScreen';
@@ -102,6 +106,20 @@ class AppRoute {
     GetPage(
       name: AppRoute.onboardingscreen,
       page: () => const OnbardingScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
+    ),
+    //! Free Trial Screen Route
+    GetPage(
+      name: AppRoute.freeTrialScreen,
+      page: () => FreeTrialScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
+    ),
+    //! Free Trail Enroll Screen Route
+    GetPage(
+      name: AppRoute.freeTrialEnrollScreen,
+      page: () => FreeTrialEnrollScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
     ),

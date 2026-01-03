@@ -95,7 +95,7 @@ class QuestionnariesScreenController extends GetxController {
   void completeQuestionnaire() {
     appLog('Questionnaire completed with ${answers.length} answers');
     _processAnswers();
-    Get.offNamed(AppRoute.subscriptionscreen);
+    Get.offNamed(AppRoute.freeTrialScreen);
   }
 
   void _processAnswers() {

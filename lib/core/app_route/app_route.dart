@@ -34,7 +34,7 @@ import 'package:better_help/screen/supports_sections/main_supports/support_scree
 import 'package:better_help/widget/app_confeti/habit_complete_screen.dart';
 import 'package:get/get.dart';
 
-import '../../screen/questionnaries_screen/before_question_screen/before_question_screen.dart';
+import '../../screen/before_question_screen/before_question_screen.dart';
 
 class AppRoute {
   AppRoute._();

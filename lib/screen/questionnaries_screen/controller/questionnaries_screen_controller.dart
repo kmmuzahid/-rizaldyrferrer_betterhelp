@@ -1,31 +1,60 @@
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
+import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class QuestionnariesScreenController extends GetxController {
   final PageController pageController = PageController();
   RxDouble progressValue = 1.0.obs;
-  RxInt currentQuestionIndex = 0.obs;
   RxInt currentPageIndex = 0.obs;
-  RxString selectedAnswer = ''.obs;
 
-  final int totalQuestions = 25;
-  final int totalSteps = 5;
-  final int totalPages = 6;
+  // Configuration
+  static const int questionsPerPage = 5;
+  static const int totalQuestionPages = 3;
+  static const int totalPages =
+      5; // 3 question pages + 1 goals page + 1 result page
 
-  // Answer options
-  final List<String> answerOptions = ['rarely', 'frequently', 'sometimes'];
-
-  // Store answers for all questions
+  // Store answers for all questions (key: questionNumber, value: answer)
   RxMap<int, String> answers = <int, String>{}.obs;
 
-  // Store selected options for multi-select questions (like page 5)
-  RxList<int> selectedOptions = <int>[].obs;
+  // Questions data organized by page
+  final List<List<String>> questionsByPage = [
+    // Page 1 - Questions 1-5
+    [
+      AppString.question1,
+      AppString.question2,
+      AppString.question3,
+      AppString.question4,
+      AppString.question5,
+    ],
+    // Page 2 - Questions 6-10
+    [
+      AppString.question6,
+      AppString.question7,
+      AppString.question8,
+      AppString.question9,
+      AppString.question10,
+    ],
+    // Page 3 - Questions 11-15
+    [
+      AppString.question11,
+      AppString.question12,
+      AppString.question1, // Reusing for demo - replace with question13
+      AppString.question2, // Reusing for demo - replace with question14
+      AppString.question3, // Reusing for demo - replace with question15
+    ],
+  ];
 
-  void selectAnswer(String answer) {
-    selectedAnswer.value = answer;
-    answers[currentQuestionIndex.value] = answer;
+  int get totalQuestions =>
+      questionsByPage.fold(0, (sum, page) => sum + page.length);
+
+  void selectAnswer(int questionNumber, String answer) {
+    answers[questionNumber] = answer;
+  }
+
+  bool isAnswerSelected(int questionNumber, String answer) {
+    return answers[questionNumber] == answer;
   }
 
   void nextPage() {
@@ -37,10 +66,6 @@ class QuestionnariesScreenController extends GetxController {
         curve: Curves.easeInOut,
       );
       updateProgress();
-      // Check if this is the last page, then navigate to subscription screen
-      if (currentPageIndex.value == totalPages - 1) {
-        Get.toNamed(AppRoute.subscriptionscreen);
-      }
     } else {
       completeQuestionnaire();
     }
@@ -63,48 +88,19 @@ class QuestionnariesScreenController extends GetxController {
     updateProgress();
   }
 
-  void nextQuestion() {
-    if (currentQuestionIndex.value < totalQuestions - 1) {
-      currentQuestionIndex.value++;
-      selectedAnswer.value = answers[currentQuestionIndex.value] ?? '';
-      updateProgress();
-    } else {
-      completeQuestionnaire();
-    }
-  }
-
-  void previousQuestion() {
-    if (currentQuestionIndex.value > 0) {
-      currentQuestionIndex.value--;
-      selectedAnswer.value = answers[currentQuestionIndex.value] ?? '';
-      updateProgress();
-    }
-  }
-
-  void goToQuestion(int index) {
-    if (index >= 0 && index < totalQuestions) {
-      currentQuestionIndex.value = index;
-      selectedAnswer.value = answers[index] ?? '';
-      updateProgress();
-    }
-  }
-
   void updateProgress() {
-    // Progress based on current page (1-5 scale for 5 steps)
-    int currentStep = currentPageIndex.value + 1;
-    progressValue.value = currentStep.toDouble();
+    progressValue.value = (currentPageIndex.value + 1).toDouble();
   }
 
   void completeQuestionnaire() {
     appLog('Questionnaire completed with ${answers.length} answers');
-    // Process answers and navigate to next screen
     _processAnswers();
+    Get.offNamed(AppRoute.subscriptionscreen);
   }
 
   void _processAnswers() {
-    // Process all answers here
-    answers.forEach((questionIndex, answer) {
-      appLog('Question ${questionIndex + 1}: $answer');
+    answers.forEach((questionNumber, answer) {
+      appLog('Question $questionNumber: $answer');
     });
   }
 
@@ -113,42 +109,58 @@ class QuestionnariesScreenController extends GetxController {
     return '$currentStep/$totalPages';
   }
 
-  String getCurrentQuestionText() {
-    return '${currentQuestionIndex.value + 1}/$totalQuestions';
-  }
-
-  bool isAnswerSelected(String answer) {
-    return selectedAnswer.value == answer;
-  }
-
-  bool isQuestionAnswered(int questionIndex) {
-    return answers.containsKey(questionIndex);
-  }
-
   double getCompletionPercentage() {
     return (answers.length / totalQuestions) * 100;
   }
 
-  // Methods for multi-select options (page 5)
-  void toggleOption(int index) {
-    if (selectedOptions.contains(index)) {
-      selectedOptions.remove(index);
+  bool get isResultPage => currentPageIndex.value == totalPages - 1;
+  bool get isGoalsPage => currentPageIndex.value == totalPages - 2;
+  bool get isLastQuestionPage =>
+      currentPageIndex.value == totalQuestionPages - 1;
+
+  // Goals page multi-select options
+  RxList<int> selectedGoals = <int>[].obs;
+
+  // Scale selection (1-10) for result page
+  RxnInt selectedScaleNumber = RxnInt(null);
+
+  void selectScaleNumber(int number) {
+    selectedScaleNumber.value = number;
+  }
+
+  bool isScaleNumberSelected(int number) => selectedScaleNumber.value == number;
+
+  final List<String> goalOptions = [
+    AppString.buildingBetterHabits,
+    AppString.boostingProductivity,
+    AppString.stayingActiveandEngergized,
+    AppString.sharperningFocus,
+    AppString.strengtheingDiscipline,
+    AppString.livingMoreMidfully,
+    AppString.mangingTimeBetter,
+    AppString.reducingOverwhelm,
+    AppString.followingThoughonGoals,
+    AppString.feelingEmotionallyBalanced,
+    AppString.improvingSelfawreness,
+    AppString.creatingAhealthierRoutine,
+  ];
+
+  void toggleGoal(int index) {
+    if (selectedGoals.contains(index)) {
+      selectedGoals.remove(index);
     } else {
-      selectedOptions.add(index);
+      selectedGoals.add(index);
     }
   }
 
-  void clearSelectedOptions() {
-    selectedOptions.clear();
-  }
-
-  bool isOptionSelected(int index) {
-    return selectedOptions.contains(index);
-  }
+  bool isGoalSelected(int index) => selectedGoals.contains(index);
 
   @override
   void onClose() {
     pageController.dispose();
+    answers.clear();
+    selectedGoals.clear();
+    selectedScaleNumber.value = null;
     super.onClose();
   }
 }

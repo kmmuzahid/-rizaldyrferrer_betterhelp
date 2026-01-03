@@ -47,10 +47,11 @@ class OnboardingScreenController extends GetxController {
   }
 
   void goToSubscriptionScreen() {
-    //!  Replace with your actual subscription screen route
-    //! Get.offNamed('/subscription');
+    //! Clean up any existing controllers before navigation
+    Get.delete<OnboardingScreenController>();
+    //! Navigate to before question screen
     Get.offAllNamed(AppRoute.beforeQuestionScreen);
-    appLog('Navigate to subscription screen');
+    appLog('Navigate to before question screen');
   }
 
   void onPageChanged(int index) {

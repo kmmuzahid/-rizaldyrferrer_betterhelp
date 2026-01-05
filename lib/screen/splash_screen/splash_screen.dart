@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
+   SplashScreen({super.key});
+   final SplashScreenController controller = Get.find<SplashScreenController>();
 
   @override
   Widget build(BuildContext context) {
-    Get.put(SplashScreenController());
     Size size = MediaQuery.of(context).size;
     AppSize.size = size;
     return Scaffold(

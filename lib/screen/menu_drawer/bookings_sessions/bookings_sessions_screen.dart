@@ -142,7 +142,7 @@ class BookingsSessionsScreen extends StatelessWidget {
                             height: AppSize.height(value: 30),
                             width: AppSize.width(value: 100),
                             onTap: () {
-                              AppSnackBar.message(
+                              AppSnackBar.showWarning(
                                 "This Feature will implemented sooned",
                               );
                             },

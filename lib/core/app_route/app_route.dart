@@ -101,7 +101,7 @@ class AppRoute {
     //! Splash Screen Route
     GetPage(
       name: AppRoute.splashscreen,
-      page: () => const SplashScreen(),
+      page: () => SplashScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
     ),

@@ -19,8 +19,11 @@ class QuestionnariesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(
-      QuestionnariesScreenController(),
+    // final controller = Get.put(
+    //   QuestionnariesScreenController(),
+    //   tag: 'questionnaires',
+    // );
+    final controller = Get.find<QuestionnariesScreenController>(
       tag: 'questionnaires',
     );
 

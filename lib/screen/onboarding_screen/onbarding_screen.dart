@@ -16,7 +16,7 @@ class OnbardingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(OnboardingScreenController());
+    final controller = Get.find<OnboardingScreenController>();
 
     return Obx(
       () => Scaffold(

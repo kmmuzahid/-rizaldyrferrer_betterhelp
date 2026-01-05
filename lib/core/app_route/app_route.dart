@@ -1,3 +1,4 @@
+import 'package:better_help/core/app_internet_check/app_interner_check.dart';
 import 'package:better_help/screen/auth_screen/change_password_screen/change_password_screen.dart';
 import 'package:better_help/screen/auth_screen/complete_profile_screen/complete_profile_screen.dart';
 import 'package:better_help/screen/auth_screen/forgot_password_screen/forgot_password_screen.dart';
@@ -26,6 +27,7 @@ import 'package:better_help/screen/menu_drawer/saved_article/saved_article_scree
 import 'package:better_help/screen/menu_drawer/talk_to_support/talk_to_support_screen.dart';
 import 'package:better_help/screen/menu_drawer/terms_conditions/terms_conditions_screen.dart';
 import 'package:better_help/screen/menu_drawer/user_drawer/user_drawer.dart';
+import 'package:better_help/screen/no_internet_screen/no_internet_screen.dart';
 import 'package:better_help/screen/onboarding_screen/onbarding_screen.dart';
 import 'package:better_help/screen/progress_sections/main_progress/progress_screen.dart';
 import 'package:better_help/screen/questionnaries_screen/questionnaries_screen.dart';
@@ -48,6 +50,7 @@ class AppRoute {
   static const String beforeQuestionScreen = '/beforeQuestionScreen';
   static const String freeTrialScreen = "/freeTrialScreen";
   static const String freeTrialEnrollScreen = "/freeTrialEnrollScreen";
+  static const String noInternetScreen = "/noInternetScreen";
 
   //! Authentication Screen Route
   static const String loginScreen = '/loginScreen';
@@ -115,6 +118,7 @@ class AppRoute {
       page: () => FreeTrialScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Free Trail Enroll Screen Route
     GetPage(
@@ -122,6 +126,7 @@ class AppRoute {
       page: () => FreeTrialEnrollScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Subscription Screen Route
     GetPage(
@@ -129,6 +134,7 @@ class AppRoute {
       page: () => const SubscriptionAndPayment(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Before Question Screen Route
     GetPage(
@@ -136,11 +142,20 @@ class AppRoute {
       page: () => BeforeQuestionScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Questionnaries Screen Route
     GetPage(
       name: AppRoute.questionariescreen,
       page: () => const QuestionnariesScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
+    ),
+    //! No Internet Screen
+    GetPage(
+      name: AppRoute.noInternetScreen,
+      page: () => NoInternetScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
     ),
@@ -150,6 +165,7 @@ class AppRoute {
       page: () => const LoginScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Signup Screen Route
     GetPage(
@@ -164,6 +180,7 @@ class AppRoute {
       page: () => const ForgotPasswordScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! OTP Verification Screen Route
     GetPage(
@@ -171,6 +188,7 @@ class AppRoute {
       page: () => const OtpVerificationScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Change Password Screen Route
     GetPage(
@@ -178,6 +196,7 @@ class AppRoute {
       page: () => const ChangePasswordScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Complete Profile Screen Route
     GetPage(
@@ -185,6 +204,7 @@ class AppRoute {
       page: () => const CompleteProfileScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Home Screen Route
     GetPage(
@@ -192,6 +212,7 @@ class AppRoute {
       page: () => const HomeScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Bottom Navigation Screen Route
     GetPage(
@@ -199,6 +220,7 @@ class AppRoute {
       page: () => const BottomNavScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Habits Screen Route
     GetPage(
@@ -206,6 +228,7 @@ class AppRoute {
       page: () => const HabitsScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Community Screen Route
     GetPage(
@@ -213,6 +236,7 @@ class AppRoute {
       page: () => const CommunityScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Learning Screen Route
     GetPage(
@@ -220,6 +244,7 @@ class AppRoute {
       page: () => const LearnScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Article Details Screen Route
     GetPage(
@@ -227,6 +252,7 @@ class AppRoute {
       page: () => const ArticlesDetailsScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Community Screen Route
     GetPage(
@@ -234,6 +260,7 @@ class AppRoute {
       page: () => const CreatingPostScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Support Screen Route
     GetPage(
@@ -241,6 +268,7 @@ class AppRoute {
       page: () => const SupportScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Progress Screen Route
     GetPage(
@@ -248,6 +276,7 @@ class AppRoute {
       page: () => const ProgressScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! TimerScreen Screen Route
     GetPage(
@@ -255,6 +284,7 @@ class AppRoute {
       page: () => TimerScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! My Task Screen Route
     GetPage(
@@ -262,6 +292,7 @@ class AppRoute {
       page: () => MyTaskScreeen(),
       transition: Transition.rightToLeft,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! All Categories screen
     GetPage(
@@ -269,6 +300,7 @@ class AppRoute {
       page: () => CategoriesScreen(),
       transition: Transition.rightToLeft,
       transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Trending course scree
     GetPage(
@@ -276,6 +308,7 @@ class AppRoute {
       page: () => TrandingCourse(),
       transition: Transition.rightToLeft,
       transitionDuration: Duration(microseconds: 300),
+      middlewares: [AppInternerCheck()],
     ),
     //! Menu Drawer Page
     GetPage(
@@ -283,6 +316,7 @@ class AppRoute {
       page: () => UserDrawer(),
       transition: Transition.fadeIn,
       transitionDuration: Duration(milliseconds: 400),
+      middlewares: [AppInternerCheck()],
     ),
     //! Menu Drawer Page
     GetPage(
@@ -290,6 +324,7 @@ class AppRoute {
       page: () => BookingsSessionsScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      middlewares: [AppInternerCheck()],
     ),
     //! calendar taks screen
     GetPage(
@@ -297,6 +332,7 @@ class AppRoute {
       page: () => CalendarTaskScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      middlewares: [AppInternerCheck()],
     ),
     //! faqs screen
     GetPage(
@@ -304,6 +340,7 @@ class AppRoute {
       page: () => FaqsScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      middlewares: [AppInternerCheck()],
     ),
     //! favrite course screen
     GetPage(
@@ -311,6 +348,7 @@ class AppRoute {
       page: () => FavoriteCourseScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      middlewares: [AppInternerCheck()],
     ),
     //! my subscription screen
     GetPage(
@@ -318,6 +356,7 @@ class AppRoute {
       page: () => MySubscriptionScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      middlewares: [AppInternerCheck()],
     ),
     //! privacy policy screen
     GetPage(
@@ -325,6 +364,7 @@ class AppRoute {
       page: () => PrivacyPolicyScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      middlewares: [AppInternerCheck()],
     ),
     //! saved article screen
     GetPage(
@@ -332,6 +372,7 @@ class AppRoute {
       page: () => SavedArticleScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      middlewares: [AppInternerCheck()],
     ),
     //! talk to support screen
     GetPage(
@@ -339,6 +380,7 @@ class AppRoute {
       page: () => TalkToSupportScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      middlewares: [AppInternerCheck()],
     ),
     //! terms and conditions screen
     GetPage(
@@ -346,6 +388,7 @@ class AppRoute {
       page: () => TermsConditionsScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      middlewares: [AppInternerCheck()],
     ),
     //! congratulation screen
     GetPage(
@@ -353,6 +396,7 @@ class AppRoute {
       page: () => CongratulationScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      middlewares: [AppInternerCheck()],
     ),
   ];
 }

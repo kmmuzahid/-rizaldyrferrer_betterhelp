@@ -13,6 +13,9 @@ class StorageService {
   static const String _refreshTokenKey = 'refresh_token';
   static const String _userDataKey = 'user_data';
   static const String _imageDataPrefix = 'image_';
+  static const String _questionnaireResponsesKey = 'questionnaire_responses';
+  static const String _questionnaireOutputKey = 'questionnaire_output';
+  static const String _createUserTokenKey = 'create_user_token';
   //static const String _settingsKey = 'app_settings';
 
   /// Initialize the storage service
@@ -89,6 +92,73 @@ class StorageService {
   Future<bool> removeUserData() async {
     final prefs = await _preferences;
     return await prefs.remove(_userDataKey);
+  }
+
+  // ==================== Questionnaire Responses Management ====================
+
+  /// Save questionnaire responses
+  Future<bool> saveQuestionnaireResponses(
+    List<Map<String, dynamic>> responses,
+  ) async {
+    final prefs = await _preferences;
+    final jsonString = json.encode(responses);
+    return await prefs.setString(_questionnaireResponsesKey, jsonString);
+  }
+
+  /// Get questionnaire responses
+  Future<List<Map<String, dynamic>>?> getQuestionnaireResponses() async {
+    final prefs = await _preferences;
+    final jsonString = prefs.getString(_questionnaireResponsesKey);
+    if (jsonString == null) return null;
+    final decoded = json.decode(jsonString) as List;
+    return decoded.map((e) => Map<String, dynamic>.from(e)).toList();
+  }
+
+  /// Remove questionnaire responses
+  Future<bool> removeQuestionnaireResponses() async {
+    final prefs = await _preferences;
+    return await prefs.remove(_questionnaireResponsesKey);
+  }
+
+  /// Save questionnaire output (API response data)
+  Future<bool> saveQuestionnaireOutput(Map<String, dynamic> output) async {
+    final prefs = await _preferences;
+    final jsonString = json.encode(output);
+    return await prefs.setString(_questionnaireOutputKey, jsonString);
+  }
+
+  /// Get questionnaire output
+  Future<Map<String, dynamic>?> getQuestionnaireOutput() async {
+    final prefs = await _preferences;
+    final jsonString = prefs.getString(_questionnaireOutputKey);
+    if (jsonString == null) return null;
+    return json.decode(jsonString) as Map<String, dynamic>;
+  }
+
+  /// Remove questionnaire output
+  Future<bool> removeQuestionnaireOutput() async {
+    final prefs = await _preferences;
+    return await prefs.remove(_questionnaireOutputKey);
+  }
+
+  // ==================== Create User Token Management ====================
+
+  /// Save create user token (for OTP verification)
+  Future<bool> saveCreateUserToken(String token) async {
+    final prefs = await _preferences;
+    return await prefs.setString(_createUserTokenKey, token);
+  }
+
+  /// Get create user token
+  Future<String?> getCreateUserToken() async {
+    final prefs = await _preferences;
+    return prefs.getString(_createUserTokenKey);
+  }
+
+  /// Remove create user token
+  Future<bool> removeCreateUserToken() async {
+    final prefs = await _preferences;
+    return await prefs.remove(_createUserTokenKey);
   }
 
   // ==================== Image Data Management ====================

@@ -52,7 +52,7 @@ class AppApi {
 
           if (token.isNotEmpty) {
             options.headers["Authorization"] = "Bearer $token";
-          } else {
+          } else if (options.headers["Authorization"] == null) {
             appLog(
               "WARNING: No token found for API request to ${options.path}",
             );

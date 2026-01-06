@@ -39,6 +39,7 @@ import 'package:get/get.dart';
 
 import '../../screen/before_question_screen/before_question_screen.dart';
 import '../../screen/free_trial_screen/free_trial_enroll.dart';
+import '../../screen/questionnaries_screen/questionnaire_summary_screen.dart';
 
 class AppRoute {
   AppRoute._();
@@ -47,6 +48,8 @@ class AppRoute {
   static const String subscriptionscreen = '/subscriptionscreen';
   static const String homescreen = '/homescreen';
   static const String questionariescreen = '/questionariescreen';
+  static const String questionnaireSummaryScreen =
+      '/questionnaireSummaryScreen';
   static const String beforeQuestionScreen = '/beforeQuestionScreen';
   static const String freeTrialScreen = "/freeTrialScreen";
   static const String freeTrialEnrollScreen = "/freeTrialEnrollScreen";
@@ -148,6 +151,14 @@ class AppRoute {
     GetPage(
       name: AppRoute.questionariescreen,
       page: () => const QuestionnariesScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
+    ),
+    //! Questionnaire Summary Screen Route
+    GetPage(
+      name: AppRoute.questionnaireSummaryScreen,
+      page: () => const QuestionnaireSummaryScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
       middlewares: [AppInternerCheck()],

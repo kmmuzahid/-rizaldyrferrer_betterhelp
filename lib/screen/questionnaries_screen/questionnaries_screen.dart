@@ -1,9 +1,7 @@
-import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/questionnaries_screen/controller/questionnaries_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
-import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
@@ -364,23 +362,21 @@ class QuestionnariesScreen extends StatelessWidget {
     return Obx(() {
       final isResult = controller.isResultPage;
       final isGoals = controller.isGoalsPage;
+      final isLoading = controller.isLoading.value;
 
       return AppButton(
-        title: isResult
-            ? 'Continue'
-            : (isGoals ? 'See Results' : AppString.next),
+        title: isLoading
+            ? 'Submitting...'
+            : (isResult
+                  ? 'Continue'
+                  : (isGoals ? 'See Results' : AppString.next)),
         titleColor: isResult ? AppColors.white : AppColors.black,
         backgroundColor: isResult ? Colors.red : AppColors.white,
-        onTap: isResult
-            ? () {
-                try {
-                  Get.offNamed(AppRoute.freeTrialScreen);
-                  appLog('Navigate to subscription screen');
-                } catch (e) {
-                  appLog('Navigation error: $e');
-                }
-              }
-            : controller.nextPage,
+        onTap: isLoading
+            ? null
+            : (isResult
+                  ? () => controller.completeQuestionnaire()
+                  : controller.nextPage),
       );
     });
   }

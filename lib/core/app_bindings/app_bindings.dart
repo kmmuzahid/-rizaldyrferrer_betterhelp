@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../../screen/auth_screen/signup_screen/controller/singup_screen_controller.dart';
 import '../../screen/onboarding_screen/controller/onboarding_screen_controller.dart';
 import '../../screen/questionnaries_screen/controller/questionnaries_screen_controller.dart';
 import '../../screen/splash_screen/controller/splash_screen_controller.dart';
@@ -36,5 +37,11 @@ class AppInitialBindings implements Bindings {
       fenix: true,
       tag: 'questionnaires',
     );
+
+    //! Signup Screen Controller
+    Get.lazyPut<SingupScreenController>(() {
+      appLog('Registering SingupScreenController');
+      return SingupScreenController();
+    }, fenix: true);
   }
 }

@@ -6,4 +6,10 @@ class AppApiurl {
   static const baseUrl = "$liveDomain/api/v1";
   static const imageUrl = "";
   static const questionAnswer = "$baseUrl/users/question-answer";
+  static const createUser = "$baseUrl/users/create";
+  static const resendOtp = "$baseUrl/otp/resend-otp";
+  static const verifyOtp = "$baseUrl/users/create-user-verify-otp";
+  static const forgotPassword = "$baseUrl/auth/forgot-password-otp";
+  static const resendForgotPasswordOtp = "$baseUrl/otp/resend-otp";
+  static const login = "$baseUrl/auth/login";
 }

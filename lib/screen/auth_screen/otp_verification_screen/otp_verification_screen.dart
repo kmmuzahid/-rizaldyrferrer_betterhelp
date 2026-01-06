@@ -169,13 +169,16 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               ),
               //! Verify Otp Button
               Gap(height: 30),
-              AppButton(
-                title: AppString.verify,
-                onTap: () {
-                  controller.verifyOtp(_controller.text);
-                },
-                backgroundColor: AppColors.primary500,
-                titleColor: AppColors.white,
+              Obx(
+                () => AppButton(
+                  title: AppString.verify,
+                  isLoading: controller.isLoading.value,
+                  onTap: controller.isLoading.value
+                      ? null
+                      : () => controller.verifyOtp(_controller.text),
+                  backgroundColor: AppColors.primary500,
+                  titleColor: AppColors.white,
+                ),
               ),
               Gap(height: 30),
             ],

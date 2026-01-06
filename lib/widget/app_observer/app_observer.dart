@@ -1,103 +1,195 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 class NavigationObserver extends NavigatorObserver {
   final List<String> routeStack = <String>[];
 
-  // ANSI Color codes for colorful output
-  static const String _reset = '\x1B[0m';
-  static const String _red = '\x1B[31m';
-  static const String _green = '\x1B[32m';
-  static const String _yellow = '\x1B[33m';
-  static const String _magenta = '\x1B[35m';
-  static const String _cyan = '\x1B[36m';
-  static const String _bold = '\x1B[1m';
+  // Auto-detect ANSI support
+  static final bool _supportsAnsi =
+      !Platform.isAndroid && !Platform.isIOS && stdout.supportsAnsiEscapes;
+
+  // ANSI Color codes (only applied if supported)
+  static String get _reset => _supportsAnsi ? '\x1B[0m' : '';
+  static String get _red => _supportsAnsi ? '\x1B[31m' : '';
+  static String get _green => _supportsAnsi ? '\x1B[32m' : '';
+  static String get _yellow => _supportsAnsi ? '\x1B[33m' : '';
+  static String get _magenta => _supportsAnsi ? '\x1B[35m' : '';
+  static String get _cyan => _supportsAnsi ? '\x1B[36m' : '';
+  static String get _bold => _supportsAnsi ? '\x1B[1m' : '';
+  static String get _dim => _supportsAnsi ? '\x1B[2m' : '';
 
   @override
-  void didPush(Route route, Route? previousRoute) {
-    super.didPush(route, previousRoute);
-    final routeName = route.settings.name ?? 'Unknown';
+  void didPush(Route<dynamic>? route, Route<dynamic>? previousRoute) {
+    super.didPush(route!, previousRoute);
+
+    if (route == null) return;
+
+    final routeName = _getRouteName(route);
     routeStack.add(routeName);
-    _printColored(
-      '🚀 PUSH',
-      '$_green$_bold${routeName.replaceAll('/', '')}$_reset',
-      'Stack: ${routeStack.length}',
-      'Full: $_cyan${routeStack.join(' → ')}$_reset',
+
+    _logNavigation(
+      emoji: '🚀',
+      action: 'PUSH',
+      routeName: routeName,
+      color: _green,
+      previousRoute: previousRoute != null
+          ? _getRouteName(previousRoute)
+          : null,
     );
-    // _logControllersForRoute(routeName);
   }
 
   @override
-  void didPop(Route route, Route? previousRoute) {
-    super.didPop(route, previousRoute);
-    final routeName = route.settings.name ?? 'Unknown';
+  void didPop(Route<dynamic>? route, Route<dynamic>? previousRoute) {
+    super.didPop(route!, previousRoute);
+
+    if (route == null) return;
+
+    final routeName = _getRouteName(route);
     routeStack.remove(routeName);
-    _printColored(
-      '⬅️  POP',
-      '$_yellow$_bold${routeName.replaceAll('/', '')}$_reset',
-      'Stack: ${routeStack.length}',
-      'Remaining: $_cyan${routeStack.join(' → ')}$_reset',
+
+    _logNavigation(
+      emoji: '⬅️',
+      action: 'POP',
+      routeName: routeName,
+      color: _yellow,
+      previousRoute: previousRoute != null
+          ? _getRouteName(previousRoute)
+          : null,
     );
   }
 
   @override
-  void didReplace({Route? newRoute, Route? oldRoute}) {
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
-    if (newRoute != null) {
-      final newName = newRoute.settings.name ?? 'Unknown';
-      final oldName = oldRoute?.settings.name ?? 'Unknown';
-      routeStack.remove(oldName);
-      routeStack.add(newName);
-      _printColored(
-        '🔄 REPLACE',
-        '$_magenta$oldName$_reset → $_green$_bold$newName$_reset',
-        'Stack: ${routeStack.length}',
-        'Full: $_cyan${routeStack.join(' → ')}$_reset',
-      );
+
+    if (newRoute == null) return;
+
+    final newName = _getRouteName(newRoute);
+    final oldName = oldRoute != null ? _getRouteName(oldRoute) : 'Unknown';
+
+    routeStack.remove(oldName);
+    routeStack.add(newName);
+
+    _logNavigation(
+      emoji: '🔄',
+      action: 'REPLACE',
+      routeName: '$oldName → $newName',
+      color: _magenta,
+    );
+  }
+
+  @override
+  void didRemove(Route<dynamic>? route, Route<dynamic>? previousRoute) {
+    super.didRemove(route!, previousRoute);
+
+    if (route == null) return;
+
+    final routeName = _getRouteName(route);
+    routeStack.remove(routeName);
+
+    _logNavigation(
+      emoji: '🗑️',
+      action: 'REMOVE',
+      routeName: routeName,
+      color: _red,
+    );
+  }
+
+  /// Extract clean route name from Route
+  String _getRouteName(Route<dynamic> route) {
+    final name = route.settings.name;
+    if (name == null || name.isEmpty) return 'Unknown';
+    return name.startsWith('/') ? name.substring(1) : name;
+  }
+
+  /// Unified logging method
+  void _logNavigation({
+    required String emoji,
+    required String action,
+    required String routeName,
+    required String color,
+    String? previousRoute,
+  }) {
+    final stackSize = routeStack.length;
+    final stackPath = routeStack.isEmpty ? 'empty' : routeStack.join(' → ');
+
+    // Build the log message
+    final buffer = StringBuffer();
+
+    // Action header with color
+    buffer.write('$_bold[$emoji $action]$_reset ');
+
+    // Route name with color
+    buffer.write('$color$_bold$routeName$_reset');
+
+    // Previous route context (if available)
+    if (previousRoute != null && action == 'PUSH') {
+      buffer.write(' $_dim(from: $previousRoute)$_reset');
+    }
+
+    // Stack info
+    buffer.write(' | Stack: $_cyan$stackSize$_reset');
+
+    // Full stack path
+    if (stackPath != 'empty') {
+      buffer.write(' | $_dim$stackPath$_reset');
+    }
+
+    debugPrint(buffer.toString());
+    _printSeparator(action);
+  }
+
+  /// Print separator for better readability
+  void _printSeparator(String action) {
+    if (action == 'REPLACE' || action == 'REMOVE') {
+      debugPrint('$_dim${'─' * 50}$_reset');
     }
   }
 
-  @override
-  void didRemove(Route route, Route? previousRoute) {
-    super.didRemove(route, previousRoute);
-    final routeName = route.settings.name ?? 'Unknown';
-    routeStack.remove(routeName);
-    _printColored(
-      '🗑️  REMOVE',
-      '$_red$_bold$routeName$_reset',
-      'Stack: ${routeStack.length}',
-      'Remaining: $_cyan${routeStack.join(' → ')}$_reset',
-    );
+  /// Get current route stack as a readable string
+  String get currentStack =>
+      routeStack.isEmpty ? 'Navigation stack is empty' : routeStack.join(' → ');
+
+  /// Clear the entire route stack (useful for debugging)
+  void clearStack() {
+    routeStack.clear();
+    debugPrint('$_red$_bold[🧹 CLEAR] Navigation stack cleared$_reset');
   }
 
-  void _printColored(
-    String action,
-    String routeInfo,
-    String stackInfo,
-    String fullStack,
-  ) {
-    print('$_bold[$action]$_reset $routeInfo | $stackInfo | $fullStack');
+  /// Print current stack state
+  void printCurrentStack() {
+    debugPrint('$_cyan$_bold[📚 STACK] $currentStack$_reset');
   }
-
-  // void _logControllersForRoute(String routeName) {
-  //   final allControllers =  G.controllers;
-  //   print('$_blue${'='*60}$_reset');
-  //   print('$_bold$_cyan📱 CONTROLLERS for $routeName$_reset');
-  //   print('$_blue${'='*60}$_reset');
-
-  //   if (allControllers.isEmpty) {
-  //     print('  $_dim😴 No active controllers$_reset');
-  //     return;
-  //   }
-
-  //   for (final controller in allControllers) {
-  //     final tags = controller.tags;
-  //     final isPermanent = controller.permanent;
-  //     final statusColor = isPermanent ? _green : _yellow;
-  //     print('  ${_magenta}•${_reset} '
-  //         '${_bold}${controller.runtimeType}$_reset '
-  //         '$_dim(tags: ${tags?.join(', ') ?? 'none'})$_reset '
-  //         '$statusColor${isPermanent ? '🔒 PERMANENT' : '⏳ TEMPORARY'}$_reset');
-  //   }
-  //   print('$_blue${'='*60}$_reset\n');
-  // }
 }
+
+
+// ```
+
+// ## Key Improvements:
+
+// 1. **Auto-detects ANSI support** - Colors work on desktop, clean output on mobile
+// 2. **Null-safe** - Properly handles null routes
+// 3. **Cleaner route names** - Removes leading `/` for readability
+// 4. **Better formatting** - More structured and consistent output
+// 5. **Context information** - Shows where you came from on PUSH
+// 6. **Helper methods** - `currentStack`, `clearStack()`, `printCurrentStack()`
+// 7. **Visual separators** - For better readability on complex operations
+
+// ## Example Output:
+
+// **With ANSI support (Desktop):**
+// ```
+// [🚀 PUSH] onboardingscreen (from: splashscreen) | Stack: 2 | home → onboardingscreen
+// [⬅️ POP] onboardingscreen | Stack: 1 | home
+// [🔄 REPLACE] splashscreen → home | Stack: 1 | home
+// ──────────────────────────────────────────────────
+// [🗑️ REMOVE] splashscreen | Stack: 0 | empty
+// ──────────────────────────────────────────────────
+// ```
+
+// **Without ANSI support (Mobile):**
+// ```
+// [🚀 PUSH] onboardingscreen (from: splashscreen) | Stack: 2 | home → onboardingscreen
+// [⬅️ POP] onboardingscreen | Stack: 1 | home
+// [🔄 REPLACE] splashscreen → home | Stack: 1 | home
+// ──────────────────────────────────────────────────

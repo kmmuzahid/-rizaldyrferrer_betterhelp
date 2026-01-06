@@ -1,4 +1,5 @@
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/screen/auth_screen/signup_screen/controller/singup_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
@@ -9,7 +10,7 @@ import 'package:better_help/widget/app_text_input/app_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends GetView<SingupScreenController> {
   const SignupScreen({super.key});
 
   @override
@@ -52,7 +53,7 @@ class SignupScreen extends StatelessWidget {
               ),
               Gap(height: AppSize.height(value: 03)),
               AppTextInput(
-                controller: TextEditingController(),
+                controller: controller.fullNameController,
                 hintText: AppString.hintFullName,
                 borderColor: AppColors.borderColor,
                 backgroundColor: AppColors.white,
@@ -69,7 +70,7 @@ class SignupScreen extends StatelessWidget {
               ),
               Gap(height: AppSize.height(value: 03)),
               AppTextInput(
-                controller: TextEditingController(),
+                controller: controller.emailController,
                 hintText: AppString.hintEmailAddress,
                 borderColor: AppColors.borderColor,
                 backgroundColor: AppColors.white,
@@ -86,11 +87,11 @@ class SignupScreen extends StatelessWidget {
               ),
               Gap(height: AppSize.height(value: 03)),
               AppTextInput(
-                controller: TextEditingController(),
+                controller: controller.passwordController,
                 hintText: AppString.hintPassword,
                 borderColor: AppColors.borderColor,
                 backgroundColor: AppColors.white,
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.visiblePassword,
                 isPassword: true,
               ),
               //! Confirm Password Field
@@ -104,26 +105,24 @@ class SignupScreen extends StatelessWidget {
               ),
               Gap(height: AppSize.height(value: 03)),
               AppTextInput(
-                controller: TextEditingController(),
+                controller: controller.confirmPasswordController,
                 hintText: AppString.hintPassword,
                 borderColor: AppColors.borderColor,
                 backgroundColor: AppColors.white,
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.visiblePassword,
                 isPassword: true,
               ),
 
               //! Sign Up Button
               Gap(height: AppSize.height(value: 20)),
-              AppButton(
-                title: AppString.signUp,
-                backgroundColor: AppColors.primary500,
-                titleColor: AppColors.white,
-                onTap: () {
-                  Get.toNamed(
-                    AppRoute.otpVerificationScreen,
-                    arguments: {'screen': "signup"},
-                  );
-                },
+              Obx(
+                () => AppButton(
+                  title: AppString.signUp,
+                  backgroundColor: AppColors.primary500,
+                  titleColor: AppColors.white,
+                  isLoading: controller.isLoading.value,
+                  onTap: controller.isLoading.value ? null : controller.signUp,
+                ),
               ),
               Gap(height: AppSize.height(value: 40)),
               Row(

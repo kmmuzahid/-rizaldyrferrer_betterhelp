@@ -1,13 +1,22 @@
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/screen/questionnaries_screen/repository/questionnaries_screen_repository.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
+import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class QuestionnariesScreenController extends GetxController {
   final PageController pageController = PageController();
+  final QuestionnariesScreenRepository _repository =
+      QuestionnariesScreenRepository();
+
   RxDouble progressValue = 1.0.obs;
   RxInt currentPageIndex = 0.obs;
+  RxBool isLoading = false.obs;
+
+  // API response data
+  Rxn<Map<String, dynamic>> apiResponseData = Rxn<Map<String, dynamic>>();
 
   // Configuration
   static const int questionsPerPage = 5;
@@ -92,16 +101,69 @@ class QuestionnariesScreenController extends GetxController {
     progressValue.value = (currentPageIndex.value + 1).toDouble();
   }
 
-  void completeQuestionnaire() {
+  Future<void> completeQuestionnaire() async {
     appLog('Questionnaire completed with ${answers.length} answers');
-    _processAnswers();
-    Get.offNamed(AppRoute.freeTrialScreen);
+    await _submitAnswersToApi();
   }
 
-  void _processAnswers() {
-    answers.forEach((questionNumber, answer) {
-      appLog('Question $questionNumber: $answer');
+  List<Map<String, String>> _buildApiPayload() {
+    final List<Map<String, String>> payload = [];
+
+    // Add 15 question answers
+    for (int pageIndex = 0; pageIndex < questionsByPage.length; pageIndex++) {
+      final questions = questionsByPage[pageIndex];
+      for (int i = 0; i < questions.length; i++) {
+        final questionNumber = pageIndex * questionsPerPage + i + 1;
+        final answer = answers[questionNumber] ?? '';
+        payload.add({'questions': questions[i], 'questionOutput': answer});
+      }
+    }
+
+    // Add goals question
+    final selectedGoalsList = selectedGoals
+        .map((index) => goalOptions[index])
+        .toList();
+    payload.add({
+      'questions': AppString.whatdoYouwanttoAchieve,
+      'questionOutput': selectedGoalsList.join(', '),
     });
+
+    // Add scale question
+    payload.add({
+      'questions': AppString.resultQuestion,
+      'questionOutput': selectedScaleNumber.value?.toString() ?? '',
+    });
+
+    return payload;
+  }
+
+  Future<void> _submitAnswersToApi() async {
+    isLoading.value = true;
+
+    try {
+      final payload = _buildApiPayload();
+      appLog('Submitting payload: $payload');
+
+      final response = await _repository.submitQuestionAnswers(
+        questionAnswers: payload,
+      );
+
+      if (response != null && response['success'] == true) {
+        apiResponseData.value = response['data'];
+        appLog('API Response: ${response['data']}');
+        Get.offNamed(
+          AppRoute.questionnaireSummaryScreen,
+          arguments: response['data'],
+        );
+      } else {
+        AppSnackBar.showError('Failed to submit answers. Please try again.');
+      }
+    } catch (e) {
+      appLog('Error submitting answers: $e');
+      AppSnackBar.showError('Something went wrong. Please try again.');
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   String getCurrentStepText() {

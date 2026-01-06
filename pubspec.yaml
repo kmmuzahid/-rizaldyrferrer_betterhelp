@@ -35,6 +35,7 @@ dependencies:
   dio: ^5.9.0
   shared_preferences: ^2.5.4
   awesome_snackbar_content: ^0.1.8
+  loading_animation_widget: ^1.3.0
 
 dev_dependencies:
   flutter_test:

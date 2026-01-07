@@ -11,14 +11,13 @@ import 'widget/app_observer/app_observer.dart';
 
 void main() async {
    WidgetsFlutterBinding.ensureInitialized();
-   //Initialize Storage
+  //!Initialize Storage
   await StorageService().init();
-  // Initialize GetStorage
+  //! Initialize GetStorage
   await GetStorage.init();
-  // Initialize TimerService as a service
+  //! Initialize TimerService as a service
   Get.put(TimerService(), permanent: true);
   DeviceUtils.lockDevicePortrait();
-
   //! Initial Bindings
   AppInitialBindings().dependencies();
   runApp(const MyApp());

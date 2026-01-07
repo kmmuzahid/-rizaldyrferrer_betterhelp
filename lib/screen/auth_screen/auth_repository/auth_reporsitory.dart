@@ -9,12 +9,56 @@ class AuthReporsitory {
   final _apiServices = ApiServices.instance;
   final _storageService = StorageService();
 
-  /// Creates a new user account
-  /// Returns the response data on success, null on failure
+  //! Login user
+  //! Returns the response data on success, null on failure
+  Future<dynamic> loginUser({
+    required dynamic email,
+    required dynamic password,
+  }) async {
+    appLog('AuthRepository: Starting login...');
+    appLog('AuthRepository: Email - $email');
+
+    try {
+      final body = {"email": email, "password": password};
+
+      appLog('AuthRepository: Request body prepared');
+      appLog('AuthRepository: Calling API - ${AppApiurl.login}');
+
+      final response = await _apiServices.apiPostServices(
+        url: AppApiurl.login,
+        body: body,
+      );
+
+      if (response != null && response['success'] == true) {
+        appLog('AuthRepository: Login successful');
+        appLog('AuthRepository: Response - $response');
+
+        // Save tokens and user data
+        final data = response['data'];
+        if (data != null) {
+          await _storageService.saveAccessToken(data['accessToken']);
+          await _storageService.saveRefreshToken(data['refreshToken']);
+          await _storageService.saveUserData(data['user']);
+          appLog('AuthRepository: Tokens and user data saved');
+        }
+
+        return response;
+      } else {
+        appLog('AuthRepository: Login failed - null response or success false');
+        return null;
+      }
+    } catch (e) {
+      errorLog('AuthRepository: Exception during login', e);
+      return null;
+    }
+  }
+
+  //! Creates a new user account
+  //! Returns the response data on success, null on failure
   Future<dynamic> createUser({
-    required String fullName,
-    required String email,
-    required String password,
+    required dynamic fullName,
+    required dynamic email,
+    required dynamic password,
   }) async {
     appLog('AuthRepository: Starting user creation...');
     appLog('AuthRepository: Email - $email');
@@ -50,28 +94,28 @@ class AuthReporsitory {
     }
   }
 
-  /// Verify OTP with questionnaire responses
-  /// Returns the response data on success, null on failure
+  //! Verify OTP with questionnaire responses
+  //! Returns the response data on success, null on failure
   Future<dynamic> verifyOtp({required dynamic otp}) async {
     appLog('AuthRepository: Starting OTP verification...');
     appLog('AuthRepository: OTP - $otp');
 
     try {
-      // Get saved createUserToken from storage
+      //! Get saved createUserToken from storage
       final createUserToken = await _storageService.getCreateUserToken();
       appLog('AuthRepository: Retrieved createUserToken from storage');
 
-      // Get saved questionnaire responses from storage
+      //! Get saved questionnaire responses from storage
       final responses = await _storageService.getQuestionnaireResponses();
       appLog('AuthRepository: Retrieved responses from storage - $responses');
 
-      // Get saved questionnaire output from storage
+      //! Get saved questionnaire output from storage
       final questionOutput = await _storageService.getQuestionnaireOutput();
       appLog(
         'AuthRepository: Retrieved questionOutput from storage - $questionOutput',
       );
 
-      // Build body matching the expected format
+      //! Build body matching the expected format
       final body = {
         "otp": int.tryParse(otp) ?? otp,
         if (responses != null) "questions": responses,
@@ -81,7 +125,7 @@ class AuthReporsitory {
       appLog('AuthRepository: Request body prepared - $body');
       appLog('AuthRepository: Calling API - ${AppApiurl.verifyOtp}');
 
-      // Send token in header
+      //! Send token in header
       final response = await _apiServices.apiPostServices(
         url: AppApiurl.verifyOtp,
         body: body,
@@ -92,7 +136,7 @@ class AuthReporsitory {
         appLog('AuthRepository: OTP verified successfully');
         appLog('AuthRepository: Response - $response');
 
-        // Clear all stored data after successful verification
+        //! Clear all stored data after successful verification
         await _storageService.removeQuestionnaireResponses();
         await _storageService.removeQuestionnaireOutput();
         await _storageService.removeCreateUserToken();
@@ -109,7 +153,7 @@ class AuthReporsitory {
     }
   }
 
-  /// Resend OTP
+  //! Resend OTP
   Future<dynamic> resendOtp({required dynamic email}) async {
     appLog('AuthRepository: Resending OTP...');
     appLog('AuthRepository: Email - $email');

@@ -177,4 +177,131 @@ class AuthReporsitory {
       return null;
     }
   }
+
+  //! Forgot Password - Send OTP to email
+  Future<dynamic> forgotPassword({required String email}) async {
+    appLog('AuthRepository: Starting forgot password...');
+    appLog('AuthRepository: Email - $email');
+
+    try {
+      final body = {"email": email};
+
+      final response = await _apiServices.apiPostServices(
+        url: AppApiurl.forgotPassword,
+        body: body,
+      );
+
+      if (response != null) {
+        appLog('AuthRepository: Forgot password OTP sent successfully');
+
+        // Save forgetToken for OTP verification
+        if (response['data'] != null &&
+            response['data']['forgetToken'] != null) {
+          await _storageService.saveString(
+            'forget_token',
+            response['data']['forgetToken'],
+          );
+          appLog('AuthRepository: forgetToken saved');
+        }
+
+        return response;
+      } else {
+        appLog('AuthRepository: Forgot password failed');
+        return null;
+      }
+    } catch (e) {
+      errorLog('AuthRepository: Exception during forgot password', e);
+      return null;
+    }
+  }
+
+  //! Verify Forgot Password OTP using PATCH method
+  Future<dynamic> verifyForgotPasswordOtp({required String otp}) async {
+    appLog('AuthRepository: Verifying forgot password OTP...');
+
+    try {
+      final forgetToken = await _storageService.getString('forget_token');
+      appLog('AuthRepository: Retrieved forgetToken from storage');
+
+      final body = {"otp": otp};
+
+      final response = await _apiServices.apiPatchServices(
+        url: AppApiurl.forgotPasswordOtpMatch,
+        body: body,
+        options: Options(headers: {'token': forgetToken}),
+      );
+
+      if (response != null) {
+        appLog('AuthRepository: Forgot password OTP verified');
+        return response;
+      } else {
+        appLog('AuthRepository: Forgot password OTP verification failed');
+        return null;
+      }
+    } catch (e) {
+      errorLog(
+        'AuthRepository: Exception during forgot password OTP verification',
+        e,
+      );
+      return null;
+    }
+  }
+
+  //! Resend Forgot Password OTP
+  Future<dynamic> resendForgotPasswordOtp() async {
+    appLog('AuthRepository: Resending forgot password OTP...');
+
+    try {
+      final forgetToken = await _storageService.getString('forget_token');
+
+      final response = await _apiServices.apiPatchServices(
+        url: AppApiurl.forgotPassworResendOtp,
+        options: Options(headers: {'token': forgetToken}),
+      );
+
+      if (response != null) {
+        appLog('AuthRepository: Forgot password OTP resent successfully');
+        return response;
+      } else {
+        appLog('AuthRepository: Resend forgot password OTP failed');
+        return null;
+      }
+    } catch (e) {
+      errorLog(
+        'AuthRepository: Exception during resend forgot password OTP',
+        e,
+      );
+      return null;
+    }
+  }
+
+  //! Reset Password (after forgot password OTP verification)
+  Future<dynamic> resetPassword({required String newPassword}) async {
+    appLog('AuthRepository: Resetting password...');
+
+    try {
+      final forgetToken = await _storageService.getString('forget_token');
+      appLog('AuthRepository: forgetToken - $forgetToken');
+
+      final body = {"newPassword": newPassword, "confirmPassword": newPassword};
+
+      final response = await _apiServices.apiPatchServices(
+        url: AppApiurl.resetPassoword,
+        body: body,
+        options: Options(headers: {'token': forgetToken}),
+      );
+
+      if (response != null && response['success'] == true) {
+        appLog('AuthRepository: Password reset successfully');
+        await _storageService.remove('forget_token');
+        return response;
+      } else {
+        appLog('AuthRepository: Password reset failed');
+        return null;
+      }
+    } catch (e) {
+      errorLog('AuthRepository: Exception during password reset', e);
+      return null;
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/screen/auth_screen/forgot_password_screen/controller/forgot_password_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
@@ -14,6 +14,8 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(ForgotPasswordScreenController());
+
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
@@ -42,9 +44,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               Gap(height: AppSize.height(value: 30)),
-
               //! Email Address Field
-              // Gap(height: AppSize.height(value: 12)),
               AppText(
                 text: AppString.emailAddress,
                 fontFamilyIndex: 2,
@@ -54,7 +54,7 @@ class ForgotPasswordScreen extends StatelessWidget {
               ),
               Gap(height: AppSize.height(value: 03)),
               AppTextInput(
-                controller: TextEditingController(),
+                controller: controller.emailController,
                 hintText: AppString.hintEmailAddress,
                 borderColor: AppColors.borderColor,
                 backgroundColor: AppColors.white,
@@ -62,16 +62,17 @@ class ForgotPasswordScreen extends StatelessWidget {
               ),
               Gap(height: AppSize.height(value: 30)),
               //! Send Code
-              AppButton(
-                title: AppString.sendCode,
-                backgroundColor: AppColors.primary500,
-                titleColor: AppColors.white,
-                onTap: () {
-                  Get.toNamed(
-                    AppRoute.otpVerificationScreen,
-                    arguments: {'screen': "forgotpassword"},
-                  );
-                },
+              Obx(
+                () => AppButton(
+                  title: controller.isLoading.value
+                      ? "Sending..."
+                      : AppString.sendCode,
+                  backgroundColor: AppColors.primary500,
+                  titleColor: AppColors.white,
+                  onTap: controller.isLoading.value
+                      ? null
+                      : () => controller.sendCode(),
+                ),
               ),
             ],
           ),

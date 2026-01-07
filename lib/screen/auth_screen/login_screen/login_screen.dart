@@ -1,4 +1,5 @@
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/screen/auth_screen/login_screen/controller/login_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
@@ -16,6 +17,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(LoginScreenController());
+
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
@@ -46,7 +49,6 @@ class LoginScreen extends StatelessWidget {
               Gap(height: 30),
 
               //! Email Address Field
-              // Gap(height: AppSize.height(value: 12)),
               AppText(
                 text: AppString.emailAddress,
                 fontFamilyIndex: 2,
@@ -56,7 +58,7 @@ class LoginScreen extends StatelessWidget {
               ),
               Gap(height: 03),
               AppTextInput(
-                controller: TextEditingController(),
+                controller: controller.emailController,
                 hintText: AppString.hintEmailAddress,
                 borderColor: AppColors.borderColor,
                 backgroundColor: AppColors.white,
@@ -73,11 +75,11 @@ class LoginScreen extends StatelessWidget {
               ),
               Gap(height: 03),
               AppTextInput(
-                controller: TextEditingController(),
+                controller: controller.passwordController,
                 hintText: AppString.hintPassword,
                 borderColor: AppColors.borderColor,
                 backgroundColor: AppColors.white,
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.visiblePassword,
                 isPassword: true,
               ),
               //! Forget Password
@@ -101,13 +103,17 @@ class LoginScreen extends StatelessWidget {
               ),
               //! Log In Button
               Gap(height: 20),
-              AppButton(
-                title: AppString.login,
-                backgroundColor: AppColors.primary500,
-                titleColor: AppColors.white,
-                onTap: () {
-                  Get.toNamed(AppRoute.completeProfileScreen);
-                },
+              Obx(
+                () => AppButton(
+                  title: controller.isLoading.value
+                      ? "Loading..."
+                      : AppString.login,
+                  backgroundColor: AppColors.primary500,
+                  titleColor: AppColors.white,
+                  onTap: controller.isLoading.value
+                      ? null
+                      : () => controller.login(),
+                ),
               ),
               Gap(height: 12),
               Center(child: AppText(text: "Or", fontFamilyIndex: 2)),

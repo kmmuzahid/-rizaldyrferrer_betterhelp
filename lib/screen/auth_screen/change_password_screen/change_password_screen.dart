@@ -1,4 +1,4 @@
-import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/screen/auth_screen/change_password_screen/controller/change_password_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
@@ -14,6 +14,8 @@ class ChangePasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(ChangePasswordScreenController());
+
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
@@ -53,8 +55,8 @@ class ChangePasswordScreen extends StatelessWidget {
               ),
               Gap(height: AppSize.height(value: 05)),
               AppTextInput(
-                controller: TextEditingController(),
-                hintText: AppString.hintEmailAddress,
+                controller: controller.newPasswordController,
+                hintText: "Enter new password",
                 borderColor: AppColors.borderColor,
                 backgroundColor: AppColors.white,
                 keyboardType: TextInputType.visiblePassword,
@@ -71,21 +73,25 @@ class ChangePasswordScreen extends StatelessWidget {
               ),
               Gap(height: AppSize.height(value: 05)),
               AppTextInput(
-                controller: TextEditingController(),
-                hintText: AppString.hintEmailAddress,
+                controller: controller.confirmPasswordController,
+                hintText: "Confirm new password",
                 borderColor: AppColors.borderColor,
                 backgroundColor: AppColors.white,
                 keyboardType: TextInputType.visiblePassword,
                 isPassword: true,
               ),
               Gap(height: AppSize.height(value: 50)),
-              AppButton(
-                title: AppString.changePassword,
-                backgroundColor: AppColors.primary500,
-                titleColor: AppColors.white,
-                onTap: () {
-                  Get.toNamed(AppRoute.loginScreen);
-                },
+              Obx(
+                () => AppButton(
+                  title: controller.isLoading.value
+                      ? "Changing..."
+                      : AppString.changePassword,
+                  backgroundColor: AppColors.primary500,
+                  titleColor: AppColors.white,
+                  onTap: controller.isLoading.value
+                      ? null
+                      : () => controller.changePassword(),
+                ),
               ),
             ],
           ),

@@ -7,19 +7,14 @@ import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:get/get.dart';
 
 class OtpVerificationController extends GetxController {
-  // Get arguments passed to this controller
   final arguments = Get.arguments;
-
-  // Repository
   final _authRepository = AuthReporsitory();
 
-  // Timer variables
   RxInt timerSeconds = 60.obs;
   RxBool isTimerActive = true.obs;
   RxBool isLoading = false.obs;
   Timer? _timer;
 
-  // Get the source screen
   String get sourceScreen => arguments?['screen'] ?? '';
   String get email => arguments?['email'] ?? '';
 
@@ -46,7 +41,13 @@ class OtpVerificationController extends GetxController {
   }
 
   void resetTimer() async {
-    if (email.isNotEmpty) {
+    if (sourceScreen == 'forgotpassword') {
+      appLog('OtpVerificationController: Resending forgot password OTP');
+      final response = await _authRepository.resendForgotPasswordOtp();
+      if (response != null) {
+        AppSnackBar.showSuccess('OTP sent successfully');
+      }
+    } else if (email.isNotEmpty) {
       appLog('OtpVerificationController: Resending OTP to $email');
       final response = await _authRepository.resendOtp(email: email);
       if (response != null) {
@@ -68,21 +69,21 @@ class OtpVerificationController extends GetxController {
 
     try {
       if (sourceScreen == 'signup') {
-        // Call verify OTP API with questionnaire responses
         final response = await _authRepository.verifyOtp(otp: otp);
 
         if (response != null) {
           appLog('OtpVerificationController: OTP verified successfully');
           AppSnackBar.showSuccess('Account verified successfully!');
           Get.offAllNamed(AppRoute.loginScreen);
-        } else {
-          appLog('OtpVerificationController: OTP verification failed');
         }
       } else if (sourceScreen == 'forgotpassword') {
-        // For forgot password, just verify OTP without responses
-        final response = await _authRepository.verifyOtp(otp: otp);
+        final response = await _authRepository.verifyForgotPasswordOtp(
+          otp: otp,
+        );
 
         if (response != null) {
+          appLog('OtpVerificationController: Forgot password OTP verified');
+          AppSnackBar.showSuccess('OTP verified successfully!');
           Get.offNamed(AppRoute.changePasswrodScreen);
         }
       }

@@ -22,8 +22,6 @@ class NavigationObserver extends NavigatorObserver {
   void didPush(Route<dynamic>? route, Route<dynamic>? previousRoute) {
     super.didPush(route!, previousRoute);
 
-    if (route == null) return;
-
     final routeName = _getRouteName(route);
     routeStack.add(routeName);
 
@@ -41,8 +39,6 @@ class NavigationObserver extends NavigatorObserver {
   @override
   void didPop(Route<dynamic>? route, Route<dynamic>? previousRoute) {
     super.didPop(route!, previousRoute);
-
-    if (route == null) return;
 
     final routeName = _getRouteName(route);
     routeStack.remove(routeName);
@@ -81,8 +77,6 @@ class NavigationObserver extends NavigatorObserver {
   @override
   void didRemove(Route<dynamic>? route, Route<dynamic>? previousRoute) {
     super.didRemove(route!, previousRoute);
-
-    if (route == null) return;
 
     final routeName = _getRouteName(route);
     routeStack.remove(routeName);

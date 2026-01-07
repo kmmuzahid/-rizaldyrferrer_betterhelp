@@ -12,4 +12,9 @@ class AppApiurl {
   static const forgotPassword = "$baseUrl/auth/forgot-password-otp";
   static const resendForgotPasswordOtp = "$baseUrl/otp/resend-otp";
   static const login = "$baseUrl/auth/login";
+  static const changePassword = "$baseUrl/auth/change-password";
+  static const forgotPassworResendOtp = "$baseUrl/otp/resend-otp";
+  static const forgotPasswordOtpMatch =
+      "$baseUrl/auth/forgot-password-otp-match";
+  static const resetPassoword = "$baseUrl/auth/forgot-password-reset";
 }

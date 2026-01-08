@@ -1,3 +1,4 @@
+import 'package:better_help/core/app_apiurl/app_apiurl.dart';
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/community_sections/main_community/controller/community_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
@@ -13,8 +14,10 @@ import 'package:better_help/widget/app_button/app_button_with_icon.dart';
 import 'package:better_help/widget/app_comments_widget/app_comments_widget.dart';
 import 'package:better_help/widget/app_course_card/app_course_card.dart';
 import 'package:better_help/widget/app_post_card/app_post_card.dart';
+import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class CommunityScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
@@ -189,7 +192,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                       icon: AppStaticImages.communityRecent,
                                       borderRadius: 12,
                                       height: AppSize.width(value: 36),
-                                      width: AppSize.height(value: 110),
+                                      width: AppSize.height(value: 100),
                                       fontSize: 12,
                                       iconSize: 15,
                                       title: "Recent",
@@ -213,7 +216,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                       iconAlignment: CustomIconAlignment.left,
                                       icon: AppStaticImages.communityHighlight,
                                       height: AppSize.width(value: 36),
-                                      width: AppSize.height(value: 134),
+                                      width: AppSize.height(value: 125),
                                       fontSize: 12,
                                       iconSize: 15,
                                       title: "Highlight",
@@ -239,7 +242,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                       iconAlignment: CustomIconAlignment.left,
                                       icon: AppStaticImages.communityRecent,
                                       height: AppSize.width(value: 36),
-                                      width: AppSize.height(value: 110),
+                                      width: AppSize.height(value: 100),
                                       fontSize: 12,
                                       iconSize: 15,
                                       title: "Popular",
@@ -274,44 +277,117 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   ); // Debug log
 
                   if (controller.selectedTab == CommunityTab.article) {
-                    appLog(
-                      'Rendering articles list with ${articleImages.length} items',
-                    ); // Debug log
+                    appLog('Rendering articles list'); // Debug log
                     // Show articles when Article tab is selected
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                        // Add null safety checks
-                        if (index >= articleImages.length) {
-                          return SizedBox.shrink();
-                        }
-
-                        appLog(
-                          'Building article item at index: $index',
-                        ); // Debug log
-
-                        return Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppSize.width(value: 20),
-                            vertical: AppSize.height(value: 8),
-                          ),
-                          child: CourseCard(
-                            onTap: () {
-                              Get.toNamed(AppRoute.articleScreen);
-                            },
-                            margin: EdgeInsets.only(bottom: 08),
-                            height: AppSize.height(value: 245),
-                            cardType: CardType.article,
-                            title:
-                                "The Science Behind Mindfulness Meditation ${index + 1}",
-                            instructor: "Dr Rizal Dy Ferrer",
-                            timeToread: "5 minutes to read",
-                            date: "12 Aug, 2024",
-                            imageUrl:
-                                articleImages[index % articleImages.length],
+                    return Obx(() {
+                      if (controller.isLoadingArticles.value &&
+                          controller.articles.isEmpty) {
+                        // Show loading for initial load
+                        return SliverFillRemaining(
+                          child: Center(
+                            child: LoadingAnimationWidget.threeArchedCircle(
+                              color: AppColors.primary500,
+                              size: 50,
+                            ),
                           ),
                         );
-                      }, childCount: articleImages.length),
-                    );
+                      }
+
+                      if (controller.articles.isEmpty) {
+                        // Show empty state
+                        return SliverFillRemaining(
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.article_outlined,
+                                  size: 64,
+                                  color: AppColors.grey100,
+                                ),
+                                Gap(height: 16),
+                                AppText(
+                                  text: "No articles available",
+                                  fontSize: 16,
+                                  color: AppColors.grey100,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+
+                      return SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            // Show loading indicator at the end
+                            if (index == controller.articles.length) {
+                              if (controller.hasMoreArticles.value) {
+                                // Trigger load more
+                                Future.microtask(
+                                  () => controller.loadMoreArticles(),
+                                );
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: AppSize.height(value: 20),
+                                  ),
+                                  child: Center(
+                                    child:
+                                        LoadingAnimationWidget.staggeredDotsWave(
+                                          color: AppColors.primary500,
+                                          size: 40,
+                                        ),
+                                  ),
+                                );
+                              }
+                              return SizedBox.shrink();
+                            }
+
+                            final article = controller.articles[index];
+
+                            // Build full image URL if needed
+                            String imageUrl = article.image ?? '';
+                            if (imageUrl.isNotEmpty &&
+                                !imageUrl.startsWith('http')) {
+                              // If image is a relative path, prepend the base domain
+                              imageUrl = AppApiurl.imageUrl;
+                            }
+
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppSize.width(value: 20),
+                                vertical: AppSize.height(value: 8),
+                              ),
+                              child: CourseCard(
+                                onTap: () {
+                                  Get.toNamed(
+                                    AppRoute.articleScreen,
+                                    arguments: {'articleId': article.id},
+                                  );
+                                },
+                                margin: EdgeInsets.only(bottom: 08),
+                                height: AppSize.height(value: 245),
+                                cardType: CardType.article,
+                                title: article.title ?? "Untitled Article",
+                                instructor:
+                                    article.sourseName ?? "Unknown Author",
+                                timeToread:
+                                    article.readTime ?? "5 minutes to read",
+                                date: article.publicationDate != null
+                                    ? "${article.publicationDate!.day} ${_getMonthName(article.publicationDate!.month)}, ${article.publicationDate!.year}"
+                                    : "Date not available",
+                                imageUrl: imageUrl.isNotEmpty
+                                    ? imageUrl
+                                    : AppStaticImages.habits01,
+                              ),
+                            );
+                          },
+                          childCount:
+                              controller.articles.length +
+                              (controller.hasMoreArticles.value ? 1 : 0),
+                        ),
+                      );
+                    });
                   } else {
                     appLog(
                       'Rendering posts list with 10 items for filter: ${controller.selectedFilter}',
@@ -422,5 +498,23 @@ class _CommunityScreenState extends State<CommunityScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );
+  }
+
+  String _getMonthName(int month) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    return months[month - 1];
   }
 }

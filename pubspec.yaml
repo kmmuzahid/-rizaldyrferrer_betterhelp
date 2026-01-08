@@ -50,7 +50,6 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/animated/daily_affermation/
-    - assets/animated/questionaries/
   fonts:
     - family: Playfair Display
       fonts:

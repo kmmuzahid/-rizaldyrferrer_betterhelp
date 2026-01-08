@@ -4,7 +4,7 @@ class AppApiurl {
   static const liveDomain = "http://10.10.7.65:5003";
   static const localDomain = "http://10.10.7.65:5003";
   static const baseUrl = "$liveDomain/api/v1";
-  static const imageUrl = "";
+  static const imageUrl = "http://10.10.7.65:5003";
   static const questionAnswer = "$baseUrl/users/question-answer";
   static const createUser = "$baseUrl/users/create";
   static const resendOtp = "$baseUrl/otp/resend-otp";
@@ -17,4 +17,6 @@ class AppApiurl {
   static const forgotPasswordOtpMatch =
       "$baseUrl/auth/forgot-password-otp-match";
   static const resetPassoword = "$baseUrl/auth/forgot-password-reset";
+  static const getAllArticle = "$baseUrl/article";
+  static getSingleArticle(var id) => "$baseUrl/article/$id";
 }

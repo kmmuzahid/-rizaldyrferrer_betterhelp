@@ -9,23 +9,35 @@ class SplashScreenController extends GetxController {
     await Future.delayed(const Duration(seconds: 2));
 
     final accessToken = await _storageService.getAccessToken();
-
-    // If user has access token, go directly to bottomNav (logged in)
-    if (accessToken != null && accessToken.isNotEmpty) {
-      Get.offNamed(AppRoute.bottomNav);
-      
-    }
-
-    // Check if questionnaire responses are saved
     final responses = await _storageService.getQuestionnaireResponses();
 
-    if (responses != null && responses.isNotEmpty) {
-      // User has completed questionnaire, go to free trial screen
-      Get.offNamed(AppRoute.freeTrialScreen);
-    } else {
-      // No questionnaire data, go to onboarding
-      Get.offNamed(AppRoute.onboardingscreen);
+    // Case 1: Has accessToken AND questionnaire responses -> Go to bottomNav (logged in)
+    if (accessToken != null &&
+        accessToken.isNotEmpty &&
+        responses != null &&
+        responses.isNotEmpty) {
+      Get.offNamed(AppRoute.bottomNav);
+      return;
     }
+
+    // Case 2: Has accessToken but NO questionnaire responses -> Go to questionnaire
+    if (accessToken != null &&
+        accessToken.isNotEmpty &&
+        (responses == null || responses.isEmpty)) {
+      Get.offNamed(AppRoute.beforeQuestionScreen);
+      return;
+    }
+
+    // Case 3: NO accessToken but HAS questionnaire responses -> Go to free trial
+    if ((accessToken == null || accessToken.isEmpty) &&
+        responses != null &&
+        responses.isNotEmpty) {
+      Get.offNamed(AppRoute.freeTrialScreen);
+      return;
+    }
+
+    // Case 4: NO accessToken and NO questionnaire responses -> Go to onboarding
+    Get.offNamed(AppRoute.onboardingscreen);
   }
 
   @override

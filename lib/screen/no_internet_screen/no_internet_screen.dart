@@ -14,7 +14,6 @@ class NoInternetScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return GetBuilder(
       init: NoInternetScreenController(),
       builder: (controller) {
@@ -31,7 +30,7 @@ class NoInternetScreen extends StatelessWidget {
                     size: 100,
                   ),
                 ),
-                Gap(height: AppSize.height(value: 20),),
+                Gap(height: AppSize.height(value: 20)),
                 Obx(() => AppText(text: controller.errorMessage.value)),
                 Obx(
                   () => controller.isInternetProblem.value
@@ -43,7 +42,7 @@ class NoInternetScreen extends StatelessWidget {
                         )
                       : const SizedBox(),
                 ),
-                Gap(height: AppSize.height(value: 30),),
+                Gap(height: AppSize.height(value: 30)),
 
                 AppButton(
                   title: "Try again",

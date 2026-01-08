@@ -1,3 +1,5 @@
+import 'package:better_help/screen/community_sections/main_community/model/article_model.dart';
+import 'package:better_help/service/repository/community_repository/community_repository.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,12 +9,21 @@ enum CommunityTab { peerForum, article }
 enum ForumFilter { recent, highlight, popular }
 
 class CommunityScreenController extends GetxController {
+  final _repository = CommunityRepository();
+
   // Selection states (non-reactive for GetBuilder)
   CommunityTab selectedTab = CommunityTab.peerForum;
   ForumFilter selectedFilter = ForumFilter.recent;
-  
+
   // Add a flag to prevent multiple simultaneous updates
   bool _isUpdating = false;
+
+  // Article related observables
+  final RxBool isLoadingArticles = false.obs;
+  final RxList<Datum> articles = <Datum>[].obs;
+  final Rx<Meta?> articleMeta = Rx<Meta?>(null);
+  final RxInt currentPage = 1.obs;
+  final RxBool hasMoreArticles = true.obs;
 
   @override
   void onInit() {
@@ -23,6 +34,8 @@ class CommunityScreenController extends GetxController {
     appLog(
       'Controller initialized - Tab: $selectedTab, Filter: $selectedFilter',
     );
+    // Load articles when controller initializes
+    fetchArticles();
   }
 
   // Method to select tab (Peer Forum or Article)
@@ -32,17 +45,22 @@ class CommunityScreenController extends GetxController {
       appLog('Tab selection ignored - already updating or same tab');
       return;
     }
-    
+
     _isUpdating = true;
     appLog('Selecting tab: $tab (from: $selectedTab)');
     selectedTab = tab;
     // Reset filter to recent when switching tabs
     selectedFilter = ForumFilter.recent;
     appLog('Tab selected: $selectedTab, Filter reset to: $selectedFilter');
-    
+
+    // Load articles when switching to article tab
+    if (tab == CommunityTab.article && articles.isEmpty) {
+      fetchArticles();
+    }
+
     // Force immediate update for tab switching
     update();
-    
+
     // Use post-frame callback to reset the updating flag
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _isUpdating = false;
@@ -57,15 +75,15 @@ class CommunityScreenController extends GetxController {
       appLog('Filter selection ignored - already updating or same filter');
       return;
     }
-    
+
     _isUpdating = true;
     appLog('Selecting filter: $filter (from: $selectedFilter)');
     selectedFilter = filter;
     appLog('Filter selected: $selectedFilter');
-    
+
     // Force immediate update for filter switching
     update();
-    
+
     // Use post-frame callback to reset the updating flag
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _isUpdating = false;
@@ -79,11 +97,69 @@ class CommunityScreenController extends GetxController {
     appLog('isTabSelected($tab): $result (current: $selectedTab)');
     return result;
   }
-  
+
   bool isFilterSelected(ForumFilter filter) {
     bool result = selectedFilter == filter;
     appLog('isFilterSelected($filter): $result (current: $selectedFilter)');
     return result;
+  }
+
+  //! Fetch articles from API
+  Future<void> fetchArticles({bool refresh = false}) async {
+    if (isLoadingArticles.value) return;
+
+    try {
+      if (refresh) {
+        currentPage.value = 1;
+        articles.clear();
+        hasMoreArticles.value = true;
+      }
+
+      isLoadingArticles.value = true;
+      appLog('Fetching articles - Page: ${currentPage.value}');
+
+      final result = await _repository.getAllArticles(
+        page: currentPage.value,
+        limit: 10,
+      );
+
+      if (result != null && result.data != null) {
+        appLog('Articles fetched successfully: ${result.data!.length} items');
+
+        if (refresh) {
+          articles.value = result.data!;
+        } else {
+          articles.addAll(result.data!);
+        }
+
+        articleMeta.value = result.meta;
+
+        // Check if there are more articles
+        if (result.meta != null) {
+          hasMoreArticles.value =
+              currentPage.value < (result.meta!.totalPage ?? 0);
+        }
+      } else {
+        appLog('Failed to fetch articles');
+      }
+    } catch (e) {
+      appLog('Error fetching articles: $e');
+    } finally {
+      isLoadingArticles.value = false;
+    }
+  }
+
+  //! Load more articles (pagination)
+  Future<void> loadMoreArticles() async {
+    if (!hasMoreArticles.value || isLoadingArticles.value) return;
+
+    currentPage.value++;
+    await fetchArticles();
+  }
+
+  //! Refresh articles
+  Future<void> refreshArticles() async {
+    await fetchArticles(refresh: true);
   }
 
   @override

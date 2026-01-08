@@ -350,7 +350,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                             if (imageUrl.isNotEmpty &&
                                 !imageUrl.startsWith('http')) {
                               // If image is a relative path, prepend the base domain
-                              imageUrl = AppApiurl.imageUrl;
+                              imageUrl = '${AppApiurl.liveDomain}$imageUrl';
                             }
 
                             return Padding(

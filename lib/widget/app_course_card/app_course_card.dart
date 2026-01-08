@@ -82,15 +82,43 @@ class CourseCard extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
           child: imageUrl.isNotEmpty && imageUrl != "imageUrl"
-              ? Image.asset(
-                  imageUrl,
-                  height: AppSize.height(value: 120),
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return _buildPlaceholderImage();
-                  },
-                )
+              ? (imageUrl.startsWith('http')
+                    ? Image.network(
+                        imageUrl,
+                        height: AppSize.height(value: 120),
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return _buildPlaceholderImage();
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Container(
+                            height: AppSize.height(value: 120),
+                            width: double.infinity,
+                            color: AppColors.t5,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.primary500,
+                                value:
+                                    loadingProgress.expectedTotalBytes != null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : Image.asset(
+                        imageUrl,
+                        height: AppSize.height(value: 120),
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return _buildPlaceholderImage();
+                        },
+                      ))
               : _buildPlaceholderImage(),
         ),
         _buildFavoriteButton(),

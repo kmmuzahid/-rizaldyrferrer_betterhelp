@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:better_help/core/app_route/app_route.dart';
-import 'package:better_help/screen/auth_screen/auth_repository/auth_reporsitory.dart';
+import 'package:better_help/service/repository/auth_repository/auth_reporsitory.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:get/get.dart';

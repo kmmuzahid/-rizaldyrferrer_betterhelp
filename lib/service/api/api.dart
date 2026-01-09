@@ -19,9 +19,9 @@ class AppApi {
 
   AppApi() {
     _dio.options.baseUrl = AppApiurl.baseUrl;
-    _dio.options.sendTimeout = const Duration(seconds: 30);
-    _dio.options.connectTimeout = const Duration(seconds: 30);
-    _dio.options.receiveTimeout = const Duration(seconds: 30);
+    _dio.options.sendTimeout = const Duration(seconds: 60);
+    _dio.options.connectTimeout = const Duration(seconds: 60);
+    _dio.options.receiveTimeout = const Duration(seconds: 60);
     _dio.options.followRedirects = false;
 
     _dio.interceptors.addAll({
@@ -42,7 +42,11 @@ class AppApi {
 
           if (kDebugMode) {
             appLog("API Request to: ${options.path}");
+            appLog("Request method: ${options.method}");
             appLog("Token present: ${token.isNotEmpty}");
+            if (options.data is FormData) {
+              appLog("Request type: FormData (multipart)");
+            }
             if (token.isNotEmpty) {
               appLog(
                 "Token (first 20 chars): ${token.substring(0, token.length > 20 ? 20 : token.length)}...",
@@ -64,6 +68,7 @@ class AppApi {
           appLog("API error occurred:");
           appLog("Status code: ${error.response?.statusCode}");
           appLog("Error message: ${error.message}");
+          appLog("Error type: ${error.type}");
 
           try {
             if (error.response?.statusCode == 401) {

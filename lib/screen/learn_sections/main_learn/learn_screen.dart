@@ -11,6 +11,7 @@ import 'package:better_help/widget/app_course_card/app_course_card.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/app_text_input/app_text_input.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:core_kit/image/common_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -70,90 +71,126 @@ class _LearnScreenState extends State<LearnScreen> {
                   ),
                 ),
                 Gap(height: 15),
-                CarouselSlider(
-                  carouselController: controller.carouselController,
-                  items: controller.backgroundImages.asMap().entries.map((
-                    entry,
-                  ) {
-                    int index = entry.key;
-                    String imagePath = entry.value;
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(imagePath),
-                            fit: BoxFit.cover,
+                Obx(
+                  () => CarouselSlider(
+                    carouselController: controller.carouselController,
+                    items: controller.backgroundImages.map<Widget>((imagePath) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: RotatedBox(
+                          quarterTurns: -1, // 90 degrees clockwise (use 3 for counter-clockwise)
+                          child: Image.asset(
+                            imagePath,
+                            fit: BoxFit.contain,
+                            width: double.infinity,
+                            height: double.infinity,
                           ),
                         ),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppSize.width(value: 22),
-                            vertical: AppSize.height(value: 21),
-                          ),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.transparent,
-                                Colors.black.withValues(alpha: 0.3),
-                              ],
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: AppText(
-                                  text: controller.quoteList[index],
-                                  fontFamilyIndex: 4,
-                                  fontSize: AppSize.width(value: 16),
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.white,
-                                  maxLines: 3,
-                                  textAlign: TextAlign.start,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Gap(height: 12),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: AppText(
-                                  text: controller.quoteAuthorList[index],
-                                  fontFamilyIndex: 4,
-                                  fontSize: AppSize.width(value: 14),
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                  options: CarouselOptions(
-                    height: AppSize.height(value: 137),
-                    aspectRatio: 16 / 9,
-                    viewportFraction: 0.85,
-                    initialPage: 0,
-                    enableInfiniteScroll: true,
-                    autoPlay: true,
-                    autoPlayInterval: const Duration(seconds: 4),
-                    autoPlayAnimationDuration: const Duration(
-                      milliseconds: 800,
+                      );
+                    }).toList(),
+                    options: CarouselOptions(
+                      height: AppSize.height(value: 200),
+                      viewportFraction: 0.85,
+                      initialPage: 0,
+                      enableInfiniteScroll: true,
+                      
+                      autoPlay: true,
+                      autoPlayInterval: const Duration(seconds: 4),
+                      autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                      autoPlayCurve: Curves.linear,
+                      enlargeCenterPage: true,
+                      enlargeFactor: 0.2,
+                      scrollDirection: Axis.horizontal,
+                      onPageChanged: (index, reason) {
+                        controller.updateCurrentIndex(index);
+                      },
                     ),
-                    autoPlayCurve: Curves.linear,
-                    enlargeCenterPage: true,
-                    enlargeFactor: 0.2,
-                    scrollDirection: Axis.horizontal,
-                    onPageChanged: (index, reason) {
-                      controller.updateCurrentIndex(index);
-                    },
                   ),
                 ),
+                // CarouselSlider(
+                //   carouselController: controller.carouselController,
+                //   items: controller.backgroundImages.asMap().entries.map((
+                //     entry,
+                //   ) {
+                //     int index = entry.key;
+                //     String imagePath = entry.value;
+                //     return ClipRRect(
+                //       borderRadius: BorderRadius.circular(12),
+                //       child: Container(
+                //         width: double.infinity,
+                //         decoration: BoxDecoration(
+                //           image: DecorationImage(
+                //             image: AssetImage(imagePath),
+                //             fit: BoxFit.cover,
+                //           ),
+                //         ),
+                //         child: Container(
+                //           padding: EdgeInsets.symmetric(
+                //             horizontal: AppSize.width(value: 22),
+                //             vertical: AppSize.height(value: 21),
+                //           ),
+                //           decoration: BoxDecoration(
+                //             gradient: LinearGradient(
+                //               begin: Alignment.topCenter,
+                //               end: Alignment.bottomCenter,
+                //               colors: [
+                //                 Colors.transparent,
+                //                 Colors.black.withValues(alpha: 0.3),
+                //               ],
+                //             ),
+                //           ),
+                //           child: Column(
+                //             crossAxisAlignment: CrossAxisAlignment.start,
+                //             children: [
+                //               Expanded(
+                //                 child: AppText(
+                //                   text: controller.quoteList[index],
+                //                   fontFamilyIndex: 4,
+                //                   fontSize: AppSize.width(value: 16),
+                //                   fontWeight: FontWeight.w500,
+                //                   color: AppColors.white,
+                //                   maxLines: 3,
+                //                   textAlign: TextAlign.start,
+                //                   overflow: TextOverflow.ellipsis,
+                //                 ),
+                //               ),
+                //               Gap(height: 12),
+                //               Align(
+                //                 alignment: Alignment.centerRight,
+                //                 child: AppText(
+                //                   text: controller.quoteAuthorList[index],
+                //                   fontFamilyIndex: 4,
+                //                   fontSize: AppSize.width(value: 14),
+                //                   fontWeight: FontWeight.w500,
+                //                   color: AppColors.white,
+                //                 ),
+                //               ),
+                //             ],
+                //           ),
+                //         ),
+                //       ),
+                //     );
+                //   }).toList(),
+                //   options: CarouselOptions(
+                //     height: AppSize.height(value: 137),
+                //     aspectRatio: 16 / 9,
+                //     viewportFraction: 0.85,
+                //     initialPage: 0,
+                //     enableInfiniteScroll: true,
+                //     autoPlay: true,
+                //     autoPlayInterval: const Duration(seconds: 4),
+                //     autoPlayAnimationDuration: const Duration(
+                //       milliseconds: 800,
+                //     ),
+                //     autoPlayCurve: Curves.linear,
+                //     enlargeCenterPage: true,
+                //     enlargeFactor: 0.2,
+                //     scrollDirection: Axis.horizontal,
+                //     onPageChanged: (index, reason) {
+                //       controller.updateCurrentIndex(index);
+                //     },
+                //   ),
+                // ),
                 Gap(height: 16),
                 Center(
                   child: Obx(
@@ -221,58 +258,52 @@ class _LearnScreenState extends State<LearnScreen> {
                 Gap(height: 08),
                 SizedBox(
                   height: AppSize.height(value: 95),
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSize.width(value: 20),
-                    ),
-                    itemCount: controller.categoryImages.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Get.toNamed(
-                            AppRoute.trendingCourse,
-                            arguments: {
-                              'categoryName': controller.categoryNames[index],
-                            },
-                          );
-                        },
-                        child: Container(
-                          width: AppSize.width(value: 88),
-                          margin: EdgeInsets.only(
-                            right: AppSize.width(value: 12),
-                          ),
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: AppColors.red50,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                controller.categoryImages[index],
-                                height: AppSize.height(value: 32),
-                                width: AppSize.width(value: 32),
-                              ),
-                              Gap(height: 4),
-                              Expanded(
-                                child: AppText(
-                                  text: controller.categoryNames[index],
-                                  fontFamilyIndex: 2,
-                                  fontSize: AppSize.width(value: 12),
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.textPrimaryBlack,
-                                  maxLines: 2,
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.ellipsis,
+                  child: Obx(() {
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
+                      itemCount: controller.categoryList.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Get.toNamed(
+                              AppRoute.trendingCourse,
+                              arguments: {
+                                  'categoryName': controller.categoryList[index].name},
+                            );
+                          },
+                          child: Container(
+                            width: AppSize.width(value: 88),
+                            margin: EdgeInsets.only(right: AppSize.width(value: 12)),
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: AppColors.red50,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CommonImage(src: controller.categoryList[index].image, size: 32),
+                                Gap(height: 4),
+                                Expanded(
+                                  child: AppText(
+                                    text: controller.categoryList[index].name,
+                                    fontFamilyIndex: 2,
+                                    fontSize: AppSize.width(value: 12),
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.textPrimaryBlack,
+                                    maxLines: 2,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    );
+                  }
                   ),
                 ),
                 Gap(height: 20),

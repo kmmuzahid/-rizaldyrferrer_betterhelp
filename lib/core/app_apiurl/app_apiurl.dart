@@ -1,3 +1,8 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-09 09:41:39
+ * @Email: km.muzahid@gmail.com
+ */
 class AppApiurl {
   AppApiurl._();
 
@@ -19,4 +24,9 @@ class AppApiurl {
   static const resetPassoword = "$baseUrl/auth/forgot-password-reset";
   static const getAllArticle = "$baseUrl/article";
   static getSingleArticle(var id) => "$baseUrl/article/$id";
+
+  static const getCourseList = "$baseUrl/course";
+  static getSingleCourse(var id) => "$baseUrl/course/$id";
+  static const getCourseCategoryList = "$baseUrl/category";
+  static const refreshToken = "$baseUrl/auth/refresh-token";
 }

@@ -1,6 +1,6 @@
 import 'package:better_help/core/app_internet_check/app_interner_check.dart';
 import 'package:better_help/screen/auth_screen/change_password_screen/change_password_screen.dart';
-import 'package:better_help/screen/auth_screen/complete_profile_screen/complete_profile_screen.dart';
+import 'package:better_help/screen/menu_drawer/my_profile/edit_profile_screen/edit_profile_screen.dart';
 import 'package:better_help/screen/auth_screen/forgot_password_screen/forgot_password_screen.dart';
 import 'package:better_help/screen/auth_screen/login_screen/login_screen.dart';
 import 'package:better_help/screen/auth_screen/otp_verification_screen/otp_verification_screen.dart';
@@ -21,6 +21,7 @@ import 'package:better_help/screen/menu_drawer/bookings_sessions/bookings_sessio
 import 'package:better_help/screen/menu_drawer/calendar/calendar_task_screen.dart';
 import 'package:better_help/screen/menu_drawer/faqs/faqs_screen.dart';
 import 'package:better_help/screen/menu_drawer/favorite_course/favorite_course_screen.dart';
+import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/my_profle_screen.dart';
 import 'package:better_help/screen/menu_drawer/my_subscription/my_subscription_screen.dart';
 import 'package:better_help/screen/menu_drawer/privacy_policy/privacy_policy_screen.dart';
 import 'package:better_help/screen/menu_drawer/saved_article/saved_article_screen.dart';
@@ -82,6 +83,7 @@ class AppRoute {
   static const String articleScreen = '/articleScreen';
 
   //! User Menu Drawer Screen Route
+  static const String myProfileScreen = '/myProfileScreen';
   static const String userMenuDrawerScreen = '/userMenuDrawerScreen';
   static const String bookingsSessions = "/bookingsessions";
   static const String calendartaskscreen = "/calendartaskscreen";
@@ -326,6 +328,14 @@ class AppRoute {
       name: AppRoute.userMenuDrawerScreen,
       page: () => UserDrawer(),
       transition: Transition.fadeIn,
+      transitionDuration: Duration(milliseconds: 400),
+      middlewares: [AppInternerCheck()],
+    ),
+    //! Menu My Profile Screen
+    GetPage(
+      name: AppRoute.myProfileScreen,
+      page: () => MyProfleScreen(),
+      transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
       middlewares: [AppInternerCheck()],
     ),

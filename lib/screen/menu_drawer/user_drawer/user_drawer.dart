@@ -18,24 +18,25 @@ class UserDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> generalSettingsIcons = [
+      AppIcons.profileIcons,
       AppIcons.savedArticle,
       AppIcons.favoriteCourse,
       AppIcons.bookings,
-      AppIcons.calendar,
     ];
     List<String> generalSettingTitle = [
+      "Profile",
       "Saved Articles",
       "Favorite Courses",
       "Bookings",
-      "Calendar",
     ];
     List<String> generalSettingsPage = [
+      AppRoute.myProfileScreen,
       AppRoute.savedArticleScreen,
       AppRoute.favriteScreen,
       AppRoute.bookingsSessions,
-      AppRoute.calendartaskscreen,
     ];
     List<String> accountSettingsIcons = [
+      AppIcons.subscriptionLeve,
       AppIcons.mySubscription,
       AppIcons.faqs,
       AppIcons.talkTosupport,
@@ -43,6 +44,7 @@ class UserDrawer extends StatelessWidget {
       AppIcons.privacyPolicy,
     ];
     List<String> accountSettingTitle = [
+      "Subscription Level",
       "My Subscription",
       "FAQs",
       "Talk to Support",
@@ -128,7 +130,7 @@ class UserDrawer extends StatelessWidget {
                               text: generalSettingTitle[index],
                               color: AppColors.white,
                               fontFamilyIndex: 2,
-                              fontSize: AppSize.width(value: 16),
+                              fontSize: AppSize.width(value: 14),
                               fontWeight: FontWeight.w600,
                             ),
                             Spacer(),
@@ -182,7 +184,7 @@ class UserDrawer extends StatelessWidget {
                               text: accountSettingTitle[index],
                               color: AppColors.white,
                               fontFamilyIndex: 2,
-                              fontSize: AppSize.width(value: 16),
+                              fontSize: AppSize.width(value: 14),
                               fontWeight: FontWeight.w600,
                             ),
                             Spacer(),
@@ -204,7 +206,7 @@ class UserDrawer extends StatelessWidget {
                     child: AppText(
                       text: "Copyright@BetterHabbitsforLife",
                       color: Colors.white,
-                      fontSize: AppSize.width(value: 12 ),
+                      fontSize: AppSize.width(value: 12),
                       fontFamilyIndex: 2,
                       fontWeight: FontWeight.w600,
                     ),

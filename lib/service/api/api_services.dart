@@ -279,10 +279,11 @@ class ApiServices {
       if (response.statusCode == statusCode) {
         return response.data;
       } else {
-        AppSnackBar.showError(
-          "Unexpected response: ${response.statusCode} ${response.statusMessage}",
-        );
-        return null;
+        // Return the response data even for non-200 status codes
+        // so we can see the error message from the server
+        appLog('⚠️ Non-200 response: ${response.statusCode}');
+        appLog('Response data: ${response.data}');
+        return response.data;
       }
     } on SocketException catch (e) {
       errorLog('api socket exception', e);
@@ -299,11 +300,16 @@ class ApiServices {
           Get.offAllNamed(AppRoute.onboardingscreen);
         }
 
-        // Fixed null checking for message
+        // Return the error response data so we can see what went wrong
+        appLog('❌ DioException response data: ${e.response?.data}');
+
+        // Show error message if available
         if (e.response?.data != null && e.response?.data["message"] != null) {
           AppSnackBar.showError("${e.response?.data["message"]}");
         }
-        return null;
+
+        // Return the error response so caller can handle it
+        return e.response?.data;
       }
       errorLog('api dio exception', e);
       return null;

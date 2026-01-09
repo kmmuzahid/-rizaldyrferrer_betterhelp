@@ -57,4 +57,7 @@ class AppIcons {
   static const String commentLikes = "assets/icons/commentsLIke.svg";
   static const String winnder = "assets/icons/winner.svg";
   static const String freeTrialScreenCheck = "assets/icons/freeTrialChecks.svg";
+  static const String profileIcons = "assets/icons/profile-icons.svg";
+  static const String subscriptionLeve =
+      "assets/icons/subscritption_levels.svg";
 }

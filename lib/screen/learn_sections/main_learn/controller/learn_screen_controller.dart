@@ -1,11 +1,16 @@
+import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/screen/learn_sections/main_learn/model/category_model.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:carousel_slider/carousel_controller.dart';
+import 'package:core_kit/network/dio_service.dart';
+import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
 
+import '../model/course_model.dart';
+
 class LearnScreenController extends GetxController {
-  final CarouselSliderController carouselController =
-      CarouselSliderController();
+  final CarouselSliderController carouselController = CarouselSliderController();
   var currentIndex = 0.obs;
 
   // Quote data
@@ -24,65 +29,20 @@ class LearnScreenController extends GetxController {
   ];
 
   List<String> get backgroundImages => [
-    AppStaticImages.habits01,
-    AppStaticImages.habits02,
-    AppStaticImages.habits03,
-    AppStaticImages.habits04,
-  ];
+    AppStaticImages.dailyAffermation01,
+    AppStaticImages.dailyAffermation02,
+    AppStaticImages.dailyAffermation03,
+    AppStaticImages.dailyAffermation04,
+    AppStaticImages.dailyAffermation05,
+    AppStaticImages.dailyAffermation06,
+    AppStaticImages.dailyAffermation07,
+    AppStaticImages.dailyAffermation08,
+  ].obs;
 
   // Category data
-  List<String> get categoryImages => [
-    AppStaticImages.relationshipGuidance,
-    AppStaticImages.stressManagements,
-    AppStaticImages.healthyHabits,
-    AppStaticImages.selfCareDevelopment,
-    AppStaticImages.relationshipGuidance,
-    AppStaticImages.stressManagements,
-    AppStaticImages.healthyHabits,
-    AppStaticImages.selfCareDevelopment,
-  ];
-
-  List<String> get categoryNames => [
-    "Relationship Guidance",
-    "Stress Management",
-    "Healthy Habits",
-    "Self Care Development",
-    "Relationship Guidance",
-    "Stress Management",
-    "Healthy Habits",
-    "Self Care Development",
-  ];
-
-  // Trending courses data
-  List<String> get trendingCourseImages => [
-    AppStaticImages.habits01,
-    AppStaticImages.habits02,
-    AppStaticImages.habits03,
-    AppStaticImages.habits04,
-  ];
-
-  List<String> get trendingCourseTitles => [
-    "Overcoming Workplace Anxiety",
-    "Building Healthy Relationships",
-    "Stress Management Techniques",
-    "Self-Care Development",
-  ];
-
-  List<String> get trendingCourseInstructors => [
-    "Dr. Rizaldy Ferrer",
-    "Dr. Sarah Johnson",
-    "Dr. Michael Chen",
-    "Dr. Emily Davis",
-  ];
-
-  List<double> get trendingCourseRatings => [4.3, 4.5, 4.2, 4.7];
-
-  List<String> get trendingCourseViews => [
-    "2,453 View",
-    "3,821 View",
-    "1,967 View",
-    "4,102 View",
-  ];
+  RxList<CategoryModel> categoryList = <CategoryModel>[].obs;
+  RxList<CourseModel> recentCourseList = <CourseModel>[].obs;
+  RxList<CourseModel> trendingCourseList = <CourseModel>[].obs;
 
   // Method to update current index
   void updateCurrentIndex(int index) {
@@ -102,5 +62,61 @@ class LearnScreenController extends GetxController {
   // Method to go to previous slide
   void previousSlide() {
     carouselController.previousPage();
+  }
+
+  void fetchCategory() async {
+    final response = await DioService.instance.request(
+      input: RequestInput(
+        queryParams: {"page": 1, "limit": 10},
+        endpoint: AppApiurl.getCourseCategoryList,
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => (data as List).map((e) => CategoryModel.fromJson(e)).toList(),
+    );
+
+    if (response.isSuccess) {
+      final data = response.data;
+      categoryList.assignAll(data ?? []);
+    }
+  }
+
+  void fetchRecentCourse() async {
+    final response = await DioService.instance.request(
+      input: RequestInput(
+        queryParams: {"page": 1, "limit": 10},
+        endpoint: AppApiurl.getCourseList,
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => (data as List).map((e) => CourseModel.fromJson(e)).toList(),
+    );
+
+    if (response.isSuccess) {
+      final data = response.data;
+      recentCourseList.assignAll(data ?? []);
+    }
+  }
+
+  void fetchTrendingCourse() async {
+    final response = await DioService.instance.request(
+      input: RequestInput(
+        queryParams: {"page": 1, "limit": 10},
+        endpoint: AppApiurl.getCourseList,
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => (data as List).map((e) => CourseModel.fromJson(e)).toList(),
+    );
+
+    if (response.isSuccess) {
+      final data = response.data;
+      trendingCourseList.assignAll(data ?? []);
+    }
+  }
+
+  @override
+  void onInit() {
+    fetchCategory();
+    fetchTrendingCourse();
+    fetchRecentCourse();
+    super.onInit();
   }
 }

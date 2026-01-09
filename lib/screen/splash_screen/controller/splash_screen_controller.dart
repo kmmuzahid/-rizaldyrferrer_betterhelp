@@ -1,5 +1,6 @@
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
+import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:get/get.dart';
 
 class SplashScreenController extends GetxController {
@@ -16,6 +17,7 @@ class SplashScreenController extends GetxController {
         accessToken.isNotEmpty &&
         responses != null &&
         responses.isNotEmpty) {
+      appLog(accessToken);
       Get.offNamed(AppRoute.bottomNav);
       return;
     }

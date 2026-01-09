@@ -318,6 +318,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                       }
 
                       return SliverList(
+                        key: ValueKey('article_list'),
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
                             // Show loading indicator at the end
@@ -394,6 +395,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     ); // Debug log
                     // Show posts for Peer Forum with different content based on filter
                     return SliverList(
+                      key: ValueKey('forum_list_${controller.selectedFilter}'),
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           // Add null safety check

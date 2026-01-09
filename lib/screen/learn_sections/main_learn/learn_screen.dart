@@ -11,7 +11,7 @@ import 'package:better_help/widget/app_course_card/app_course_card.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/app_text_input/app_text_input.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:core_kit/image/common_image.dart';
+import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -353,28 +353,30 @@ class _LearnScreenState extends State<LearnScreen> {
           SliverToBoxAdapter(
             child: SizedBox(
               height: AppSize.height(value: 250),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppSize.width(value: 20),
-                ),
-                itemCount: controller.trendingCourseImages.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: AppSize.width(value: 240),
-                    margin: EdgeInsets.only(right: AppSize.width(value: 16)),
-                    child: CourseCard(
-                      onTap: () {},
-                      imageUrl: controller.trendingCourseImages[index],
-                      title: controller.trendingCourseTitles[index],
-                      instructor: controller.trendingCourseInstructors[index],
-                      rating: 4.8,
-                      views: "3445 views",
-                      date: "2 Aug, 2025",
-                    ),
-                  );
-                },
-              ),
+              child: Obx(() {
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
+                  itemCount: controller.trendingCourseList.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      width: AppSize.width(value: 240),
+                      margin: EdgeInsets.only(right: AppSize.width(value: 16)),
+                      child: CourseCard(
+                        onTap: () {},
+                        imageUrl: controller.trendingCourseList[index].thumbnail,
+                        title: controller.trendingCourseList[index].title,
+                        instructor: controller.trendingCourseList[index].categoryName,
+                        rating: controller.trendingCourseList[index].rating,
+                        views: "${controller.trendingCourseList[index].viewUsers.length} views",
+                        date: CoreUtils.formatDateTime(
+                          controller.trendingCourseList[index].createdAt,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }),
             ),
           ),
 
@@ -422,29 +424,33 @@ class _LearnScreenState extends State<LearnScreen> {
           SliverToBoxAdapter(
             child: SizedBox(
               height: AppSize.height(value: 250),
-              child: ListView.builder(
+              child: Obx(() {
+                return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(
                   horizontal: AppSize.width(value: 20),
                 ),
-                itemCount: controller.trendingCourseImages.length,
+                  itemCount: controller.recentCourseList.length,
                 itemBuilder: (context, index) {
                   return Container(
                     width: 240,
                     height: AppSize.height(value: 300),
                     margin: EdgeInsets.only(right: AppSize.width(value: 16)),
                     child: CourseCard(
-                      onTap: () {},
-                      imageUrl: controller.trendingCourseImages[index],
-                      title: controller.trendingCourseTitles[index],
-                      instructor: controller.trendingCourseInstructors[index],
-                      rating: 4.8,
-                      views: "3445 views",
-                      date: "2 Aug, 2025",
-                    ),
+                        onTap: () {},
+                        imageUrl: controller.recentCourseList[index].thumbnail,
+                        title: controller.recentCourseList[index].title,
+                        instructor: controller.recentCourseList[index].categoryName,
+                        rating: controller.recentCourseList[index].rating,
+                        views: "${controller.recentCourseList[index].viewUsers.length} views",
+                        date: CoreUtils.formatDateTime(
+                          controller.recentCourseList[index].createdAt,
+                        ),
+                      ),
                   );
                 },
-              ),
+                );
+              }),
             ),
           ),
           SliverToBoxAdapter(child: SizedBox(height: 100)),

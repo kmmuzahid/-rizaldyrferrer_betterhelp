@@ -7,9 +7,10 @@ import 'package:core_kit/network/dio_service.dart';
 import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
 
+import '../model/course_model.dart';
+
 class LearnScreenController extends GetxController {
-  final CarouselSliderController carouselController =
-      CarouselSliderController();
+  final CarouselSliderController carouselController = CarouselSliderController();
   var currentIndex = 0.obs;
 
   // Quote data
@@ -40,38 +41,8 @@ class LearnScreenController extends GetxController {
 
   // Category data
   RxList<CategoryModel> categoryList = <CategoryModel>[].obs;
-
-
-  // Trending courses data
-  List<String> get trendingCourseImages => [
-    AppStaticImages.habits01,
-    AppStaticImages.habits02,
-    AppStaticImages.habits03,
-    AppStaticImages.habits04,
-  ];
-
-  List<String> get trendingCourseTitles => [
-    "Overcoming Workplace Anxiety",
-    "Building Healthy Relationships",
-    "Stress Management Techniques",
-    "Self-Care Development",
-  ];
-
-  List<String> get trendingCourseInstructors => [
-    "Dr. Rizaldy Ferrer",
-    "Dr. Sarah Johnson",
-    "Dr. Michael Chen",
-    "Dr. Emily Davis",
-  ];
-
-  List<double> get trendingCourseRatings => [4.3, 4.5, 4.2, 4.7];
-
-  List<String> get trendingCourseViews => [
-    "2,453 View",
-    "3,821 View",
-    "1,967 View",
-    "4,102 View",
-  ];
+  RxList<CourseModel> recentCourseList = <CourseModel>[].obs;
+  RxList<CourseModel> trendingCourseList = <CourseModel>[].obs;
 
   // Method to update current index
   void updateCurrentIndex(int index) {
@@ -109,9 +80,43 @@ class LearnScreenController extends GetxController {
     }
   }
 
+  void fetchRecentCourse() async {
+    final response = await DioService.instance.request(
+      input: RequestInput(
+        queryParams: {"page": 1, "limit": 10},
+        endpoint: AppApiurl.getCourseList,
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => (data as List).map((e) => CourseModel.fromJson(e)).toList(),
+    );
+
+    if (response.isSuccess) {
+      final data = response.data;
+      recentCourseList.assignAll(data ?? []);
+    }
+  }
+
+  void fetchTrendingCourse() async {
+    final response = await DioService.instance.request(
+      input: RequestInput(
+        queryParams: {"page": 1, "limit": 10},
+        endpoint: AppApiurl.getCourseList,
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => (data as List).map((e) => CourseModel.fromJson(e)).toList(),
+    );
+
+    if (response.isSuccess) {
+      final data = response.data;
+      trendingCourseList.assignAll(data ?? []);
+    }
+  }
+
   @override
   void onInit() {
     fetchCategory();
+    fetchTrendingCourse();
+    fetchRecentCourse();
     super.onInit();
   }
 }

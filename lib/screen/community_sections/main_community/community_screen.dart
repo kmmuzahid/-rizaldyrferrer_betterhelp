@@ -47,24 +47,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> articleImages = [
-      AppStaticImages.habits01,
-      AppStaticImages.habits02,
-      AppStaticImages.habits03,
-      AppStaticImages.habits04,
-      AppStaticImages.habits01,
-      AppStaticImages.habits02,
-      AppStaticImages.habits03,
-      AppStaticImages.habits04,
-      AppStaticImages.habits01,
-      AppStaticImages.habits02,
-      AppStaticImages.habits03,
-      AppStaticImages.habits04,
-      AppStaticImages.habits01,
-      AppStaticImages.habits02,
-      AppStaticImages.habits03,
-      AppStaticImages.habits04,
-    ];
     return Scaffold(
       appBar: FlexibleCustomAppBar(
         title: AppString.communities,
@@ -391,52 +373,114 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     });
                   } else {
                     appLog(
-                      'Rendering posts list with 10 items for filter: ${controller.selectedFilter}',
+                      'Rendering posts list for filter: ${controller.selectedFilter}',
                     ); // Debug log
-                    // Show posts for Peer Forum with different content based on filter
-                    return SliverList(
-                      key: ValueKey('forum_list_${controller.selectedFilter}'),
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          // Add null safety check
-                          if (index >= 10) {
-                            return SizedBox.shrink();
-                          }
-
-                          String postText;
-                          switch (controller.selectedFilter) {
-                            case ForumFilter.recent:
-                              postText = AppString.demoPost;
-                              break;
-                            case ForumFilter.highlight:
-                              postText = AppString.demoHighLightPost;
-                              break;
-                            case ForumFilter.popular:
-                              postText = AppString.demoPopularPost;
-                              break;
-                          }
-
-                          return Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: AppSize.width(value: 20),
-                              vertical: AppSize.height(value: 8),
+                    // Show posts for Peer Forum with real data from API
+                    return Obx(() {
+                      if (controller.isLoadingPosts.value &&
+                          controller.posts.isEmpty) {
+                        // Show loading for initial load
+                        return SliverFillRemaining(
+                          child: Center(
+                            child: LoadingAnimationWidget.threeArchedCircle(
+                              color: AppColors.primary500,
+                              size: 50,
                             ),
-                            child: SocialMediaPostCard(
-                              postText: postText,
-                              userName: "User ${index + 1}",
-                              userLocation: "Dhaka, Bangladesh",
-                              profileImage: AppStaticImages.postProfile,
-                              likesCount: 10 + index,
-                              commentsCount: 5 + index,
-                              onCommentTap: () {
-                                showCommentsBottomSheet();
-                              },
+                          ),
+                        );
+                      }
+
+                      if (controller.posts.isEmpty) {
+                        // Show empty state
+                        return SliverFillRemaining(
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.forum_outlined,
+                                  size: 64,
+                                  color: AppColors.grey100,
+                                ),
+                                Gap(height: 16),
+                                AppText(
+                                  text: "No posts available",
+                                  fontSize: 16,
+                                  color: AppColors.grey100,
+                                ),
+                              ],
                             ),
-                          );
-                        },
-                        childCount: 10, // Show 10 posts
-                      ),
-                    );
+                          ),
+                        );
+                      }
+
+                      return SliverList(
+                        key: ValueKey(
+                          'forum_list_${controller.selectedFilter}',
+                        ),
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            // Show loading indicator at the end
+                            if (index == controller.posts.length) {
+                              if (controller.hasMorePosts.value) {
+                                // Trigger load more
+                                Future.microtask(
+                                  () => controller.loadMorePosts(),
+                                );
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: AppSize.height(value: 20),
+                                  ),
+                                  child: Center(
+                                    child:
+                                        LoadingAnimationWidget.staggeredDotsWave(
+                                          color: AppColors.primary500,
+                                          size: 40,
+                                        ),
+                                  ),
+                                );
+                              }
+                              return SizedBox.shrink();
+                            }
+
+                            final post = controller.posts[index];
+
+                            // Build profile image URL if needed
+                            String profileImage = post.userId?.profile ?? '';
+                            if (profileImage.isNotEmpty &&
+                                !profileImage.startsWith('http')) {
+                              profileImage =
+                                  '${AppApiurl.imageUrl}$profileImage';
+                            }
+
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppSize.width(value: 20),
+                                vertical: AppSize.height(value: 8),
+                              ),
+                              child: SocialMediaPostCard(
+                                postText: post.description ?? "No description",
+                                userName:
+                                    post.userId?.fullName ?? "Unknown User",
+                                userLocation:
+                                    post.userId?.address ?? "Unknown Location",
+                                profileImage: profileImage.isNotEmpty
+                                    ? profileImage
+                                    : AppStaticImages.postProfile,
+                                likesCount: post.likesCount ?? 0,
+                                commentsCount: post.commentsCount ?? 0,
+                                onCommentTap: () {
+                                  showCommentsBottomSheet();
+                                },
+                              ),
+                            );
+                          },
+                          childCount:
+                              controller.posts.length +
+                              (controller.hasMorePosts.value ? 1 : 0),
+                        ),
+                      );
+                    });
                   }
                 },
               ),

@@ -1,4 +1,6 @@
-import 'package:better_help/screen/community_sections/main_community/model/article_model.dart';
+import 'package:better_help/screen/community_sections/main_community/model/article_model.dart'
+    as article_model;
+import 'package:better_help/screen/community_sections/main_community/model/post_model.dart';
 import 'package:better_help/service/repository/community_repository/community_repository.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:flutter/material.dart';
@@ -20,10 +22,17 @@ class CommunityScreenController extends GetxController {
 
   // Article related observables
   final RxBool isLoadingArticles = false.obs;
-  final RxList<Datum> articles = <Datum>[].obs;
-  final Rx<Meta?> articleMeta = Rx<Meta?>(null);
+  final RxList<article_model.Datum> articles = <article_model.Datum>[].obs;
+  final Rx<article_model.Meta?> articleMeta = Rx<article_model.Meta?>(null);
   final RxInt currentPage = 1.obs;
   final RxBool hasMoreArticles = true.obs;
+
+  // Post related observables
+  final RxBool isLoadingPosts = false.obs;
+  final RxList<Post> posts = <Post>[].obs;
+  final Rx<Meta?> postMeta = Rx<Meta?>(null);
+  final RxInt currentPostPage = 1.obs;
+  final RxBool hasMorePosts = true.obs;
 
   @override
   void onInit() {
@@ -36,6 +45,8 @@ class CommunityScreenController extends GetxController {
     );
     // Load articles when controller initializes
     fetchArticles();
+    // Load posts when controller initializes
+    fetchPosts();
   }
 
   // Method to select tab (Peer Forum or Article)
@@ -80,6 +91,9 @@ class CommunityScreenController extends GetxController {
     appLog('Selecting filter: $filter (from: $selectedFilter)');
     selectedFilter = filter;
     appLog('Filter selected: $selectedFilter');
+
+    // Fetch posts based on the selected filter
+    fetchPosts();
 
     // Force immediate update for filter switching
     update();
@@ -160,6 +174,85 @@ class CommunityScreenController extends GetxController {
   //! Refresh articles
   Future<void> refreshArticles() async {
     await fetchArticles(refresh: true);
+  }
+
+  //! Fetch posts from API based on selected filter
+  Future<void> fetchPosts({bool refresh = false}) async {
+    if (isLoadingPosts.value) return;
+
+    try {
+      if (refresh) {
+        currentPostPage.value = 1;
+        posts.clear();
+        hasMorePosts.value = true;
+      }
+
+      isLoadingPosts.value = true;
+      appLog(
+        'Fetching posts - Filter: $selectedFilter, Page: ${currentPostPage.value}',
+      );
+
+      PostModel? result;
+
+      // Fetch posts based on selected filter
+      switch (selectedFilter) {
+        case ForumFilter.recent:
+          result = await _repository.getRecentPosts(
+            page: currentPostPage.value,
+            limit: 10,
+          );
+          break;
+        case ForumFilter.highlight:
+          result = await _repository.getHighlightPosts(
+            page: currentPostPage.value,
+            limit: 10,
+          );
+          break;
+        case ForumFilter.popular:
+          result = await _repository.getPopularPosts(
+            page: currentPostPage.value,
+            limit: 10,
+          );
+          break;
+      }
+
+      if (result != null && result.data != null) {
+        appLog('Posts fetched successfully: ${result.data!.length} items');
+
+        if (refresh) {
+          posts.value = result.data!;
+        } else {
+          posts.addAll(result.data!);
+        }
+
+        postMeta.value = result.meta;
+
+        // Check if there are more posts
+        if (result.meta != null) {
+          hasMorePosts.value =
+              currentPostPage.value < (result.meta!.totalPage ?? 0);
+        }
+      } else {
+        appLog('Failed to fetch posts');
+      }
+    } catch (e) {
+      appLog('Error fetching posts: $e');
+    } finally {
+      isLoadingPosts.value = false;
+    }
+  }
+
+  //! Load more posts (pagination)
+  Future<void> loadMorePosts() async {
+    if (!hasMorePosts.value || isLoadingPosts.value) return;
+
+    currentPostPage.value++;
+    await fetchPosts();
+  }
+
+  //! Refresh posts
+  Future<void> refreshPosts() async {
+    await fetchPosts(refresh: true);
   }
 
   @override

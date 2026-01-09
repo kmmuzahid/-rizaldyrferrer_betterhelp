@@ -469,6 +469,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                     : AppStaticImages.postProfile,
                                 likesCount: post.likesCount ?? 0,
                                 commentsCount: post.commentsCount ?? 0,
+                                onLikeTap: () {
+                                  if (post.id != null) {
+                                    controller.likePost(post.id!, index);
+                                  }
+                                },
                                 onCommentTap: () {
                                   showCommentsBottomSheet();
                                 },

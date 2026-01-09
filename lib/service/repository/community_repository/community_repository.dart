@@ -150,4 +150,27 @@ class CommunityRepository {
       return null;
     }
   }
+
+  //! Like/Unlike a post
+  Future<bool> likePost(String postId) async {
+    appLog('CommunityRepository: Liking post with ID - $postId');
+
+    try {
+      final response = await _apiServices.apiPostServices(
+        url: AppApiurl.getPostLike(postId),
+        body: {},
+      );
+
+      if (response != null && response['success'] == true) {
+        appLog('CommunityRepository: Post liked/unliked successfully');
+        return true;
+      } else {
+        appLog('CommunityRepository: Failed to like/unlike post');
+        return false;
+      }
+    } catch (e) {
+      errorLog('CommunityRepository: Exception during liking post', e);
+      return false;
+    }
+  }
 }

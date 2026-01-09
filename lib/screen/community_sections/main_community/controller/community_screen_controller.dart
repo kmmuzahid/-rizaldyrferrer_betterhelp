@@ -255,6 +255,48 @@ class CommunityScreenController extends GetxController {
     await fetchPosts(refresh: true);
   }
 
+  //! Like/Unlike a post
+  Future<void> likePost(String postId, int index) async {
+    appLog('Liking post with ID: $postId');
+
+    try {
+      // Optimistically update UI
+      final post = posts[index];
+      final isCurrentlyLiked = post.likes?.contains(postId) ?? false;
+      
+      // Update the post in the list
+      posts[index] = Post(
+        id: post.id,
+        userId: post.userId,
+        description: post.description,
+        likes: post.likes,
+        highlights: post.highlights,
+        commentsCount: post.commentsCount,
+        likesCount: isCurrentlyLiked 
+            ? (post.likesCount ?? 0) - 1 
+            : (post.likesCount ?? 0) + 1,
+        isDeleted: post.isDeleted,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+      );
+      posts.refresh();
+
+      // Call API
+      final success = await _repository.likePost(postId);
+
+      if (!success) {
+        // Revert on failure
+        posts[index] = post;
+        posts.refresh();
+        appLog('Failed to like/unlike post');
+      } else {
+        appLog('Post liked/unliked successfully');
+      }
+    } catch (e) {
+      appLog('Error liking post: $e');
+    }
+  }
+
   @override
   void onClose() {
     // Clean up resources when controller is disposed

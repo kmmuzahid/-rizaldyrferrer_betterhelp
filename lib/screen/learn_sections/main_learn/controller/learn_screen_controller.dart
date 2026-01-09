@@ -1,3 +1,8 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-09 09:41:39
+ * @Email: km.muzahid@gmail.com
+ */
 import 'package:better_help/core/app_apiurl/app_apiurl.dart';
 import 'package:better_help/screen/learn_sections/main_learn/model/category_model.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
@@ -38,6 +43,12 @@ class LearnScreenController extends GetxController {
     AppStaticImages.dailyAffermation07,
     AppStaticImages.dailyAffermation08,
   ].obs;
+  // List<String> get backgroundImages => [
+  //  AppStaticImages.habits01,
+  //   AppStaticImages.habits02,
+  //   AppStaticImages.habits03,
+  //   AppStaticImages.habits04,
+  // ].obs;
 
   // Category data
   RxList<CategoryModel> categoryList = <CategoryModel>[].obs;
@@ -81,15 +92,16 @@ class LearnScreenController extends GetxController {
   }
 
   void fetchRecentCourse() async {
+    
     final response = await DioService.instance.request(
+      // showMessage: true,
       input: RequestInput(
-        queryParams: {"page": 1, "limit": 10},
+        queryParams: {"page": 1, "limit": 10, "recent": true},
         endpoint: AppApiurl.getCourseList,
         method: RequestMethod.GET,
       ),
       responseBuilder: (data) => (data as List).map((e) => CourseModel.fromJson(e)).toList(),
     );
-
     if (response.isSuccess) {
       final data = response.data;
       recentCourseList.assignAll(data ?? []);
@@ -99,7 +111,7 @@ class LearnScreenController extends GetxController {
   void fetchTrendingCourse() async {
     final response = await DioService.instance.request(
       input: RequestInput(
-        queryParams: {"page": 1, "limit": 10},
+        queryParams: {"page": 1, "limit": 10, "trending": true},
         endpoint: AppApiurl.getCourseList,
         method: RequestMethod.GET,
       ),

@@ -38,6 +38,7 @@ import 'package:better_help/widget/app_confeti/habit_complete_screen.dart';
 import 'package:get/get.dart';
 
 import '../../screen/before_question_screen/before_question_screen.dart';
+import '../../screen/course_details/corse_details_screen.dart';
 import '../../screen/free_trial_screen/free_trial_enroll.dart';
 import '../../screen/questionnaries_screen/questionnaire_summary_screen.dart';
 
@@ -79,6 +80,7 @@ class AppRoute {
   //! Learn Screen Route
   static const String allCategoriesScreen = '/allCategoriesScreen';
   static const String courseScreen = '/courseScreen';
+  static const String courseDetailScreen = '/courseDetailScreen';
   static const String articleScreen = '/articleScreen';
 
   //! User Menu Drawer Screen Route
@@ -317,6 +319,13 @@ class AppRoute {
     GetPage(
       name: AppRoute.trendingCourse,
       page: () => TrandingCourse(),
+      transition: Transition.rightToLeft,
+      transitionDuration: Duration(microseconds: 300),
+      middlewares: [AppInternerCheck()],
+    ),
+    GetPage(
+      name: AppRoute.courseDetailScreen,
+      page: () => CourseDetailScreen(),
       transition: Transition.rightToLeft,
       transitionDuration: Duration(microseconds: 300),
       middlewares: [AppInternerCheck()],

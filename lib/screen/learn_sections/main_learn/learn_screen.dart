@@ -363,7 +363,12 @@ class _LearnScreenState extends State<LearnScreen> {
                       width: AppSize.width(value: 240),
                       margin: EdgeInsets.only(right: AppSize.width(value: 16)),
                       child: CourseCard(
-                        onTap: () {},
+                        onTap: () {
+                          Get.toNamed(
+                            AppRoute.courseDetailScreen,
+                            arguments: {'id': controller.trendingCourseList[index].id},
+                          );
+                        },
                         imageUrl: controller.trendingCourseList[index].thumbnail,
                         title: controller.trendingCourseList[index].title,
                         instructor: controller.trendingCourseList[index].categoryName,
@@ -437,7 +442,12 @@ class _LearnScreenState extends State<LearnScreen> {
                     height: AppSize.height(value: 300),
                     margin: EdgeInsets.only(right: AppSize.width(value: 16)),
                     child: CourseCard(
-                        onTap: () {},
+                        onTap: () {
+                          Get.toNamed(
+                            AppRoute.courseDetailScreen,
+                            arguments: {'id': controller.recentCourseList[index].id},
+                          );
+                        },
                         imageUrl: controller.recentCourseList[index].thumbnail,
                         title: controller.recentCourseList[index].title,
                         instructor: controller.recentCourseList[index].categoryName,

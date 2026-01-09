@@ -29,4 +29,5 @@ class AppApiurl {
   static getSingleCourse(var id) => "$baseUrl/course/$id";
   static const getCourseCategoryList = "$baseUrl/category";
   static const refreshToken = "$baseUrl/auth/refresh-token";
+  static const review = "$baseUrl/review";
 }

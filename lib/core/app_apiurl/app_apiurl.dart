@@ -24,10 +24,12 @@ class AppApiurl {
   static const resetPassoword = "$baseUrl/auth/forgot-password-reset";
   static const getAllArticle = "$baseUrl/article";
   static getSingleArticle(var id) => "$baseUrl/article/$id";
+
   static const getCourseList = "$baseUrl/course";
   static getSingleCourse(var id) => "$baseUrl/course/$id";
   static const getCourseCategoryList = "$baseUrl/category";
   static const refreshToken = "$baseUrl/auth/refresh-token";
+  static const review = "$baseUrl/review";
   static const getMyProfile = "$baseUrl/users/my-profile";
   static const editMyProfile = "$baseUrl/users/update-my-profile";
   static const getAllPost = "$baseUrl/post";

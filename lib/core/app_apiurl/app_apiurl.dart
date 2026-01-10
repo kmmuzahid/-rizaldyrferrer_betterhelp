@@ -30,4 +30,11 @@ class AppApiurl {
   static const getCourseCategoryList = "$baseUrl/category";
   static const refreshToken = "$baseUrl/auth/refresh-token";
   static const review = "$baseUrl/review";
+  static const getMyProfile = "$baseUrl/users/my-profile";
+  static const editMyProfile = "$baseUrl/users/update-my-profile";
+  static const getAllPost = "$baseUrl/post";
+  static const getHighlightPost = "$baseUrl/post?highlight=true";
+  static const getRecentPost = "$baseUrl/post?recent=true";
+  static const getPopularPost = "$baseUrl/post?popular=true";
+  static getPostLike(var postId) => "$baseUrl/post/like/$postId";
 }

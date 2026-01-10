@@ -108,11 +108,48 @@ class _SocialMediaPostCardState extends State<SocialMediaPostCard> {
                 onTap: widget.onProfileImageTap,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100),
-                  child: Image.asset(
-                    widget.profileImage,
-                    height: AppSize.height(value: 35),
-                    width: AppSize.width(value: 35),
-                  ),
+                  child: widget.profileImage.startsWith('http')
+                      ? Image.network(
+                          widget.profileImage,
+                          height: AppSize.height(value: 35),
+                          width: AppSize.width(value: 35),
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Container(
+                              height: AppSize.height(value: 35),
+                              width: AppSize.width(value: 35),
+                              color: AppColors.grey100,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    AppColors.primary500,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            // Fallback to a default icon if network image fails
+                            return Container(
+                              height: AppSize.height(value: 35),
+                              width: AppSize.width(value: 35),
+                              color: AppColors.grey100,
+                              child: Icon(
+                                Icons.person,
+                                size: 20,
+                                color: AppColors.white,
+                              ),
+                            );
+                          },
+                        )
+                      : Image.asset(
+                          widget.profileImage,
+                          height: AppSize.height(value: 35),
+                          width: AppSize.width(value: 35),
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
               Gap(width: 10),

@@ -59,9 +59,7 @@ class _LearnScreenState extends State<LearnScreen> {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSize.width(value: 20),
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
                   child: AppTextInput(
                     prefixIcon: Icons.search,
                     hintText: "Search courses...",
@@ -93,7 +91,7 @@ class _LearnScreenState extends State<LearnScreen> {
                       viewportFraction: 0.85,
                       initialPage: 0,
                       enableInfiniteScroll: true,
-                      
+
                       autoPlay: true,
                       autoPlayInterval: const Duration(seconds: 4),
                       autoPlayAnimationDuration: const Duration(milliseconds: 800),
@@ -196,36 +194,29 @@ class _LearnScreenState extends State<LearnScreen> {
                   child: Obx(
                     () => Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: List.generate(
-                        controller.backgroundImages.length,
-                        (index) {
-                          return GestureDetector(
-                            onTap: () => controller.goToSlide(index),
-                            child: Container(
-                              margin: EdgeInsets.symmetric(
-                                horizontal: AppSize.width(value: 3),
-                              ),
-                              height: AppSize.height(value: 8),
-                              width: AppSize.width(value: 32),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4.5),
-                                color: controller.currentIndex.value == index
-                                    ? AppColors.secondary900
-                                    : AppColors.iconLightgrey,
-                              ),
+                      children: List.generate(controller.backgroundImages.length, (index) {
+                        return GestureDetector(
+                          onTap: () => controller.goToSlide(index),
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: AppSize.width(value: 3)),
+                            height: AppSize.height(value: 8),
+                            width: AppSize.width(value: 32),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4.5),
+                              color: controller.currentIndex.value == index
+                                  ? AppColors.secondary900
+                                  : AppColors.iconLightgrey,
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      }),
                     ),
                   ),
                 ),
                 Gap(height: 16),
                 //! Categories Section
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSize.height(value: 20),
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: AppSize.height(value: 20)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -255,9 +246,9 @@ class _LearnScreenState extends State<LearnScreen> {
                     ],
                   ),
                 ),
-                Gap(height: 08),
+                8.height,
                 SizedBox(
-                  height: AppSize.height(value: 95),
+                  height: 95.h,
                   child: Obx(() {
                     return ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -268,8 +259,7 @@ class _LearnScreenState extends State<LearnScreen> {
                           onTap: () {
                             Get.toNamed(
                               AppRoute.trendingCourse,
-                              arguments: {
-                                  'categoryName': controller.categoryList[index].name},
+                              arguments: {'categoryName': controller.categoryList[index].name},
                             );
                           },
                           child: Container(
@@ -303,8 +293,7 @@ class _LearnScreenState extends State<LearnScreen> {
                         );
                       },
                     );
-                  }
-                  ),
+                  }),
                 ),
                 Gap(height: 20),
               ],
@@ -314,9 +303,7 @@ class _LearnScreenState extends State<LearnScreen> {
           //! Trending Courses Section - As Sliver
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSize.width(value: 20),
-              ),
+              padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -331,7 +318,7 @@ class _LearnScreenState extends State<LearnScreen> {
                     hoverColor: Colors.transparent,
                     splashColor: Colors.transparent,
                     onTap: () {
-                      Get.toNamed(AppRoute.trendingCourse);
+                      Get.toNamed(AppRoute.trendingCourse, arguments: {'isTrending': true});
                     },
                     child: AppText(
                       text: "See all",
@@ -359,6 +346,7 @@ class _LearnScreenState extends State<LearnScreen> {
                   padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
                   itemCount: controller.trendingCourseList.length,
                   itemBuilder: (context, index) {
+                    final course = controller.trendingCourseList[index];
                     return Container(
                       width: AppSize.width(value: 240),
                       margin: EdgeInsets.only(right: AppSize.width(value: 16)),
@@ -366,17 +354,19 @@ class _LearnScreenState extends State<LearnScreen> {
                         onTap: () {
                           Get.toNamed(
                             AppRoute.courseDetailScreen,
-                            arguments: {'id': controller.trendingCourseList[index].id},
+                            arguments: {'id': course.id},
                           );
                         },
-                        imageUrl: controller.trendingCourseList[index].thumbnail,
-                        title: controller.trendingCourseList[index].title,
-                        instructor: controller.trendingCourseList[index].categoryName,
-                        rating: controller.trendingCourseList[index].rating,
-                        views: "${controller.trendingCourseList[index].viewUsers.length} views",
-                        date: CoreUtils.formatDateTime(
-                          controller.trendingCourseList[index].createdAt,
-                        ),
+                        onFavoritePressed: () {
+                          controller.toggleFavouriteTrending(index);
+                        },
+                        isFavorited: course.isFavorite,
+                        imageUrl: course.thumbnail,
+                        title: course.title,
+                        instructor: course.categoryName,
+                        rating: course.rating,
+                        views: "${course.viewCont} views",
+                        date: CoreUtils.formatDateTime(course.createdAt),
                       ),
                     );
                   },
@@ -390,9 +380,7 @@ class _LearnScreenState extends State<LearnScreen> {
           //! Recent Course Section - As Sliver
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSize.width(value: 20),
-              ),
+              padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -431,34 +419,37 @@ class _LearnScreenState extends State<LearnScreen> {
               height: AppSize.height(value: 250),
               child: Obx(() {
                 return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppSize.width(value: 20),
-                ),
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
                   itemCount: controller.recentCourseList.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: 240,
-                    height: AppSize.height(value: 300),
-                    margin: EdgeInsets.only(right: AppSize.width(value: 16)),
-                    child: CourseCard(
+                  itemBuilder: (context, index) {
+                    final course = controller.recentCourseList[index];
+                    return Container(
+                      width: 240,
+                      height: AppSize.height(value: 300),
+                      margin: EdgeInsets.only(right: AppSize.width(value: 16)),
+                      child: CourseCard(
                         onTap: () {
                           Get.toNamed(
                             AppRoute.courseDetailScreen,
-                            arguments: {'id': controller.recentCourseList[index].id},
+                            arguments: {'id': course.id},
                           );
                         },
-                        imageUrl: controller.recentCourseList[index].thumbnail,
-                        title: controller.recentCourseList[index].title,
-                        instructor: controller.recentCourseList[index].categoryName,
-                        rating: controller.recentCourseList[index].rating,
-                        views: "${controller.recentCourseList[index].viewUsers.length} views",
+                        isFavorited: course.isFavorite,
+                        onFavoritePressed: () {
+                          controller.toggleFavouriteRecent(index);
+                        },
+                        imageUrl: course.thumbnail,
+                        title: course.title,
+                        instructor: course.categoryName,
+                        rating: course.rating,
+                        views: "${course.viewCont} views",
                         date: CoreUtils.formatDateTime(
-                          controller.recentCourseList[index].createdAt,
+                          course.createdAt,
                         ),
                       ),
-                  );
-                },
+                    );
+                  },
                 );
               }),
             ),

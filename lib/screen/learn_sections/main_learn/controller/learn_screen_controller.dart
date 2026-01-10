@@ -6,7 +6,6 @@
 import 'package:better_help/core/app_apiurl/app_apiurl.dart';
 import 'package:better_help/screen/learn_sections/main_learn/model/category_model.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
-import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:core_kit/network/dio_service.dart';
 import 'package:core_kit/network/request_input.dart';
@@ -18,21 +17,6 @@ class LearnScreenController extends GetxController {
   final CarouselSliderController carouselController = CarouselSliderController();
   var currentIndex = 0.obs;
 
-  // Quote data
-  List<String> get quoteList => [
-    AppString.quotes01,
-    AppString.quotes02,
-    AppString.quotes03,
-    AppString.quotes04,
-  ];
-
-  List<String> get quoteAuthorList => [
-    AppString.quotes01Author,
-    AppString.quotes02Author,
-    AppString.quotes03Author,
-    AppString.quotes04Author,
-  ];
-
   List<String> get backgroundImages => [
     AppStaticImages.dailyAffermation01,
     AppStaticImages.dailyAffermation02,
@@ -43,14 +27,7 @@ class LearnScreenController extends GetxController {
     AppStaticImages.dailyAffermation07,
     AppStaticImages.dailyAffermation08,
   ].obs;
-  // List<String> get backgroundImages => [
-  //  AppStaticImages.habits01,
-  //   AppStaticImages.habits02,
-  //   AppStaticImages.habits03,
-  //   AppStaticImages.habits04,
-  // ].obs;
-
-  // Category data
+ 
   RxList<CategoryModel> categoryList = <CategoryModel>[].obs;
   RxList<CourseModel> recentCourseList = <CourseModel>[].obs;
   RxList<CourseModel> trendingCourseList = <CourseModel>[].obs;
@@ -96,7 +73,7 @@ class LearnScreenController extends GetxController {
     final response = await DioService.instance.request(
       // showMessage: true,
       input: RequestInput(
-        queryParams: {"page": 1, "limit": 10, "recent": true},
+        queryParams: {"page": 1, "limit": 10},
         endpoint: AppApiurl.getCourseList,
         method: RequestMethod.GET,
       ),
@@ -121,6 +98,38 @@ class LearnScreenController extends GetxController {
     if (response.isSuccess) {
       final data = response.data;
       trendingCourseList.assignAll(data ?? []);
+    }
+  }
+
+  toggleFavouriteTrending(int index) async {
+    final course = trendingCourseList[index];
+    final result = await DioService.instance.request(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: AppApiurl.favoriteCourse,
+        method: RequestMethod.POST,
+        jsonBody: {"courseId": course.id},
+      ),
+      responseBuilder: (data) => data,
+    );
+    if (result.isSuccess) {
+      trendingCourseList[index] = course.copywith(isFavorite: !course.isFavorite);
+    }
+  }
+
+  toggleFavouriteRecent(int index) async {
+    final course = recentCourseList[index];
+    final result = await DioService.instance.request(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: AppApiurl.favoriteCourse,
+        method: RequestMethod.POST,
+        jsonBody: {"courseId": course.id},
+      ),
+      responseBuilder: (data) => data,
+    );
+    if (result.isSuccess) {
+      recentCourseList[index] = course.copywith(isFavorite: !course.isFavorite);
     }
   }
 

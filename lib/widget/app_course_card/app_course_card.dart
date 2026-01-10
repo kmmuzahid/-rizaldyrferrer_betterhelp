@@ -2,6 +2,7 @@ import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
+import 'package:core_kit/image/common_image.dart';
 import 'package:flutter/material.dart';
 
 enum CardType { course, article }
@@ -79,48 +80,8 @@ class CourseCard extends StatelessWidget {
   Widget _buildImageSection() {
     return Stack(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-          child: imageUrl.isNotEmpty && imageUrl != "imageUrl"
-              ? (imageUrl.startsWith('http')
-                    ? Image.network(
-                        imageUrl,
-                        height: AppSize.height(value: 120),
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return _buildPlaceholderImage();
-                        },
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Container(
-                            height: AppSize.height(value: 120),
-                            width: double.infinity,
-                            color: AppColors.t5,
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: AppColors.primary500,
-                                value:
-                                    loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                    : null,
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    : Image.asset(
-                        imageUrl,
-                        height: AppSize.height(value: 120),
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return _buildPlaceholderImage();
-                        },
-                      ))
-              : _buildPlaceholderImage(),
-        ),
+        CommonImage(src: imageUrl, height: 120, width: double.infinity,
+          borderRadius: 12),
         _buildFavoriteButton(),
         _buildViewsCounter(),
       ],

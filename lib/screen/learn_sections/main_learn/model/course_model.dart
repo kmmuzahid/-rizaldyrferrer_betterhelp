@@ -14,7 +14,7 @@ class CourseModel {
   final double rating;
   final double price;
   final int reviews;
-  final List<String> viewUsers;
+  final int viewCont;
   final bool isDeleted;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -31,12 +31,48 @@ class CourseModel {
     required this.rating,
     required this.price,
     required this.reviews,
-    required this.viewUsers,
+    required this.viewCont,
     required this.isDeleted,
     required this.createdAt,
     required this.updatedAt,
     required this.isFavorite,
   });
+
+  CourseModel copywith({
+    String? id,
+    String? title,
+    String? description,
+    String? thumbnail,
+    String? categoryId,
+    String? categoryName,
+    String? video,
+    double? rating,
+    double? price,
+    int? reviews,
+    int? viewCont,
+    bool? isDeleted,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    bool? isFavorite,
+  }) {
+    return CourseModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      thumbnail: thumbnail ?? this.thumbnail,
+      categoryId: categoryId ?? this.categoryId,
+      categoryName: categoryName ?? this.categoryName,
+      video: video ?? this.video,
+      rating: rating ?? this.rating,
+      price: price ?? this.price,
+      reviews: reviews ?? this.reviews,
+      viewCont: viewCont ?? this.viewCont,
+      isDeleted: isDeleted ?? this.isDeleted,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isFavorite: isFavorite ?? this.isFavorite,
+    );
+  }
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
     return CourseModel(
@@ -50,7 +86,7 @@ class CourseModel {
       rating: (json['ratings'] as num?)?.toDouble() ?? 0.0,
       price: (json['price'] as num?)?.toDouble() ?? 0.0,
       reviews: (json['reviews'] as num?)?.toInt() ?? 0,
-      viewUsers: List<String>.from(json['viewUsers'] ?? const []),
+      viewCont: (json['viewCount'] as num?)?.toInt() ?? 0,
       isDeleted: json['isDeleted'] ?? false,
       createdAt:
           DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.fromMillisecondsSinceEpoch(0),
@@ -72,7 +108,7 @@ class CourseModel {
       'ratings': rating,
       'price': price,
       'reviews': reviews,
-      'viewUsers': viewUsers,
+      'viewUsers': viewCont,
       'isDeleted': isDeleted,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),

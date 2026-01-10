@@ -33,8 +33,14 @@ class AppApiurl {
   static const getMyProfile = "$baseUrl/users/my-profile";
   static const editMyProfile = "$baseUrl/users/update-my-profile";
   static const getAllPost = "$baseUrl/post";
+  static getSinglePost(var postId) => "$baseUrl/post/$postId";
   static const getHighlightPost = "$baseUrl/post?highlight=true";
   static const getRecentPost = "$baseUrl/post?recent=true";
   static const getPopularPost = "$baseUrl/post?popular=true";
   static getPostLike(var postId) => "$baseUrl/post/like/$postId";
+  static getPostComment(var postId) => "$baseUrl/comments/post/$postId";
+  static const createComment = "$baseUrl/comments/create-comment-or-reply";
+  static const createCommentReply = "$baseUrl/comments/create-comment-or-reply";
+  static const reactOnComment = "$baseUrl/comments/like-comment";
+  static const reactOnCommentReply = "$baseUrl/comments/like-comment";
 }

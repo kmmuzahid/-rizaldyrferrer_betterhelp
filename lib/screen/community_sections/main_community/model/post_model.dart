@@ -4,12 +4,7 @@ class PostModel {
   final Meta? meta;
   final List<Post>? data;
 
-  PostModel({
-    this.success,
-    this.message,
-    this.meta,
-    this.data,
-  });
+  PostModel({this.success, this.message, this.meta, this.data});
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
     return PostModel(
@@ -38,12 +33,7 @@ class Meta {
   final int? total;
   final int? totalPage;
 
-  Meta({
-    this.page,
-    this.limit,
-    this.total,
-    this.totalPage,
-  });
+  Meta({this.page, this.limit, this.total, this.totalPage});
 
   factory Meta.fromJson(Map<String, dynamic> json) {
     return Meta(
@@ -75,6 +65,7 @@ class Post {
   final bool? isDeleted;
   final String? createdAt;
   final String? updatedAt;
+  final bool? isLiked;
 
   Post({
     this.id,
@@ -87,6 +78,7 @@ class Post {
     this.isDeleted,
     this.createdAt,
     this.updatedAt,
+    this.isLiked,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -101,6 +93,7 @@ class Post {
       isDeleted: json['isDeleted'] as bool?,
       createdAt: json['createdAt'] as String?,
       updatedAt: json['updatedAt'] as String?,
+      isLiked: json['isLiked'] as bool?,
     );
   }
 
@@ -116,6 +109,7 @@ class Post {
       'isDeleted': isDeleted,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
+      'isLiked': isLiked,
     };
   }
 }

@@ -173,4 +173,128 @@ class CommunityRepository {
       return false;
     }
   }
+
+  //! Get single post with comments
+  Future<dynamic> getSinglePost(String postId) async {
+    appLog('CommunityRepository: Fetching post with ID - $postId');
+
+    try {
+      final response = await _apiServices.apiGetServices(
+        AppApiurl.getSinglePost(postId),
+      );
+
+      if (response != null && response['success'] == true) {
+        appLog('CommunityRepository: Post fetched successfully');
+        return response;
+      } else {
+        appLog('CommunityRepository: Failed to fetch post');
+        return null;
+      }
+    } catch (e) {
+      errorLog('CommunityRepository: Exception during fetching post', e);
+      return null;
+    }
+  }
+
+  //! Create a comment on a post
+  Future<dynamic> createComment({
+    required String postId,
+    required String message,
+  }) async {
+    appLog('CommunityRepository: Creating comment on post - $postId');
+
+    try {
+      final response = await _apiServices.apiPostServices(
+        url: AppApiurl.createComment,
+        body: {'postId': postId, 'message': message},
+      );
+
+      if (response != null && response['success'] == true) {
+        appLog('CommunityRepository: Comment created successfully');
+        return response;
+      } else {
+        appLog('CommunityRepository: Failed to create comment');
+        return null;
+      }
+    } catch (e) {
+      errorLog('CommunityRepository: Exception during creating comment', e);
+      return null;
+    }
+  }
+
+  //! Create a reply to a comment
+  Future<dynamic> createReply({
+    required String postId,
+    required String message,
+    required String parentId,
+  }) async {
+    appLog('CommunityRepository: Creating reply to comment - $parentId');
+
+    try {
+      final response = await _apiServices.apiPostServices(
+        url: AppApiurl.createCommentReply,
+        body: {'postId': postId, 'message': message, 'parentId': parentId},
+      );
+
+      if (response != null && response['success'] == true) {
+        appLog('CommunityRepository: Reply created successfully');
+        return response;
+      } else {
+        appLog('CommunityRepository: Failed to create reply');
+        return null;
+      }
+    } catch (e) {
+      errorLog('CommunityRepository: Exception during creating reply', e);
+      return null;
+    }
+  }
+
+  //! React on a comment
+  Future<bool> reactOnComment(String commentId) async {
+    appLog('CommunityRepository: Reacting on comment - $commentId');
+
+    try {
+      final response = await _apiServices.apiPostServices(
+        url: AppApiurl.reactOnComment,
+        body: {'commentId': commentId},
+      );
+
+      if (response != null && response['success'] == true) {
+        appLog('CommunityRepository: Comment reaction successful');
+        return true;
+      } else {
+        appLog('CommunityRepository: Failed to react on comment');
+        return false;
+      }
+    } catch (e) {
+      errorLog('CommunityRepository: Exception during reacting on comment', e);
+      return false;
+    }
+  }
+
+  //! React on a comment reply
+  Future<bool> reactOnCommentReply({
+    required String commentId,
+    required String replyId,
+  }) async {
+    appLog('CommunityRepository: Reacting on reply - $replyId');
+
+    try {
+      final response = await _apiServices.apiPostServices(
+        url: AppApiurl.reactOnCommentReply,
+        body: {'commentId': commentId, 'replyId': replyId},
+      );
+
+      if (response != null && response['success'] == true) {
+        appLog('CommunityRepository: Reply reaction successful');
+        return true;
+      } else {
+        appLog('CommunityRepository: Failed to react on reply');
+        return false;
+      }
+    } catch (e) {
+      errorLog('CommunityRepository: Exception during reacting on reply', e);
+      return false;
+    }
+  }
 }

@@ -1,8 +1,10 @@
 import 'package:better_help/utils/app_colors/app_colors.dart';
+import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SocialMediaPostCard extends StatefulWidget {
   final String postText;
@@ -11,6 +13,7 @@ class SocialMediaPostCard extends StatefulWidget {
   final String profileImage;
   final int likesCount;
   final int commentsCount;
+  final bool isLiked;
 
   // Optional callback functions
   final VoidCallback? onProfileImageTap;
@@ -26,6 +29,7 @@ class SocialMediaPostCard extends StatefulWidget {
     required this.profileImage,
     required this.likesCount,
     required this.commentsCount,
+    this.isLiked = false,
     this.onProfileImageTap,
     this.onMoreVertTap,
     this.onLikeTap,
@@ -153,27 +157,32 @@ class _SocialMediaPostCardState extends State<SocialMediaPostCard> {
                 ),
               ),
               Gap(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppText(
-                    text: widget.userName,
-                    fontSize: AppSize.width(value: 14.38),
-                    fontFamilyIndex: 2,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: -0.14,
-                  ),
-                  Gap(height: 02),
-                  AppText(
-                    text: widget.userLocation,
-                    fontSize: AppSize.width(value: 12.33),
-                    fontFamilyIndex: 2,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: -0.12,
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppText(
+                      text: widget.userName,
+                      fontSize: AppSize.width(value: 14.38),
+                      fontFamilyIndex: 2,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: -0.14,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Gap(height: 02),
+                    AppText(
+                      text: widget.userLocation,
+                      fontSize: AppSize.width(value: 12.33),
+                      fontFamilyIndex: 2,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: -0.12,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
               ),
-              Spacer(),
               // More Options Button with Optional Click
               GestureDetector(
                 onTap: widget.onMoreVertTap,
@@ -237,7 +246,13 @@ class _SocialMediaPostCardState extends State<SocialMediaPostCard> {
               // Like Button with Optional Click
               GestureDetector(
                 onTap: widget.onLikeTap,
-                child: Icon(Icons.favorite_border_outlined, size: 20),
+                child: widget.isLiked
+                    ? SvgPicture.asset(
+                        AppIcons.likedFillIcons,
+                        height: 20,
+                        width: 20,
+                      )
+                    : Icon(Icons.favorite_border_outlined, size: 20),
               ),
               Gap(width: 5),
               AppText(

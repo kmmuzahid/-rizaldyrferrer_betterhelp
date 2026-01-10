@@ -60,4 +60,5 @@ class AppIcons {
   static const String profileIcons = "assets/icons/profile-icons.svg";
   static const String subscriptionLeve =
       "assets/icons/subscritption_levels.svg";
+  static const String likedFillIcons = "assets/icons/likedFill.svg";
 }

@@ -39,6 +39,7 @@ class AppApiurl {
   static const review = "$baseUrl/review";
   static const favoriteCourse = "$baseUrl/favorite/saved";
   static setCourseViewCount(var id) => "$baseUrl/course/view-count/$id";
+  static getPostComment(var postId) => "$baseUrl/comments/post/$postId";
   static const createComment = "$baseUrl/comments/create-comment-or-reply";
   static const createCommentReply = "$baseUrl/comments/create-comment-or-reply";
   static const reactOnComment = "$baseUrl/comments/like-comment";

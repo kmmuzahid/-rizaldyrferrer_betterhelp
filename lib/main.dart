@@ -40,13 +40,9 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   // Cache tokens in memory for synchronous access
-  static String? _cachedAccessToken;
-  static String? _cachedRefreshToken;
 
   // Initialize tokens from storage
   static Future<void> initializeTokens() async {
-    _cachedAccessToken = await StorageService().getAccessToken();
-    _cachedRefreshToken = await StorageService().getRefreshToken();
   }
 
   @override
@@ -80,25 +76,20 @@ class MyApp extends StatelessWidget {
             baseUrl: AppApiurl.baseUrl,
             refreshTokenEndpoint: AppApiurl.refreshToken,
             onLogout: () {
-              _cachedAccessToken = null;
-              _cachedRefreshToken = null;
               StorageService().removeTokens();
               Get.offAllNamed(AppRoute.splashscreen);
             },
             enableDebugLogs: kDebugMode,
           ),
           tokenProvider: TokenProvider(
-            accessToken: () => _cachedAccessToken,
-            refreshToken: () => _cachedRefreshToken,
-            updateTokens: (accessToken, refreshToken) async {
-              _cachedAccessToken = accessToken;
-              _cachedRefreshToken = refreshToken;
-              await StorageService().saveAccessToken(accessToken);
-              await StorageService().saveRefreshToken(refreshToken);
+            accessToken: () =>
+                StorageService().getAccessToken().then((v) => v ?? ''),
+            refreshToken: () =>
+                StorageService().getRefreshToken().then((v) => v ?? ''),
+            updateTokens: (data) async {
+              await StorageService().saveAccessToken(data['accessToken']);
             },
             clearTokens: () async {
-              _cachedAccessToken = null;
-              _cachedRefreshToken = null;
               await StorageService().removeTokens();
             },
           ),

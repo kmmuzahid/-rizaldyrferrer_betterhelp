@@ -1,5 +1,5 @@
 import 'package:better_help/core/app_apiurl/app_apiurl.dart';
-import 'package:better_help/screen/community_sections/article_details/controller/article_details_screen_controller.dart';
+import 'package:better_help/screen/community_sections/main_community/controller/article_details_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';

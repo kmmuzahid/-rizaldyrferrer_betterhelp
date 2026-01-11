@@ -6,12 +6,7 @@ void appLog(dynamic message) {
   try {
     if (kDebugMode) {
       log("""
-✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅
-
-$message
-
-✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅
-
+✅✅✅ $message ✅✅✅
 """);
     }
   } catch (e) {

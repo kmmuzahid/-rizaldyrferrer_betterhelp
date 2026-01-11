@@ -43,6 +43,7 @@ dependencies:
       url: https://github.com/kmmuzahid/flutter_core_kit.git
       ref: 1f12b09
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

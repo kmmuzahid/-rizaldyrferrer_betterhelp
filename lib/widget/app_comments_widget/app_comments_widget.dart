@@ -218,6 +218,18 @@ class CommentsController extends GetxController {
 
       if (response != null && response['success'] == true) {
         postData.value = post_model.SinglePostModel.fromJson(response);
+
+        // Get current user ID to set isLiked state
+        final userData = await StorageService.instance.getUserData();
+        final currentUserId = userData?['_id'] as String?;
+
+        if (currentUserId != null && postData.value?.data?.comments != null) {
+          // Update isLiked for all comments and replies
+          for (var comment in postData.value!.data!.comments!) {
+            _updateCommentLikeState(comment, currentUserId);
+          }
+        }
+
         appLog('Comments loaded successfully');
       } else {
         appLog('Failed to load comments');
@@ -226,6 +238,32 @@ class CommentsController extends GetxController {
       appLog('Error loading comments: $e');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  //! Helper method to update like state for comments and replies
+  void _updateCommentLikeState(post_model.Comment comment, String userId) {
+    // Check if user liked this comment
+    comment.isLiked = comment.likes?.contains(userId) ?? false;
+
+    // Update like state for all replies recursively
+    if (comment.replies != null) {
+      for (var reply in comment.replies!) {
+        _updateReplyLikeState(reply, userId);
+      }
+    }
+  }
+
+  //! Helper method to update like state for replies recursively
+  void _updateReplyLikeState(post_model.Reply reply, String userId) {
+    // Check if user liked this reply
+    reply.isLiked = reply.likes?.contains(userId) ?? false;
+
+    // Update like state for nested replies
+    if (reply.replies != null) {
+      for (var nestedReply in reply.replies!) {
+        _updateReplyLikeState(nestedReply, userId);
+      }
     }
   }
 
@@ -295,24 +333,28 @@ class CommentsController extends GetxController {
     try {
       appLog('Reacting on comment: ${comment.id}');
 
+      // Get current user ID
+      final userData = await StorageService.instance.getUserData();
+      final currentUserId = userData?['_id'] as String?;
+
+      if (currentUserId == null) {
+        appLog('Cannot react: User ID not found');
+        return;
+      }
+
       // Optimistically update UI
       final currentLikeState = comment.isLiked ?? false;
       comment.isLiked = !currentLikeState;
 
       // Update likes array
       List<dynamic> updatedLikes = List.from(comment.likes ?? []);
-      final userData = await StorageService.instance.getUserData();
-      final currentUserId = userData?['_id'] as String?;
-
-      if (currentUserId != null) {
-        if (currentLikeState) {
-          updatedLikes.remove(currentUserId);
-        } else {
-          updatedLikes.add(currentUserId);
-        }
-        comment.likes?.clear();
-        comment.likes?.addAll(updatedLikes);
+      if (currentLikeState) {
+        updatedLikes.remove(currentUserId);
+      } else {
+        updatedLikes.add(currentUserId);
       }
+      comment.likes?.clear();
+      comment.likes?.addAll(updatedLikes);
 
       postData.refresh();
 
@@ -340,24 +382,28 @@ class CommentsController extends GetxController {
     try {
       appLog('Reacting on reply: ${reply.id}');
 
+      // Get current user ID
+      final userData = await StorageService.instance.getUserData();
+      final currentUserId = userData?['_id'] as String?;
+
+      if (currentUserId == null) {
+        appLog('Cannot react: User ID not found');
+        return;
+      }
+
       // Optimistically update UI
       final currentLikeState = reply.isLiked ?? false;
       reply.isLiked = !currentLikeState;
 
       // Update likes array
       List<dynamic> updatedLikes = List.from(reply.likes ?? []);
-      final userData = await StorageService.instance.getUserData();
-      final currentUserId = userData?['_id'] as String?;
-
-      if (currentUserId != null) {
-        if (currentLikeState) {
-          updatedLikes.remove(currentUserId);
-        } else {
-          updatedLikes.add(currentUserId);
-        }
-        reply.likes?.clear();
-        reply.likes?.addAll(updatedLikes);
+      if (currentLikeState) {
+        updatedLikes.remove(currentUserId);
+      } else {
+        updatedLikes.add(currentUserId);
       }
+      reply.likes?.clear();
+      reply.likes?.addAll(updatedLikes);
 
       postData.refresh();
 
@@ -379,6 +425,41 @@ class CommentsController extends GetxController {
       appLog('Error reacting on reply: $e');
       await loadRealComments(refresh: true);
     }
+  }
+
+  //! Helper method to get reply depth
+  int getReplyDepth(post_model.Reply reply) {
+    int depth = 0;
+    post_model.Reply? current = reply;
+
+    // Count nested levels
+    while (current?.replies != null && current!.replies!.isNotEmpty) {
+      depth++;
+      current = current.replies!.first;
+    }
+
+    return depth;
+  }
+
+  //! Check if reply option should be shown (max 4 levels)
+  bool canReply(post_model.Comment comment) {
+    // Count the maximum depth of replies
+    int maxDepth = _getMaxReplyDepth(comment.replies ?? []);
+    return maxDepth < 4;
+  }
+
+  int _getMaxReplyDepth(
+    List<post_model.Reply> replies, [
+    int currentDepth = 0,
+  ]) {
+    if (replies.isEmpty) return currentDepth;
+
+    int maxDepth = currentDepth;
+    for (var reply in replies) {
+      int depth = _getMaxReplyDepth(reply.replies ?? [], currentDepth + 1);
+      if (depth > maxDepth) maxDepth = depth;
+    }
+    return maxDepth;
   }
 
   void toggleLike(Comment comment) {
@@ -1033,27 +1114,29 @@ class RealCommentWidget extends StatelessWidget {
                           fontFamilyIndex: 2,
                         ),
                         const Gap(width: 16),
-                        GestureDetector(
-                          onTap: () {
-                            controller.replyingToCommentId.value =
-                                comment.id ?? '';
-                            controller.replyingTo.value = Comment(
-                              id: 0,
-                              user: comment.getUserName(),
-                              avatar: '',
-                              text: comment.message ?? '',
-                              likes: 0,
-                              replies: [],
-                            );
-                          },
-                          child: const AppText(
-                            text: "Reply",
-                            color: Color(0xFF007AFF),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            fontFamilyIndex: 2,
+                        // Only show reply button if depth is less than 3
+                        if (controller.canReply(comment))
+                          GestureDetector(
+                            onTap: () {
+                              controller.replyingToCommentId.value =
+                                  comment.id ?? '';
+                              controller.replyingTo.value = Comment(
+                                id: 0,
+                                user: comment.getUserName(),
+                                avatar: '',
+                                text: comment.message ?? '',
+                                likes: 0,
+                                replies: [],
+                              );
+                            },
+                            child: const AppText(
+                              text: "Reply",
+                              color: Color(0xFF007AFF),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              fontFamilyIndex: 2,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                     // Show replies
@@ -1276,27 +1359,29 @@ class RealReplyWidget extends StatelessWidget {
                           ),
                         ),
                         const Gap(width: 12),
-                        GestureDetector(
-                          onTap: () {
-                            controller.replyingToCommentId.value =
-                                reply.id ?? '';
-                            controller.replyingTo.value = Comment(
-                              id: 0,
-                              user: reply.userId?.fullName ?? 'User',
-                              avatar: '',
-                              text: reply.message ?? '',
-                              likes: 0,
-                              replies: [],
-                            );
-                          },
-                          child: const AppText(
-                            text: "Reply",
-                            color: Color(0xFF007AFF),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            fontFamilyIndex: 2,
+                        // Only show reply button if depth is less than 4
+                        if (depth < 3)
+                          GestureDetector(
+                            onTap: () {
+                              controller.replyingToCommentId.value =
+                                  reply.id ?? '';
+                              controller.replyingTo.value = Comment(
+                                id: 0,
+                                user: reply.userId?.fullName ?? 'User',
+                                avatar: '',
+                                text: reply.message ?? '',
+                                likes: 0,
+                                replies: [],
+                              );
+                            },
+                            child: const AppText(
+                              text: "Reply",
+                              color: Color(0xFF007AFF),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              fontFamilyIndex: 2,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                     // Nested replies

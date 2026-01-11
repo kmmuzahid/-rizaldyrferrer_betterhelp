@@ -387,4 +387,51 @@ class CommunityScreenController extends GetxController {
     appLog('Controller disposed');
     super.onClose();
   }
+
+  //! Toggle save/unsave article
+  Future<void> toggleSaveArticle(String articleId, int index) async {
+    appLog('Toggling save for article with ID: $articleId at index: $index');
+
+    try {
+      // Get the current article
+      final article = articles[index];
+      final currentSaveState = article.isFavorite ?? false;
+
+      // Optimistically update UI immediately
+      articles[index] = article_model.Datum(
+        id: article.id,
+        title: article.title,
+        description: article.description,
+        image: article.image,
+        publicationDate: article.publicationDate,
+        sourseName: article.sourseName,
+        readTime: article.readTime,
+        isDeleted: article.isDeleted,
+        createdAt: article.createdAt,
+        updatedAt: article.updatedAt,
+        isFavorite: !currentSaveState,
+      );
+      articles.refresh();
+
+      // Call API in background
+      final success = await _repository.toggleSaveArticle(articleId);
+
+      if (!success) {
+        // Revert on failure
+        appLog('Failed to toggle save state - reverting changes');
+        articles[index] = article;
+        articles.refresh();
+      } else {
+        appLog('Article save state toggled successfully');
+      }
+    } catch (e) {
+      appLog('Error toggling article save state: $e');
+      // Revert on error
+      if (index < articles.length) {
+        final article = articles[index];
+        articles[index] = article;
+        articles.refresh();
+      }
+    }
+  }
 }

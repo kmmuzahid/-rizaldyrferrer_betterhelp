@@ -18,6 +18,7 @@ class StorageService {
   static const String _questionnaireResponsesKey = 'questionnaire_responses';
   static const String _questionnaireOutputKey = 'questionnaire_output';
   static const String _createUserTokenKey = 'create_user_token';
+  static String get userId => '695e1c0e085dd3d8713c17f7';
   //static const String _settingsKey = 'app_settings';
 
   /// Initialize the storage service

@@ -5,6 +5,7 @@
  */
 import 'package:better_help/screen/report_problem/report_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
+import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,15 +18,7 @@ class ReportProblemScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Report a Problem", style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Get.back(),
-        ),
-      ),
+      appBar: AppBarWithBack(text: "Report a Problem"),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(

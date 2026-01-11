@@ -1,3 +1,11 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-10 14:55:55
+ * @Email: km.muzahid@gmail.com
+ */
+import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:core_kit/network/dio_service.dart';
+import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
 
 class BookingController extends GetxController {
@@ -76,5 +84,21 @@ class BookingController extends GetxController {
     return DateTime(date.year, date.month, date.day, hour, minute);
   }
 
-  void confirmBooking() {}
+  void confirmBooking() async {
+    DioService.instance.request<dynamic>(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: AppApiurl.createDoctorBooking,
+        method: RequestMethod.POST,
+        jsonBody: {
+          "bookingDate": selectedDate.value.microsecondsSinceEpoch,
+          "startTime": selectedTime.value,
+          "endTime": "10:45 AM",
+        },
+      ),
+      responseBuilder: (data) {
+        return data;
+      },
+    );
+  }
 }

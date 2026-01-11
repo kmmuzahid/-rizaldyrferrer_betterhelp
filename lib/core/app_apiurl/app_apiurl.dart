@@ -46,4 +46,7 @@ class AppApiurl {
   static const reactOnCommentReply = "$baseUrl/comments/like-comment";
 
   static const report = "$baseUrl/report";
+  static getMyMessages(var id) => "$baseUrl/message/my-messages/$id";
+  static const sendMessages = "$baseUrl/message/send-messages";
+  static const createDoctorBooking = "$baseUrl/doctor-booking/create-doctor-booking";
 }

@@ -1,18 +1,22 @@
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/screen/supports_sections/main_supports/controller/support_screen_controller.dart'
+    show SupportScreenController;
+import 'package:better_help/screen/supports_sections/main_supports/widgets/chat_bubble.dart';
+import 'package:better_help/screen/supports_sections/main_supports/widgets/common_chat_header.dart';
+import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
-import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
-import 'package:better_help/widget/app_chat_widget/app_chat_widget.dart';
-import 'package:better_help/widget/app_chat_widget/models/chat_models.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
+import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class SupportScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
@@ -24,48 +28,13 @@ class SupportScreen extends StatefulWidget {
 }
 
 class _SupportScreenState extends State<SupportScreen> {
-  // Chat widget key to prevent rebuilds
-  final GlobalKey _chatKey = GlobalKey();
-
-  // Mock data for chat
-  final List<ChatMessage> _mockMessages = [
-    ChatMessage(
-      id: '1',
-      text: 'Hi 👋 Welcome to Health Assistant!',
-      isMe: false,
-      timestamp: DateTime.now().subtract(Duration(minutes: 5)),
-      senderName: 'Health Assistant',
-      senderAvatar: 'https://via.placeholder.com/40/4DB6AC/FFFFFF?text=HA',
-    ),
-    ChatMessage(
-      id: '2',
-      text: 'How can I help you today?',
-      isMe: false,
-      timestamp: DateTime.now().subtract(Duration(minutes: 4)),
-      senderName: 'Health Assistant',
-      senderAvatar: 'https://via.placeholder.com/40/4DB6AC/FFFFFF?text=HA',
-    ),
-    ChatMessage(
-      id: '3',
-      text: 'I need some guidance about my health routine',
-      isMe: true,
-      timestamp: DateTime.now().subtract(Duration(minutes: 3)),
-    ),
-    ChatMessage(
-      id: '4',
-      text:
-          'I\'d be happy to help! What specific area would you like to focus on?',
-      isMe: false,
-      timestamp: DateTime.now().subtract(Duration(minutes: 2)),
-      senderName: 'Health Assistant',
-      senderAvatar: 'https://via.placeholder.com/40/4DB6AC/FFFFFF?text=HA',
-    ),
-  ];
+  late SupportScreenController controller;
 
   @override
   void initState() {
+    controller = SupportScreenController();
+    controller.getMessages(page: 1);
     super.initState();
-    // Chat integration will be implemented when API is ready
   }
 
   @override
@@ -82,86 +51,54 @@ class _SupportScreenState extends State<SupportScreen> {
         onMenuTap: () => widget.scaffoldKey?.currentState?.openDrawer(),
       ),
       backgroundColor: AppColors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          // Changed from SingleChildScrollView to Column
+      body: Obx(
+        () => Column(
           children: [
-            // Quick action buttons - wrapped in container with fixed height
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSize.width(value: 20),
-                vertical: 20,
-              ),
-              child: Row(
+            10.height,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
                 children: [
-                  Expanded(
-                    child: _buildQuickActionCard(
-                      icon: Icons.calendar_today,
-                      title: 'Book Session',
-                      color: Color(0xFF0095FF),
-                      backgroundColor: Color(0xFFF2F7FF),
-                      onTap: () {
-                        Get.toNamed(AppRoute.bookingScreen);
-                      },
-                    ),
-                  ),
-                  Gap(width: 12),
-                  Expanded(
-                    child: _buildQuickActionCard(
-                      icon: Icons.report_problem,
-                      title: 'Report Problem',
-                      color: Color(0xFFEE443F),
-                      backgroundColor: Color(0xFFFFF3F2),
-                      onTap: () {
-                        Get.toNamed(AppRoute.reportProblemScreen);
-                      },
-                    ),
-                  ),
+                  _header(),
+                  10.height,
+                  CommonChatHeader(title: 'Kris', subtitle: 'Health Assistant'),
                 ],
               ),
             ),
-
-            // Chat widget - takes remaining space
-            Container(
-              height: MediaQuery.of(context).size.height * 0.65,
-              margin: EdgeInsets.fromLTRB(
-                AppSize.width(value: 20),
-                0,
-                AppSize.width(value: 20),
-                20,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 10,
-                    offset: Offset(0, 2),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      left: BorderSide(color: Colors.grey.shade200),
+                      right: BorderSide(color: Colors.grey.shade200),
+                    ),
                   ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: ModernChatWidget(
-                  key: _chatKey, // Add key to prevent rebuilds
-                  title: 'Health Assistant',
-                  subtitle: 'Online',
-                  chatId:
-                      'health_assistant_chat_${widget.hashCode}', // Make unique
-                  recipientAvatar:
-                      'https://via.placeholder.com/40/4DB6AC/FFFFFF?text=HA',
-                  showOnlineStatus: true,
-                  primaryColor: Color(0xFF4DB6AC),
-                  backgroundColor: Color(0xFFF5F7FA),
-                  initialMessages: _mockMessages,
-                  showHeader: true,
-                  onMessageSent: (message) {
-                    // Mock response - simulate bot reply
-                    Future.delayed(Duration(seconds: 2), () {
-                      // In a real app, this would send to your API
-                      appLog('User sent: $message');
-                    });
-                  },
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: SmartListLoader(
+                          isReverse: true,
+                          onLoadMore: (page) {
+                            controller.getMessages(page: page + 1);
+                          },
+                          itemCount: controller.messageModel.length,
+                          itemBuilder: (context, index) {
+                            final message = controller.messageModel[index];
+                            return CommonChatBubble(
+                              text: message.message,
+                              timestamp: message.createdAt.date == DateTime.now().date
+                                  ? CoreUtils.formatTime(message.createdAt)
+                                  : CoreUtils.formatDateTimeToHms(message.createdAt),
+                              isSender: message.sender.id == StorageService.userId,
+                            );
+                          },
+                        ),
+                      ),
+                      _buttons(),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -172,6 +109,115 @@ class _SupportScreenState extends State<SupportScreen> {
         height: AppSize.height(value: 85),
         decoration: BoxDecoration(color: Colors.transparent),
       ),
+    );
+  }
+
+  Container _buttons() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: Colors.grey.shade200)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          25.width,
+          Expanded(
+            child: CommonButton(
+              buttonWidth: double.infinity,
+              titleText: "Yes",
+              buttonColor: const Color(0xFFE0F2F1), // Light teal
+              titleColor: const Color(0xFF00796B),
+              onTap: () {
+                controller.sendMessage(message: "Yes");
+              },
+            ),
+          ),
+          20.width,
+          Expanded(
+            child: CommonButton(
+              buttonWidth: double.infinity,
+              titleText: "No",
+              buttonColor: const Color(0xFFEEEEEE), // Light grey
+              titleColor: Colors.black54,
+              onTap: () {
+                controller.sendMessage(message: "No");
+              },
+            ),
+          ),
+          25.width,
+        ],
+      ),
+    );
+  }
+
+  Column _header() {
+    return Column(
+      // Changed from SingleChildScrollView to Column
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.accelerationButton.withAlpha(10),
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+          child: Row(
+            children: [
+              CommonText(
+                text: "Next Appointment",
+                textColor: AppColors.accelerationButton,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+              const Spacer(),
+              CommonText(
+                top: 4,
+                bottom: 4,
+                left: 8,
+                right: 8,
+                borderColor: Colors.white,
+                backgroundColor: Colors.white,
+                preffix: Icon(Icons.calendar_today_outlined),
+                text: "11:00 AM 10-27-2025",
+                textColor: AppColors.accelerationButton,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ],
+          ),
+        ),
+        10.height,
+
+        Row(
+          children: [
+            Expanded(
+              child: _buildQuickActionCard(
+                icon: Icons.calendar_today,
+                title: 'Book Session',
+                color: Color(0xFF0095FF),
+                backgroundColor: Color(0xFFF2F7FF),
+                onTap: () {
+                  Get.toNamed(AppRoute.bookingScreen);
+                },
+              ),
+            ),
+            Gap(width: 12),
+            Expanded(
+              child: _buildQuickActionCard(
+                icon: Icons.report_problem,
+                title: 'Report Problem',
+                color: Color(0xFFEE443F),
+                backgroundColor: Color(0xFFFFF3F2),
+                onTap: () {
+                  Get.toNamed(AppRoute.reportProblemScreen);
+                },
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -186,10 +232,7 @@ class _SupportScreenState extends State<SupportScreen> {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(8),
-        ),
+        decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(8)),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -362,6 +362,15 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                 imageUrl: imageUrl.isNotEmpty
                                     ? imageUrl
                                     : AppStaticImages.habits01,
+                                isFavorited: article.isFavorite ?? false,
+                                onFavoritePressed: () {
+                                  if (article.id != null) {
+                                    controller.toggleSaveArticle(
+                                      article.id!,
+                                      index,
+                                    );
+                                  }
+                                },
                               ),
                             );
                           },

@@ -44,4 +44,6 @@ class AppApiurl {
   static const createCommentReply = "$baseUrl/comments/create-comment-or-reply";
   static const reactOnComment = "$baseUrl/comments/like-comment";
   static const reactOnCommentReply = "$baseUrl/comments/like-comment";
+
+  static const report = "$baseUrl/report";
 }

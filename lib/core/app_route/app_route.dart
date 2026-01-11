@@ -8,6 +8,7 @@ import 'package:better_help/screen/booking_screen/booking_screen.dart';
 import 'package:better_help/screen/bottom_nav/bottom_nav_screen.dart';
 import 'package:better_help/screen/community_sections/creating_post/creating_post.dart';
 import 'package:better_help/screen/community_sections/main_community/community_screen.dart';
+import 'package:better_help/screen/community_sections/single_post/single_post_screen.dart';
 import 'package:better_help/screen/free_trial_screen/free_trial_screen.dart';
 import 'package:better_help/screen/habits_sections/home_screen.dart';
 import 'package:better_help/screen/habits_sections/main_habits/habits_screen.dart';
@@ -101,6 +102,7 @@ class AppRoute {
 
   //! Community Screen Route
   static const String creatingPost = "/creatingpost";
+  static const String singlePostScreen = "/singlePostScreen";
 
   //! Congratulation Screen
   static const String congratulationScreen = "/congratulationScreen";
@@ -295,6 +297,14 @@ class AppRoute {
     GetPage(
       name: AppRoute.creatingPost,
       page: () => const CreatingPostScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
+      middlewares: [AppInternerCheck()],
+    ),
+    //! Single Post Screen Route
+    GetPage(
+      name: AppRoute.singlePostScreen,
+      page: () => const SinglePostScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
       middlewares: [AppInternerCheck()],

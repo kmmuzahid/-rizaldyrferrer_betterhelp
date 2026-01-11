@@ -8,6 +8,7 @@ import 'package:better_help/core/app_bindings/app_bindings.dart';
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/service/timer_service/timer_service.dart';
+import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/widget/app_deviceutils/app_device_utils.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:core_kit/initializer.dart';
@@ -59,6 +60,13 @@ class MyApp extends StatelessWidget {
       transitionDuration: const Duration(milliseconds: 200),
       initialRoute: AppRoute.splashscreen,
       navigatorKey: Get.key,
+      theme: ThemeData(
+        scaffoldBackgroundColor: AppColors.white,
+        inputDecorationTheme: const InputDecorationTheme(
+          fillColor: Colors.white,
+          hintStyle: TextStyle(color: Colors.grey, fontStyle: FontStyle.normal),
+        ),
+      ),
       getPages: AppRoute.appRoutes,
       builder: (context, child) {
         return CoreKit.init(

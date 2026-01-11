@@ -1,10 +1,10 @@
 import 'package:better_help/core/app_internet_check/app_interner_check.dart';
 import 'package:better_help/screen/auth_screen/change_password_screen/change_password_screen.dart';
-import 'package:better_help/screen/menu_drawer/my_profile/edit_profile_screen/edit_profile_screen.dart';
 import 'package:better_help/screen/auth_screen/forgot_password_screen/forgot_password_screen.dart';
 import 'package:better_help/screen/auth_screen/login_screen/login_screen.dart';
 import 'package:better_help/screen/auth_screen/otp_verification_screen/otp_verification_screen.dart';
 import 'package:better_help/screen/auth_screen/signup_screen/signup_screen.dart';
+import 'package:better_help/screen/booking_screen/booking_screen.dart';
 import 'package:better_help/screen/bottom_nav/bottom_nav_screen.dart';
 import 'package:better_help/screen/community_sections/creating_post/creating_post.dart';
 import 'package:better_help/screen/community_sections/main_community/community_screen.dart';
@@ -22,6 +22,7 @@ import 'package:better_help/screen/menu_drawer/bookings_sessions/bookings_sessio
 import 'package:better_help/screen/menu_drawer/calendar/calendar_task_screen.dart';
 import 'package:better_help/screen/menu_drawer/faqs/faqs_screen.dart';
 import 'package:better_help/screen/menu_drawer/favorite_course/favorite_course_screen.dart';
+import 'package:better_help/screen/menu_drawer/my_profile/edit_profile_screen/edit_profile_screen.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/my_profle_screen.dart';
 import 'package:better_help/screen/menu_drawer/my_subscription/my_subscription_screen.dart';
 import 'package:better_help/screen/menu_drawer/privacy_policy/privacy_policy_screen.dart';
@@ -33,6 +34,7 @@ import 'package:better_help/screen/no_internet_screen/no_internet_screen.dart';
 import 'package:better_help/screen/onboarding_screen/onbarding_screen.dart';
 import 'package:better_help/screen/progress_sections/main_progress/progress_screen.dart';
 import 'package:better_help/screen/questionnaries_screen/questionnaries_screen.dart';
+import 'package:better_help/screen/report_problem/report_problem_screen.dart';
 import 'package:better_help/screen/splash_screen/splash_screen.dart';
 import 'package:better_help/screen/subscription/subscription_and_payment.dart';
 import 'package:better_help/screen/supports_sections/main_supports/support_screen.dart';
@@ -105,12 +107,32 @@ class AppRoute {
   //! Congratulation Screen
   static const String congratulationScreen = "/congratulationScreen";
 
+  static const String bookingScreen = "/bookingScreen";
+  static const String reportProblemScreen = "/reportProblemScreen";
+
   //! Get Pages for all the Screen
+
   static List<GetPage> appRoutes = [
     //! Splash Screen Route
     GetPage(
       name: AppRoute.splashscreen,
       page: () => SplashScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
+    ),
+
+    //! Report Problem Screen Route
+    GetPage(
+      name: AppRoute.reportProblemScreen,
+      page: () => ReportProblemScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
+    ),
+
+    //! Booking Screen Route
+    GetPage(
+      name: AppRoute.bookingScreen,
+      page: () => BookingScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
     ),

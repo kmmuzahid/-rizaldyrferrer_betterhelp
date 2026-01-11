@@ -24,12 +24,6 @@ class AppApiurl {
   static const resetPassoword = "$baseUrl/auth/forgot-password-reset";
   static const getAllArticle = "$baseUrl/article";
   static getSingleArticle(var id) => "$baseUrl/article/$id";
-
-  static const getCourseList = "$baseUrl/course";
-  static getSingleCourse(var id) => "$baseUrl/course/$id";
-  static const getCourseCategoryList = "$baseUrl/category";
-  static const refreshToken = "$baseUrl/auth/refresh-token";
-  static const review = "$baseUrl/review";
   static const getMyProfile = "$baseUrl/users/my-profile";
   static const editMyProfile = "$baseUrl/users/update-my-profile";
   static const getAllPost = "$baseUrl/post";
@@ -38,6 +32,14 @@ class AppApiurl {
   static const getRecentPost = "$baseUrl/post?recent=true";
   static const getPopularPost = "$baseUrl/post?popular=true";
   static getPostLike(var postId) => "$baseUrl/post/like/$postId";
+
+  static const getCourseList = "$baseUrl/course";
+  static getSingleCourse(var id) => "$baseUrl/course/$id";
+  static const getCourseCategoryList = "$baseUrl/category";
+  static const refreshToken = "$baseUrl/auth/refresh-token";
+  static const review = "$baseUrl/review";
+  static const favoriteCourse = "$baseUrl/favorite/saved";
+  static setCourseViewCount(var id) => "$baseUrl/course/view-count/$id";
   static getPostComment(var postId) => "$baseUrl/comments/post/$postId";
   static const createComment = "$baseUrl/comments/create-comment-or-reply";
   static const createCommentReply = "$baseUrl/comments/create-comment-or-reply";

@@ -1,5 +1,6 @@
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
+import 'package:better_player_plus/better_player_plus.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,13 +33,6 @@ class CourseDetailScreen extends StatelessWidget {
                       _buildTitleSection(controller),
                       const SizedBox(height: 20),
                       const CommonText(
-                        text: 'Information',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      const SizedBox(height: 12),
-                      _buildInfoBadges(controller),
-                      const SizedBox(height: 20),
-                      const CommonText(
                         text: 'Description',
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
@@ -67,20 +61,36 @@ class CourseDetailScreen extends StatelessWidget {
   // --- UI Sub-Widgets ---
 
   Widget _buildHeader(CourseDetailsController controller) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        CommonImage(
-          src: controller.courseDetails.value?.data.thumbnail ?? '',
-          height: 250,
-          width: double.infinity,
-        ),
-        CircleAvatar(
-          radius: 35,
-          backgroundColor: Colors.teal.withOpacity(0.8),
-          child: const Icon(Icons.play_arrow, color: Colors.white, size: 50),
-        ),
-      ],
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        minHeight: 250,
+        maxWidth: double.infinity,
+        minWidth: double.infinity,
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          if (controller.isPlay.value == false) ...[
+            CommonImage(
+              src: controller.courseDetails.value?.data.thumbnail ?? '',
+              height: 250,
+              width: double.infinity,
+            ),
+            GestureDetector(
+              onTap: () {
+                controller.playNow();
+              },
+              child: CircleAvatar(
+                radius: 35,
+                backgroundColor: Colors.teal.withOpacity(0.8),
+                child: const Icon(Icons.play_arrow, color: Colors.white, size: 50),
+              ),
+            ),
+          ],
+          if (controller.isPlay.value)
+            BetterPlayer(controller: controller.betterPlayerController.value!),
+        ],
+      ),
     );
   }
 
@@ -89,7 +99,6 @@ class CourseDetailScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               child: CommonText(
@@ -99,17 +108,27 @@ class CourseDetailScreen extends StatelessWidget {
                 style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
-            _statusChip('2.5 Hours', Colors.blue),
+             
+            _badge(Icons.access_time, controller.videoDuration.value)
+  
           ],
         ),
         const SizedBox(height: 8),
-        CommonText(
-          text: controller.courseDetails.value?.data.categoryName ?? '',
-          style: const TextStyle(color: Colors.grey, fontSize: 18),
+        Row(
+          children: [
+            CommonText(
+              text: controller.courseDetails.value?.data.categoryName ?? '',
+              style: const TextStyle(color: Colors.grey, fontSize: 18),
+            ),
+            10.width,
+            _buildInfoBadges(controller),
+          ],
         ),
       ],
     );
   }
+
+ 
 
   Widget _buildDescription(CourseDetailsController controller) {
     return Obx(
@@ -199,12 +218,15 @@ class CourseDetailScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _badge(Icons.access_time, '12h 35m'),
+        _badge(
+          Icons.access_time,
+          (controller.courseDetails.value?.data.createdAt ?? DateTime.now()).checkTime,
+        ),
+        10.width,
         _badge(
           Icons.people_outline,
-          '${controller.courseDetails.value?.data.viewUsers.length} students',
+          '${controller.courseDetails.value?.data.viewUsers.length} views',
         ),
-        _badge(Icons.chat_bubble_outline, '200 comments'),
       ],
     );
   }

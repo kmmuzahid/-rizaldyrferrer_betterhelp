@@ -1,3 +1,4 @@
+import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
@@ -10,6 +11,8 @@ import 'package:better_help/widget/app_chat_widget/app_chat_widget.dart';
 import 'package:better_help/widget/app_chat_widget/models/chat_models.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 
 class SupportScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
@@ -98,7 +101,7 @@ class _SupportScreenState extends State<SupportScreen> {
                       color: Color(0xFF0095FF),
                       backgroundColor: Color(0xFFF2F7FF),
                       onTap: () {
-                        // Handle booking
+                        Get.toNamed(AppRoute.bookingScreen);
                       },
                     ),
                   ),
@@ -110,7 +113,7 @@ class _SupportScreenState extends State<SupportScreen> {
                       color: Color(0xFFEE443F),
                       backgroundColor: Color(0xFFFFF3F2),
                       onTap: () {
-                        // Handle report
+                        Get.toNamed(AppRoute.reportProblemScreen);
                       },
                     ),
                   ),

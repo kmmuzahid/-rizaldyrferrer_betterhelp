@@ -469,13 +469,21 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                     : AppStaticImages.postProfile,
                                 likesCount: post.likesCount ?? 0,
                                 commentsCount: post.commentsCount ?? 0,
+                                isLiked: post.isLiked ?? false,
                                 onLikeTap: () {
                                   if (post.id != null) {
                                     controller.likePost(post.id!, index);
                                   }
                                 },
                                 onCommentTap: () {
-                                  showCommentsBottomSheet();
+                                  // Navigate to comments bottom sheet with post ID
+                                  if (post.id != null) {
+                                    Get.bottomSheet(
+                                      CommentsBottomSheet(postId: post.id),
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                    );
+                                  }
                                 },
                               ),
                             );

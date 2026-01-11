@@ -19,14 +19,14 @@ class AppApiurl {
   static const login = "$baseUrl/auth/login";
   static const changePassword = "$baseUrl/auth/change-password";
   static const forgotPassworResendOtp = "$baseUrl/otp/resend-otp";
-  static const forgotPasswordOtpMatch =
-      "$baseUrl/auth/forgot-password-otp-match";
+  static const forgotPasswordOtpMatch = "$baseUrl/auth/forgot-password-otp-match";
   static const resetPassoword = "$baseUrl/auth/forgot-password-reset";
   static const getAllArticle = "$baseUrl/article";
   static getSingleArticle(var id) => "$baseUrl/article/$id";
   static const getMyProfile = "$baseUrl/users/my-profile";
   static const editMyProfile = "$baseUrl/users/update-my-profile";
   static const getAllPost = "$baseUrl/post";
+  static getSinglePost(var postId) => "$baseUrl/post/$postId";
   static const getHighlightPost = "$baseUrl/post?highlight=true";
   static const getRecentPost = "$baseUrl/post?recent=true";
   static const getPopularPost = "$baseUrl/post?popular=true";

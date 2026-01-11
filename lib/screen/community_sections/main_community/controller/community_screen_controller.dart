@@ -2,20 +2,21 @@ import 'package:better_help/screen/community_sections/main_community/model/artic
     as article_model;
 import 'package:better_help/screen/community_sections/main_community/model/post_model.dart';
 import 'package:better_help/service/repository/community_repository/community_repository.dart';
+import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 enum CommunityTab { peerForum, article }
 
-enum ForumFilter { recent, highlight, popular }
+enum ForumFilter { none, recent, highlight, popular }
 
 class CommunityScreenController extends GetxController {
   final _repository = CommunityRepository();
 
   // Selection states (non-reactive for GetBuilder)
   CommunityTab selectedTab = CommunityTab.peerForum;
-  ForumFilter selectedFilter = ForumFilter.recent;
+  ForumFilter selectedFilter = ForumFilter.none;
 
   // Add a flag to prevent multiple simultaneous updates
   bool _isUpdating = false;
@@ -39,13 +40,13 @@ class CommunityScreenController extends GetxController {
     super.onInit();
     // Ensure initial values are set
     selectedTab = CommunityTab.peerForum;
-    selectedFilter = ForumFilter.recent;
+    selectedFilter = ForumFilter.none;
     appLog(
       'Controller initialized - Tab: $selectedTab, Filter: $selectedFilter',
     );
     // Load articles when controller initializes
     fetchArticles();
-    // Load posts when controller initializes
+    // Load all posts when controller initializes (no filter)
     fetchPosts();
   }
 
@@ -60,8 +61,8 @@ class CommunityScreenController extends GetxController {
     _isUpdating = true;
     appLog('Selecting tab: $tab (from: $selectedTab)');
     selectedTab = tab;
-    // Reset filter to recent when switching tabs
-    selectedFilter = ForumFilter.recent;
+    // Reset filter to none when switching tabs
+    selectedFilter = ForumFilter.none;
     appLog('Tab selected: $selectedTab, Filter reset to: $selectedFilter');
 
     // Load articles when switching to article tab
@@ -91,6 +92,10 @@ class CommunityScreenController extends GetxController {
     appLog('Selecting filter: $filter (from: $selectedFilter)');
     selectedFilter = filter;
     appLog('Filter selected: $selectedFilter');
+
+    // Clear posts when changing filters
+    posts.clear();
+    currentPostPage.value = 1;
 
     // Fetch posts based on the selected filter
     fetchPosts();
@@ -183,7 +188,7 @@ class CommunityScreenController extends GetxController {
     try {
       if (refresh) {
         currentPostPage.value = 1;
-        posts.clear();
+        // Don't clear posts immediately to preserve like states
         hasMorePosts.value = true;
       }
 
@@ -196,6 +201,12 @@ class CommunityScreenController extends GetxController {
 
       // Fetch posts based on selected filter
       switch (selectedFilter) {
+        case ForumFilter.none:
+          result = await _repository.getAllPosts(
+            page: currentPostPage.value,
+            limit: 10,
+          );
+          break;
         case ForumFilter.recent:
           result = await _repository.getRecentPosts(
             page: currentPostPage.value,
@@ -219,10 +230,56 @@ class CommunityScreenController extends GetxController {
       if (result != null && result.data != null) {
         appLog('Posts fetched successfully: ${result.data!.length} items');
 
+        // Get current user ID from storage
+        final userData = await StorageService.instance.getUserData();
+        final currentUserId = userData?['_id'] as String?;
+
         if (refresh) {
-          posts.value = result.data!;
+          // Update posts with correct like states based on likes array
+          posts.value = result.data!.map((newPost) {
+            // Check if current user ID is in the likes array
+            final isLikedByCurrentUser =
+                currentUserId != null &&
+                newPost.likes != null &&
+                newPost.likes!.contains(currentUserId);
+
+            return Post(
+              id: newPost.id,
+              userId: newPost.userId,
+              description: newPost.description,
+              likes: newPost.likes,
+              highlights: newPost.highlights,
+              commentsCount: newPost.commentsCount,
+              likesCount: newPost.likesCount,
+              isDeleted: newPost.isDeleted,
+              createdAt: newPost.createdAt,
+              updatedAt: newPost.updatedAt,
+              isLiked: isLikedByCurrentUser,
+            );
+          }).toList();
         } else {
-          posts.addAll(result.data!);
+          // For pagination, also check likes array
+          final newPosts = result.data!.map((newPost) {
+            final isLikedByCurrentUser =
+                currentUserId != null &&
+                newPost.likes != null &&
+                newPost.likes!.contains(currentUserId);
+
+            return Post(
+              id: newPost.id,
+              userId: newPost.userId,
+              description: newPost.description,
+              likes: newPost.likes,
+              highlights: newPost.highlights,
+              commentsCount: newPost.commentsCount,
+              likesCount: newPost.likesCount,
+              isDeleted: newPost.isDeleted,
+              createdAt: newPost.createdAt,
+              updatedAt: newPost.updatedAt,
+              isLiked: isLikedByCurrentUser,
+            );
+          }).toList();
+          posts.addAll(newPosts);
         }
 
         postMeta.value = result.meta;
@@ -257,43 +314,69 @@ class CommunityScreenController extends GetxController {
 
   //! Like/Unlike a post
   Future<void> likePost(String postId, int index) async {
-    appLog('Liking post with ID: $postId');
+    appLog('Liking post with ID: $postId at index: $index');
 
     try {
-      // Optimistically update UI
+      // Get current user ID
+      final userData = await StorageService.instance.getUserData();
+      final currentUserId = userData?['_id'] as String?;
+
+      if (currentUserId == null) {
+        appLog('Cannot like post: User ID not found');
+        return;
+      }
+
+      // Get the current post
       final post = posts[index];
-      final isCurrentlyLiked = post.likes?.contains(postId) ?? false;
-      
-      // Update the post in the list
+      final currentLikeState = post.isLiked ?? false;
+
+      // Update likes array
+      List<dynamic> updatedLikes = List.from(post.likes ?? []);
+      if (currentLikeState) {
+        // Remove user ID from likes array
+        updatedLikes.remove(currentUserId);
+      } else {
+        // Add user ID to likes array
+        updatedLikes.add(currentUserId);
+      }
+
+      // Optimistically update UI immediately
       posts[index] = Post(
         id: post.id,
         userId: post.userId,
         description: post.description,
-        likes: post.likes,
+        likes: updatedLikes,
         highlights: post.highlights,
         commentsCount: post.commentsCount,
-        likesCount: isCurrentlyLiked 
-            ? (post.likesCount ?? 0) - 1 
+        likesCount: currentLikeState
+            ? (post.likesCount ?? 1) - 1
             : (post.likesCount ?? 0) + 1,
         isDeleted: post.isDeleted,
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
+        isLiked: !currentLikeState, // Toggle like state
       );
       posts.refresh();
 
-      // Call API
+      // Call API in background
       final success = await _repository.likePost(postId);
 
       if (!success) {
         // Revert on failure
+        appLog('Failed to like/unlike post - reverting changes');
         posts[index] = post;
         posts.refresh();
-        appLog('Failed to like/unlike post');
       } else {
         appLog('Post liked/unliked successfully');
       }
     } catch (e) {
       appLog('Error liking post: $e');
+      // Revert on error
+      if (index < posts.length) {
+        final post = posts[index];
+        posts[index] = post;
+        posts.refresh();
+      }
     }
   }
 

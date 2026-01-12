@@ -9,51 +9,64 @@ import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
 
 class BookingController extends GetxController {
-  // Observable variables
   var selectedDate = DateTime.now().obs;
   var selectedTime = "".obs;
 
-  // Mock data for time slots
-  final List<String> morningSlots = [
-    "9:00 AM",
-    "9:30 AM",
-    "10:00 AM",
-    "10:30 AM",
-    "11:00 AM",
-    "11:30 AM",
-  ];
+  final List<String> morningSlots = ["9:00 AM", "9:45 AM", "10:30 AM", "11:15 AM"];
 
   final List<String> afternoonSlots = [
     "12:00 PM",
-    "12:30 PM",
-    "1:00 PM",
+    "12:45 PM",
     "1:30 PM",
-    "2:00 PM",
-    "2:30 PM",
+    "2:15 PM",
     "3:00 PM",
-    "3:30 PM",
-    "4:00 PM",
+    "3:45 PM",
     "4:30 PM",
-    "5:00 PM",
-    "5:30 PM",
+    "5:15 PM",
   ];
 
-  final List<String> nightSlots = [
-    "6:00 PM",
-    "6:30 PM",
-    "7:00 PM",
-    "7:30 PM",
-    "8:00 PM",
-    "8:30 PM",
-    "9:00 PM",
-  ];
+  final List<String> nightSlots = ["6:00 PM", "6:45 PM", "7:30 PM", "8:15 PM", "9:00 PM"];
 
   void selectTime(String time) {
     selectedTime.value = time;
   }
 
+  String getNext45MinSlot(String inputTime) {
+    final input = _parseTime(inputTime);
+
+    final next = input.add(const Duration(minutes: 45));
+
+    return _formatTime(next);
+  }
+
+  String _formatTime(DateTime time) {
+    int hour = time.hour;
+    final minute = time.minute.toString().padLeft(2, '0');
+    final meridian = hour >= 12 ? 'PM' : 'AM';
+
+    hour = hour % 12;
+    if (hour == 0) hour = 12;
+
+    return "$hour:$minute $meridian";
+  }
+
+  DateTime _parseTime(String time) {
+    final parts = time.split(' ');
+    final timePart = parts[0];
+    final meridian = parts[1];
+
+    final hourMinute = timePart.split(':');
+    int hour = int.parse(hourMinute[0]);
+    final minute = int.parse(hourMinute[1]);
+
+    if (meridian == 'PM' && hour != 12) hour += 12;
+    if (meridian == 'AM' && hour == 12) hour = 0;
+
+    return DateTime(2026, 1, 1, hour, minute);
+  }
+
   bool isTimeSelectable({required DateTime selectedDate, required String time}) {
-    if (time.isEmpty) return false;
+    if (time.isEmpty || (time == nightSlots[nightSlots.length - 1])) return false;
 
     final now = DateTime.now();
 
@@ -85,6 +98,7 @@ class BookingController extends GetxController {
   }
 
   void confirmBooking() async {
+    if (selectedTime.value.isEmpty) return;
     DioService.instance.request<dynamic>(
       showMessage: true,
       input: RequestInput(
@@ -93,7 +107,7 @@ class BookingController extends GetxController {
         jsonBody: {
           "bookingDate": selectedDate.value.microsecondsSinceEpoch,
           "startTime": selectedTime.value,
-          "endTime": "10:45 AM",
+          "endTime": getNext45MinSlot(selectedTime.value),
         },
       ),
       responseBuilder: (data) {

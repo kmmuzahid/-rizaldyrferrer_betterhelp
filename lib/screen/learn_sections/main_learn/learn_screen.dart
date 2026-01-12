@@ -9,7 +9,6 @@ import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
 import 'package:better_help/widget/app_course_card/app_course_card.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:better_help/widget/app_text_input/app_text_input.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
@@ -60,13 +59,25 @@ class _LearnScreenState extends State<LearnScreen> {
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
-                  child: AppTextInput(
-                    prefixIcon: Icons.search,
-                    hintText: "Search courses...",
-                    height: AppSize.height(value: 48),
-                    backgroundColor: AppColors.white,
-                    borderColor: AppColors.black10,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      Get.toNamed(
+                        AppRoute.trendingCourse,
+                        arguments: {'title': 'Search Courses', 'isSearch': true},
+                      );
+                    },
+                    child: AbsorbPointer(
+                      child: CommonTextField(
+                        prefixIcon: const Icon(Icons.search),
+                        hintText: "Search courses...",
+                        validationType: ValidationType.notRequired,
+                        backgroundColor: AppColors.white,
+                        borderColor: AppColors.black10,
+                      ),
+                    ),
                   ),
+
                 ),
                 Gap(height: 15),
                 Obx(
@@ -318,7 +329,10 @@ class _LearnScreenState extends State<LearnScreen> {
                     hoverColor: Colors.transparent,
                     splashColor: Colors.transparent,
                     onTap: () {
-                      Get.toNamed(AppRoute.trendingCourse, arguments: {'isTrending': true});
+                      Get.toNamed(
+                        AppRoute.trendingCourse,
+                        arguments: {'isTrending': true, 'title': 'Trending Courses'},
+                      );
                     },
                     child: AppText(
                       text: "See all",
@@ -393,7 +407,7 @@ class _LearnScreenState extends State<LearnScreen> {
                   ),
                   InkWell(
                     onTap: () {
-                      Get.toNamed(AppRoute.trendingCourse);
+                      Get.toNamed(AppRoute.trendingCourse, arguments: {'title': 'Recent Course'});
                     },
                     splashColor: Colors.transparent,
                     highlightColor: Colors.indigo,

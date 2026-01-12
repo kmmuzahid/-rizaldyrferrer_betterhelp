@@ -82,6 +82,10 @@ class MyApp extends StatelessWidget {
             enableDebugLogs: kDebugMode,
           ),
           tokenProvider: TokenProvider(
+            accessToken: () => StorageService().getAccessToken().then((v) => v ?? ''),
+            refreshToken: () => StorageService().getRefreshToken().then((v) => v ?? ''),
+            updateTokens: (data) async {
+              await StorageService().saveAccessToken(data['accessToken']); 
             accessToken: () =>
                 StorageService().getAccessToken().then((v) => v ?? ''),
             refreshToken: () =>

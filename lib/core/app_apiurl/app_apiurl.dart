@@ -19,8 +19,7 @@ class AppApiurl {
   static const login = "$baseUrl/auth/login";
   static const changePassword = "$baseUrl/auth/change-password";
   static const forgotPassworResendOtp = "$baseUrl/otp/resend-otp";
-  static const forgotPasswordOtpMatch =
-      "$baseUrl/auth/forgot-password-otp-match";
+  static const forgotPasswordOtpMatch = "$baseUrl/auth/forgot-password-otp-match";
   static const resetPassoword = "$baseUrl/auth/forgot-password-reset";
   static const getAllArticle = "$baseUrl/article";
   static getSingleArticle(var id) => "$baseUrl/article/$id";
@@ -47,4 +46,9 @@ class AppApiurl {
   static const createCommentReply = "$baseUrl/comments/create-comment-or-reply";
   static const reactOnComment = "$baseUrl/comments/like-comment";
   static const reactOnCommentReply = "$baseUrl/comments/like-comment";
+
+  static const report = "$baseUrl/report";
+  static getMyMessages(var id) => "$baseUrl/message/my-messages/$id";
+  static const sendMessages = "$baseUrl/message/send-messages";
+  static const createDoctorBooking = "$baseUrl/doctor-booking/create-doctor-booking";
 }

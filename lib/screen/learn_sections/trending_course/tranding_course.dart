@@ -21,7 +21,19 @@ class TrandingCourse extends StatelessWidget {
     final TrendingCourseController controller = Get.put(TrendingCourseController());
 
     // Get category name from arguments if not provided directly
-    final String displayTitle = categoryName ?? Get.arguments?['categoryName'] ?? "Trending Course";
+    final String displayTitle =
+        categoryName ??
+        Get.arguments?['categoryName'] ??
+        Get.arguments?['title'] ??
+        "Trending Course";
+
+    if (Get.arguments?['isSearch'] == true) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Future.delayed(const Duration(milliseconds: 100), () {
+          FocusScope.of(context).nextFocus();
+        });
+      });
+    }
 
     return Scaffold(
       appBar: AppBarWithBack(text: displayTitle, backgroundColor: AppColors.white),

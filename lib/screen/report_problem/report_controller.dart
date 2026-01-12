@@ -3,8 +3,11 @@
  * @Date: 2026-01-10 16:01:41
  * @Email: km.muzahid@gmail.com
  */
-import 'package:flutter/material.dart';
+import 'package:core_kit/core_kit.dart';
+import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
+
+import '../../core/app_apiurl/app_apiurl.dart';
 
 class ReportController extends GetxController {
   // Selected category state
@@ -12,10 +15,6 @@ class ReportController extends GetxController {
 
   var report = '';
 
-  // Controller for the multi-line text field
-  final TextEditingController descriptionController = TextEditingController();
-
-  // List of categories for the dropdown
   final List<String> categories = [
     "Technical Issue",
     "Account Problem",
@@ -28,13 +27,20 @@ class ReportController extends GetxController {
     if (value != null) selectedCategory.value = value;
   }
 
-  void submitReport() {
-    if (report.isNotEmpty) {}
-  }
-
-  @override
-  void onClose() {
-    descriptionController.dispose(); // Always dispose controllers
-    super.onClose();
+  void submitReport() async {
+    if (report.isNotEmpty) {
+      final result = await DioService.instance.request(
+        showMessage: true,
+        input: RequestInput(
+          endpoint: AppApiurl.report,
+          method: RequestMethod.POST,
+          jsonBody: {"text": report},
+        ),
+        responseBuilder: (data) => data,
+      );
+      if (result.isSuccess) {
+        Get.back();
+      }
+    }
   }
 }

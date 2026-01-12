@@ -1,5 +1,11 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-09 09:41:39
+ * @Email: km.muzahid@gmail.com
+ */
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
+import 'package:better_help/sockets/support_message_socket.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:get/get.dart';
 
@@ -18,22 +24,19 @@ class SplashScreenController extends GetxController {
         responses != null &&
         responses.isNotEmpty) {
       appLog(accessToken);
+      SocketService.instance.connect();
       Get.offNamed(AppRoute.bottomNav);
       return;
     }
 
     // Case 2: Has accessToken but NO questionnaire responses -> Go to questionnaire
-    if (accessToken != null &&
-        accessToken.isNotEmpty &&
-        (responses == null || responses.isEmpty)) {
+    if (accessToken != null && accessToken.isNotEmpty && (responses == null || responses.isEmpty)) {
       Get.offNamed(AppRoute.beforeQuestionScreen);
       return;
     }
 
     // Case 3: NO accessToken but HAS questionnaire responses -> Go to free trial
-    if ((accessToken == null || accessToken.isEmpty) &&
-        responses != null &&
-        responses.isNotEmpty) {
+    if ((accessToken == null || accessToken.isEmpty) && responses != null && responses.isNotEmpty) {
       Get.offNamed(AppRoute.freeTrialScreen);
       return;
     }

@@ -84,18 +84,8 @@ class MyApp extends StatelessWidget {
           tokenProvider: TokenProvider(
             accessToken: () => StorageService().getAccessToken().then((v) => v ?? ''),
             refreshToken: () => StorageService().getRefreshToken().then((v) => v ?? ''),
-            updateTokens: (data) async {
-              await StorageService().saveAccessToken(data['accessToken']); 
-            accessToken: () =>
-                StorageService().getAccessToken().then((v) => v ?? ''),
-            refreshToken: () =>
-                StorageService().getRefreshToken().then((v) => v ?? ''),
-            updateTokens: (data) async {
-              await StorageService().saveAccessToken(data['accessToken']);
-            },
-            clearTokens: () async {
-              await StorageService().removeTokens();
-            },
+            updateTokens: (data) => StorageService().saveAccessToken(data['accessToken']),
+            clearTokens: () => StorageService().removeTokens()           
           ),
           child: child,
         );

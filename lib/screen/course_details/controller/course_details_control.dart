@@ -24,25 +24,31 @@ class CourseDetailsController extends GetxController {
   RxString videoDuration = "".obs;
 
   Rxn<BetterPlayerController> betterPlayerController = Rxn<BetterPlayerController>();
+void initializePlayer() {
+    final videoUrl = courseDetails.value?.data.video;
+    if (videoUrl == null || videoUrl.isEmpty) return;
 
-  initializePlayer() {
-    if (courseDetails.value?.data.video == null) return;
     isPlay.value = false;
-    final dataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.network,
-      courseDetails.value!.data.video,
-    );
+
+    final dataSource = BetterPlayerDataSource(BetterPlayerDataSourceType.network,
+    videoUrl);
 
     betterPlayerController.value = BetterPlayerController(
       const BetterPlayerConfiguration(),
       betterPlayerDataSource: dataSource,
     );
 
-    Future.delayed(const Duration(seconds: 1)).then((value) {
-      final d = betterPlayerController.value?.videoPlayerController?.value.duration;
-      videoDuration.value = d != null ? CoreUtils.formatDurationToHms(d) : '00:00:00';
+    betterPlayerController.value!.videoPlayerController?.addListener(() {
+      final controller = betterPlayerController.value?.videoPlayerController;
+      if (controller == null) return;
+
+      final duration = controller.value.duration;
+      if (duration != null && duration.inSeconds > 0) {
+        videoDuration.value = CoreUtils.formatDurationToHms(duration);
+      }
     });
   }
+
 
   playNow() {
     isPlay.value = true;
@@ -107,7 +113,7 @@ class CourseDetailsController extends GetxController {
   @override
   void onInit() {
     id = Get.arguments['id'];
-    fetchCourseDetails(); 
+    fetchCourseDetails();
     super.onInit();
   }
 

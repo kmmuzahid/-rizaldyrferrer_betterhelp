@@ -42,8 +42,7 @@ class MyApp extends StatelessWidget {
   // Cache tokens in memory for synchronous access
 
   // Initialize tokens from storage
-  static Future<void> initializeTokens() async {
-  }
+  static Future<void> initializeTokens() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +81,6 @@ class MyApp extends StatelessWidget {
             enableDebugLogs: kDebugMode,
           ),
           tokenProvider: TokenProvider(
-            accessToken: () => StorageService().getAccessToken().then((v) => v ?? ''),
-            refreshToken: () => StorageService().getRefreshToken().then((v) => v ?? ''),
-            updateTokens: (data) async {
-              await StorageService().saveAccessToken(data['accessToken']); 
             accessToken: () =>
                 StorageService().getAccessToken().then((v) => v ?? ''),
             refreshToken: () =>

@@ -16,6 +16,9 @@ class ArticleDetailsScreenController extends GetxController {
   // Loading state
   final RxBool isLoading = true.obs;
 
+  // Loading state for save operation
+  final RxBool isSaving = false.obs;
+
   // Observable to check if "See more" should be shown
   final RxBool shouldShowSeeMore = false.obs;
 
@@ -59,23 +62,9 @@ class ArticleDetailsScreenController extends GetxController {
         appLog('Article details fetched successfully');
       } else {
         appLog('Failed to fetch article details');
-        Get.snackbar(
-          "Error",
-          "Failed to load article details",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
       }
     } catch (e) {
       appLog('Error fetching article details: $e');
-      Get.snackbar(
-        "Error",
-        "An error occurred while loading the article",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
     } finally {
       isLoading.value = false;
     }
@@ -87,34 +76,74 @@ class ArticleDetailsScreenController extends GetxController {
   }
 
   /// Toggle save state of the article
-  void toggleSaveArticle() async {
-    try {
-      // Simulate API call delay
-      await Future.delayed(const Duration(milliseconds: 500));
+  Future<void> toggleSaveArticle() async {
+    if (article.value == null || isSaving.value) return;
 
-      // Toggle save state
+    try {
+      final articleId = article.value!.id;
+      if (articleId == null) {
+        appLog('Cannot save article: Article ID is null');
+        return;
+      }
+
+      // Prevent multiple simultaneous calls
+      isSaving.value = true;
+
+      // Optimistically update UI
+      final previousState = isSaved.value;
       isSaved.value = !isSaved.value;
 
-      // Show success message
-      Get.snackbar(
-        isSaved.value ? "Saved" : "Removed",
-        isSaved.value
-            ? "Article saved successfully"
-            : "Article removed from saved list",
-        snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 2),
-        backgroundColor: isSaved.value ? Colors.green : Colors.orange,
-        colorText: Colors.white,
+      // Update the article's isFavorite field
+      article.value = Datum(
+        id: article.value!.id,
+        title: article.value!.title,
+        description: article.value!.description,
+        image: article.value!.image,
+        publicationDate: article.value!.publicationDate,
+        sourseName: article.value!.sourseName,
+        readTime: article.value!.readTime,
+        isDeleted: article.value!.isDeleted,
+        createdAt: article.value!.createdAt,
+        updatedAt: article.value!.updatedAt,
+        isFavorite: isSaved.value,
       );
+
+      appLog('Calling API to toggle save state for article: $articleId');
+
+      // Call API
+      final success = await _repository.toggleSaveArticle(articleId);
+
+      appLog('API response: $success');
+
+      if (!success) {
+        // Revert on failure
+        appLog('Failed to toggle save state - reverting');
+        isSaved.value = previousState;
+        article.value = Datum(
+          id: article.value!.id,
+          title: article.value!.title,
+          description: article.value!.description,
+          image: article.value!.image,
+          publicationDate: article.value!.publicationDate,
+          sourseName: article.value!.sourseName,
+          readTime: article.value!.readTime,
+          isDeleted: article.value!.isDeleted,
+          createdAt: article.value!.createdAt,
+          updatedAt: article.value!.updatedAt,
+          isFavorite: previousState,
+        );
+      } else {
+        appLog('Article save state toggled successfully');
+      }
     } catch (e) {
-      // Handle error
-      Get.snackbar(
-        "Error",
-        "Failed to ${isSaved.value ? 'remove' : 'save'} article",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      appLog('Error toggling save state: $e');
+      // Revert on error
+      final previousState = !isSaved.value;
+      isSaved.value = previousState;
+    } finally {
+      if (!isClosed) {
+        isSaving.value = false;
+      }
     }
   }
 
@@ -125,12 +154,7 @@ class ArticleDetailsScreenController extends GetxController {
 
   /// Share article functionality
   void shareArticle() {
-    Get.snackbar(
-      "Share",
-      "Share functionality would be implemented here",
-      snackPosition: SnackPosition.BOTTOM,
-      duration: const Duration(seconds: 2),
-    );
+    appLog('Share article functionality would be implemented here');
   }
 
   /// Check if text needs "See more" button
@@ -143,5 +167,11 @@ class ArticleDetailsScreenController extends GetxController {
     textPainterCollapsed.layout(maxWidth: width);
 
     shouldShowSeeMore.value = textPainterCollapsed.didExceedMaxLines;
+  }
+
+  @override
+  void onClose() {
+    appLog('ArticleDetailsScreenController: Disposing controller');
+    super.onClose();
   }
 }

@@ -297,4 +297,40 @@ class CommunityRepository {
       return false;
     }
   }
+
+  //! Toggle save/unsave article
+  Future<bool> toggleSaveArticle(String articleId) async {
+    appLog('CommunityRepository: Toggling save for article - $articleId');
+
+    try {
+      appLog(
+        'CommunityRepository: Calling API with body: {"articleId": "$articleId"}',
+      );
+
+      final response = await _apiServices.apiPostServices(
+        url: AppApiurl.toggleSaveArticle(articleId),
+        body: {'articleId': articleId},
+        statusCodeStart: 200,
+        statusCodeEnd: 201,
+      );
+
+      appLog('CommunityRepository: API response received: $response');
+
+      if (response != null && response['success'] == true) {
+        appLog('CommunityRepository: Article save toggled successfully');
+        return true;
+      } else {
+        appLog(
+          'CommunityRepository: Failed to toggle article save - Response: $response',
+        );
+        return false;
+      }
+    } catch (e) {
+      errorLog(
+        'CommunityRepository: Exception during toggling article save',
+        e,
+      );
+      return false;
+    }
+  }
 }

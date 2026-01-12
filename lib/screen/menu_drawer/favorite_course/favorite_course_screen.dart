@@ -1,58 +1,160 @@
+import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/screen/menu_drawer/favorite_course/controller/favorite_course_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
+import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
 import 'package:better_help/widget/app_course_card/app_course_card.dart';
+import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class FavoriteCourseScreen extends StatelessWidget {
+class FavoriteCourseScreen extends StatefulWidget {
   const FavoriteCourseScreen({super.key});
 
   @override
+  State<FavoriteCourseScreen> createState() => _FavoriteCourseScreenState();
+}
+
+class _FavoriteCourseScreenState extends State<FavoriteCourseScreen> {
+  late final FavoriteCourseController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(FavoriteCourseController(), permanent: false);
+  }
+
+  @override
+  void dispose() {
+    Get.delete<FavoriteCourseController>();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    List<String> courseImages = [
-      AppStaticImages.habits01,
-      AppStaticImages.habits02,
-      AppStaticImages.habits03,
-      AppStaticImages.habits04,
-      AppStaticImages.habits01,
-      AppStaticImages.habits02,
-      AppStaticImages.habits03,
-      AppStaticImages.habits04,
-      AppStaticImages.habits01,
-      AppStaticImages.habits02,
-      AppStaticImages.habits03,
-      AppStaticImages.habits04,
-      AppStaticImages.habits01,
-      AppStaticImages.habits02,
-      AppStaticImages.habits03,
-      AppStaticImages.habits04,
-    ];
     return Scaffold(
       appBar: AppBarWithBack(
-        text: "Favorite Course",
+        text: "Favorite Courses",
         backgroundColor: AppColors.white,
       ),
       backgroundColor: AppColors.white,
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
-        child: Column(
-          children: List.generate(courseImages.length, (index) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: CourseCard(
-                margin: EdgeInsets.only(bottom: 10),
-                cardType: CardType.course,
-                height: AppSize.height(value: 247),
-                title: "The Science Behind Mindfulness Meditation",
-                instructor: "Dr Rizal Dy Ferrer",
-                rating: 4.5,
-                imageUrl: courseImages[index],
-              ),
-            );
-          }),
-        ),
-      ),
+      body: Obx(() {
+        // Show loading for initial load
+        if (controller.isLoading.value && controller.savedCourses.isEmpty) {
+          return Center(
+            child: LoadingAnimationWidget.threeArchedCircle(
+              color: AppColors.primary500,
+              size: 50,
+            ),
+          );
+        }
+
+        // Show empty state
+        if (controller.savedCourses.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.favorite_border, size: 64, color: AppColors.grey100),
+                Gap(height: 16),
+                AppText(
+                  text: "No favorite courses yet",
+                  fontSize: 16,
+                  color: AppColors.grey100,
+                  fontWeight: FontWeight.w500,
+                ),
+                Gap(height: 8),
+                AppText(
+                  text: "Courses you favorite will appear here",
+                  fontSize: 14,
+                  color: AppColors.grey100,
+                ),
+              ],
+            ),
+          );
+        }
+
+        // Show courses list
+        return RefreshIndicator(
+          onRefresh: controller.refreshCourses,
+          child: ListView.builder(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSize.width(value: 20),
+              vertical: AppSize.height(value: 10),
+            ),
+            itemCount:
+                controller.savedCourses.length +
+                (controller.hasMore.value ? 1 : 0),
+            itemBuilder: (context, index) {
+              // Show loading indicator at the end
+              if (index == controller.savedCourses.length) {
+                if (controller.hasMore.value) {
+                  // Trigger load more
+                  Future.microtask(() => controller.loadMoreCourses());
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: AppSize.height(value: 20),
+                    ),
+                    child: Center(
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: AppColors.primary500,
+                        size: 40,
+                      ),
+                    ),
+                  );
+                }
+                return SizedBox.shrink();
+              }
+
+              final savedCourse = controller.savedCourses[index];
+              final course = savedCourse.courseId;
+
+              if (course == null) return SizedBox.shrink();
+
+              // Build full image URL
+              String imageUrl = course.thumbnail ?? '';
+              if (imageUrl.isNotEmpty && !imageUrl.startsWith('http')) {
+                imageUrl = '${AppApiurl.liveDomain}$imageUrl';
+              }
+
+              // Format view count
+              String viewCount = "${course.viewCount ?? 0} views";
+
+              return Padding(
+                padding: EdgeInsets.only(bottom: AppSize.height(value: 12)),
+                child: CourseCard(
+                  onTap: () {
+                    Get.toNamed(
+                      AppRoute.courseDetailScreen,
+                      arguments: {'courseId': course.id},
+                    );
+                  },
+                  margin: EdgeInsets.only(bottom: 10),
+                  cardType: CardType.course,
+                  height: AppSize.height(value: 247),
+                  title: course.title ?? "Untitled Course",
+                  instructor: course.categoryName ?? "Unknown Category",
+                  rating: course.ratings ?? 0.0,
+                  views: viewCount,
+                  imageUrl: imageUrl.isNotEmpty
+                      ? imageUrl
+                      : AppStaticImages.habits01,
+                  isFavorited: true,
+                  onFavoritePressed: () {
+                    if (course.id != null) {
+                      controller.removeSavedCourse(course.id!, index);
+                    }
+                  },
+                ),
+              );
+            },
+          ),
+        );
+      }),
     );
   }
 }

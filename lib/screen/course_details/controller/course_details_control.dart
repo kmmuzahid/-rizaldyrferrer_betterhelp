@@ -27,6 +27,8 @@ class CourseDetailsController extends GetxController {
 void initializePlayer() {
     final videoUrl = courseDetails.value?.data.video;
     if (videoUrl == null || videoUrl.isEmpty) return;
+  Rxn<BetterPlayerController> betterPlayerController =
+      Rxn<BetterPlayerController>();
 
     isPlay.value = false;
 
@@ -46,6 +48,12 @@ void initializePlayer() {
       if (duration != null && duration.inSeconds > 0) {
         videoDuration.value = CoreUtils.formatDurationToHms(duration);
       }
+    Future.delayed(const Duration(seconds: 1)).then((value) {
+      final d =
+          betterPlayerController.value?.videoPlayerController?.value.duration;
+      videoDuration.value = d != null
+          ? CoreUtils.formatDurationToHms(d)
+          : '00:00:00';
     });
   }
 
@@ -62,7 +70,10 @@ void initializePlayer() {
 
   setCourseViewCount() async {
     DioService.instance.request(
-      input: RequestInput(endpoint: AppApiurl.setCourseViewCount(id), method: RequestMethod.PATCH),
+      input: RequestInput(
+        endpoint: AppApiurl.setCourseViewCount(id),
+        method: RequestMethod.PATCH,
+      ),
       responseBuilder: (response) {
         return response;
       },
@@ -98,7 +109,10 @@ void initializePlayer() {
   fetchCourseDetails() async {
     betterPlayerController.value?.dispose();
     final result = await DioService.instance.request(
-      input: RequestInput(endpoint: '${AppApiurl.getCourseList}/$id', method: RequestMethod.GET),
+      input: RequestInput(
+        endpoint: '${AppApiurl.getCourseList}/$id',
+        method: RequestMethod.GET,
+      ),
       responseBuilder: (response) {
         return CourseDetailsModel.fromJson(response);
       },
@@ -113,6 +127,13 @@ void initializePlayer() {
   @override
   void onInit() {
     id = Get.arguments['id'];
+    // Handle both 'id' and 'courseId' argument keys with null safety
+    id = Get.arguments?['courseId'] ?? Get.arguments?['id'] ?? '';
+    if (id.isEmpty) {
+      showSnackBar('Course ID not found', type: SnackBarType.error);
+      Get.back();
+      return;
+    }
     fetchCourseDetails();
     super.onInit();
   }

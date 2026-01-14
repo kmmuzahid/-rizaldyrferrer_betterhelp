@@ -23,22 +23,31 @@ class CourseDetailsController extends GetxController {
   RxBool isPlay = false.obs;
   RxString videoDuration = "".obs;
 
+  Rxn<BetterPlayerController> betterPlayerController = Rxn<BetterPlayerController>();
+void initializePlayer() {
+    final videoUrl = courseDetails.value?.data.video;
+    if (videoUrl == null || videoUrl.isEmpty) return;
   Rxn<BetterPlayerController> betterPlayerController =
       Rxn<BetterPlayerController>();
 
-  initializePlayer() {
-    if (courseDetails.value?.data.video == null) return;
     isPlay.value = false;
-    final dataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.network,
-      courseDetails.value!.data.video,
-    );
+
+    final dataSource = BetterPlayerDataSource(BetterPlayerDataSourceType.network,
+    videoUrl);
 
     betterPlayerController.value = BetterPlayerController(
       const BetterPlayerConfiguration(),
       betterPlayerDataSource: dataSource,
     );
 
+    betterPlayerController.value!.videoPlayerController?.addListener(() {
+      final controller = betterPlayerController.value?.videoPlayerController;
+      if (controller == null) return;
+
+      final duration = controller.value.duration;
+      if (duration != null && duration.inSeconds > 0) {
+        videoDuration.value = CoreUtils.formatDurationToHms(duration);
+      }
     Future.delayed(const Duration(seconds: 1)).then((value) {
       final d =
           betterPlayerController.value?.videoPlayerController?.value.duration;
@@ -47,6 +56,7 @@ class CourseDetailsController extends GetxController {
           : '00:00:00';
     });
   }
+
 
   playNow() {
     isPlay.value = true;
@@ -116,6 +126,7 @@ class CourseDetailsController extends GetxController {
 
   @override
   void onInit() {
+    id = Get.arguments['id'];
     // Handle both 'id' and 'courseId' argument keys with null safety
     id = Get.arguments?['courseId'] ?? Get.arguments?['id'] ?? '';
     if (id.isEmpty) {

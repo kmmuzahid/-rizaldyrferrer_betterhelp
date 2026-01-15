@@ -1,3 +1,4 @@
+import 'package:better_help/screen/community_sections/creating_post/controller/creating_post_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
@@ -13,6 +14,7 @@ class CreatingPostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<CreatingPostController>();
     return Scaffold(
       appBar: AppBarWithBack(
         text: "Create Post",
@@ -33,26 +35,10 @@ class CreatingPostScreen extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
             AppTextInput(
+              controller: controller.titleController,
               textColor: AppColors.white900,
               backgroundColor: AppColors.white,
               hintText: 'Enter title',
-              hintTextColor: AppColors.white900,
-              borderRadius: 10,
-              borderColor: AppColors.habitsCalendarBorder,
-            ),
-            Gap(height: 20),
-            AppText(
-              text: 'Image',
-              color: Colors.black,
-              fontSize: 14,
-              fontFamilyIndex: 2,
-              fontWeight: FontWeight.w500,
-            ),
-
-            AppTextInput(
-              textColor: AppColors.white900,
-              backgroundColor: AppColors.white,
-              hintText: "Categories",
               hintTextColor: AppColors.white900,
               borderRadius: 10,
               borderColor: AppColors.habitsCalendarBorder,
@@ -66,6 +52,7 @@ class CreatingPostScreen extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
             AppTextInput(
+              controller: controller.contentController,
               textColor: AppColors.white900,
               backgroundColor: AppColors.white,
               hintText: 'Enter content',
@@ -75,16 +62,21 @@ class CreatingPostScreen extends StatelessWidget {
               maxLines: 10,
             ),
             Gap(height: 20),
-
-            AppButton(
-              title: "Post Now",
-              backgroundColor: AppColors.primary500,
-              titleColor: AppColors.white,
-              fontSize: AppSize.width(value: 12),
-              onTap: () {
-                Get.back();
-              },
-            ),
+            Obx(() {
+              return AppButton(
+                title: controller.isSubmitting.value
+                    ? "Posting..."
+                    : "Post Now",
+                backgroundColor: AppColors.primary500,
+                titleColor: AppColors.white,
+                fontSize: AppSize.width(value: 12),
+                onTap: controller.isSubmitting.value
+                    ? null
+                    : () {
+                        controller.submitPost();
+                      },
+              );
+            }),
           ],
         ),
       ),

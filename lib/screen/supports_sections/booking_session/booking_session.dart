@@ -12,10 +12,7 @@ class BookingSessionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Initialize the controller
-    final BookingSessionController controller = Get.put(
-      BookingSessionController(),
-    );
+    final BookingSessionController controller = Get.find<BookingSessionController>();
 
     return Scaffold(
       appBar: AppBarWithBack(

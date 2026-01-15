@@ -44,6 +44,7 @@ import '../app_bindings/community_bindings.dart';
 import '../app_bindings/habit_bindings.dart';
 import '../app_bindings/menu_bindings.dart';
 import '../app_bindings/learn_bindings.dart';
+import '../app_bindings/support_bindings.dart';
 
 import '../../screen/before_question_screen/before_question_screen.dart';
 import '../../screen/course_details/corse_details_screen.dart';
@@ -266,6 +267,8 @@ class AppRoute {
       binding: BindingsBuilder(() {
         CommunityBindings().dependencies();
         HabitBindings().dependencies();
+        LearnBindings().dependencies();
+        SupportBindings().dependencies();
       }),
       middlewares: [AppInternerCheck()],
     ),
@@ -320,6 +323,7 @@ class AppRoute {
       page: () => const SupportScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      binding: SupportBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! Progress Screen Route

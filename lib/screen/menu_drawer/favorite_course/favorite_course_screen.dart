@@ -12,27 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class FavoriteCourseScreen extends StatefulWidget {
+class FavoriteCourseScreen extends GetView<FavoriteCourseController> {
   const FavoriteCourseScreen({super.key});
-
-  @override
-  State<FavoriteCourseScreen> createState() => _FavoriteCourseScreenState();
-}
-
-class _FavoriteCourseScreenState extends State<FavoriteCourseScreen> {
-  late final FavoriteCourseController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = Get.put(FavoriteCourseController(), permanent: false);
-  }
-
-  @override
-  void dispose() {
-    Get.delete<FavoriteCourseController>();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

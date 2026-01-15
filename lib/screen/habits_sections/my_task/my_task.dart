@@ -9,12 +9,11 @@ import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class MyTaskScreeen extends StatelessWidget {
+class MyTaskScreeen extends GetView<MyTaskController> {
   const MyTaskScreeen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final MyTaskController controller = Get.put(MyTaskController());
 
     return Scaffold(
       backgroundColor: AppColors.white400,

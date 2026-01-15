@@ -12,27 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class SavedArticleScreen extends StatefulWidget {
+class SavedArticleScreen extends GetView<SavedArticleController> {
   const SavedArticleScreen({super.key});
-
-  @override
-  State<SavedArticleScreen> createState() => _SavedArticleScreenState();
-}
-
-class _SavedArticleScreenState extends State<SavedArticleScreen> {
-  late final SavedArticleController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = Get.put(SavedArticleController(), permanent: false);
-  }
-
-  @override
-  void dispose() {
-    Get.delete<SavedArticleController>();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

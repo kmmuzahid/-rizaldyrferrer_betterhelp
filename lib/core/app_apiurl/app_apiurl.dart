@@ -34,6 +34,7 @@ class AppApiurl {
   static const getHighlightPost = "$baseUrl/post?highlight=true";
   static const getRecentPost = "$baseUrl/post?recent=true";
   static const getPopularPost = "$baseUrl/post?popular=true";
+  static const createPost = "$baseUrl/post/create-post";
   static getPostLike(var postId) => "$baseUrl/post/like/$postId";
 
   static const getCourseList = "$baseUrl/course";

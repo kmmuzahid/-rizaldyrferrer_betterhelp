@@ -14,10 +14,7 @@ import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/get_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/get.dart';
 
 class SupportScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
@@ -33,7 +30,7 @@ class _SupportScreenState extends State<SupportScreen> {
 
   @override
   void initState() {
-    controller = Get.put(SupportScreenController()); 
+    controller = Get.find<SupportScreenController>(); 
     super.initState();
   }
 

@@ -12,12 +12,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-class TimerScreen extends StatelessWidget {
+class TimerScreen extends GetView<TimerScreenController> {
   const TimerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(TimerScreenController(), tag: 'timer_screen');
     return Scaffold(
       backgroundColor: AppColors.white400,
       appBar: AppBarWithBack(

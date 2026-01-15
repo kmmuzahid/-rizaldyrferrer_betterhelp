@@ -29,22 +29,6 @@ class CommunityScreen extends StatefulWidget {
 }
 
 class _CommunityScreenState extends State<CommunityScreen> {
-  late final CommunityScreenController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    // Use Get.put with permanent: false to allow disposal
-    controller = Get.put(CommunityScreenController(), permanent: false);
-  }
-
-  @override
-  void dispose() {
-    // Clean up controller when screen is disposed
-    Get.delete<CommunityScreenController>();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

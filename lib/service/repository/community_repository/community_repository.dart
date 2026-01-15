@@ -53,6 +53,27 @@ class CommunityRepository {
     }
   }
 
+  //! Create a post
+  Future<dynamic> createApost(dynamic description) async {
+    appLog('CommunityRepository: Creating a post...');
+    try {
+      final response = await _apiServices.apiPostServices(
+        url: AppApiurl.createPost,
+        body: description,
+      );
+      if (response != null && response['success'] == true) {
+        appLog('CommunityRepository: Post created successfully');
+        return response;
+      } else {
+        appLog('CommunityRepository: Failed to create post');
+        return null;
+      }
+    } catch (e) {
+      errorLog('CommunityRepository: Exception during creating post', e);
+      return null;
+    }
+  }
+
   //! Get all posts with pagination
   Future<PostModel?> getAllPosts({int page = 1, int limit = 10}) async {
     appLog('CommunityRepository: Fetching all posts...');

@@ -29,7 +29,7 @@ class ProfileRepository {
     String? fullName,
     String? phone,
     String? address,
-    dynamic image,
+    dynamic profile,
   }) async {
     try {
       final token = await _storageServices.getAccessToken();
@@ -50,10 +50,9 @@ class ProfileRepository {
         formData.fields.add(MapEntry('address', address));
         appLog('📍 Adding address: $address');
       }
-      if (image != null) {
-        // Add image as a file, not as a field
-        formData.files.add(MapEntry('image', image));
-        appLog('🖼️ Adding image to form data as file');
+      if (profile != null) {
+        formData.files.add(MapEntry('profile', profile));
+        appLog('🖼️ Adding profile image to form data as file');
       }
 
       appLog('📦 FormData fields: ${formData.fields.length}');

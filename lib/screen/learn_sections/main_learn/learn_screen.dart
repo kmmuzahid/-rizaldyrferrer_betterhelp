@@ -29,12 +29,11 @@ class _LearnScreenState extends State<LearnScreen> {
   @override
   void initState() {
     super.initState();
-    controller = Get.put(LearnScreenController(), permanent: false);
+    controller = Get.find<LearnScreenController>();
   }
 
   @override
   void dispose() {
-    Get.delete<LearnScreenController>();
     super.dispose();
   }
 

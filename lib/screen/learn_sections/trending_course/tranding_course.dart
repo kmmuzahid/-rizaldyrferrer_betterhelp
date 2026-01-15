@@ -18,7 +18,7 @@ class TrandingCourse extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TrendingCourseController controller = Get.put(TrendingCourseController());
+    final TrendingCourseController controller = Get.find<TrendingCourseController>();
 
     // Get category name from arguments if not provided directly
     final String displayTitle =

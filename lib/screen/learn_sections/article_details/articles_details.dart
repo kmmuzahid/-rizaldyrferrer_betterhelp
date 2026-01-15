@@ -25,14 +25,11 @@ class _ArticlesDetailsScreenState extends State<ArticlesDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize controller
-    controller = Get.put(ArticleDetailsScreenController(), permanent: false);
+    controller = Get.find<ArticleDetailsScreenController>();
   }
 
   @override
   void dispose() {
-    // Clean up controller when screen is disposed
-    Get.delete<ArticleDetailsScreenController>();
     super.dispose();
   }
 

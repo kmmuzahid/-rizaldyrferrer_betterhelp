@@ -12,8 +12,7 @@ class CourseDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Initialize the controller
-    final CourseDetailsController controller = Get.put(CourseDetailsController());
+    final CourseDetailsController controller = Get.find<CourseDetailsController>();
 
     return Scaffold(
       appBar: AppBarWithBack(text: "Course Details", backgroundColor: AppColors.white),

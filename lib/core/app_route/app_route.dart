@@ -43,6 +43,7 @@ import 'package:get/get.dart';
 import '../app_bindings/community_bindings.dart';
 import '../app_bindings/habit_bindings.dart';
 import '../app_bindings/menu_bindings.dart';
+import '../app_bindings/learn_bindings.dart';
 
 import '../../screen/before_question_screen/before_question_screen.dart';
 import '../../screen/course_details/corse_details_screen.dart';
@@ -292,6 +293,7 @@ class AppRoute {
       page: () => const LearnScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      binding: LearnBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! Article Details Screen Route
@@ -300,6 +302,7 @@ class AppRoute {
       page: () => const ArticlesDetailsScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      binding: LearnBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! Community Screen Route
@@ -351,6 +354,7 @@ class AppRoute {
       page: () => CategoriesScreen(),
       transition: Transition.rightToLeft,
       transitionDuration: Duration(milliseconds: 300),
+      binding: LearnBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! Trending course scree
@@ -359,6 +363,7 @@ class AppRoute {
       page: () => TrandingCourse(),
       transition: Transition.rightToLeft,
       transitionDuration: Duration(microseconds: 300),
+      binding: LearnBindings(),
       middlewares: [AppInternerCheck()],
     ),
     GetPage(
@@ -366,6 +371,7 @@ class AppRoute {
       page: () => CourseDetailScreen(),
       transition: Transition.rightToLeft,
       transitionDuration: Duration(microseconds: 300),
+      binding: LearnBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! Menu Drawer Page

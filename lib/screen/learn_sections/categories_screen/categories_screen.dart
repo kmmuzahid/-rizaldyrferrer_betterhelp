@@ -17,9 +17,7 @@ class CategoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CategoriesScreenController controller = Get.put(
-      CategoriesScreenController(),
-    );
+    final CategoriesScreenController controller = Get.find<CategoriesScreenController>();
     return Scaffold(
       appBar: AppBarWithBack(
         text: AppString.categories,

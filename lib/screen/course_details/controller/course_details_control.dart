@@ -24,16 +24,14 @@ class CourseDetailsController extends GetxController {
   RxString videoDuration = "".obs;
 
   Rxn<BetterPlayerController> betterPlayerController = Rxn<BetterPlayerController>();
-void initializePlayer() {
+  void initializePlayer() {
     final videoUrl = courseDetails.value?.data.video;
     if (videoUrl == null || videoUrl.isEmpty) return;
-  Rxn<BetterPlayerController> betterPlayerController =
-      Rxn<BetterPlayerController>();
+    Rxn<BetterPlayerController> betterPlayerController = Rxn<BetterPlayerController>();
 
     isPlay.value = false;
 
-    final dataSource = BetterPlayerDataSource(BetterPlayerDataSourceType.network,
-    videoUrl);
+    final dataSource = BetterPlayerDataSource(BetterPlayerDataSourceType.network, videoUrl);
 
     betterPlayerController.value = BetterPlayerController(
       const BetterPlayerConfiguration(),
@@ -48,15 +46,12 @@ void initializePlayer() {
       if (duration != null && duration.inSeconds > 0) {
         videoDuration.value = CoreUtils.formatDurationToHms(duration);
       }
-    Future.delayed(const Duration(seconds: 1)).then((value) {
-      final d =
-          betterPlayerController.value?.videoPlayerController?.value.duration;
-      videoDuration.value = d != null
-          ? CoreUtils.formatDurationToHms(d)
-          : '00:00:00';
+      Future.delayed(const Duration(seconds: 1)).then((value) {
+        final d = betterPlayerController.value?.videoPlayerController?.value.duration;
+        videoDuration.value = d != null ? CoreUtils.formatDurationToHms(d) : '00:00:00';
+      });
     });
   }
-
 
   playNow() {
     isPlay.value = true;
@@ -70,10 +65,7 @@ void initializePlayer() {
 
   setCourseViewCount() async {
     DioService.instance.request(
-      input: RequestInput(
-        endpoint: AppApiurl.setCourseViewCount(id),
-        method: RequestMethod.PATCH,
-      ),
+      input: RequestInput(endpoint: AppApiurl.setCourseViewCount(id), method: RequestMethod.PATCH),
       responseBuilder: (response) {
         return response;
       },
@@ -109,10 +101,7 @@ void initializePlayer() {
   fetchCourseDetails() async {
     betterPlayerController.value?.dispose();
     final result = await DioService.instance.request(
-      input: RequestInput(
-        endpoint: '${AppApiurl.getCourseList}/$id',
-        method: RequestMethod.GET,
-      ),
+      input: RequestInput(endpoint: '${AppApiurl.getCourseList}/$id', method: RequestMethod.GET),
       responseBuilder: (response) {
         return CourseDetailsModel.fromJson(response);
       },

@@ -1,4 +1,3 @@
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
@@ -11,13 +10,11 @@ import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../utils/app_size/app_gap.dart';
 import '../../../../widget/app_appbar/app_back_appbar.dart';
 
-class MyProfleScreen extends StatelessWidget {
+class MyProfleScreen extends GetView<MyProfileScreenController> {
   const MyProfleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(MyProfileScreenController());
-
     return Scaffold(
       appBar: AppBarWithBack(text: "Profile", backgroundColor: AppColors.white),
       backgroundColor: AppColors.white,

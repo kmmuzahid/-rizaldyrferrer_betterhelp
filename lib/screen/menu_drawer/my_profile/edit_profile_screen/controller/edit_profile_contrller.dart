@@ -10,7 +10,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide MultipartFile;
 
-class CompleteProfileContrller extends GetxController {
+class EditProfileContrller extends GetxController {
   final _profileRepository = ProfileRepository();
   final ImagePickerService _imagePickerService = ImagePickerService();
 
@@ -133,7 +133,7 @@ class CompleteProfileContrller extends GetxController {
         address: addressController.text.trim().isNotEmpty
             ? addressController.text.trim()
             : null,
-        image: imageFile,
+        profile: imageFile,
       );
 
       appLog('📥 Response received: $response');
@@ -143,7 +143,7 @@ class CompleteProfileContrller extends GetxController {
         AppSnackBar.showSuccess("Profile updated successfully");
 
         // Clean up controller before going back
-        Get.delete<CompleteProfileContrller>(tag: 'edit_profile');
+        Get.delete<EditProfileContrller>(tag: 'edit_profile');
         Get.back(); // Go back to profile screen
 
         // Refresh profile screen if controller exists

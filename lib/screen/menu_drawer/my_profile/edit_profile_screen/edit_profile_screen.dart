@@ -11,26 +11,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-class CompleteProfileScreen extends StatelessWidget {
+class CompleteProfileScreen extends GetView<EditProfileContrller> {
   const CompleteProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     // Use Get.lazyPut to prevent multiple instances
-    final CompleteProfileContrller controller = Get.put(
-      CompleteProfileContrller(),
-      tag: 'edit_profile',
-    );
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
         // Clean up controller when leaving screen
-        Get.delete<CompleteProfileContrller>(tag: 'edit_profile');
-        return true;
+        Get.delete<EditProfileContrller>();
       },
       child: Scaffold(
         appBar: AppBarWithBack(
-          text: "Edit Profile",
+          text: "EditComplete Profile",
           backgroundColor: AppColors.white,
         ),
         backgroundColor: AppColors.white,

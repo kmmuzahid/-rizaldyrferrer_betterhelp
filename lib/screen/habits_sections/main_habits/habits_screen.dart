@@ -26,19 +26,7 @@ class HabitsScreen extends StatefulWidget {
 }
 
 class _HabitsScreenState extends State<HabitsScreen> {
-  late final HabitsScreenController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = Get.put(HabitsScreenController(), permanent: false);
-  }
-
-  @override
-  void dispose() {
-    Get.delete<HabitsScreenController>();
-    super.dispose();
-  }
+  final HabitsScreenController controller = Get.find<HabitsScreenController>();
 
   @override
   Widget build(BuildContext context) {

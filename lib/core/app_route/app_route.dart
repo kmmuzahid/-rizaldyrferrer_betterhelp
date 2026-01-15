@@ -40,6 +40,10 @@ import 'package:better_help/screen/supports_sections/main_supports/support_scree
 import 'package:better_help/widget/app_confeti/habit_complete_screen.dart';
 import 'package:get/get.dart';
 
+import '../app_bindings/community_bindings.dart';
+import '../app_bindings/habit_bindings.dart';
+import '../app_bindings/menu_bindings.dart';
+
 import '../../screen/before_question_screen/before_question_screen.dart';
 import '../../screen/course_details/corse_details_screen.dart';
 import '../../screen/free_trial_screen/free_trial_enroll.dart';
@@ -258,6 +262,10 @@ class AppRoute {
       page: () => const BottomNavScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      binding: BindingsBuilder(() {
+        CommunityBindings().dependencies();
+        HabitBindings().dependencies();
+      }),
       middlewares: [AppInternerCheck()],
     ),
     //! Habits Screen Route
@@ -266,6 +274,7 @@ class AppRoute {
       page: () => const HabitsScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      binding: HabitBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! Community Screen Route
@@ -274,6 +283,7 @@ class AppRoute {
       page: () => const CommunityScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      binding: CommunityBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! Learning Screen Route
@@ -298,6 +308,7 @@ class AppRoute {
       page: () => const CreatingPostScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      binding: CommunityBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! Support Screen Route
@@ -322,6 +333,7 @@ class AppRoute {
       page: () => TimerScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
+      binding: HabitBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! My Task Screen Route
@@ -330,6 +342,7 @@ class AppRoute {
       page: () => MyTaskScreeen(),
       transition: Transition.rightToLeft,
       transitionDuration: Duration(milliseconds: 300),
+      binding: HabitBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! All Categories screen
@@ -361,6 +374,7 @@ class AppRoute {
       page: () => UserDrawer(),
       transition: Transition.fadeIn,
       transitionDuration: Duration(milliseconds: 400),
+      binding: MenuBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! Menu My Profile Screen
@@ -369,6 +383,7 @@ class AppRoute {
       page: () => MyProfleScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      binding: MenuBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! Menu Drawer Page
@@ -377,6 +392,7 @@ class AppRoute {
       page: () => BookingsSessionsScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      binding: MenuBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! calendar taks screen
@@ -385,6 +401,7 @@ class AppRoute {
       page: () => CalendarTaskScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      binding: MenuBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! faqs screen
@@ -393,6 +410,7 @@ class AppRoute {
       page: () => FaqsScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      binding: MenuBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! favrite course screen
@@ -401,6 +419,7 @@ class AppRoute {
       page: () => FavoriteCourseScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      binding: MenuBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! my subscription screen
@@ -409,6 +428,7 @@ class AppRoute {
       page: () => MySubscriptionScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      binding: MenuBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! privacy policy screen
@@ -417,6 +437,7 @@ class AppRoute {
       page: () => PrivacyPolicyScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      binding: MenuBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! saved article screen
@@ -425,6 +446,7 @@ class AppRoute {
       page: () => SavedArticleScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      binding: MenuBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! talk to support screen
@@ -433,6 +455,7 @@ class AppRoute {
       page: () => TalkToSupportScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      binding: MenuBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! terms and conditions screen
@@ -441,6 +464,7 @@ class AppRoute {
       page: () => TermsConditionsScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      binding: MenuBindings(),
       middlewares: [AppInternerCheck()],
     ),
     //! congratulation screen

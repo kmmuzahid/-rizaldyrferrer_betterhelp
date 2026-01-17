@@ -269,6 +269,7 @@ class AppRoute {
         HabitBindings().dependencies();
         LearnBindings().dependencies();
         SupportBindings().dependencies();
+        MenuBindings().dependencies();
       }),
       middlewares: [AppInternerCheck()],
     ),
@@ -278,7 +279,10 @@ class AppRoute {
       page: () => const HabitsScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
-      binding: HabitBindings(),
+      binding: BindingsBuilder(() {
+        HabitBindings().dependencies();
+        MenuBindings().dependencies();
+      }),
       middlewares: [AppInternerCheck()],
     ),
     //! Community Screen Route

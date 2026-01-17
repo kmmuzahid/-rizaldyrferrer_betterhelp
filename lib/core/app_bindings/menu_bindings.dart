@@ -10,23 +10,31 @@ import '../../utils/app_log/app_log.dart';
 class MenuBindings extends Bindings {
   @override
   void dependencies() {
+    //! Bookings Sessions Controller
     Get.lazyPut<BookingsSessionsController>(() {
       appLog("Booking Seesing Controller is Initialized");
       return BookingsSessionsController();
     }, fenix: true);
 
+    //! Favorite Course Controller
     Get.lazyPut<FavoriteCourseController>(() {
       appLog("Favorite Course Controller is Initialized");
       return FavoriteCourseController();
     }, fenix: true);
+
+    //! Edit Profile Controller
     Get.lazyPut<EditProfileContrller>(() {
       appLog("Edit Profile Controller is Initialized");
       return EditProfileContrller();
     }, fenix: true);
+
+    //! My Profile Screen Controller
     Get.lazyPut<MyProfileScreenController>(() {
       appLog("My Profile Screen Controller is Initialized");
       return MyProfileScreenController();
     }, fenix: true);
+
+    //! Saved Article Controller
     Get.lazyPut<SavedArticleController>(() {
       appLog("Saved Article Controller is Initialized");
       return SavedArticleController();

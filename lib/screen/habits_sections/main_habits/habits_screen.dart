@@ -1,5 +1,6 @@
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/habits_sections/main_habits/controller/habits_screen_controller.dart';
+import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
@@ -27,19 +28,47 @@ class HabitsScreen extends StatefulWidget {
 
 class _HabitsScreenState extends State<HabitsScreen> {
   final HabitsScreenController controller = Get.find<HabitsScreenController>();
+  late final MyProfileScreenController profileController;
+
+  @override
+  void initState() {
+    super.initState();
+    if (Get.isRegistered<MyProfileScreenController>()) {
+      profileController = Get.find<MyProfileScreenController>();
+    } else {
+      profileController = Get.put(MyProfileScreenController());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: FlexibleCustomAppBar(
-        appBarHeight: AppSize.height(value: 70),
-        title: AppString.getReadytoStart,
-        subtitle: AppString.mahbubulQareem,
-        notificationIconPath: AppIcons.notificationIcons,
-        menuIconPath: AppIcons.menuIcons,
-        leadingImagePath: AppStaticImages.habitsAppbar,
-        showCircleAvatar: true,
-        onMenuTap: () => widget.scaffoldKey?.currentState?.openDrawer(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(AppSize.height(value: 70)),
+        child: Obx(() {
+          final profile = profileController.profileData.value;
+
+          final String subtitle =
+              profile?.fullName != null && profile!.fullName!.isNotEmpty
+              ? profile.fullName!
+              : AppString.mahbubulQareem;
+
+          final String profileImageUrl = profileController.getProfileImageUrl();
+          final String? profileImage = profileImageUrl.isNotEmpty
+              ? profileImageUrl
+              : null;
+
+          return FlexibleCustomAppBar(
+            appBarHeight: AppSize.height(value: 70),
+            title: AppString.getReadytoStart,
+            subtitle: subtitle,
+            notificationIconPath: AppIcons.notificationIcons,
+            menuIconPath: AppIcons.menuIcons,
+            customLeading: _buildProfileLeading(profileImage),
+            showCircleAvatar: false,
+            onMenuTap: () => widget.scaffoldKey?.currentState?.openDrawer(),
+          );
+        }),
       ),
       backgroundColor: AppColors.habitBackground,
       body: SingleChildScrollView(
@@ -497,7 +526,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
               Flexible(
                 child: AppButton(
                   height: AppSize.height(value: 36),
-                  width: AppSize.width(value: 130),
+                  width: AppSize.width(value: 125),
                   title: AppString.startNow,
                   backgroundColor: AppColors.blue500,
                   fontSize: AppSize.width(value: 12),
@@ -505,10 +534,11 @@ class _HabitsScreenState extends State<HabitsScreen> {
                   onTap: () {},
                 ),
               ),
+              Gap(width: 8),
               Flexible(
                 child: AppButton(
                   height: AppSize.height(value: 35),
-                  width: AppSize.width(value: 120),
+                  width: AppSize.width(value: 115),
                   title: AppString.talkTobhaa,
                   fontSize: AppSize.width(value: 12),
                   backgroundColor: AppColors.white50,
@@ -543,5 +573,37 @@ class _HabitsScreenState extends State<HabitsScreen> {
       default:
         return AppColors.primary50;
     }
+  }
+
+  Widget _buildProfileLeading(String? profileImage) {
+    Widget imageWidget;
+
+    if (profileImage != null && profileImage.isNotEmpty) {
+      imageWidget = ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Image.network(
+          profileImage,
+          height: AppSize.height(value: 48),
+          width: AppSize.width(value: 48),
+          fit: BoxFit.cover,
+        ),
+      );
+    } else {
+      imageWidget = Image.asset(
+        AppStaticImages.habitsAppbar,
+        height: AppSize.height(value: 48),
+        width: AppSize.width(value: 48),
+        fit: BoxFit.contain,
+      );
+    }
+
+    return Padding(
+      padding: EdgeInsets.only(left: AppSize.width(value: 20)),
+      child: CircleAvatar(
+        backgroundColor: AppColors.white,
+        radius: AppSize.width(value: 24),
+        child: imageWidget,
+      ),
+    );
   }
 }

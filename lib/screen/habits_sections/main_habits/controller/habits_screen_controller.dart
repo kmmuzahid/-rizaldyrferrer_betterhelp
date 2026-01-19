@@ -1,14 +1,24 @@
+import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/screen/habits_sections/main_habits/model/daily_task_model.dart';
+import 'package:better_help/service/api/api_services.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
+import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 
 class HabitsScreenController extends GetxController {
+  final _apiServices = ApiServices.instance;
+
   final CarouselSliderController carouselController =
       CarouselSliderController();
   var currentIndex = 0.obs;
   var selectedDate = DateTime.now().obs;
   var checklistStates = <bool>[false, false, false].obs;
+
+  // API related observables
+  final RxBool isLoadingTasks = false.obs;
+  final RxList<TaskData> tasks = <TaskData>[].obs;
 
   // Quote data
   List<String> get quoteList => [
@@ -66,6 +76,61 @@ class HabitsScreenController extends GetxController {
   // Method to update selected date
   void updateSelectedDate(DateTime date) {
     selectedDate.value = date;
+    fetchTasksByDate(date);
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Fetch tasks for today on initialization
+    fetchTasksByDate(selectedDate.value);
+  }
+
+  /// Fetch tasks by date from API
+  Future<void> fetchTasksByDate(DateTime date) async {
+    try {
+      isLoadingTasks.value = true;
+
+      // Format date to ISO 8601 format: "2026-01-12T00:00:00.000Z"
+      final formattedDate = DateTime(
+        date.year,
+        date.month,
+        date.day,
+      ).toUtc().toIso8601String();
+
+      appLog('Fetching tasks for date: $formattedDate');
+
+      final response = await _apiServices.apiGetServices(
+        AppApiurl.taskBytheDate(formattedDate),
+      );
+
+      if (response != null && response['success'] == true) {
+        appLog('Tasks fetched successfully');
+
+        final taskResponse = TaskResponse.fromJson(response);
+
+        if (taskResponse.data != null) {
+          tasks.value = taskResponse.data!;
+          appLog('Loaded ${tasks.length} tasks for ${_formatDate(date)}');
+        } else {
+          tasks.clear();
+          appLog('No tasks found for ${_formatDate(date)}');
+        }
+      } else {
+        appLog('Failed to fetch tasks');
+        tasks.clear();
+      }
+    } catch (e) {
+      appLog('Error fetching tasks: $e');
+      tasks.clear();
+    } finally {
+      isLoadingTasks.value = false;
+    }
+  }
+
+  /// Refresh tasks for current selected date
+  Future<void> refreshTasks() async {
+    await fetchTasksByDate(selectedDate.value);
   }
 
   // Method to update checklist state
@@ -232,10 +297,92 @@ class HabitsScreenController extends GetxController {
     return scheduleTemplates[templateIndex];
   }
 
-  // Get schedules for selected date
+  // Get schedules for selected date (now from API)
   List<Map<String, dynamic>> get selectedDateSchedules {
-    String dateKey = _formatDate(selectedDate.value);
-    return scheduleData[dateKey] ?? [];
+    if (tasks.isEmpty) {
+      return [];
+    }
+
+    // Convert API tasks to schedule format
+    return tasks.map((task) {
+      return {
+        'id': task.id,
+        'title': task.title ?? 'Untitled Task',
+        'subtitle': task.description ?? 'No description',
+        'duration': _calculateDuration(task.startDate, task.endDate),
+        'time': _formatTimeRange(task.startDate, task.endDate),
+        'backgroundColor': _getColorForCategory(task.category),
+        'status': task.status,
+        'category': task.category,
+      };
+    }).toList();
+  }
+
+  /// Calculate duration between start and end date
+  String _calculateDuration(DateTime? startDate, DateTime? endDate) {
+    if (startDate == null || endDate == null) {
+      return '0${AppString.minuteMeditation}';
+    }
+
+    final duration = endDate.difference(startDate);
+    final minutes = duration.inMinutes;
+
+    return '$minutes${AppString.minuteMeditation}';
+  }
+
+  /// Format time range for display
+  String _formatTimeRange(DateTime? startDate, DateTime? endDate) {
+    if (startDate == null) {
+      return 'Time not set';
+    }
+
+    final startHour = startDate.hour;
+    final startMinute = startDate.minute.toString().padLeft(2, '0');
+    final startPeriod = startHour >= 12 ? AppString.pm : AppString.am;
+    final displayStartHour = startHour > 12
+        ? startHour - 12
+        : (startHour == 0 ? 12 : startHour);
+
+    if (endDate == null) {
+      return '$displayStartHour:$startMinute$startPeriod';
+    }
+
+    final endHour = endDate.hour;
+    final endMinute = endDate.minute.toString().padLeft(2, '0');
+    final endPeriod = endHour >= 12 ? AppString.pm : AppString.am;
+    final displayEndHour = endHour > 12
+        ? endHour - 12
+        : (endHour == 0 ? 12 : endHour);
+
+    return '$displayStartHour:$startMinute$startPeriod - $displayEndHour:$endMinute$endPeriod';
+  }
+
+  /// Get background color based on category
+  String _getColorForCategory(String? category) {
+    if (category == null) return 'primary50';
+
+    switch (category.toLowerCase()) {
+      case 'meditation':
+      case 'mindfulness':
+        return 'primary50';
+      case 'exercise':
+      case 'fitness':
+        return 'green50';
+      case 'focus':
+      case 'work':
+        return 'blue50';
+      case 'energy':
+      case 'morning':
+        return 'orange50';
+      case 'stress':
+      case 'urgent':
+        return 'red50';
+      case 'calm':
+      case 'evening':
+        return 'babygreen50';
+      default:
+        return 'primary50';
+    }
   }
 
   // Helper method to format date as string key

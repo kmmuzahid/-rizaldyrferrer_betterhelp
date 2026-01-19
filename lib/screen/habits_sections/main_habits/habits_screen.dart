@@ -257,6 +257,32 @@ class _HabitsScreenState extends State<HabitsScreen> {
             Gap(height: 10),
             //! Schedule Containers for Selected Date (Horizontal)
             Obx(() {
+              // Show loading indicator while fetching tasks
+              if (controller.isLoadingTasks.value) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.width(value: 20),
+                  ),
+                  child: Container(
+                    height: AppSize.height(value: 220),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      border: Border.all(
+                        color: const Color(0xFFF0F0F0),
+                        width: 0.87,
+                      ),
+                      borderRadius: BorderRadius.circular(10.39),
+                    ),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.primary500,
+                      ),
+                    ),
+                  ),
+                );
+              }
+
               final schedules = controller.selectedDateSchedules;
               if (schedules.isEmpty) {
                 return Padding(

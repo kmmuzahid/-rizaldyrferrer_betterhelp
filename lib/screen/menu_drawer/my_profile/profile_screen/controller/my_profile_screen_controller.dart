@@ -37,7 +37,14 @@ class MyProfileScreenController extends GetxController {
   String getProfileImageUrl() {
     if (profileData.value?.profile != null &&
         profileData.value!.profile!.isNotEmpty) {
-      return '${AppApiurl.imageUrl}/${profileData.value!.profile}';
+      final profileUrl = profileData.value!.profile!;
+      // Check if it's already a complete URL (starts with http/https)
+      if (profileUrl.startsWith('http://') ||
+          profileUrl.startsWith('https://')) {
+        return profileUrl;
+      }
+      // Otherwise, prepend the base image URL
+      return '${AppApiurl.imageUrl}/$profileUrl';
     }
     return '';
   }

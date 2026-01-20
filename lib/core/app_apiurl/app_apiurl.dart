@@ -56,4 +56,6 @@ class AppApiurl {
   static const createDoctorBooking =
       "$baseUrl/doctor-booking/create-doctor-booking";
   static const getFavouriteArticle = "$baseUrl/favorite/saved";
+
+  static const getDoctorAvailableSlots = "$baseUrl/doctor-booking/my-doctor-available-slots";
 }

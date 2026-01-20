@@ -61,7 +61,7 @@ class BookingScreen extends StatelessWidget {
             return controller.selectedDate.value == day;
           },
           onDaySelected: (selectedDay, focusedDay) {
-            controller.selectedDate.value = selectedDay;
+            controller.onDaySelected(selectedDay);
           },
           firstDay: DateTime.now(),
           lastDay: DateTime.now().add(const Duration(days: 365)),
@@ -120,6 +120,11 @@ class BookingScreen extends StatelessWidget {
             selectedDate: controller.selectedDate.value,
             time: time,
           );
+
+          print(controller.availableSlots);
+          print(time);
+
+          isSelectable = isSelectable && controller.availableSlots.contains(time);
 
           return GestureDetector(
             onTap: isSelectable ? () => controller.selectTime(time) : null,

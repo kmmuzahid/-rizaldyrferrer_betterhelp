@@ -6,16 +6,18 @@
 class MessageModel {
   final String id;
   final String message;
-  final String image;
+  final String image; // Default to empty string
   final bool seen;
-  final SenderModel sender;
+  final Sender sender;
   final String chatId;
-  final String replyTo;
+  final String replyTo; // Default to empty string
   final bool isPinned;
   final List<String> deletedByUsers;
-  final List<String> reactionUsers;
+  final String messageType;
+  final List<dynamic> reactionUsers;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final bool isReply;
 
   MessageModel({
     required this.id,
@@ -27,71 +29,82 @@ class MessageModel {
     required this.replyTo,
     required this.isPinned,
     required this.deletedByUsers,
+    required this.messageType,
     required this.reactionUsers,
     required this.createdAt,
     required this.updatedAt,
+    required this.isReply,
   });
 
-  factory MessageModel.fromJson(Map<String, dynamic> json) {
+  factory MessageModel.fromJson(Map<String, dynamic>? json) {
     return MessageModel(
-      id: json['_id'] ?? '',
-      message: json['message'] ?? '',
-      image: json['image'] ?? '',
-      seen: json['seen'] ?? false,
-      sender: SenderModel.fromJson(json['sender'] ?? {}),
-      chatId: json['chatId'] ?? '',
-      replyTo: json['replyTo'] ?? '',
-      isPinned: json['isPinned'] ?? false,
-      deletedByUsers: List<String>.from(json['deletedByUsers'] ?? const []),
-      reactionUsers: List<String>.from(json['reactionUsers'] ?? const []),
-      createdAt:
-          DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.fromMillisecondsSinceEpoch(0),
-      updatedAt:
-          DateTime.tryParse(json['updatedAt'] ?? '') ?? DateTime.fromMillisecondsSinceEpoch(0),
+      id: json?['_id'] ?? '',
+      message: json?['message'] ?? '',
+      image: json?['image'] ?? '',
+      seen: json?['seen'] ?? false,
+      sender: Sender.fromJson(json?['sender']),
+      chatId: json?['chatId'] ?? '',
+      replyTo: json?['replyTo'] ?? '',
+      isPinned: json?['isPinned'] ?? false,
+      deletedByUsers: List<String>.from(json?['deletedByUsers'] ?? []),
+      messageType: json?['messageType'] ?? 'text',
+      reactionUsers: List<dynamic>.from(json?['reactionUsers'] ?? []),
+      createdAt: DateTime.tryParse(json?['createdAt'] ?? '') ?? DateTime.now(),
+      updatedAt: DateTime.tryParse(json?['updatedAt'] ?? '') ?? DateTime.now(),
+      isReply: json?['isReply'] ?? false,
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'message': message,
-      'image': image.isEmpty ? null : image,
-      'seen': seen,
-      'sender': sender.toJson(),
-      'chatId': chatId,
-      'replyTo': replyTo.isEmpty ? null : replyTo,
-      'isPinned': isPinned,
-      'deletedByUsers': deletedByUsers,
-      'reactionUsers': reactionUsers,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-    };
+  //copywith
+  MessageModel copyWith({
+    String? id,
+    String? message,
+    String? image,
+    bool? seen,
+    Sender? sender,
+    String? chatId,
+    String? replyTo,
+    bool? isPinned,
+    List<String>? deletedByUsers,
+    String? messageType,
+    List<dynamic>? reactionUsers,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    bool? isResponseSent,
+  }) {
+    return MessageModel(
+      id: id ?? this.id,
+      message: message ?? this.message,
+      image: image ?? this.image,
+      seen: seen ?? this.seen,
+      sender: sender ?? this.sender,
+      chatId: chatId ?? this.chatId,
+      replyTo: replyTo ?? this.replyTo,
+      isPinned: isPinned ?? this.isPinned,
+      deletedByUsers: deletedByUsers ?? this.deletedByUsers,
+      messageType: messageType ?? this.messageType,
+      reactionUsers: reactionUsers ?? this.reactionUsers,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isReply: isResponseSent ?? isReply,
+    );
   }
 }
 
-class SenderModel {
+class Sender {
   final String id;
   final String profile;
   final String fullName;
   final String role;
 
-  SenderModel({
-    required this.id,
-    required this.profile,
-    required this.fullName,
-    required this.role,
-  });
+  Sender({required this.id, required this.profile, required this.fullName, required this.role});
 
-  factory SenderModel.fromJson(Map<String, dynamic> json) {
-    return SenderModel(
-      id: json['_id'] ?? '',
-      profile: json['profile'] ?? '',
-      fullName: json['fullName'] ?? '',
-      role: json['role'] ?? '',
+  factory Sender.fromJson(Map<String, dynamic>? json) {
+    return Sender(
+      id: json?['_id'] ?? '',
+      profile: json?['profile'] ?? '',
+      fullName: json?['fullName'] ?? 'Unknown User',
+      role: json?['role'] ?? 'user',
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'_id': id, 'profile': profile, 'fullName': fullName, 'role': role};
   }
 }

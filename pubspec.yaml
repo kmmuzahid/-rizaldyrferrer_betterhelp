@@ -41,7 +41,8 @@ dependencies:
   core_kit:
     git:
       url: https://github.com/kmmuzahid/flutter_core_kit.git
-      ref: ^eb434d0
+      ref: 1.0.4
+      # ref: ^eb434d0
  
 
  

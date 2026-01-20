@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
             accessToken: () => StorageService().getAccessToken().then((v) => v ?? ''),
             refreshToken: () => StorageService().getRefreshToken().then((v) => v ?? ''),
             updateTokens: (data) => StorageService().saveAccessToken(data['accessToken']),
-            clearTokens: () => StorageService().removeTokens()           
+          
           ),
           child: child,
         );

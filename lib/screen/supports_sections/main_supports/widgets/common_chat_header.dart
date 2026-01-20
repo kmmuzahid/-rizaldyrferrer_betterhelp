@@ -1,5 +1,9 @@
-import 'package:core_kit/text/common_text.dart';
-import 'package:core_kit/utils/core_screen_utils.dart';
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-11 14:48:33
+ * @Email: km.muzahid@gmail.com
+ */
+import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 
 class CommonChatHeader extends StatelessWidget implements PreferredSizeWidget {
@@ -18,6 +22,7 @@ class CommonChatHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+ 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5),
       decoration: const BoxDecoration(
@@ -42,7 +47,7 @@ class CommonChatHeader extends StatelessWidget implements PreferredSizeWidget {
             fontWeight: FontWeight.bold,
             textColor: Colors.cyan,
           ),
-          CommonText(text: ' - $subtitle', fontSize: 12, textColor: Colors.cyan.withOpacity(0.6)),
+          // CommonText(text: ' - $subtitle', fontSize: 12, textColor: Colors.cyan.withOpacity(0.6)),
         ],
       ),
     );

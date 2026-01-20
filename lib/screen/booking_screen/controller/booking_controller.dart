@@ -4,7 +4,7 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_apiurl/app_apiurl.dart';
-import 'package:core_kit/network/dio_service.dart';
+import 'package:core_kit/core_kit.dart';
 import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
 
@@ -12,20 +12,48 @@ class BookingController extends GetxController {
   var selectedDate = DateTime.now().obs;
   var selectedTime = "".obs;
 
-  final List<String> morningSlots = ["9:00 AM", "9:45 AM", "10:30 AM", "11:15 AM"];
+  final List<String> morningSlots = ["09:00 AM", "09:45 AM", "10:30 AM", "11:15 AM"];
 
   final List<String> afternoonSlots = [
     "12:00 PM",
     "12:45 PM",
-    "1:30 PM",
-    "2:15 PM",
-    "3:00 PM",
-    "3:45 PM",
-    "4:30 PM",
-    "5:15 PM",
+    "01:30 PM",
+    "02:15 PM",
+    "03:00 PM",
+    "03:45 PM",
+    "04:30 PM",
+    "05:15 PM",
   ];
 
-  final List<String> nightSlots = ["6:00 PM", "6:45 PM", "7:30 PM", "8:15 PM", "9:00 PM"];
+  final List<String> nightSlots = ["06:00 PM", "06:45 PM", "07:30 PM", "08:15 PM", "09:00 PM"];
+
+  final List<String> availableSlots = [];
+
+  @override
+  void onInit() {
+    super.onInit();
+    onDaySelected(selectedDate.value);
+  }
+
+  onDaySelected(DateTime date) async {
+    if (selectedDate.value == date) return;
+    selectedDate.value = date;
+
+    final response = await DioService.instance.request<List<String>>(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: AppApiurl.getDoctorAvailableSlots,
+        queryParams: {'date': selectedDate.value.toUtc().toIso8601String()},
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) {
+        return (data as List).map((e) => e['startTime'].toString()).toList();
+      },
+    );
+    if (response.isSuccess) {
+      availableSlots.assignAll(response.data ?? []);
+    }
+  }
 
   void selectTime(String time) {
     selectedTime.value = time;
@@ -98,7 +126,10 @@ class BookingController extends GetxController {
   }
 
   void confirmBooking() async {
-    if (selectedTime.value.isEmpty) return;
+    if (selectedTime.value.isEmpty) {
+      showSnackBar('Please select a time slot', type: SnackBarType.warning);
+      return;
+    }
     DioService.instance.request<dynamic>(
       showMessage: true,
       input: RequestInput(

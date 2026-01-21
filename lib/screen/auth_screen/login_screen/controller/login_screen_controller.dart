@@ -1,3 +1,8 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-09 09:41:39
+ * @Email: km.muzahid@gmail.com
+ */
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/service/repository/auth_repository/auth_reporsitory.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
@@ -53,7 +58,7 @@ class LoginScreenController extends GetxController {
 
     if (response != null && response['success'] == true) {
       AppSnackBar.showSuccess(response['message'] ?? "Login successful");
-      Get.offAllNamed(AppRoute.bottomNav);
+      Get.offAllNamed(AppRoute.subscriptionscreen);
     }
   }
 }

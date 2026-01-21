@@ -25,7 +25,7 @@ class SplashScreenController extends GetxController {
         responses.isNotEmpty) {
       appLog(accessToken);
       SocketService.instance.connect();
-      Get.offNamed(AppRoute.bottomNav);
+      Get.offNamed(AppRoute.subscriptionscreen);
       return;
     }
 

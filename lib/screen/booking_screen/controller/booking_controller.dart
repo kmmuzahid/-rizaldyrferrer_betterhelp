@@ -27,7 +27,7 @@ class BookingController extends GetxController {
 
   final List<String> nightSlots = ["06:00 PM", "06:45 PM", "07:30 PM", "08:15 PM", "09:00 PM"];
 
-  final List<String> availableSlots = [];
+  RxList<String> availableSlots = <String>[].obs;
 
   @override
   void onInit() {
@@ -38,9 +38,8 @@ class BookingController extends GetxController {
   onDaySelected(DateTime date) async {
     if (selectedDate.value == date) return;
     selectedDate.value = date;
-
+    availableSlots.clear();
     final response = await DioService.instance.request<List<String>>(
-      showMessage: true,
       input: RequestInput(
         endpoint: AppApiurl.getDoctorAvailableSlots,
         queryParams: {'date': selectedDate.value.toUtc().toIso8601String()},
@@ -52,7 +51,11 @@ class BookingController extends GetxController {
     );
     if (response.isSuccess) {
       availableSlots.assignAll(response.data ?? []);
+    } else {
+      showSnackBar(response.message ?? '', type: SnackBarType.error);
+      availableSlots.clear();
     }
+    availableSlots.refresh();
   }
 
   void selectTime(String time) {
@@ -136,7 +139,7 @@ class BookingController extends GetxController {
         endpoint: AppApiurl.createDoctorBooking,
         method: RequestMethod.POST,
         jsonBody: {
-          "bookingDate": selectedDate.value.microsecondsSinceEpoch,
+          "bookingDate": selectedDate.value.toUtc().toIso8601String(),
           "startTime": selectedTime.value,
           "endTime": getNext45MinSlot(selectedTime.value),
         },

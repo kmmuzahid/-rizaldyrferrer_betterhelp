@@ -1,3 +1,4 @@
+import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:get/get.dart';
 
 import '../../screen/auth_screen/signup_screen/controller/singup_screen_controller.dart';
@@ -43,5 +44,12 @@ class AppInitialBindings implements Bindings {
       appLog('Registering SingupScreenController');
       return SingupScreenController();
     }, fenix: true);
+  
+    Get.lazyPut<MyProfileScreenController>(() {
+      appLog('Registering MyProfileScreenController');
+      return MyProfileScreenController();
+    }, fenix: true);
   }
+
+
 }

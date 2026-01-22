@@ -50,7 +50,11 @@ class BookingController extends GetxController {
       },
     );
     if (response.isSuccess) {
-      availableSlots.assignAll(response.data ?? []);
+      if (response.data?.isNotEmpty ?? false) {
+        availableSlots.assignAll(response.data ?? []);
+      } else {
+        showSnackBar('No available slots found', type: SnackBarType.warning);
+      }
     } else {
       showSnackBar(response.message ?? '', type: SnackBarType.error);
       availableSlots.clear();

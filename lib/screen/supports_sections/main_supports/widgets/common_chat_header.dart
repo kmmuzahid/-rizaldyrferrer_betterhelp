@@ -47,6 +47,7 @@ class CommonChatHeader extends StatelessWidget implements PreferredSizeWidget {
             fontWeight: FontWeight.bold,
             textColor: Colors.cyan,
           ),
+         
           // CommonText(text: ' - $subtitle', fontSize: 12, textColor: Colors.cyan.withOpacity(0.6)),
         ],
       ),

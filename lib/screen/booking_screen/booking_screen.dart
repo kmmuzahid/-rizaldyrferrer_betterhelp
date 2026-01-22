@@ -18,7 +18,11 @@ class BookingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarWithBack(text: "Booking Session", backgroundColor: AppColors.white),
+      appBar: AppBarWithBack(
+        text: "Booking Session",
+        backgroundColor: AppColors.white,
+        actions: [],
+      ),
       body: Obx(
         () => SingleChildScrollView(
           

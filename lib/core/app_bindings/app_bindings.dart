@@ -49,6 +49,7 @@ class AppInitialBindings implements Bindings {
       appLog('Registering MyProfileScreenController');
       return MyProfileScreenController();
     }, fenix: true);
+ 
   }
 
 

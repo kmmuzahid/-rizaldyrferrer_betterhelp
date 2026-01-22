@@ -37,19 +37,19 @@ import 'package:better_help/screen/report_problem/report_problem_screen.dart';
 import 'package:better_help/screen/splash_screen/splash_screen.dart';
 import 'package:better_help/screen/subscription/subscription_and_payment.dart';
 import 'package:better_help/screen/supports_sections/main_supports/support_screen.dart';
+import 'package:better_help/screen/supports_sections/video_call_agora/video_call_screen.dart';
 import 'package:better_help/widget/app_confeti/habit_complete_screen.dart';
 import 'package:get/get.dart';
-
-import '../app_bindings/community_bindings.dart';
-import '../app_bindings/habit_bindings.dart';
-import '../app_bindings/menu_bindings.dart';
-import '../app_bindings/learn_bindings.dart';
-import '../app_bindings/support_bindings.dart';
 
 import '../../screen/before_question_screen/before_question_screen.dart';
 import '../../screen/course_details/corse_details_screen.dart';
 import '../../screen/free_trial_screen/free_trial_enroll.dart';
 import '../../screen/questionnaries_screen/questionnaire_summary_screen.dart';
+import '../app_bindings/community_bindings.dart';
+import '../app_bindings/habit_bindings.dart';
+import '../app_bindings/learn_bindings.dart';
+import '../app_bindings/menu_bindings.dart';
+import '../app_bindings/support_bindings.dart';
 
 class AppRoute {
   AppRoute._();
@@ -104,6 +104,7 @@ class AppRoute {
   static const String savedArticleScreen = "/savedArticleScreen";
   static const String talkToSupportScreen = "/talkToSupportScreen";
   static const String termsAndConditionsScreen = "/termsAndConditionsScreen";
+  static const String videoCallScreen = "/videoCallScreen";
 
   //! Community Screen Route
   static const String creatingPost = "/creatingpost";
@@ -487,6 +488,15 @@ class AppRoute {
       page: () => CongratulationScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
+      middlewares: [AppInternerCheck()],
+    ),
+    //! video call screen
+    GetPage(
+      name: AppRoute.videoCallScreen,
+      page: () => VideoCallScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 400),
+      binding: SupportBindings(),
       middlewares: [AppInternerCheck()],
     ),
   ];

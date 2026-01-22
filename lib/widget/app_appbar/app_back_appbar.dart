@@ -1,3 +1,8 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-09 09:41:39
+ * @Email: km.muzahid@gmail.com
+ */
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
@@ -9,7 +14,8 @@ import 'package:get/get.dart';
 class AppBarWithBack extends StatelessWidget implements PreferredSizeWidget {
   final String text;
   final Color? backgroundColor;
-  const AppBarWithBack({super.key, required this.text, this.backgroundColor});
+  final List<Widget>? actions;
+  const AppBarWithBack({super.key, required this.text, this.backgroundColor, this.actions});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +24,7 @@ class AppBarWithBack extends StatelessWidget implements PreferredSizeWidget {
       child: AppBar(
         backgroundColor: backgroundColor ?? AppColors.white,
         automaticallyImplyLeading: false,
+        actions: actions,
         leading: Container(
           margin: EdgeInsets.only(left: 20, top: 8, bottom: 8),
           child: GestureDetector(

@@ -59,4 +59,6 @@ class AppApiurl {
 
   static const getDoctorAvailableSlots = "$baseUrl/doctor-booking/my-doctor-available-slots";
   static const createSubscription = "$baseUrl/subscription/create-purchase-subscription";
+  static const createVideoSession = "$baseUrl/video-session/create-video-session";
+  static const getMyBooking = "$baseUrl/doctor-booking/my-booking";
 }

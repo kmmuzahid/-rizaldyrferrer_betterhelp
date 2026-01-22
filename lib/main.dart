@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-import 'widget/app_observer/app_observer.dart';
+import 'widget/app_observer/app_observer.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,6 +61,15 @@ class MyApp extends StatelessWidget {
           fillColor: Colors.white,
           hintStyle: TextStyle(color: Colors.grey, fontStyle: FontStyle.normal),
         ),
+
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors.primary400,
+          primary: AppColors.primary400, // button, Snackbar Info
+          onPrimary: Colors.white, // text on button
+          surface: AppColors.white, //card color, SnackBar Background
+          tertiary: const Color(0xFFF59E0B), // SnackBar Warning
+          error: const Color(0xFFEF4444), // SnackBar Erro
+        ),
       ),
       getPages: AppRoute.appRoutes,
       builder: (context, child) {
@@ -70,7 +79,7 @@ class MyApp extends StatelessWidget {
           },
           designSize: const Size(428, 926),
           imageBaseUrl: AppApiurl.imageUrl,
-          navigatorKey: Get.key,
+          scaffoldMessangeKey: AppSnackBar.scaffoldMessengerKey,
           dioServiceConfig: DioServiceConfig(
             baseUrl: AppApiurl.baseUrl,
             refreshTokenEndpoint: AppApiurl.refreshToken,

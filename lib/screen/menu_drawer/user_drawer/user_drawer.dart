@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
@@ -69,8 +70,7 @@ class UserDrawer extends StatelessWidget {
               vertical: AppSize.height(value: 20),
             ),
             width: MediaQuery.of(context).size.width * 0.75,
-            height:
-                MediaQuery.of(context).size.height * 0.7, // Set a fixed height
+            height: MediaQuery.of(context).size.height * 0.7, // Set a fixed height
             decoration: BoxDecoration(
               color: const Color(0xFF032F49),
               borderRadius: BorderRadius.circular(10),
@@ -101,22 +101,17 @@ class UserDrawer extends StatelessWidget {
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () {
+                        Get.back();
                         Get.toNamed(generalSettingsPage[index]);
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: AppSize.width(value: 20),
-                        ),
-                        margin: EdgeInsets.only(
-                          bottom: AppSize.height(value: 10),
-                        ),
+                        padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
+                        margin: EdgeInsets.only(bottom: AppSize.height(value: 10)),
                         width: double.infinity,
                         height: AppSize.height(value: 48),
                         decoration: ShapeDecoration(
                           color: const Color(0xFF022134),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(11),
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
                         ),
                         child: Row(
                           children: [
@@ -155,22 +150,17 @@ class UserDrawer extends StatelessWidget {
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () {
+                        Get.back();
                         Get.toNamed(accountSettingPage[index]);
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: AppSize.width(value: 20),
-                        ),
-                        margin: EdgeInsets.only(
-                          bottom: AppSize.height(value: 10),
-                        ),
+                        padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
+                        margin: EdgeInsets.only(bottom: AppSize.height(value: 10)),
                         width: double.infinity,
                         height: AppSize.height(value: 48),
                         decoration: ShapeDecoration(
                           color: const Color(0xFF022134),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(11),
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
                         ),
                         child: Row(
                           children: [
@@ -197,7 +187,10 @@ class UserDrawer extends StatelessWidget {
                   Gap(height: 40),
                   AppButton(
                     title: "Logout",
-                    onTap: () {},
+                    onTap: () {
+                      StorageService.instance.clearAll();
+                      Get.offAllNamed(AppRoute.loginScreen);
+                    },
                     backgroundColor: AppColors.red500,
                     borderradius: 08,
                   ),

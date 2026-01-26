@@ -5,8 +5,6 @@
  */
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
-import 'package:better_help/sockets/support_message_socket.dart';
-import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:get/get.dart';
 
 class SplashScreenController extends GetxController {
@@ -22,9 +20,7 @@ class SplashScreenController extends GetxController {
     if (accessToken != null &&
         accessToken.isNotEmpty &&
         responses != null &&
-        responses.isNotEmpty) {
-      appLog(accessToken);
-      SocketService.instance.connect();
+        responses.isNotEmpty) { 
       Get.offNamed(AppRoute.subscriptionscreen);
       return;
     }
@@ -37,7 +33,7 @@ class SplashScreenController extends GetxController {
 
     // Case 3: NO accessToken but HAS questionnaire responses -> Go to free trial
     if ((accessToken == null || accessToken.isEmpty) && responses != null && responses.isNotEmpty) {
-      Get.offNamed(AppRoute.freeTrialScreen);
+      Get.offNamed(AppRoute.signupScreen);
       return;
     }
 

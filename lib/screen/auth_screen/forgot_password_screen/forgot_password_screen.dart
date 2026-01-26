@@ -1,8 +1,14 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-09 09:41:39
+ * @Email: km.muzahid@gmail.com
+ */
 import 'package:better_help/screen/auth_screen/forgot_password_screen/controller/forgot_password_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
+import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/app_text_input/app_text_input.dart';
@@ -18,6 +24,7 @@ class ForgotPasswordScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.white,
+      appBar: AppBarWithBack(text: ''),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),

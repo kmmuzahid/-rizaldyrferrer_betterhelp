@@ -157,7 +157,7 @@ class LoginScreen extends StatelessWidget {
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onTap: () {
-                      Get.toNamed(AppRoute.signupScreen);
+                      Get.toNamed(AppRoute.beforeQuestionScreen);
                     },
                     child: AppText(
                       text: AppString.signUp,

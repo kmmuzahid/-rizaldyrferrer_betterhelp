@@ -32,7 +32,7 @@ class BookingController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    onDaySelected(selectedDate.value);
+    onDaySelected(DateTime.now());
   }
 
   onDaySelected(DateTime date) async {
@@ -71,7 +71,9 @@ class BookingController extends GetxController {
 
     final next = input.add(const Duration(minutes: 45));
 
-    return _formatTime(next);
+    final endTime = _formatTime(next);
+
+    return endTime.length == 7 ? "0$endTime" : endTime;
   }
 
   String _formatTime(DateTime time) {

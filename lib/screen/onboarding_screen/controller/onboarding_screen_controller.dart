@@ -1,3 +1,8 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-09 09:41:39
+ * @Email: km.muzahid@gmail.com
+ */
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
@@ -59,7 +64,7 @@ class OnboardingScreenController extends GetxController {
     if (savedResponses != null && savedResponses.isNotEmpty) {
       //! Questionnaire already completed, skip to free trial screen
       appLog('Questionnaire responses found, navigating to free trial screen');
-      Get.offAllNamed(AppRoute.freeTrialScreen);
+      Get.offAllNamed(AppRoute.signupScreen);
     } else {
       //! No saved responses, navigate to before question screen
       appLog(

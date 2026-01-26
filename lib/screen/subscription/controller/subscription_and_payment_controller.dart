@@ -6,6 +6,7 @@
 import 'package:better_help/core/app_apiurl/app_apiurl.dart';
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
+import 'package:better_help/sockets/support_message_socket.dart';
 import 'package:core_kit/network/dio_service.dart';
 import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
@@ -61,6 +62,7 @@ class SubscriptionAndPaymentController extends GetxController {
 
   @override
   void onInit() async {
+    SocketService.instance.connect();
     isLoadingDependency.value = true;
     final profileController = Get.find<MyProfileScreenController>();
     profileController.fetchProfile().then((value) {

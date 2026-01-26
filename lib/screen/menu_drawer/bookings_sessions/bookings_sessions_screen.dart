@@ -147,7 +147,7 @@ class BookingsSessionsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AppText(
-                  text: isConfirmed ? 'Running Session' : 'Completed session at',
+                  text: isConfirmed ? 'Running Session' : 'Completed session',
                   color: isConfirmed
                       ? const Color(0xFF309AAD)
                       : const Color.fromARGB(255, 52, 51, 51),
@@ -157,13 +157,13 @@ class BookingsSessionsScreen extends StatelessWidget {
                   letterSpacing: -0.35,
                 ),
                 Gap(height: 03),
-                AppText(
+                CommonText(
                   text:
-                      "${bookingSessionModel?.startTime} ${CoreUtils.formatDateToShortMonth(bookingSessionModel?.bookingDate ?? DateTime.now())}",
-                  fontFamilyIndex: 2,
+                      "${CoreUtils.formatDateToShortMonth(bookingSessionModel?.bookingDate ?? DateTime.now())} (${bookingSessionModel?.startTime} - ${bookingSessionModel?.endTime})",
+                  // fontFamilyIndex: 2,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF677294),
+                  textColor: Color(0xFF677294),
                 ),
               ],
             ),

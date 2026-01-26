@@ -4,6 +4,7 @@ import 'package:better_help/screen/questionnaries_screen/controller/questionnari
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
+import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -81,6 +82,38 @@ class BeforeQuestionScreen extends StatelessWidget {
                 },
                 backgroundColor: AppColors.primary500,
                 height: AppSize.height(value: 48),
+              ),
+
+              Gap(height: AppSize.height(value: 40)),
+
+              Row(
+                children: [
+                  const Spacer(),
+                  AppText(
+                    text: AppString.alreaHaveanAccount,
+                    fontSize: AppSize.width(value: 14),
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.white900,
+                    maxLines: 4,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed(AppRoute.loginScreen);
+                    },
+                    child: AppText(
+                      text: 'Sign In',
+                      fontSize: AppSize.width(value: 12),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.cyan,
+                      maxLines: 4,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  20.width,
+                ],
               ),
             ],
           ),

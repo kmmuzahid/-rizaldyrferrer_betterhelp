@@ -4,6 +4,7 @@ import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
+import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   Widget build(BuildContext context) {
     final controller = Get.put(OtpVerificationController());
     return Scaffold(
+      appBar: AppBarWithBack(text: ''),
       backgroundColor: AppColors.white,
       body: SafeArea(
         child: SingleChildScrollView(

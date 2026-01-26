@@ -30,7 +30,7 @@ class _SupportScreenState extends State<SupportScreen> {
 
   @override
   void initState() {
-    controller = Get.find<SupportScreenController>(); 
+    controller = Get.find<SupportScreenController>();
     super.initState();
   }
 
@@ -63,7 +63,7 @@ class _SupportScreenState extends State<SupportScreen> {
                 children: [
                   _header(),
                   10.height,
-                  CommonChatHeader(title: 'Kris', subtitle: 'Health Assistant'),
+                  CommonChatHeader(title: 'Health Assistant', subtitle: 'Health Assistant'),
                 ],
               ),
             ),
@@ -83,13 +83,16 @@ class _SupportScreenState extends State<SupportScreen> {
                         child: SmartListLoader(
                           isReverse: true,
                           onLoadMore: (page) {
-                            controller.getMessages(page: page + 1);
+                            controller.getMessages(page: page);
                           },
                           itemCount: controller.messageModel.length,
                           itemBuilder: (context, index) {
                             final message = controller.messageModel[index];
                             return CommonChatBubble(
-                              text: message.message,
+                              message: message,
+                              onButtonTap: (value) {
+                                controller.sendMessage(message: value, index: index);
+                              },
                               timestamp: message.createdAt.date == DateTime.now().date
                                   ? CoreUtils.formatTime(message.createdAt)
                                   : CoreUtils.formatDateTimeToHms(message.createdAt),
@@ -98,7 +101,8 @@ class _SupportScreenState extends State<SupportScreen> {
                           },
                         ),
                       ),
-                      _buttons(),
+                     
+                      20.height,
                     ],
                   ),
                 ),
@@ -114,47 +118,8 @@ class _SupportScreenState extends State<SupportScreen> {
     );
   }
 
-  Container _buttons() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Colors.grey.shade200)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          25.width,
-          Expanded(
-            child: CommonButton(
-              buttonWidth: double.infinity,
-              titleText: "Yes",
-              buttonColor: const Color(0xFFE0F2F1), // Light teal
-              titleColor: const Color(0xFF00796B),
-              onTap: () {
-                controller.sendMessage(message: "Yes");
-              },
-            ),
-          ),
-          20.width,
-          Expanded(
-            child: CommonButton(
-              buttonWidth: double.infinity,
-              titleText: "No",
-              buttonColor: const Color(0xFFEEEEEE), // Light grey
-              titleColor: Colors.black54,
-              onTap: () {
-                controller.sendMessage(message: "No");
-              },
-            ),
-          ),
-          25.width,
-        ],
-      ),
-    );
-  }
 
+ 
   Column _header() {
     return Column(
       // Changed from SingleChildScrollView to Column

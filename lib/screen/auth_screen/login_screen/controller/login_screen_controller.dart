@@ -1,5 +1,11 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-09 09:41:39
+ * @Email: km.muzahid@gmail.com
+ */
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/service/repository/auth_repository/auth_reporsitory.dart';
+import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -51,9 +57,12 @@ class LoginScreenController extends GetxController {
 
     isLoading.value = false;
 
-    if (response != null && response['success'] == true) {
+    if (response != null && response['success'] == true) { 
+      await StorageService.instance.saveAccessToken(response['data']['accessToken']);
+      await StorageService.instance.saveRefreshToken(response['data']['refreshToken']);
+      await StorageService.instance.saveUserData(response['data']['user']);
       AppSnackBar.showSuccess(response['message'] ?? "Login successful");
-      Get.offAllNamed(AppRoute.bottomNav);
+      Get.offAllNamed(AppRoute.subscriptionscreen);
     }
   }
 }

@@ -5,6 +5,7 @@ import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:core_kit/core_kit.dart';
 import 'package:get/get.dart';
 
 class HabitsScreenController extends GetxController {
@@ -15,6 +16,9 @@ class HabitsScreenController extends GetxController {
   var currentIndex = 0.obs;
   var selectedDate = DateTime.now().obs;
   var checklistStates = <bool>[false, false, false].obs;
+
+  // Track expanded task index
+  var expandedTaskIndex = (-1).obs;
 
   // API related observables
   final RxBool isLoadingTasks = false.obs;
@@ -76,6 +80,19 @@ class HabitsScreenController extends GetxController {
   // Method to update selected date
   void updateSelectedDate(DateTime date) {
     selectedDate.value = date;
+    expandedTaskIndex.value = -1; // Reset expansion when date changes
+    fetchTasksByDate(date);
+  }
+
+  // Method to toggle task expansion
+  void toggleTaskExpansion(int index) {
+    if (expandedTaskIndex.value == index) {
+      expandedTaskIndex.value = -1;
+    } else {
+      expandedTaskIndex.value = index;
+    }
+  }
+
     fetchTasksByDate(date);
   }
 
@@ -96,6 +113,7 @@ class HabitsScreenController extends GetxController {
         date.year,
         date.month,
         date.day,
+        12,
       ).toUtc().toIso8601String();
 
       appLog('Fetching tasks for date: $formattedDate');
@@ -131,6 +149,55 @@ class HabitsScreenController extends GetxController {
   /// Refresh tasks for current selected date
   Future<void> refreshTasks() async {
     await fetchTasksByDate(selectedDate.value);
+  }
+
+  /// Mark task as completed
+  Future<void> markTaskAsCompleted(String taskId) async {
+    try {
+      appLog('Marking task $taskId as completed');
+      final response = await _apiServices.apiPatchServices(
+        url: AppApiurl.taskCompleted(taskId),
+      );
+
+      if (response != null && response['success'] == true) {
+        appLog('Task $taskId marked as completed successfully');
+        // Refresh tasks to reflect status change
+        await refreshTasks();
+        showSnackBar("Task marked as completed", type: SnackBarType.success);
+      } else {
+        appLog('Failed to mark task $taskId as completed');
+        showSnackBar(
+          "Failed to mark task as completed",
+          type: SnackBarType.error,
+        );
+      }
+    } catch (e) {
+      appLog('Error marking task as completed: $e');
+      showSnackBar("An error occurred", type: SnackBarType.error);
+    }
+  }
+
+  /// Mark task as cancelled
+  Future<void> markTaskAsCancelled(String taskId) async {
+    try {
+      appLog('Marking task $taskId as cancelled');
+      final response = await _apiServices.apiPatchServices(
+        url: AppApiurl.taskCancelled(taskId),
+      );
+
+      if (response != null && response['success'] == true) {
+        appLog('Task $taskId marked as cancelled successfully');
+        // Refresh tasks to reflect status change
+        await refreshTasks();
+        showSnackBar("Task cancelled successfully", type: SnackBarType.success);
+      } else {
+        appLog('Failed to mark task $taskId as cancelled');
+        showSnackBar("Failed to cancel task", type: SnackBarType.error);
+      }
+    } catch (e) {
+      appLog('Error marking task as cancelled: $e');
+      showSnackBar("An error occurred", type: SnackBarType.error);
+    }
   }
 
   // Method to update checklist state
@@ -304,6 +371,10 @@ class HabitsScreenController extends GetxController {
     }
 
     // Convert API tasks to schedule format
+    // Filter to only show pending tasks as requested
+    return tasks.where((task) => task.status?.toLowerCase() == 'pending').map((
+      task,
+    ) {
     return tasks.map((task) {
       return {
         'id': task.id,
@@ -314,8 +385,15 @@ class HabitsScreenController extends GetxController {
         'backgroundColor': _getColorForCategory(task.category),
         'status': task.status,
         'category': task.category,
+        'formattedStartDate': _formatDateTime(task.startDate),
+        'formattedEndDate': _formatDateTime(task.endDate),
       };
     }).toList();
+  }
+
+  String _formatDateTime(DateTime? date) {
+    if (date == null) return 'N/A';
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
   /// Calculate duration between start and end date

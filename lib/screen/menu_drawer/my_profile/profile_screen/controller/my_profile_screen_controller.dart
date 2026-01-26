@@ -1,3 +1,8 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-09 19:55:25
+ * @Email: km.muzahid@gmail.com
+ */
 import 'package:better_help/core/app_apiurl/app_apiurl.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/model/my_profile_model.dart';
 import 'package:better_help/service/repository/profile_repositroy/profile_repository.dart';
@@ -23,7 +28,7 @@ class MyProfileScreenController extends GetxController {
 
       if (response != null && response['success'] == true) {
         final profileResponse = Welcome.fromJson(response);
-        profileData.value = profileResponse.data;
+        profileData.value = profileResponse.data;  
       } else {
         AppSnackBar.showError("Failed to load profile");
       }
@@ -35,12 +40,10 @@ class MyProfileScreenController extends GetxController {
   }
 
   String getProfileImageUrl() {
-    if (profileData.value?.profile != null &&
-        profileData.value!.profile!.isNotEmpty) {
+    if (profileData.value?.profile != null && profileData.value!.profile!.isNotEmpty) {
       final profileUrl = profileData.value!.profile!;
       // Check if it's already a complete URL (starts with http/https)
-      if (profileUrl.startsWith('http://') ||
-          profileUrl.startsWith('https://')) {
+      if (profileUrl.startsWith('http://') || profileUrl.startsWith('https://')) {
         return profileUrl;
       }
       // Otherwise, prepend the base image URL

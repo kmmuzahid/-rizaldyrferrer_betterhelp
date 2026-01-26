@@ -18,8 +18,14 @@ class BookingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarWithBack(text: "Booking Session", backgroundColor: AppColors.white),
-      body: SingleChildScrollView(
+      appBar: AppBarWithBack(
+        text: "Booking Session",
+        backgroundColor: AppColors.white,
+        actions: [],
+      ),
+      body: Obx(
+        () => SingleChildScrollView(
+          
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,26 +37,33 @@ class BookingScreen extends StatelessWidget {
             const SizedBox(height: 10),
             _buildCalendar(),
             const SizedBox(height: 10),
-            _buildSectionHeader(Icons.wb_sunny_outlined, "Morning"),
-            _buildTimeGrid(controller.morningSlots),
-            const SizedBox(height: 10),
-            _buildSectionHeader(Icons.wb_twilight, "Afternoon"),
-            _buildTimeGrid(controller.afternoonSlots),
-            const SizedBox(height: 10),
-            _buildSectionHeader(Icons.wb_twilight, "Night"),
-            _buildTimeGrid(controller.nightSlots),
+              Column(
+                key: Key(
+                  'booking_${controller.availableSlots.length}${controller.selectedTime.toString()}',
+                ),
+                children: [
+                  _buildSectionHeader(Icons.wb_sunny_outlined, "Morning"),
+                  _buildTimeGrid(controller.morningSlots, controller.availableSlots),
+                  const SizedBox(height: 10),
+                  _buildSectionHeader(Icons.wb_twilight, "Afternoon"),
+                  _buildTimeGrid(controller.afternoonSlots, controller.availableSlots),
+                  const SizedBox(height: 10),
+                  _buildSectionHeader(Icons.wb_twilight, "Night"),
+                  _buildTimeGrid(controller.nightSlots, controller.availableSlots),
+                ],
+              ),
             const SizedBox(height: 20),
             _buildConfirmButton(),
             20.height,
           ],
+        ),
         ),
       ),
     );
   }
 
   Widget _buildCalendar() {
-    return Obx(
-      () => Container(
+    return Container(
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.5),
           borderRadius: BorderRadius.circular(15),
@@ -61,7 +74,7 @@ class BookingScreen extends StatelessWidget {
             return controller.selectedDate.value == day;
           },
           onDaySelected: (selectedDay, focusedDay) {
-            controller.selectedDate.value = selectedDay;
+            controller.onDaySelected(selectedDay);
           },
           firstDay: DateTime.now(),
           lastDay: DateTime.now().add(const Duration(days: 365)),
@@ -77,7 +90,7 @@ class BookingScreen extends StatelessWidget {
             ),
           ),
         ),
-      ),
+      
     );
   }
 
@@ -101,7 +114,7 @@ class BookingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTimeGrid(List<String> slots) {
+  Widget _buildTimeGrid(List<String> slots, List<String> availableSlots) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -114,12 +127,13 @@ class BookingScreen extends StatelessWidget {
       ),
       itemBuilder: (context, index) {
         String time = slots[index];
-        return Obx(() {
           bool isSelected = controller.selectedTime.value == time;
           bool isSelectable = controller.isTimeSelectable(
             selectedDate: controller.selectedDate.value,
             time: time,
           );
+
+        isSelectable = isSelectable && availableSlots.contains(time);
 
           return GestureDetector(
             onTap: isSelectable ? () => controller.selectTime(time) : null,
@@ -141,8 +155,7 @@ class BookingScreen extends StatelessWidget {
                 ),
               ),
             ),
-          );
-        });
+        );
       },
     );
   }

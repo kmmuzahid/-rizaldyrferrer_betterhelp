@@ -53,7 +53,7 @@ class TrandingCourse extends StatelessWidget {
             },
             limit: 10,
             onLoadMore: (page) {
-              controller.fetchTrendingCourse(page: page + 1);
+              controller.fetchTrendingCourse(page: page);
             },
             itemCount: controller.trendingCourseList.length,
             itemBuilder: (context, index) {

@@ -46,6 +46,7 @@ class Data {
   int? totalTask;
   int? pendingTask;
   int? completedTask;
+  String? doctorChatId;
 
   Data({
     this.id,
@@ -69,6 +70,7 @@ class Data {
     this.totalTask,
     this.pendingTask,
     this.completedTask,
+    this.doctorChatId,
   });
 
   factory Data.fromRawJson(String str) => Data.fromJson(json.decode(str));
@@ -77,6 +79,7 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     id: json["_id"],
+    doctorChatId: json["chatId"],
     profile: json["profile"],
     fullName: json["fullName"],
     email: json["email"],
@@ -106,6 +109,7 @@ class Data {
   Map<String, dynamic> toJson() => {
     "_id": id,
     "profile": profile,
+    "chatId": doctorChatId,
     "fullName": fullName,
     "email": email,
     "role": role,

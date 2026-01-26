@@ -173,7 +173,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
                 },
                 headerProps: EasyHeaderProps(
                   monthPickerType: MonthPickerType.switcher,
-                  dateFormatter: DateFormatter.fullDateDayAsStrMY(),
+                  dateFormatter: DateFormatter.custom('dd MMMM yyyy'),
                   monthStyle: TextStyle(
                     fontSize: AppSize.width(value: 16),
                     fontWeight: FontWeight.w600,
@@ -312,107 +312,32 @@ class _HabitsScreenState extends State<HabitsScreen> {
                   ),
                 );
               }
-              return SizedBox(
-                height: AppSize.height(
-                  value: 220,
-                ), // Fixed height for horizontal scroll
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSize.width(value: 20),
-                  ),
-                  itemCount: schedules.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        Get.toNamed(AppRoute.mytask);
-                      },
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      child: Container(
-                        width: 300,
-
-                        margin: EdgeInsets.only(
-                          right: index < schedules.length - 1
-                              ? AppSize.width(value: 12)
-                              : 0,
-                        ),
-                        child: _buildScheduleContainer(schedules[index]),
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSize.width(value: 20),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: schedules.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    var schedule = entry.value;
+                    return Container(
+                      width: 300,
+                      margin: EdgeInsets.only(
+                        right: index < schedules.length - 1
+                            ? AppSize.width(value: 12)
+                            : 0,
                       ),
+                      child: _buildScheduleContainer(schedule, index),
                     );
-                  },
+                  }).toList(),
                 ),
               );
             }),
             //! Checklist
             Gap(height: 12),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSize.width(value: 20),
-              ),
-              child: AppText(
-                text: "Check List",
-                fontFamilyIndex: 2,
-                fontSize: AppSize.width(value: 14),
-                fontWeight: FontWeight.w800,
-                color: AppColors.grey500,
-              ),
-            ),
-            Gap(height: 08),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSize.width(value: 20),
-              ),
-              child: Column(
-                children: List.generate(3, (index) {
-                  List<String> checklistItems = [
-                    AppString.drinkWaterDaily,
-                    "Complete morning meditation",
-                    "Practice gratitude journaling",
-                  ];
 
-                  return Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSize.width(value: 16),
-                      vertical: AppSize.height(value: 10),
-                    ),
-                    margin: EdgeInsets.only(bottom: AppSize.height(value: 10)),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      border: Border.all(color: AppColors.borderColor),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      children: [
-                        Obx(
-                          () => Checkbox(
-                            value: controller.checklistStates[index],
-                            onChanged: (value) {
-                              controller.updateChecklistState(
-                                index,
-                                value ?? false,
-                              );
-                            },
-                            checkColor: AppColors.white,
-                            activeColor: AppColors.primary500,
-                          ),
-                        ),
-
-                        Expanded(
-                          child: AppText(
-                            text: checklistItems[index],
-                            fontSize: AppSize.width(value: 14),
-                            fontWeight: FontWeight.w500,
-                            fontFamilyIndex: 2,
-                            color: AppColors.textPrimaryBlack,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-              ),
-            ),
             Gap(height: 20),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -438,29 +363,32 @@ class _HabitsScreenState extends State<HabitsScreen> {
         ),
       ),
       bottomNavigationBar: Container(
-        height: AppSize.height(value: 110),
+        height: AppSize.height(value: 120),
         decoration: BoxDecoration(color: Colors.transparent),
       ),
     );
   }
 
   // Helper method to build individual schedule container
-  Widget _buildScheduleContainer(Map<String, dynamic> schedule) {
+  Widget _buildScheduleContainer(Map<String, dynamic> schedule, int index) {
     Color backgroundColor = _getBackgroundColor(schedule['backgroundColor']);
 
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border.all(width: 0.87, color: const Color(0xFFF0F0F0)),
-        borderRadius: BorderRadius.circular(10.39),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Flexible(
-            child: Container(
+    return Obx(() {
+      bool isExpanded = controller.expandedTaskIndex.value == index;
+
+      return Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          border: Border.all(width: 0.87, color: const Color(0xFFF0F0F0)),
+          borderRadius: BorderRadius.circular(10.39),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
               padding: EdgeInsets.symmetric(
                 horizontal: AppSize.width(value: 13),
                 vertical: AppSize.height(value: 10),
@@ -486,99 +414,153 @@ class _HabitsScreenState extends State<HabitsScreen> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        AppText(
-                          text: schedule['subtitle'],
-                          fontFamilyIndex: 2,
-                          fontSize: AppSize.width(value: 12),
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.primary900,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                        if (!isExpanded) // Only show subtitle if collapsed
+                          AppText(
+                            text: schedule['subtitle'],
+                            fontFamilyIndex: 2,
+                            fontSize: AppSize.width(value: 12),
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primary900,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                       ],
                     ),
                   ),
-                  SvgPicture.asset(AppIcons.threedots),
+                  InkWell(
+                    onTap: () {
+                      controller.toggleTaskExpansion(index);
+                    },
+                    child: Icon(
+                      isExpanded
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                      color: AppColors.grey500,
+                    ),
+                  ),
                 ],
               ),
             ),
-          ),
-          Gap(height: 10),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  SvgPicture.asset(AppIcons.minuteMeditation),
-                  Gap(width: 4),
-                  Expanded(
-                    child: AppText(
-                      text: schedule['duration'],
-                      fontFamilyIndex: 2,
-                      fontSize: AppSize.width(value: 12),
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimaryBlack,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
+            Gap(height: 10),
+
+            if (isExpanded) ...[
+              // Expanded Content
+              AppText(
+                text: "Task Description",
+                fontFamilyIndex: 2,
+                fontSize: AppSize.width(value: 12),
+                fontWeight: FontWeight.w700,
+                color: AppColors.primary900,
               ),
-              Gap(height: 08),
-              Row(
-                children: [
-                  SvgPicture.asset(AppIcons.scheduleTime),
-                  Gap(width: 4),
-                  Expanded(
-                    child: AppText(
-                      text: schedule['time'],
-                      fontFamilyIndex: 2,
-                      fontSize: AppSize.width(value: 12),
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimaryBlack,
-                      maxLines: 1,
-                      textAlign: TextAlign.start,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
+              Gap(height: 4),
+              AppText(
+                text:
+                    schedule['subtitle'], // Using subtitle as full description
+                fontFamilyIndex: 2,
+                fontSize: AppSize.width(value: 12),
+                fontWeight: FontWeight.w400,
+                color: AppColors.grey500,
+                maxLines: 10,
               ),
-            ],
-          ),
-          Gap(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Flexible(
-                child: AppButton(
-                  height: AppSize.height(value: 36),
-                  width: AppSize.width(value: 125),
-                  title: AppString.startNow,
-                  backgroundColor: AppColors.blue500,
+              Gap(height: 12),
+
+              if (schedule['category'] != null) ...[
+                AppText(
+                  text: "Category",
+                  fontFamilyIndex: 2,
                   fontSize: AppSize.width(value: 12),
-                  titleColor: AppColors.white,
-                  onTap: () {},
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.primary900,
                 ),
-              ),
-              Gap(width: 8),
-              Flexible(
-                child: AppButton(
-                  height: AppSize.height(value: 35),
-                  width: AppSize.width(value: 115),
-                  title: AppString.talkTobhaa,
+                Gap(height: 4),
+                AppText(
+                  text: schedule['category'],
+                  fontFamilyIndex: 2,
                   fontSize: AppSize.width(value: 12),
-                  backgroundColor: AppColors.white50,
-                  titleColor: const Color.fromARGB(255, 168, 129, 129),
-                  onTap: () {
-                    // Handle talk to BHA action
-                  },
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.grey500,
                 ),
-              ),
+                Gap(height: 12),
+              ],
+
+              if (schedule['formattedStartDate'] != null &&
+                  schedule['formattedEndDate'] != null) ...[
+                AppText(
+                  text: "Date",
+                  fontFamilyIndex: 2,
+                  fontSize: AppSize.width(value: 12),
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.primary900,
+                ),
+                Gap(height: 4),
+                AppText(
+                  text:
+                      "${schedule['formattedStartDate']} - ${schedule['formattedEndDate']}",
+                  fontFamilyIndex: 2,
+                  fontSize: AppSize.width(value: 12),
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.grey500,
+                ),
+                Gap(height: 12),
+              ],
+
+              if (isExpanded) ...[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Flexible(
+                      child: AppButton(
+                        height: AppSize.height(value: 36),
+                        width: AppSize.width(value: 125),
+                        title: "Completed",
+                        backgroundColor: AppColors.blue500,
+                        fontSize: AppSize.width(value: 12),
+                        titleColor: AppColors.white,
+                        onTap: () {
+                          if (schedule['id'] != null) {
+                            controller.markTaskAsCompleted(schedule['id']);
+                          }
+                        },
+                      ),
+                    ),
+                    Gap(width: 8),
+                    Flexible(
+                      child: AppButton(
+                        height: AppSize.height(value: 35),
+                        width: AppSize.width(value: 115),
+                        title: "Cancel",
+                        fontSize: AppSize.width(value: 12),
+                        backgroundColor: AppColors.white50,
+                        titleColor: const Color.fromARGB(255, 168, 129, 129),
+                        onTap: () {
+                          if (schedule['id'] != null) {
+                            controller.markTaskAsCancelled(schedule['id']);
+                          }
+                        },
+                      ),
+                    ),
+                    Gap(width: 8),
+                    Flexible(
+                      child: AppButton(
+                        height: AppSize.height(value: 35),
+                        width: AppSize.width(value: 115),
+                        title: "Talk to BHAA",
+                        fontSize: AppSize.width(value: 12),
+                        backgroundColor: AppColors.white50,
+                        titleColor: const Color.fromARGB(255, 168, 129, 129),
+                        onTap: () {
+                          // Handle talk to BHA action
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   // Helper method to get background color based on string

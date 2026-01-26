@@ -87,6 +87,8 @@ class BeforeQuestionScreen extends StatelessWidget {
               Gap(height: AppSize.height(value: 40)),
 
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Spacer(),
                   AppText(

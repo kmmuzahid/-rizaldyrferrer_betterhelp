@@ -20,7 +20,7 @@ class TaskResponse {
       message: json['message'] as String?,
       meta: json['meta'] != null ? Meta.fromJson(json['meta']) : null,
       data: json['data'] != null
-          ? (json['data'] as List).map((item) => TaskData.fromJson(item)).toList()
+          ? (json['data'] as List).map((e) => TaskData.fromJson(e)).toList()
           : null,
     );
   }
@@ -31,7 +31,7 @@ class TaskResponse {
       'success': success,
       'message': message,
       'meta': meta?.toJson(),
-      'data': data?.map((item) => item.toJson()).toList(),
+      'data': data?.map((e) => e.toJson()).toList(),
     };
   }
 }
@@ -49,7 +49,6 @@ class Meta {
     this.totalPage,
   });
 
-  // Decoder (fromJson)
   factory Meta.fromJson(Map<String, dynamic>? json) {
     if (json == null) return Meta();
     
@@ -61,7 +60,6 @@ class Meta {
     );
   }
 
-  // Encoder (toJson)
   Map<String, dynamic> toJson() {
     return {
       'page': page,
@@ -74,7 +72,7 @@ class Meta {
 
 class TaskData {
   final String? id;
-  final User? userId;
+  final UserInfo? userId;
   final String? doctorBookingId;
   final String? doctorId;
   final String? assistantId;
@@ -85,6 +83,7 @@ class TaskData {
   final DateTime? startDate;
   final DateTime? endDate;
   final String? status;
+  final String? chatId;
   final bool? isDeleted;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -102,18 +101,18 @@ class TaskData {
     this.startDate,
     this.endDate,
     this.status,
+    this.chatId,
     this.isDeleted,
     this.createdAt,
     this.updatedAt,
   });
 
-  // Decoder (fromJson)
   factory TaskData.fromJson(Map<String, dynamic>? json) {
     if (json == null) return TaskData();
     
     return TaskData(
       id: json['_id'] as String?,
-      userId: json['userId'] != null ? User.fromJson(json['userId']) : null,
+      userId: json['userId'] != null ? UserInfo.fromJson(json['userId']) : null,
       doctorBookingId: json['doctorBookingId'] as String?,
       doctorId: json['doctorId'] as String?,
       assistantId: json['assistantId'] as String?,
@@ -128,6 +127,7 @@ class TaskData {
           ? DateTime.tryParse(json['endDate']) 
           : null,
       status: json['status'] as String?,
+      chatId: json['chatId'] as String?,
       isDeleted: json['isDeleted'] as bool?,
       createdAt: json['createdAt'] != null 
           ? DateTime.tryParse(json['createdAt']) 
@@ -138,7 +138,6 @@ class TaskData {
     );
   }
 
-  // Encoder (toJson)
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
@@ -153,6 +152,7 @@ class TaskData {
       'startDate': startDate?.toIso8601String(),
       'endDate': endDate?.toIso8601String(),
       'status': status,
+      'chatId': chatId,
       'isDeleted': isDeleted,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
@@ -160,7 +160,7 @@ class TaskData {
   }
 }
 
-class User {
+class UserInfo {
   final String? id;
   final String? profile;
   final String? fullName;
@@ -168,7 +168,7 @@ class User {
   final String? role;
   final String? address;
 
-  User({
+  UserInfo({
     this.id,
     this.profile,
     this.fullName,
@@ -177,11 +177,10 @@ class User {
     this.address,
   });
 
-  // Decoder (fromJson)
-  factory User.fromJson(Map<String, dynamic>? json) {
-    if (json == null) return User();
+  factory UserInfo.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return UserInfo();
     
-    return User(
+    return UserInfo(
       id: json['_id'] as String?,
       profile: json['profile'] as String?,
       fullName: json['fullName'] as String?,
@@ -191,7 +190,6 @@ class User {
     );
   }
 
-  // Encoder (toJson)
   Map<String, dynamic> toJson() {
     return {
       '_id': id,

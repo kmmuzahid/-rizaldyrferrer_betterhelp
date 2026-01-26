@@ -21,7 +21,7 @@ class BookingsSessionsController extends GetxController {
   final _apiServices = ApiServices.instance;
 
   // Loading state
-  final RxBool isLoading = false.obs;
+  //final RxBool isLoading = false.obs;
 
   // Bookings list
   final RxList<BookingsModel> bookings = <BookingsModel>[].obs;

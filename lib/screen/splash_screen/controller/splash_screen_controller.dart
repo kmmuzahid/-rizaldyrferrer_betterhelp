@@ -16,23 +16,16 @@ class SplashScreenController extends GetxController {
     final accessToken = await _storageService.getAccessToken();
     final responses = await _storageService.getQuestionnaireResponses();
 
-    // Case 1: Has accessToken AND questionnaire responses -> Go to bottomNav (logged in)
-    if (accessToken != null &&
-        accessToken.isNotEmpty &&
-        responses != null &&
-        responses.isNotEmpty) { 
+    // Case 1: Has accessToken -> Go to subscription screen (app)
+    if (accessToken != null && accessToken.isNotEmpty) {
       Get.offNamed(AppRoute.subscriptionscreen);
       return;
     }
 
-    // Case 2: Has accessToken but NO questionnaire responses -> Go to questionnaire
-    if (accessToken != null && accessToken.isNotEmpty && (responses == null || responses.isEmpty)) {
-      Get.offNamed(AppRoute.beforeQuestionScreen);
-      return;
-    }
-
     // Case 3: NO accessToken but HAS questionnaire responses -> Go to free trial
-    if ((accessToken == null || accessToken.isEmpty) && responses != null && responses.isNotEmpty) {
+    if ((accessToken == null || accessToken.isEmpty) &&
+        responses != null &&
+        responses.isNotEmpty) {
       Get.offNamed(AppRoute.signupScreen);
       return;
     }

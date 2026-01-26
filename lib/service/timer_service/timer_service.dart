@@ -15,9 +15,9 @@ class TimerService extends GetxService {
   static const String _keyTotalDuration = 'timer_total_duration';
 
   // Reactive variables
-  RxInt remainingSeconds = 300.obs;
+  RxInt remainingSeconds = 1500.obs;
   RxBool isRunning = false.obs;
-  RxInt totalDuration = 300.obs; // 5 minutes (now dynamic)
+  RxInt totalDuration = 1500.obs; // 25 minutes (now dynamic)
 
   @override
   void onInit() {
@@ -28,7 +28,7 @@ class TimerService extends GetxService {
 
   void _loadTimerState() {
     // Load saved timer state
-    int savedTotalDuration = _storage.read(_keyTotalDuration) ?? 300;
+    int savedTotalDuration = _storage.read(_keyTotalDuration) ?? 1500;
     totalDuration.value = savedTotalDuration;
 
     int savedRemaining =

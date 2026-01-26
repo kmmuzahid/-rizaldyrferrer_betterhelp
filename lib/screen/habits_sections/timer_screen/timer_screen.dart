@@ -35,13 +35,6 @@ class TimerScreen extends GetView<TimerScreenController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AppText(
-                      text: "Good Morning, Rizal!",
-                      fontFamilyIndex: 2,
-                      fontSize: AppSize.width(value: 18),
-                      fontWeight: FontWeight.w500,
-                    ),
-                    Gap(height: 05),
-                    AppText(
                       text: "Let's get productive today",
                       fontFamilyIndex: 2,
                       fontSize: AppSize.width(value: 22.62),
@@ -139,16 +132,6 @@ class TimerScreen extends GetView<TimerScreenController> {
             ),
             Gap(height: 30),
 
-            // AppButton(
-            //   title: "Set Custom Time",
-            //   backgroundColor: AppColors.white,
-            //   titleColor: AppColors.blue500,
-            //   borderColor: AppColors.blue500,
-            //   onTap: () {
-            //     //Get.to(HabitCompleteScreen());
-            //   },
-            //   borderradius: 12,
-            // ),
           ],
         ),
       ),

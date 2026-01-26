@@ -93,9 +93,6 @@ class HabitsScreenController extends GetxController {
     }
   }
 
-    fetchTasksByDate(date);
-  }
-
   @override
   void onInit() {
     super.onInit();
@@ -375,7 +372,6 @@ class HabitsScreenController extends GetxController {
     return tasks.where((task) => task.status?.toLowerCase() == 'pending').map((
       task,
     ) {
-    return tasks.map((task) {
       return {
         'id': task.id,
         'title': task.title ?? 'Untitled Task',

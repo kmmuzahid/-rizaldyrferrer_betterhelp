@@ -21,6 +21,7 @@ class TaskResponse {
       meta: json['meta'] != null ? Meta.fromJson(json['meta']) : null,
       data: json['data'] != null
           ? (json['data'] as List).map((e) => TaskData.fromJson(e)).toList()
+          ? (json['data'] as List).map((item) => TaskData.fromJson(item)).toList()
           : null,
     );
   }
@@ -32,6 +33,7 @@ class TaskResponse {
       'message': message,
       'meta': meta?.toJson(),
       'data': data?.map((e) => e.toJson()).toList(),
+      'data': data?.map((item) => item.toJson()).toList(),
     };
   }
 }
@@ -49,6 +51,7 @@ class Meta {
     this.totalPage,
   });
 
+  // Decoder (fromJson)
   factory Meta.fromJson(Map<String, dynamic>? json) {
     if (json == null) return Meta();
     
@@ -60,6 +63,7 @@ class Meta {
     );
   }
 
+  // Encoder (toJson)
   Map<String, dynamic> toJson() {
     return {
       'page': page,
@@ -73,6 +77,7 @@ class Meta {
 class TaskData {
   final String? id;
   final UserInfo? userId;
+  final User? userId;
   final String? doctorBookingId;
   final String? doctorId;
   final String? assistantId;
@@ -107,12 +112,14 @@ class TaskData {
     this.updatedAt,
   });
 
+  // Decoder (fromJson)
   factory TaskData.fromJson(Map<String, dynamic>? json) {
     if (json == null) return TaskData();
     
     return TaskData(
       id: json['_id'] as String?,
       userId: json['userId'] != null ? UserInfo.fromJson(json['userId']) : null,
+      userId: json['userId'] != null ? User.fromJson(json['userId']) : null,
       doctorBookingId: json['doctorBookingId'] as String?,
       doctorId: json['doctorId'] as String?,
       assistantId: json['assistantId'] as String?,
@@ -138,6 +145,7 @@ class TaskData {
     );
   }
 
+  // Encoder (toJson)
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
@@ -161,6 +169,7 @@ class TaskData {
 }
 
 class UserInfo {
+class User {
   final String? id;
   final String? profile;
   final String? fullName;
@@ -169,6 +178,7 @@ class UserInfo {
   final String? address;
 
   UserInfo({
+  User({
     this.id,
     this.profile,
     this.fullName,
@@ -181,6 +191,11 @@ class UserInfo {
     if (json == null) return UserInfo();
     
     return UserInfo(
+  // Decoder (fromJson)
+  factory User.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return User();
+    
+    return User(
       id: json['_id'] as String?,
       profile: json['profile'] as String?,
       fullName: json['fullName'] as String?,
@@ -190,6 +205,7 @@ class UserInfo {
     );
   }
 
+  // Encoder (toJson)
   Map<String, dynamic> toJson() {
     return {
       '_id': id,

@@ -70,4 +70,6 @@ class AppApiurl {
       "$baseUrl/task/status/$taskId?status=completed";
   static taskCancelled(var taskId) =>
       "$baseUrl/task/status/$taskId?status=cancelled";
+  static const seeAllBookings = "$baseUrl/doctor-booking/my-booking";
+  static taskBytheDate(var date) => "$baseUrl/task?dateTime=$date";
 }

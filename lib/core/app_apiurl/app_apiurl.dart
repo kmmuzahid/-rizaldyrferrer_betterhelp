@@ -22,7 +22,7 @@ class AppApiurl {
   static const forgotPassworResendOtp = "$baseUrl/otp/resend-otp";
   static const forgotPasswordOtpMatch =
       "$baseUrl/auth/forgot-password-otp-match";
-  static const resetPassoword = "$baseUrl/auth/forgot-password-reset";
+  static const resetPassoword = "$baseUrl/auth/change-password";
   static const getAllArticle = "$baseUrl/article";
   static getSingleArticle(var id) => "$baseUrl/article/$id";
   static const savedArticle = "$baseUrl/favorite/saved";
@@ -62,7 +62,7 @@ class AppApiurl {
   static const createSubscription =
       "$baseUrl/subscription/create-purchase-subscription";
   static const createVideoSession =
-      "$baseUrl/video-session/create-video-session";
+      "$baseUrl/doctor-booking/agora-token";
   static const getMyBooking = "$baseUrl/doctor-booking/my-booking";
   static taskBytheDate(var data) => "$baseUrl/task?dateTime=$data";
   static const seeAllBookings = "$baseUrl/doctor-booking/my-booking";
@@ -70,4 +70,13 @@ class AppApiurl {
       "$baseUrl/task/status/$taskId?status=completed";
   static taskCancelled(var taskId) =>
       "$baseUrl/task/status/$taskId?status=cancelled";
+
+  static const notification = "$baseUrl/notification";
+  static const notificationAllRead = "$baseUrl/notification/all-read";
+  static getNotificationRead(var id) => "$baseUrl/notification/read/$id";
+  static const faq = "$baseUrl/faq";
+  static const talkToSupport = "$baseUrl/report";
+  static const termsOfService = "$baseUrl/setting?termsOfService";
+  static const privacyPolicy = "$baseUrl/setting?privacyPolicy";
+
 }

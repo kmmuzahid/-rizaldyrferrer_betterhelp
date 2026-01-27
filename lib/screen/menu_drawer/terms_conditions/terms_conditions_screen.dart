@@ -1,8 +1,9 @@
+import 'package:better_help/screen/menu_drawer/terms_conditions/terms_and_conditions_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
-import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
-import 'package:better_help/widget/app_text/app_text.dart';
+import 'package:core_kit/text/common_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class TermsConditionsScreen extends StatelessWidget {
   const TermsConditionsScreen({super.key});
@@ -15,13 +16,15 @@ class TermsConditionsScreen extends StatelessWidget {
         backgroundColor: AppColors.white,
       ),
       backgroundColor: AppColors.white,
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
-        child: Column(
-          children: [
-            Center(child: AppText(text: "This the Terms & Conditions Screen")),
-          ],
-        ),
+      body: Obx(() {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: CommonText(
+            text: Get.find<TermsAndConditionsScreenController>().termsAndConditions.value,
+            isDescription: true,
+          ),
+        );
+      }
       ),
     );
   }

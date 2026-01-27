@@ -1,8 +1,16 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-09 09:41:39
+ * @Email: km.muzahid@gmail.com
+ */
+import 'package:better_help/screen/menu_drawer/privacy_policy/privacy_policy_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
-import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
-import 'package:better_help/widget/app_text/app_text.dart';
+import 'package:core_kit/text/common_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
@@ -15,11 +23,15 @@ class PrivacyPolicyScreen extends StatelessWidget {
         backgroundColor: AppColors.white,
       ),
       backgroundColor: AppColors.white,
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
-        child: Column(
-          children: [Center(child: AppText(text: "This the Privacy Screen"))],
-        ),
+      body: Obx(() {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: CommonText(
+            text: Get.find<PrivacyPolicyScreenController>().privacyPolicy.value,
+            isDescription: true,
+          ),
+        );
+      }
       ),
     );
   }

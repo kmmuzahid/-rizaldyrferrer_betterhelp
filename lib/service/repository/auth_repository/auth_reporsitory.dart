@@ -276,14 +276,14 @@ class AuthReporsitory {
   }
 
   //! Reset Password (after forgot password OTP verification)
-  Future<dynamic> resetPassword({required String newPassword}) async {
+  Future<dynamic> resetPassword({required String newPassword, required String oldPassword}) async {
     appLog('AuthRepository: Resetting password...');
 
     try {
       final forgetToken = await _storageService.getString('forget_token');
       appLog('AuthRepository: forgetToken - $forgetToken');
 
-      final body = {"newPassword": newPassword, "confirmPassword": newPassword};
+      final body = {"newPassword": newPassword, "oldPassword": oldPassword};
 
       final response = await _apiServices.apiPatchServices(
         url: AppApiurl.resetPassoword,

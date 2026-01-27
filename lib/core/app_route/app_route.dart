@@ -30,6 +30,7 @@ import 'package:better_help/screen/menu_drawer/talk_to_support/talk_to_support_s
 import 'package:better_help/screen/menu_drawer/terms_conditions/terms_conditions_screen.dart';
 import 'package:better_help/screen/menu_drawer/user_drawer/user_drawer.dart';
 import 'package:better_help/screen/no_internet_screen/no_internet_screen.dart';
+import 'package:better_help/screen/notification/notification_screen.dart';
 import 'package:better_help/screen/onboarding_screen/onbarding_screen.dart';
 import 'package:better_help/screen/progress_sections/main_progress/progress_screen.dart';
 import 'package:better_help/screen/questionnaries_screen/questionnaries_screen.dart';
@@ -105,6 +106,7 @@ class AppRoute {
   static const String talkToSupportScreen = "/talkToSupportScreen";
   static const String termsAndConditionsScreen = "/termsAndConditionsScreen";
   static const String videoCallScreen = "/videoCallScreen";
+  static const String notificationScreen = "/notificationScreen";
 
   //! Community Screen Route
   static const String creatingPost = "/creatingpost";
@@ -150,6 +152,12 @@ class AppRoute {
       transitionDuration: Duration(milliseconds: 300),
     ),
     //! Free Trial Screen Route
+    GetPage(
+      name: AppRoute.notificationScreen,
+      page: () => NotificationScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
+    ),
     GetPage(
       name: AppRoute.freeTrialScreen,
       page: () => FreeTrialScreen(),

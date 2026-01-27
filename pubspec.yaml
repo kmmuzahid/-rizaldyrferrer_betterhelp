@@ -39,11 +39,13 @@ dependencies:
   better_player_plus: ^1.1.5
   table_calendar: ^3.1.0
   agora_rtc_engine: ^6.5.3
+  flutter_local_notifications: 
+  flutter_timezone:
   intl:  
   core_kit:
     git:
       url: https://github.com/kmmuzahid/flutter_core_kit.git
-      ref: ^f70291a
+      ref: ^1.0.11
 
       # ref: ^eb434d0
  

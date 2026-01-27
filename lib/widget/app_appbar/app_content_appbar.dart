@@ -1,9 +1,19 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-09 09:41:39
+ * @Email: km.muzahid@gmail.com
+ */
+import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/screen/notification/notification_screen_controller.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
-class FlexibleCustomAppBar extends StatelessWidget
-    implements PreferredSizeWidget {
+class FlexibleCustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   //! Leading widget options
   final String? leadingImagePath;
   final String? leadingSvgPath;
@@ -164,27 +174,25 @@ class FlexibleCustomAppBar extends StatelessWidget
   }
 
   List<Widget> _buildActions(BuildContext context) {
-    List<Widget> actions = [];
+    List<Widget> actions = [
+      if (notificationIconPath != null)
+        Obx(() {
+          final controller = Get.find<NotificationScreenController>();
 
-    //! Notification icon
-    if (showNotification && notificationIconPath != null) {
-      actions.add(
-        GestureDetector(
-          onTap:
-              onNotificationTap ??
-              () {
-                // Default behavior - you can customize this
-                //Navigator.pushNamed(context, '/notifications');
-              },
-          child: SvgPicture.asset(
-            notificationIconPath!,
-            height: iconSize,
-            width: iconSize,
-          ),
-        ),
-      );
-      actions.add(SizedBox(width: actionSpacing));
-    }
+          final icon = Icon(Icons.notifications);
+
+          final widget = controller.unreadCount.value > 0
+              ? Badge.count(count: controller.unreadCount.value, child: icon)
+              : icon;
+
+          return IconButton(
+            onPressed: () {
+              Get.toNamed(AppRoute.notificationScreen);
+            },
+            icon: widget,
+          );
+        }),
+    ];
 
     // Menu icon
     if (showMenu && menuIconPath != null) {
@@ -202,11 +210,7 @@ class FlexibleCustomAppBar extends StatelessWidget
                   }
                 }
               },
-          child: SvgPicture.asset(
-            menuIconPath!,
-            height: iconSize,
-            width: iconSize,
-          ),
+          child: SvgPicture.asset(menuIconPath!, height: iconSize, width: iconSize),
         ),
       );
       actions.add(SizedBox(width: endPadding));

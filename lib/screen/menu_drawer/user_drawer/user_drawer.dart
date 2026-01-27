@@ -37,7 +37,7 @@ class UserDrawer extends StatelessWidget {
       AppRoute.bookingsSessions,
     ];
     List<String> accountSettingsIcons = [
-      AppIcons.subscriptionLeve,
+      // AppIcons.subscriptionLeve,
       AppIcons.mySubscription,
       AppIcons.faqs,
       AppIcons.talkTosupport,
@@ -45,7 +45,7 @@ class UserDrawer extends StatelessWidget {
       AppIcons.privacyPolicy,
     ];
     List<String> accountSettingTitle = [
-      "Subscription Level",
+      // "Subscription Level",
       "My Subscription",
       "FAQs",
       "Talk to Support",

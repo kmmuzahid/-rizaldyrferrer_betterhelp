@@ -6,6 +6,7 @@
 import 'package:better_help/core/app_apiurl/app_apiurl.dart';
 import 'package:better_help/core/app_bindings/app_bindings.dart';
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/screen/notification/notification_service.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/service/timer_service/timer_service.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
@@ -15,13 +16,30 @@ import 'package:core_kit/initializer.dart';
 import 'package:core_kit/network/dio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-import 'widget/app_observer/app_observer.dart'; 
+import 'widget/app_observer/app_observer.dart';
+@pragma('vm:entry-point')
+void notificationTapBackground(NotificationResponse notificationResponse) {
+  // ignore: avoid_print
+  print(
+    'notification(${notificationResponse.id}) action tapped: '
+    '${notificationResponse.actionId} with'
+    ' payload: ${notificationResponse.payload}',
+  );
+  if (notificationResponse.input?.isNotEmpty ?? false) {
+    // ignore: avoid_print
+    print('notification action tapped with input: ${notificationResponse.input}');
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await NotificationService.instance.initialize(notificationTapBackground);
+
   //!Initialize Storage
   await StorageService().init();
   //! Initialize GetStorage
@@ -93,7 +111,6 @@ class MyApp extends StatelessWidget {
             accessToken: () => StorageService().getAccessToken().then((v) => v ?? ''),
             refreshToken: () => StorageService().getRefreshToken().then((v) => v ?? ''),
             updateTokens: (data) => StorageService().saveAccessToken(data['accessToken']),
-          
           ),
           child: child,
         );

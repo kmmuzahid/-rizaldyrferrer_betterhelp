@@ -11,10 +11,10 @@ import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_button/app_button_with_icon.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:core_kit/image/common_image.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 
 class HabitsScreen extends StatefulWidget {
@@ -48,15 +48,12 @@ class _HabitsScreenState extends State<HabitsScreen> {
         child: Obx(() {
           final profile = profileController.profileData.value;
 
-          final String subtitle =
-              profile?.fullName != null && profile!.fullName!.isNotEmpty
+          final String subtitle = profile?.fullName != null && profile!.fullName!.isNotEmpty
               ? profile.fullName!
               : AppString.mahbubulQareem;
 
           final String profileImageUrl = profileController.getProfileImageUrl();
-          final String? profileImage = profileImageUrl.isNotEmpty
-              ? profileImageUrl
-              : null;
+          final String? profileImage = profileImageUrl.isNotEmpty ? profileImageUrl : null;
 
           return FlexibleCustomAppBar(
             appBarHeight: AppSize.height(value: 70),
@@ -76,9 +73,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSize.width(value: 20),
-              ),
+              padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
               child: AppText(
                 text: "Daily Affirmations",
                 fontFamilyIndex: 2,
@@ -95,8 +90,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
                   return ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: RotatedBox(
-                      quarterTurns:
-                          -1, // 90 degrees clockwise (use 3 for counter-clockwise)
+                      quarterTurns: -1, // 90 degrees clockwise (use 3 for counter-clockwise)
                       child: Image.asset(
                         imagePath,
                         fit: BoxFit.contain,
@@ -129,27 +123,22 @@ class _HabitsScreenState extends State<HabitsScreen> {
               child: Obx(
                 () => Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: List.generate(
-                    controller.dailyAffermationList.length,
-                    (index) {
-                      return GestureDetector(
-                        onTap: () => controller.goToSlide(index),
-                        child: Container(
-                          margin: EdgeInsets.symmetric(
-                            horizontal: AppSize.width(value: 3),
-                          ),
-                          height: AppSize.height(value: 8),
-                          width: AppSize.width(value: 32),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4.5),
-                            color: controller.currentIndex.value == index
-                                ? AppColors.secondary900
-                                : AppColors.iconLightgrey,
-                          ),
+                  children: List.generate(controller.dailyAffermationList.length, (index) {
+                    return GestureDetector(
+                      onTap: () => controller.goToSlide(index),
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: AppSize.width(value: 3)),
+                        height: AppSize.height(value: 8),
+                        width: AppSize.width(value: 32),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4.5),
+                          color: controller.currentIndex.value == index
+                              ? AppColors.secondary900
+                              : AppColors.iconLightgrey,
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  }),
                 ),
               ),
             ),
@@ -260,25 +249,16 @@ class _HabitsScreenState extends State<HabitsScreen> {
               // Show loading indicator while fetching tasks
               if (controller.isLoadingTasks.value) {
                 return Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSize.width(value: 20),
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
                   child: Container(
                     height: AppSize.height(value: 220),
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: AppColors.white,
-                      border: Border.all(
-                        color: const Color(0xFFF0F0F0),
-                        width: 0.87,
-                      ),
+                      border: Border.all(color: const Color(0xFFF0F0F0), width: 0.87),
                       borderRadius: BorderRadius.circular(10.39),
                     ),
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.primary500,
-                      ),
-                    ),
+                    child: Center(child: CircularProgressIndicator(color: AppColors.primary500)),
                   ),
                 );
               }
@@ -286,18 +266,13 @@ class _HabitsScreenState extends State<HabitsScreen> {
               final schedules = controller.selectedDateSchedules;
               if (schedules.isEmpty) {
                 return Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSize.width(value: 20),
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
                   child: Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(AppSize.width(value: 20)),
                     decoration: BoxDecoration(
                       color: AppColors.white,
-                      border: Border.all(
-                        color: const Color(0xFFF0F0F0),
-                        width: 0.87,
-                      ),
+                      border: Border.all(color: const Color(0xFFF0F0F0), width: 0.87),
                       borderRadius: BorderRadius.circular(10.39),
                     ),
                     child: Center(
@@ -314,9 +289,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
               }
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppSize.width(value: 20),
-                ),
+                padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: schedules.asMap().entries.map((entry) {
@@ -325,9 +298,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
                     return Container(
                       width: 300,
                       margin: EdgeInsets.only(
-                        right: index < schedules.length - 1
-                            ? AppSize.width(value: 12)
-                            : 0,
+                        right: index < schedules.length - 1 ? AppSize.width(value: 12) : 0,
                       ),
                       child: _buildScheduleContainer(schedule, index),
                     );
@@ -340,13 +311,9 @@ class _HabitsScreenState extends State<HabitsScreen> {
 
             Gap(height: 20),
             Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSize.width(value: 20),
-              ),
+              padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
               child: IconAppButton(
-                padding: EdgeInsets.symmetric(
-                  vertical: AppSize.height(value: 12),
-                ),
+                padding: EdgeInsets.symmetric(vertical: AppSize.height(value: 12)),
                 height: AppSize.height(value: 50),
                 iconAlignment: CustomIconAlignment.left,
                 title: AppString.startTimer,
@@ -432,9 +399,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
                       controller.toggleTaskExpansion(index);
                     },
                     child: Icon(
-                      isExpanded
-                          ? Icons.keyboard_arrow_up
-                          : Icons.keyboard_arrow_down,
+                      isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
                       color: AppColors.grey500,
                     ),
                   ),
@@ -454,8 +419,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
               ),
               Gap(height: 4),
               AppText(
-                text:
-                    schedule['subtitle'], // Using subtitle as full description
+                text: schedule['subtitle'], // Using subtitle as full description
                 fontFamilyIndex: 2,
                 fontSize: AppSize.width(value: 12),
                 fontWeight: FontWeight.w400,
@@ -494,8 +458,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
                 ),
                 Gap(height: 4),
                 AppText(
-                  text:
-                      "${schedule['formattedStartDate']} - ${schedule['formattedEndDate']}",
+                  text: "${schedule['formattedStartDate']} - ${schedule['formattedEndDate']}",
                   fontFamilyIndex: 2,
                   fontSize: AppSize.width(value: 12),
                   fontWeight: FontWeight.w400,
@@ -584,33 +547,15 @@ class _HabitsScreenState extends State<HabitsScreen> {
   }
 
   Widget _buildProfileLeading(String? profileImage) {
-    Widget imageWidget;
-
-    if (profileImage != null && profileImage.isNotEmpty) {
-      imageWidget = ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Image.network(
-          profileImage,
-          height: AppSize.height(value: 48),
-          width: AppSize.width(value: 48),
-          fit: BoxFit.cover,
-        ),
-      );
-    } else {
-      imageWidget = Image.asset(
-        AppStaticImages.habitsAppbar,
-        height: AppSize.height(value: 48),
-        width: AppSize.width(value: 48),
-        fit: BoxFit.contain,
-      );
-    }
 
     return Padding(
       padding: EdgeInsets.only(left: AppSize.width(value: 20)),
-      child: CircleAvatar(
-        backgroundColor: AppColors.white,
-        radius: AppSize.width(value: 24),
-        child: imageWidget,
+      child: CommonImage(
+        borderRadius: 12,
+        src: profileImage ?? '',
+        height: AppSize.height(value: 48),
+        width: AppSize.width(value: 48),
+        fill: BoxFit.cover,
       ),
     );
   }

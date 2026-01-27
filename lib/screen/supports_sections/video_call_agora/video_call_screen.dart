@@ -86,10 +86,10 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
         ),
         width: 150,
         height: 200,
-        child: controller.remoteUid != null
+        child: controller.remoteUid != null && controller.engine != null
             ? AgoraVideoView(
                 controller: VideoViewController.remote(
-                  rtcEngine: controller.engine,
+                  rtcEngine: controller.engine!,
                   canvas: VideoCanvas(uid: controller.remoteUid!),
                   connection: RtcConnection(channelId: controller.videoSessionModel?.channelName),
                 ),
@@ -107,10 +107,10 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
       ),
       width: 150,
       height: 200,
-      child: controller.localUserJoined
+      child: controller.localUserJoined && controller.engine != null
           ? (AgoraVideoView(
               controller: VideoViewController(
-                rtcEngine: controller.engine,
+                rtcEngine: controller.engine!,
                 canvas: const VideoCanvas(uid: 0),
               ),
             ))
@@ -124,10 +124,10 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   // Display remote user's video
   Widget _remoteVideo(VideoCallController controller) {
     if (showRemoteInBox) {
-      return controller.localUserJoined
+      return controller.localUserJoined && controller.engine != null
           ? (AgoraVideoView(
               controller: VideoViewController(
-                rtcEngine: controller.engine,
+                rtcEngine: controller.engine!,
                 canvas: const VideoCanvas(uid: 0),
               ),
             ))
@@ -136,10 +136,10 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
               child: Center(child: CircularProgressIndicator()),
             );
     }
-    if (controller.remoteUid != null) {
+    if (controller.remoteUid != null && controller.engine != null) {
       return AgoraVideoView(
         controller: VideoViewController.remote(
-          rtcEngine: controller.engine,
+          rtcEngine: controller.engine!,
           canvas: VideoCanvas(uid: controller.remoteUid!),
           connection: RtcConnection(channelId: controller.videoSessionModel?.channelName),
         ),

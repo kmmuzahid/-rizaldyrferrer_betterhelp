@@ -3,6 +3,7 @@ import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/control
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
+import 'package:core_kit/image/common_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,23 +36,12 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
               children: [
                 Gap(height: AppSize.height(value: 24)),
                 Center(
-                  child: Container(
+                  child: CommonImage(
+                    borderRadius: 12,
+                    src: profile?.profile ?? '',
                     height: AppSize.height(value: 100),
                     width: AppSize.width(value: 100),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        image:
-                            profile?.profile != null &&
-                                profile!.profile!.isNotEmpty
-                            ? NetworkImage('${profile.profile}')
-                            : const AssetImage(
-                                    "assets/images/completeProfile01.png",
-                                  )
-                                  as ImageProvider,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    fill: BoxFit.cover,
                   ),
                 ),
                 Gap(height: AppSize.height(value: 08)),

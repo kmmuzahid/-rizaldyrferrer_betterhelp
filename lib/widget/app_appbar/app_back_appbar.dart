@@ -15,7 +15,14 @@ class AppBarWithBack extends StatelessWidget implements PreferredSizeWidget {
   final String text;
   final Color? backgroundColor;
   final List<Widget>? actions;
-  const AppBarWithBack({super.key, required this.text, this.backgroundColor, this.actions});
+  final void Function()? onBackTap;
+  const AppBarWithBack({
+    super.key,
+    required this.text,
+    this.backgroundColor,
+    this.actions,
+    this.onBackTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +36,7 @@ class AppBarWithBack extends StatelessWidget implements PreferredSizeWidget {
           margin: EdgeInsets.only(left: 20, top: 8, bottom: 8),
           child: GestureDetector(
             onTap: () {
+              onBackTap?.call();
               Get.back();
             },
             child: Container(

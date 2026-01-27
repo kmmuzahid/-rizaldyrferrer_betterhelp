@@ -3,6 +3,7 @@ import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
+import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/app_text_input/app_text_input.dart';
@@ -18,6 +19,7 @@ class ChangePasswordScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.white,
+      appBar: AppBarWithBack(text: ''),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
@@ -47,7 +49,7 @@ class ChangePasswordScreen extends StatelessWidget {
               Gap(height: AppSize.height(value: 30)),
               //! Set Password
               AppText(
-                text: AppString.setPassword,
+                text: 'Current Password',
                 fontFamilyIndex: 2,
                 fontSize: AppSize.width(value: 16),
                 fontWeight: FontWeight.w500,
@@ -55,7 +57,7 @@ class ChangePasswordScreen extends StatelessWidget {
               ),
               Gap(height: AppSize.height(value: 05)),
               AppTextInput(
-                controller: controller.newPasswordController,
+                controller: controller.currentPasswordController,
                 hintText: "Enter new password",
                 borderColor: AppColors.borderColor,
                 backgroundColor: AppColors.white,
@@ -65,7 +67,7 @@ class ChangePasswordScreen extends StatelessWidget {
               //! Confirm Password
               Gap(height: AppSize.height(value: 20)),
               AppText(
-                text: AppString.confirmPassword,
+                text: 'New Password',
                 fontFamilyIndex: 2,
                 fontSize: AppSize.width(value: 16),
                 fontWeight: FontWeight.w500,
@@ -73,7 +75,7 @@ class ChangePasswordScreen extends StatelessWidget {
               ),
               Gap(height: AppSize.height(value: 05)),
               AppTextInput(
-                controller: controller.confirmPasswordController,
+                controller: controller.newPasswordController,
                 hintText: "Confirm new password",
                 borderColor: AppColors.borderColor,
                 backgroundColor: AppColors.white,

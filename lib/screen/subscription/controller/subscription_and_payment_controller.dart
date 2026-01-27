@@ -6,6 +6,7 @@
 import 'package:better_help/core/app_apiurl/app_apiurl.dart';
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
+import 'package:better_help/screen/notification/notification_screen_controller.dart';
 import 'package:better_help/sockets/support_message_socket.dart';
 import 'package:core_kit/network/dio_service.dart';
 import 'package:core_kit/network/request_input.dart';
@@ -71,6 +72,10 @@ class SubscriptionAndPaymentController extends GetxController {
       }
       isLoadingDependency.value = false;
     });
+    Get.find<NotificationScreenController>()
+      ..getUnreadCount()
+      ..listenNotification();
+
     super.onInit();
   }
 }

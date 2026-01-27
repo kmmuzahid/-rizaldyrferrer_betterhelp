@@ -33,6 +33,15 @@ class SocketService {
     socket.connect();
   }
 
+  void startListeningNotification({required Function(dynamic data) onNotification}) {
+    socket.on('notification', (data) {
+      AppLogger.info('Notification Event: $data', tag: 'Socket');
+      if (data != null) {
+        onNotification(data);
+      }
+    });
+  }
+
   void startListeningChat({required String chatId, required Function(dynamic data) onMessage}) {
     AppLogger.apiDebug('Created Listener: $chatId', tag: 'Socket');
 

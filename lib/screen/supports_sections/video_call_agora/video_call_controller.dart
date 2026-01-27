@@ -9,7 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 class VideoCallController extends GetxController {
   int? remoteUid;
   bool localUserJoined = false;
-  late RtcEngine engine;
+  RtcEngine? engine;
 
   late String id;
 
@@ -37,6 +37,9 @@ class VideoCallController extends GetxController {
       videoSessionModel = result.data;
       update();
       initAgora();
+    } else {
+      showSnackBar(result.message ?? '', type: SnackBarType.error);
+      Get.back();
     }
   }
 
@@ -47,14 +50,14 @@ class VideoCallController extends GetxController {
     if (status.values.every((element) => element.isGranted)) {
       //create the engine
       engine = createAgoraRtcEngine();
-      await engine.initialize(
+      await engine?.initialize(
         RtcEngineContext(
           appId: videoSessionModel!.appId,
           channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
         ),
       );
 
-      engine.registerEventHandler(
+      engine?.registerEventHandler(
         RtcEngineEventHandler(
           onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
             AppLogger.debug("local user ${connection.localUid} joined");
@@ -82,11 +85,11 @@ class VideoCallController extends GetxController {
         ),
       );
 
-      await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
-      await engine.enableVideo();
-      await engine.startPreview();
+      await engine?.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
+      await engine?.enableVideo();
+      await engine?.startPreview();
 
-      await engine.joinChannel(
+      await engine?.joinChannel(
         token: videoSessionModel!.token,
         channelId: videoSessionModel!.channelName,
         uid: videoSessionModel!.uid,
@@ -103,7 +106,7 @@ class VideoCallController extends GetxController {
   }
 
   Future<void> _dispose() async {
-    await engine.leaveChannel();
-    await engine.release();
+    await engine?.leaveChannel();
+    await engine?.release();
   }
 }

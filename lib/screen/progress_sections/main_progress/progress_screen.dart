@@ -2,7 +2,6 @@ import 'package:better_help/screen/progress_sections/main_progress/controller/pr
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
-import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
@@ -89,7 +88,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AppText(
-                          text: "POINTS EARNED",
+                          text: "TOTAL TASKS",
                           fontFamilyIndex: 2,
                           fontWeight: FontWeight.w600,
                           fontSize: AppSize.width(value: 12),
@@ -116,7 +115,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                               Gap(width: 5),
                               Obx(
                                 () => AppText(
-                                  text: controller.pointsEarned.value
+                                  text: controller.totalTask.value
                                       .toString(),
                                   color: Color(0xFFFEA800),
                                   fontSize: AppSize.width(value: 14),
@@ -157,7 +156,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       children: [
                         //! Best Strike Day
                         AppText(
-                          text: "BEST STREAK DAY",
+                          text: "PENDING TASKS",
                           color: Color(0xFF292929),
                           fontFamilyIndex: 2,
                           fontSize: AppSize.width(value: 12),
@@ -167,7 +166,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                         Gap(height: 5),
                         Obx(
                           () => AppText(
-                            text: controller.bestStreakDay.value.toString(),
+                            text: controller.pendingTask.value.toString(),
                             color: Color(0xFF040415),
                             fontSize: AppSize.width(value: 20),
                             fontFamilyIndex: 2,
@@ -180,7 +179,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
                         //! ReMaining Section
                         AppText(
-                          text: "REMEAINING",
+                          text: "OVERDUE TASKS",
                           color: Color(0xFF292929),
                           fontFamilyIndex: 2,
                           fontSize: AppSize.width(value: 12),
@@ -190,7 +189,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                         Gap(height: 5),
                         Obx(
                           () => AppText(
-                            text: controller.remaining.value.toString(),
+                            text: controller.overdeueTask.value.toString(),
                             color: Color(0xFFE3524F),
                             fontSize: AppSize.width(value: 20),
                             fontFamilyIndex: 2,
@@ -229,40 +228,40 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     ],
                   ),
                   Spacer(),
-                  //! Previous Button
-                  Container(
-                    width: AppSize.width(value: 45),
-                    height: AppSize.width(value: 45),
-                    padding: const EdgeInsets.all(13.50),
-                    decoration: ShapeDecoration(
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 1.12,
-                          color: const Color(0xFFEAECF0),
-                        ),
-                        borderRadius: BorderRadius.circular(17.99),
-                      ),
-                    ),
-                    child: Center(child: SvgPicture.asset(AppIcons.arrowLeft)),
-                  ),
-                  Gap(width: 10),
-                  Container(
-                    width: AppSize.width(value: 45),
-                    height: AppSize.width(value: 45),
-                    padding: const EdgeInsets.all(13.50),
-                    decoration: ShapeDecoration(
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 1.12,
-                          color: const Color(0xFFEAECF0),
-                        ),
-                        borderRadius: BorderRadius.circular(17.99),
-                      ),
-                    ),
-                    child: Center(child: SvgPicture.asset(AppIcons.arrowRight)),
-                  ),
+                  // //! Previous Button
+                  // Container(
+                  //   width: AppSize.width(value: 45),
+                  //   height: AppSize.width(value: 45),
+                  //   padding: const EdgeInsets.all(13.50),
+                  //   decoration: ShapeDecoration(
+                  //     color: Colors.white,
+                  //     shape: RoundedRectangleBorder(
+                  //       side: BorderSide(
+                  //         width: 1.12,
+                  //         color: const Color(0xFFEAECF0),
+                  //       ),
+                  //       borderRadius: BorderRadius.circular(17.99),
+                  //     ),
+                  //   ),
+                  //   child: Center(child: SvgPicture.asset(AppIcons.arrowLeft)),
+                  // ),
+                  // Gap(width: 10),
+                  // Container(
+                  //   width: AppSize.width(value: 45),
+                  //   height: AppSize.width(value: 45),
+                  //   padding: const EdgeInsets.all(13.50),
+                  //   decoration: ShapeDecoration(
+                  //     color: Colors.white,
+                  //     shape: RoundedRectangleBorder(
+                  //       side: BorderSide(
+                  //         width: 1.12,
+                  //         color: const Color(0xFFEAECF0),
+                  //       ),
+                  //       borderRadius: BorderRadius.circular(17.99),
+                  //     ),
+                  //   ),
+                  //   child: Center(child: SvgPicture.asset(AppIcons.arrowRight)),
+                  // ),
                 ],
               ),
               Gap(height: 10),
@@ -324,14 +323,14 @@ class _ProgressScreenState extends State<ProgressScreen> {
                                 fontWeight: FontWeight.w700,
                                 color: Color(0xFF0095FF),
                               ),
-                              Gap(width: 10),
-                              InkWell(
-                                onTap: () {
-                                  // Handle dropdown tap
-                                  appLog("Dropdown tapped");
-                                },
-                                child: SvgPicture.asset(AppIcons.dropdown),
-                              ),
+                              // Gap(width: 10),
+                              // InkWell(
+                              //   onTap: () {
+                              //     // Handle dropdown tap
+                              //     appLog("Dropdown tapped");
+                              //   },
+                              //   child: SvgPicture.asset(AppIcons.dropdown),
+                              // ),
                             ],
                           ),
                         ),

@@ -29,22 +29,24 @@ class NotificationScreen extends StatelessWidget {
         },
         actions: [markAllReadButton(controller)],
       ),
-      body: Obx(
-        () => SmartListLoader(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          isLoading: controller.isLoading.value,
-          onRefresh: () => controller.getAllNotification(isRefresh: true),
-          limit: 20,
-          onLoadMore: (page) => controller.getAllNotification(page: page),
-          itemCount: controller.notificationList.length,
-          itemBuilder: (context, index) {
-            final notification = controller.notificationList[index];
-            return NotificationItem(
-              notification: notification,
-              controller: controller,
-              index: index,
-            );
-          },
+      body: SafeArea(
+        child: Obx(
+          () => SmartListLoader(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            isLoading: controller.isLoading.value,
+            onRefresh: () => controller.getAllNotification(isRefresh: true),
+            limit: 20,
+            onLoadMore: (page) => controller.getAllNotification(page: page),
+            itemCount: controller.notificationList.length,
+            itemBuilder: (context, index) {
+              final notification = controller.notificationList[index];
+              return NotificationItem(
+                notification: notification,
+                controller: controller,
+                index: index,
+              );
+            },
+          ),
         ),
       ),
     );

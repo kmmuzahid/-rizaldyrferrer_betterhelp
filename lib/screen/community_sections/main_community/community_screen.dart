@@ -1,4 +1,4 @@
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/community_sections/main_community/controller/community_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
@@ -317,7 +317,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                             if (imageUrl.isNotEmpty &&
                                 !imageUrl.startsWith('http')) {
                               // If image is a relative path, prepend the base domain
-                              imageUrl = '${AppApiurl.liveDomain}$imageUrl';
+                              imageUrl = '${ApiEndPoints.liveDomain}$imageUrl';
                             }
 
                             return Padding(
@@ -443,7 +443,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                             if (profileImage.isNotEmpty &&
                                 !profileImage.startsWith('http')) {
                               profileImage =
-                                  '${AppApiurl.imageUrl}$profileImage';
+                                  '${ApiEndPoints.imageUrl}$profileImage';
                             }
 
                             return Padding(

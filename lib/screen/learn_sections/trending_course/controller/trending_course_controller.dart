@@ -3,7 +3,7 @@
  * @Date: 2026-01-09 09:41:39
  * @Email: km.muzahid@gmail.com
  */
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/learn_sections/main_learn/model/course_model.dart';
 import 'package:core_kit/network/dio_service.dart';
 import 'package:core_kit/network/request_input.dart';
@@ -43,7 +43,7 @@ class TrendingCourseController extends GetxController {
     final result = await DioService.instance.request(
       showMessage: true,
       input: RequestInput(
-        endpoint: AppApiurl.favoriteCourse,
+        endpoint: ApiEndPoints.favoriteCourse,
         method: RequestMethod.POST,
         jsonBody: {"courseId": course.id},
       ),
@@ -64,7 +64,7 @@ class TrendingCourseController extends GetxController {
           if (isTrending) "trending": true,
           if (searchQuery != null) "searchTerm": searchQuery,
         },
-        endpoint: AppApiurl.getCourseList,
+        endpoint: ApiEndPoints.getCourseList,
         method: RequestMethod.GET,
       ),
       responseBuilder: (response) {

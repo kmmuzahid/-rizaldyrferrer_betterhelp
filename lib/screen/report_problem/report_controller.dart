@@ -7,7 +7,7 @@ import 'package:core_kit/core_kit.dart';
 import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
 
-import '../../core/app_apiurl/app_apiurl.dart';
+import '../../core/app_apiurl/api_end_points.dart';
 
 class ReportController extends GetxController {
   // Selected category state
@@ -32,7 +32,7 @@ class ReportController extends GetxController {
       final result = await DioService.instance.request(
         showMessage: true,
         input: RequestInput(
-          endpoint: AppApiurl.report,
+          endpoint: ApiEndPoints.report,
           method: RequestMethod.POST,
           jsonBody: {"text": report},
         ),

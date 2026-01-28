@@ -3,7 +3,7 @@
  * @Date: 2026-01-09 09:41:39
  * @Email: km.muzahid@gmail.com
  */
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_bindings/app_bindings.dart';
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/notification/notification_service.dart';
@@ -96,11 +96,11 @@ class MyApp extends StatelessWidget {
             Get.back();
           },
           designSize: const Size(428, 926),
-          imageBaseUrl: AppApiurl.imageUrl,
+          imageBaseUrl: ApiEndPoints.imageUrl,
           scaffoldMessangeKey: AppSnackBar.scaffoldMessengerKey,
           dioServiceConfig: DioServiceConfig(
-            baseUrl: AppApiurl.baseUrl,
-            refreshTokenEndpoint: AppApiurl.refreshToken,
+            baseUrl: ApiEndPoints.baseUrl,
+            refreshTokenEndpoint: ApiEndPoints.refreshToken,
             onLogout: () {
               StorageService().removeTokens();
               Get.offAllNamed(AppRoute.splashscreen);

@@ -3,8 +3,11 @@
  * @Date: 2026-01-12 10:09:47
  * @Email: km.muzahid@gmail.com
  */
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
+import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:core_kit/utils/app_log.dart';
+import 'package:get/get_instance/get_instance.dart';
+import 'package:get/utils.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketService {
@@ -16,10 +19,10 @@ class SocketService {
   void connect() {
     if (isConnected) return;
     isConnected = true;
-    socket = IO.io(AppApiurl.domain, IO.OptionBuilder().setTransports(['websocket']).build());
+    socket = IO.io(ApiEndPoints.domain, IO.OptionBuilder().setTransports(['websocket']).build());
 
     socket.on('connect', (_) {
-      AppLogger.info('Connected to Socket.IO server ${AppApiurl.domain}', tag: 'Socket');
+      AppLogger.info('Connected to Socket.IO server ${ApiEndPoints.domain}', tag: 'Socket');
     });
 
     socket.on('disconnect', (_) {
@@ -34,7 +37,8 @@ class SocketService {
   }
 
   void startListeningNotification({required Function(dynamic data) onNotification}) {
-    socket.on('notification', (data) {
+    final id = Get.find<MyProfileScreenController>().profileData.value?.id;
+    socket.on('notification::$id', (data) {
       AppLogger.info('Notification Event: $data', tag: 'Socket');
       if (data != null) {
         onNotification(data);

@@ -1,4 +1,4 @@
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/community_sections/main_community/model/article_model.dart';
 import 'package:better_help/screen/community_sections/main_community/model/post_model.dart';
 import 'package:better_help/service/api/api_services.dart';
@@ -15,7 +15,7 @@ class CommunityRepository {
 
     try {
       final response = await _apiServices.apiGetServices(
-        '${AppApiurl.getAllArticle}?page=$page&limit=$limit',
+        '${ApiEndPoints.getAllArticle}?page=$page&limit=$limit',
       );
 
       if (response != null && response['success'] == true) {
@@ -37,7 +37,7 @@ class CommunityRepository {
 
     try {
       final response = await _apiServices.apiGetServices(
-        AppApiurl.getSingleArticle(id),
+        ApiEndPoints.getSingleArticle(id),
       );
 
       if (response != null && response['success'] == true) {
@@ -58,7 +58,7 @@ class CommunityRepository {
     appLog('CommunityRepository: Creating a post...');
     try {
       final response = await _apiServices.apiPostServices(
-        url: AppApiurl.createPost,
+        url: ApiEndPoints.createPost,
         body: description,
       );
       if (response != null && response['success'] == true) {
@@ -81,7 +81,7 @@ class CommunityRepository {
 
     try {
       final response = await _apiServices.apiGetServices(
-        '${AppApiurl.getAllPost}?page=$page&limit=$limit',
+        '${ApiEndPoints.getAllPost}?page=$page&limit=$limit',
       );
 
       if (response != null && response['success'] == true) {
@@ -103,7 +103,7 @@ class CommunityRepository {
 
     try {
       final response = await _apiServices.apiGetServices(
-        '${AppApiurl.getHighlightPost}&page=$page&limit=$limit',
+        '${ApiEndPoints.getHighlightPost}&page=$page&limit=$limit',
       );
 
       if (response != null && response['success'] == true) {
@@ -128,7 +128,7 @@ class CommunityRepository {
 
     try {
       final response = await _apiServices.apiGetServices(
-        '${AppApiurl.getRecentPost}&page=$page&limit=$limit',
+        '${ApiEndPoints.getRecentPost}&page=$page&limit=$limit',
       );
 
       if (response != null && response['success'] == true) {
@@ -153,7 +153,7 @@ class CommunityRepository {
 
     try {
       final response = await _apiServices.apiGetServices(
-        '${AppApiurl.getPopularPost}&page=$page&limit=$limit',
+        '${ApiEndPoints.getPopularPost}&page=$page&limit=$limit',
       );
 
       if (response != null && response['success'] == true) {
@@ -178,7 +178,7 @@ class CommunityRepository {
 
     try {
       final response = await _apiServices.apiPostServices(
-        url: AppApiurl.getPostLike(postId),
+        url: ApiEndPoints.getPostLike(postId),
         body: {},
       );
 
@@ -201,7 +201,7 @@ class CommunityRepository {
 
     try {
       final response = await _apiServices.apiGetServices(
-        AppApiurl.getSinglePost(postId),
+        ApiEndPoints.getSinglePost(postId),
       );
 
       if (response != null && response['success'] == true) {
@@ -226,7 +226,7 @@ class CommunityRepository {
 
     try {
       final response = await _apiServices.apiPostServices(
-        url: AppApiurl.createComment,
+        url: ApiEndPoints.createComment,
         body: {'postId': postId, 'message': message},
       );
 
@@ -253,7 +253,7 @@ class CommunityRepository {
 
     try {
       final response = await _apiServices.apiPostServices(
-        url: AppApiurl.createCommentReply,
+        url: ApiEndPoints.createCommentReply,
         body: {'postId': postId, 'message': message, 'parentId': parentId},
       );
 
@@ -276,7 +276,7 @@ class CommunityRepository {
 
     try {
       final response = await _apiServices.apiPostServices(
-        url: AppApiurl.reactOnComment,
+        url: ApiEndPoints.reactOnComment,
         body: {'commentId': commentId},
       );
 
@@ -302,7 +302,7 @@ class CommunityRepository {
 
     try {
       final response = await _apiServices.apiPostServices(
-        url: AppApiurl.reactOnCommentReply,
+        url: ApiEndPoints.reactOnCommentReply,
         body: {'commentId': commentId, 'replyId': replyId},
       );
 
@@ -329,7 +329,7 @@ class CommunityRepository {
       );
 
       final response = await _apiServices.apiPostServices(
-        url: AppApiurl.toggleSaveArticle(articleId),
+        url: ApiEndPoints.toggleSaveArticle(articleId),
         body: {'articleId': articleId},
         statusCodeStart: 200,
         statusCodeEnd: 201,

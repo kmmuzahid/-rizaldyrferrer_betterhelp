@@ -3,7 +3,7 @@
  * @Date: 2026-01-27 17:45:43
  * @Email: km.muzahid@gmail.com
  */
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
@@ -22,7 +22,7 @@ class TermsAndConditionsScreenController extends GetxController {
     isLoading.value = true;
 
     final result = await DioService.instance.request(
-      input: RequestInput(endpoint: AppApiurl.termsOfService, method: RequestMethod.GET),
+      input: RequestInput(endpoint: ApiEndPoints.termsOfService, method: RequestMethod.GET),
       responseBuilder: (response) {
         return response['termsOfService']?.toString() ?? '';
       },

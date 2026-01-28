@@ -1,9 +1,9 @@
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/supports_sections/main_supports/controller/support_screen_controller.dart'
     show SupportScreenController;
 import 'package:better_help/screen/supports_sections/main_supports/widgets/chat_bubble.dart';
 import 'package:better_help/screen/supports_sections/main_supports/widgets/common_chat_header.dart';
-import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
@@ -41,6 +41,7 @@ class _SupportScreenState extends State<SupportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final profileController = Get.find<MyProfileScreenController>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: FlexibleCustomAppBar(
@@ -96,7 +97,8 @@ class _SupportScreenState extends State<SupportScreen> {
                               timestamp: message.createdAt.date == DateTime.now().date
                                   ? CoreUtils.formatTime(message.createdAt)
                                   : CoreUtils.formatDateTimeToHms(message.createdAt),
-                              isSender: message.sender.id == StorageService.userId,
+                              isSender:
+                                  message.sender.id == profileController.profileData.value?.id,
                             );
                           },
                         ),

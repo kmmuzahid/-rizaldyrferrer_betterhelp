@@ -1,4 +1,4 @@
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -18,7 +18,7 @@ class AppApi {
   var storageServices = StorageService();
 
   AppApi() {
-    _dio.options.baseUrl = AppApiurl.baseUrl;
+    _dio.options.baseUrl = ApiEndPoints.baseUrl;
     _dio.options.sendTimeout = const Duration(seconds: 60);
     _dio.options.connectTimeout = const Duration(seconds: 60);
     _dio.options.receiveTimeout = const Duration(seconds: 60);
@@ -27,7 +27,7 @@ class AppApi {
     _dio.interceptors.addAll({
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          options.baseUrl = AppApiurl.baseUrl;
+          options.baseUrl = ApiEndPoints.baseUrl;
 
           // Only set content-type to JSON if it's not a FormData request
           // FormData requests need multipart/form-data content-type

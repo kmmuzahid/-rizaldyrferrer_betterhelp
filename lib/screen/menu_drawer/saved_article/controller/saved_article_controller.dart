@@ -1,6 +1,6 @@
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/menu_drawer/saved_article/model/saved_article_course_model.dart';
 import 'package:better_help/service/api/api_services.dart';
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:get/get.dart';
 
@@ -39,7 +39,7 @@ class SavedArticleController extends GetxController {
       appLog('Fetching saved articles - Page: ${currentPage.value}');
 
       final response = await _apiServices.apiGetServices(
-        '${AppApiurl.getFavouriteArticle}?page=${currentPage.value}&limit=10&type=article',
+        '${ApiEndPoints.getFavouriteArticle}?page=${currentPage.value}&limit=10&type=article',
       );
 
       if (response != null && response['success'] == true) {
@@ -102,7 +102,7 @@ class SavedArticleController extends GetxController {
 
       // Call API to unsave
       final response = await _apiServices.apiPostServices(
-        url: AppApiurl.toggleSaveArticle(articleId),
+        url: ApiEndPoints.toggleSaveArticle(articleId),
         body: {'articleId': articleId},
       );
 

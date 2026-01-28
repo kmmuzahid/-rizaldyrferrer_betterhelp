@@ -3,7 +3,7 @@
  * @Date: 2026-01-27 18:13:30
  * @Email: km.muzahid@gmail.com
  */
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:core_kit/network/dio_service.dart';
 import 'package:core_kit/network/request_input.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
@@ -23,7 +23,7 @@ class PrivacyPolicyScreenController extends GetxController {
     isLoading.value = true;
 
     final result = await DioService.instance.request(
-      input: RequestInput(endpoint: AppApiurl.privacyPolicy, method: RequestMethod.GET),
+      input: RequestInput(endpoint: ApiEndPoints.privacyPolicy, method: RequestMethod.GET),
       responseBuilder: (response) {
         return response['privacyPolicy']?.toString() ?? '';
       },

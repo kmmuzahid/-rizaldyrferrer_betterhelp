@@ -1,5 +1,5 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/supports_sections/main_supports/model/video_session_model.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:core_kit/network/request_input.dart';
@@ -25,7 +25,7 @@ class VideoCallController extends GetxController {
   getVideoSession() async {
     final result = await DioService.instance.request<VideoSessionModel>(
       input: RequestInput(
-        endpoint: AppApiurl.createVideoSession,
+        endpoint: ApiEndPoints.createVideoSession,
         jsonBody: {"bookingSheduleId": id},
         method: RequestMethod.POST,
       ),

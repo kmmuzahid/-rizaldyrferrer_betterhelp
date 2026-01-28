@@ -3,7 +3,7 @@
  * @Date: 2026-01-10 14:55:55
  * @Email: km.muzahid@gmail.com
  */
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
@@ -41,7 +41,7 @@ class BookingController extends GetxController {
     availableSlots.clear();
     final response = await DioService.instance.request<List<String>>(
       input: RequestInput(
-        endpoint: AppApiurl.getDoctorAvailableSlots,
+        endpoint: ApiEndPoints.getDoctorAvailableSlots,
         queryParams: {'date': selectedDate.value.toUtc().toIso8601String()},
         method: RequestMethod.GET,
       ),
@@ -142,7 +142,7 @@ class BookingController extends GetxController {
     DioService.instance.request<dynamic>(
       showMessage: true,
       input: RequestInput(
-        endpoint: AppApiurl.createDoctorBooking,
+        endpoint: ApiEndPoints.createDoctorBooking,
         method: RequestMethod.POST,
         jsonBody: {
           "bookingDate": selectedDate.value.toUtc().toIso8601String(),

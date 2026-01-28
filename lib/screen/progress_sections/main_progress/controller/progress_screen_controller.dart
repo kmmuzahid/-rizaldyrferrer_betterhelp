@@ -1,5 +1,9 @@
-import 'package:get/get.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
+import 'package:better_help/screen/progress_sections/main_progress/controller/model/task_summery_model.dart';
+import 'package:core_kit/core_kit.dart';
+import 'package:core_kit/network/request_input.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:get/get.dart';
 
 class ProgressScreenController extends GetxController {
   // Loading state
@@ -7,12 +11,11 @@ class ProgressScreenController extends GetxController {
 
   // Chart data
   var chartData = <FlSpot>[].obs;
-
   // Progress data
-  var pointsEarned = 325.obs;
-  var completed = 244.obs;
-  var bestStreakDay = 22.obs;
-  var remaining = 22.obs;
+  var totalTask = 0.obs;
+  var completed = 0.obs;
+  var pendingTask = 0.obs;
+  var overdeueTask = 0.obs;
 
   @override
   void onInit() {
@@ -21,27 +24,22 @@ class ProgressScreenController extends GetxController {
   }
 
   Future<void> loadProgressData() async {
-    try {
-      isLoading.value = true;
-
-      // Simulate API call delay
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      // Load chart data
-      chartData.value = [
-        const FlSpot(0, 1),
-        const FlSpot(1, 2),
-        const FlSpot(2, 3),
-        const FlSpot(3, 4),
-        const FlSpot(4, 5),
-        const FlSpot(5, 6),
-        const FlSpot(6, 7),
-      ];
-
-      isLoading.value = false;
-    } catch (e) {
-      isLoading.value = false;
-      // Handle error
+    isLoading.value = true;
+    final result = await DioService.instance.request(
+      input: RequestInput(endpoint: ApiEndPoints.taskStatistics, method: RequestMethod.GET),
+      responseBuilder: (data) {
+        return TaskSummaryModel.fromMap(data);
+      },
+    );
+    if (result.isSuccess) {
+      totalTask.value = result.data?.totalTasks ?? 0;
+      completed.value = result.data?.totalCompletedTask ?? 0;
+      pendingTask.value = result.data?.totalPendingTask ?? 0;
+      overdeueTask.value = result.data?.totalOverdueTask ?? 0;
+      for (var i = 0; i < (result.data?.data ?? []).length; i++) {
+        chartData.add(FlSpot(i.toDouble(), (result.data?.data ?? [])[i].task.toDouble()));
+      }
     }
+    isLoading.value = false;
   }
 }

@@ -3,7 +3,7 @@
  * @Date: 2026-01-09 09:41:39
  * @Email: km.muzahid@gmail.com
  */
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/learn_sections/main_learn/model/category_model.dart';
 import 'package:core_kit/network/dio_service.dart';
 import 'package:core_kit/network/request_input.dart';
@@ -27,7 +27,7 @@ class CategoriesScreenController extends GetxController {
           if (searchTerm?.isNotEmpty == true) "searchTerm": searchTerm,
           "limit": 100,
         },
-        endpoint: AppApiurl.getCourseCategoryList,
+        endpoint: ApiEndPoints.getCourseCategoryList,
         method: RequestMethod.GET,
       ),
       responseBuilder: (data) => (data as List).map((e) => CategoryModel.fromJson(e)).toList(),

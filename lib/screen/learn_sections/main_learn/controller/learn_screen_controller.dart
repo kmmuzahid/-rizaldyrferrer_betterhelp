@@ -3,7 +3,7 @@
  * @Date: 2026-01-09 09:41:39
  * @Email: km.muzahid@gmail.com
  */
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/learn_sections/main_learn/model/category_model.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:carousel_slider/carousel_controller.dart';
@@ -56,7 +56,7 @@ class LearnScreenController extends GetxController {
     final response = await DioService.instance.request(
       input: RequestInput(
         queryParams: {"page": 1, "limit": 10},
-        endpoint: AppApiurl.getCourseCategoryList,
+        endpoint: ApiEndPoints.getCourseCategoryList,
         method: RequestMethod.GET,
       ),
       responseBuilder: (data) => (data as List).map((e) => CategoryModel.fromJson(e)).toList(),
@@ -74,7 +74,7 @@ class LearnScreenController extends GetxController {
       // showMessage: true,
       input: RequestInput(
         queryParams: {"page": 1, "limit": 10},
-        endpoint: AppApiurl.getCourseList,
+        endpoint: ApiEndPoints.getCourseList,
         method: RequestMethod.GET,
       ),
       responseBuilder: (data) => (data as List).map((e) => CourseModel.fromJson(e)).toList(),
@@ -89,7 +89,7 @@ class LearnScreenController extends GetxController {
     final response = await DioService.instance.request(
       input: RequestInput(
         queryParams: {"page": 1, "limit": 10, "trending": true},
-        endpoint: AppApiurl.getCourseList,
+        endpoint: ApiEndPoints.getCourseList,
         method: RequestMethod.GET,
       ),
       responseBuilder: (data) => (data as List).map((e) => CourseModel.fromJson(e)).toList(),
@@ -106,7 +106,7 @@ class LearnScreenController extends GetxController {
     final result = await DioService.instance.request(
       showMessage: true,
       input: RequestInput(
-        endpoint: AppApiurl.favoriteCourse,
+        endpoint: ApiEndPoints.favoriteCourse,
         method: RequestMethod.POST,
         jsonBody: {"courseId": course.id},
       ),
@@ -122,7 +122,7 @@ class LearnScreenController extends GetxController {
     final result = await DioService.instance.request(
       showMessage: true,
       input: RequestInput(
-        endpoint: AppApiurl.favoriteCourse,
+        endpoint: ApiEndPoints.favoriteCourse,
         method: RequestMethod.POST,
         jsonBody: {"courseId": course.id},
       ),

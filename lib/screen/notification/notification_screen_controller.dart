@@ -1,4 +1,4 @@
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/notification/model/notification_model.dart';
@@ -18,7 +18,7 @@ class NotificationScreenController extends GetxController {
     SocketService.instance.startListeningNotification(
       onNotification: (data) {
         final notification = NotificationModel.fromJson(data);
-        if (notification.userId == profileController.profileData.value?.id) return;
+        // if (notification.userId == profileController.profileData.value?.id) return;
         addSingleNotification(notification);
         if (Get.currentRoute != AppRoute.notificationScreen) {
           NotificationService.instance.showNotification(title: notification.message);
@@ -35,7 +35,7 @@ class NotificationScreenController extends GetxController {
   getUnreadCount() async {
     final response = await DioService.instance.request<int>(
       input: RequestInput(
-        endpoint: AppApiurl.notification,
+        endpoint: ApiEndPoints.notification,
         queryParams: {'limit': 1},
         method: RequestMethod.GET,
       ),
@@ -49,7 +49,7 @@ class NotificationScreenController extends GetxController {
   getAllNotification({int page = 1, bool isRefresh = false}) async {
     final response = await DioService.instance.request<List<NotificationModel>>(
       input: RequestInput(
-        endpoint: AppApiurl.notification,
+        endpoint: ApiEndPoints.notification,
         queryParams: {'page': page, 'limit': 20},
         method: RequestMethod.GET,
       ),
@@ -67,15 +67,17 @@ class NotificationScreenController extends GetxController {
   }
 
   markAllRead() async {
-    final response = await DioService.instance.request<int>(
-      input: RequestInput(endpoint: AppApiurl.notificationAllRead, method: RequestMethod.GET),
+    final response = await DioService.instance.request<dynamic>(
+      input: RequestInput(endpoint: ApiEndPoints.notificationAllRead, method: RequestMethod.POST),
       responseBuilder: (data) {
         return data;
       },
     );
     if (response.isSuccess) {
       unreadCount.value = 0;
-      notificationList.assignAll(notificationList.map((e) => e.copyWith(isRead: true)));
+      for (int i = 0; i < notificationList.length; i++) {
+        notificationList[i] = notificationList[i].copyWith(isRead: true);
+      }
       notificationList.refresh();
     }
   }
@@ -84,7 +86,7 @@ class NotificationScreenController extends GetxController {
     final notification = notificationList[index];
     final response = await DioService.instance.request(
       input: RequestInput(
-        endpoint: AppApiurl.getNotificationRead(notification.id),
+        endpoint: ApiEndPoints.getNotificationRead(notification.id),
         method: RequestMethod.PATCH,
       ),
       responseBuilder: (data) {

@@ -1,4 +1,4 @@
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/habits_sections/main_habits/model/daily_task_model.dart';
 import 'package:better_help/service/api/api_services.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
@@ -116,7 +116,7 @@ class HabitsScreenController extends GetxController {
       appLog('Fetching tasks for date: $formattedDate');
 
       final response = await _apiServices.apiGetServices(
-        AppApiurl.taskBytheDate(formattedDate),
+        ApiEndPoints.taskBytheDate(formattedDate),
       );
 
       if (response != null && response['success'] == true) {
@@ -153,7 +153,7 @@ class HabitsScreenController extends GetxController {
     try {
       appLog('Marking task $taskId as completed');
       final response = await _apiServices.apiPatchServices(
-        url: AppApiurl.taskCompleted(taskId),
+        url: ApiEndPoints.taskCompleted(taskId),
       );
 
       if (response != null && response['success'] == true) {
@@ -179,7 +179,7 @@ class HabitsScreenController extends GetxController {
     try {
       appLog('Marking task $taskId as cancelled');
       final response = await _apiServices.apiPatchServices(
-        url: AppApiurl.taskCancelled(taskId),
+        url: ApiEndPoints.taskCancelled(taskId),
       );
 
       if (response != null && response['success'] == true) {

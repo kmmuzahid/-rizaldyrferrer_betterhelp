@@ -3,7 +3,7 @@
  * @Date: 2026-01-09 09:41:39
  * @Email: km.muzahid@gmail.com
  */
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/supports_sections/main_supports/model/message_model.dart';
 import 'package:better_help/sockets/support_message_socket.dart';
@@ -41,7 +41,7 @@ class SupportScreenController extends GetxController {
     final result = await DioService.instance.request<List<MessageModel>>(
       input: RequestInput(
         queryParams: {'page': page, 'limit': 20},
-        endpoint: AppApiurl.getMyMessages(chatId),
+        endpoint: ApiEndPoints.getMyMessages(chatId),
         method: RequestMethod.GET,
       ),
       responseBuilder: (data) {
@@ -57,6 +57,7 @@ class SupportScreenController extends GetxController {
 
   sendMessage({required String message, required int index}) async {
     final updatedMessage = messageModel[index].copyWith(isResponseSent: true);
+    print(profileScreenController.profileData.value?.id);
     messageModel.insert(
       0,
       updatedMessage.copyWith(
@@ -73,7 +74,7 @@ class SupportScreenController extends GetxController {
     );
     final result = await DioService.instance.request<dynamic>(
       input: RequestInput(
-        endpoint: AppApiurl.sendMessages,
+        endpoint: ApiEndPoints.sendMessages,
         method: RequestMethod.POST,
         formFields: {
           'message': message,

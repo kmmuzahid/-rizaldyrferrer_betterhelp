@@ -1,6 +1,6 @@
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/menu_drawer/saved_article/model/saved_article_course_model.dart';
 import 'package:better_help/service/api/api_services.dart';
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:get/get.dart';
 
@@ -39,7 +39,7 @@ class FavoriteCourseController extends GetxController {
       appLog('Fetching saved courses - Page: ${currentPage.value}');
 
       final response = await _apiServices.apiGetServices(
-        '${AppApiurl.getFavouriteArticle}?page=${currentPage.value}&limit=10&type=course',
+        '${ApiEndPoints.getFavouriteArticle}?page=${currentPage.value}&limit=10&type=course',
       );
 
       if (response != null && response['success'] == true) {
@@ -102,7 +102,7 @@ class FavoriteCourseController extends GetxController {
 
       // Call API to unsave
       final response = await _apiServices.apiPostServices(
-        url: AppApiurl.favoriteCourse,
+        url: ApiEndPoints.favoriteCourse,
         body: {'courseId': courseId},
       );
 

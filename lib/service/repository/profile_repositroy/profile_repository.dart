@@ -1,4 +1,4 @@
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/service/api/api_services.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
@@ -14,7 +14,7 @@ class ProfileRepository {
       final token = await _storageServices.getAccessToken();
 
       final response = await _apiServices.apiGetServices(
-        AppApiurl.getMyProfile,
+        ApiEndPoints.getMyProfile,
         headers: {'Authorization': 'Bearer $token'},
       );
 
@@ -58,7 +58,7 @@ class ProfileRepository {
       appLog('📦 FormData fields: ${formData.fields.length}');
       appLog('📦 FormData files: ${formData.files.length}');
 
-      appLog('🚀 Sending PATCH request to: ${AppApiurl.editMyProfile}');
+      appLog('🚀 Sending PATCH request to: ${ApiEndPoints.editMyProfile}');
 
       // Create options with proper headers for multipart
       final options = Options(
@@ -71,7 +71,7 @@ class ProfileRepository {
       );
 
       final response = await _apiServices.apiPatchServices(
-        url: AppApiurl.editMyProfile,
+        url: ApiEndPoints.editMyProfile,
         body: formData,
         options: options,
       );

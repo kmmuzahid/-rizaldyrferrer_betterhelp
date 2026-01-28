@@ -1,4 +1,4 @@
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/service/api/api_services.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
@@ -22,10 +22,10 @@ class AuthReporsitory {
       final body = {"email": email, "password": password};
 
       appLog('AuthRepository: Request body prepared');
-      appLog('AuthRepository: Calling API - ${AppApiurl.login}');
+      appLog('AuthRepository: Calling API - ${ApiEndPoints.login}');
 
       final response = await _apiServices.apiPostServices(
-        url: AppApiurl.login,
+        url: ApiEndPoints.login,
         body: body,
       );
 
@@ -73,10 +73,10 @@ class AuthReporsitory {
       };
 
       appLog('AuthRepository: Request body prepared');
-      appLog('AuthRepository: Calling API - ${AppApiurl.createUser}');
+      appLog('AuthRepository: Calling API - ${ApiEndPoints.createUser}');
 
       final response = await _apiServices.apiPostServices(
-        url: AppApiurl.createUser,
+        url: ApiEndPoints.createUser,
         body: body,
       );
 
@@ -123,11 +123,11 @@ class AuthReporsitory {
       };
 
       appLog('AuthRepository: Request body prepared - $body');
-      appLog('AuthRepository: Calling API - ${AppApiurl.verifyOtp}');
+      appLog('AuthRepository: Calling API - ${ApiEndPoints.verifyOtp}');
 
       //! Send token in header
       final response = await _apiServices.apiPostServices(
-        url: AppApiurl.verifyOtp,
+        url: ApiEndPoints.verifyOtp,
         body: body,
         header: {'token': createUserToken},
       );
@@ -161,7 +161,7 @@ class AuthReporsitory {
 
     try {
       final response = await _apiServices.apiPatchServices(
-        url: AppApiurl.resendOtp,
+        url: ApiEndPoints.resendOtp,
         options: Options(headers: {'token': createUserToken}),
       );
 
@@ -187,7 +187,7 @@ class AuthReporsitory {
       final body = {"email": email};
 
       final response = await _apiServices.apiPostServices(
-        url: AppApiurl.forgotPassword,
+        url: ApiEndPoints.forgotPassword,
         body: body,
       );
 
@@ -226,7 +226,7 @@ class AuthReporsitory {
       final body = {"otp": otp};
 
       final response = await _apiServices.apiPatchServices(
-        url: AppApiurl.forgotPasswordOtpMatch,
+        url: ApiEndPoints.forgotPasswordOtpMatch,
         body: body,
         options: Options(headers: {'token': forgetToken}),
       );
@@ -255,7 +255,7 @@ class AuthReporsitory {
       final forgetToken = await _storageService.getString('forget_token');
 
       final response = await _apiServices.apiPatchServices(
-        url: AppApiurl.forgotPassworResendOtp,
+        url: ApiEndPoints.forgotPassworResendOtp,
         options: Options(headers: {'token': forgetToken}),
       );
 
@@ -286,7 +286,7 @@ class AuthReporsitory {
       final body = {"newPassword": newPassword, "oldPassword": oldPassword};
 
       final response = await _apiServices.apiPatchServices(
-        url: AppApiurl.resetPassoword,
+        url: ApiEndPoints.resetPassoword,
         body: body,
         options: Options(headers: {'token': forgetToken}),
       );

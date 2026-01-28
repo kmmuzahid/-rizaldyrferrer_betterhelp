@@ -3,15 +3,14 @@
  * @Date: 2026-01-09 09:41:39
  * @Email: km.muzahid@gmail.com
  */
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/menu_drawer/bookings_sessions/model/booking_session_model.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
 import 'package:better_help/screen/menu_drawer/bookings_sessions/model/bookings_model.dart';
 import 'package:better_help/service/api/api_services.dart';
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
+import 'package:core_kit/core_kit.dart';
+import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -44,7 +43,7 @@ class BookingsSessionsController extends GetxController {
     }
     final result = await DioService.instance.request<List<BookedSessionModel>>(
       input: RequestInput(
-        endpoint: AppApiurl.getMyBooking,
+        endpoint: ApiEndPoints.getMyBooking,
         queryParams: {'page': page, 'limit': 10},
         method: RequestMethod.GET,
       ),
@@ -113,7 +112,7 @@ class BookingsSessionsController extends GetxController {
       appLog('Fetching bookings - Page: ${currentPage.value}');
 
       final response = await _apiServices.apiGetServices(
-        '${AppApiurl.seeAllBookings}?page=${currentPage.value}&limit=10',
+        '${ApiEndPoints.seeAllBookings}?page=${currentPage.value}&limit=10',
       );
 
       if (response != null && response['success'] == true) {

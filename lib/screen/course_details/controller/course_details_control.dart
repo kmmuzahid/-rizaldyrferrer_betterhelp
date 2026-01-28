@@ -3,7 +3,7 @@
  * @Date: 2026-01-09 17:05:17
  * @Email: km.muzahid@gmail.com
  */
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/course_details/model/course_details_model.dart';
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:core_kit/core_kit.dart';
@@ -65,7 +65,10 @@ class CourseDetailsController extends GetxController {
 
   setCourseViewCount() async {
     DioService.instance.request(
-      input: RequestInput(endpoint: AppApiurl.setCourseViewCount(id), method: RequestMethod.PATCH),
+      input: RequestInput(
+        endpoint: ApiEndPoints.setCourseViewCount(id),
+        method: RequestMethod.PATCH,
+      ),
       responseBuilder: (response) {
         return response;
       },
@@ -79,7 +82,7 @@ class CourseDetailsController extends GetxController {
   void submitFeedback() async {
     final result = await DioService.instance.request(
       input: RequestInput(
-        endpoint: AppApiurl.review,
+        endpoint: ApiEndPoints.review,
         method: RequestMethod.POST,
         jsonBody: {
           "courseId": id,
@@ -101,7 +104,7 @@ class CourseDetailsController extends GetxController {
   fetchCourseDetails() async {
     betterPlayerController.value?.dispose();
     final result = await DioService.instance.request(
-      input: RequestInput(endpoint: '${AppApiurl.getCourseList}/$id', method: RequestMethod.GET),
+      input: RequestInput(endpoint: '${ApiEndPoints.getCourseList}/$id', method: RequestMethod.GET),
       responseBuilder: (response) {
         return CourseDetailsModel.fromJson(response);
       },

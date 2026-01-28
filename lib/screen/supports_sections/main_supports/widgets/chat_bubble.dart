@@ -101,9 +101,11 @@ class CommonChatBubble extends StatelessWidget {
   int getLength(String type) {
     if (type == 'one_to_five') {
       return 5;
-    } else if (type == 'task_pending_reminder' || type == 'task_completed_question') {
+    } else if (type == 'task_pending_reminder' ||
+        type == 'task_completed_question' ||
+        type == 'task_completed_reminder') {
       return 2;
-    } else if (type == 'task_completed_reminder' || type == 'assistant_question') {
+    } else if (type == 'assistant_question') {
       return 3;
     }
     return 0;

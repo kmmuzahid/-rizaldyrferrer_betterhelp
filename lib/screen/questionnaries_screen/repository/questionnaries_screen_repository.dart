@@ -1,4 +1,4 @@
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/service/api/api_services.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 
@@ -10,7 +10,7 @@ class QuestionnariesScreenRepository {
   }) async {
     try {
       final response = await _apiServices.apiPostServices(
-        url: AppApiurl.questionAnswer,
+        url: ApiEndPoints.questionAnswer,
         body: questionAnswers,
       );
 

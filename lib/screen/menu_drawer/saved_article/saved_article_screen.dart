@@ -1,4 +1,4 @@
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/menu_drawer/saved_article/controller/saved_article_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
@@ -99,7 +99,7 @@ class SavedArticleScreen extends GetView<SavedArticleController> {
               // Build full image URL
               String imageUrl = article.image ?? '';
               if (imageUrl.isNotEmpty && !imageUrl.startsWith('http')) {
-                imageUrl = '${AppApiurl.liveDomain}$imageUrl';
+                imageUrl = '${ApiEndPoints.liveDomain}$imageUrl';
               }
 
               // Parse publication date

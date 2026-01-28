@@ -1,4 +1,4 @@
-import 'package:better_help/core/app_apiurl/app_apiurl.dart';
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/community_sections/main_community/controller/article_details_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
@@ -86,7 +86,7 @@ class _ArticlesDetailsScreenState extends State<ArticlesDetailsScreen> {
           String imageUrl = article.image ?? '';
           if (imageUrl.isNotEmpty && !imageUrl.startsWith('http')) {
             // If image is a relative path, prepend the base domain
-            imageUrl = '${AppApiurl.liveDomain}$imageUrl';
+            imageUrl = '${ApiEndPoints.liveDomain}$imageUrl';
           }
 
           return CustomScrollView(
@@ -122,7 +122,7 @@ class _ArticlesDetailsScreenState extends State<ArticlesDetailsScreen> {
                                       (context, child, loadingProgress) {
                                         if (loadingProgress == null)
                                           return child;
-                                        return Container(
+                                    return SizedBox(
                                           height: AppSize.height(value: 250),
                                           child: Center(
                                             child:

@@ -24,6 +24,9 @@ class BookingsSessionsScreen extends StatelessWidget {
       ),
       backgroundColor: AppColors.white,
       body: Obx(() {
+        if (controller.isLoading.value && controller.bookingSessionModel.isEmpty) {
+          return Center(child: CircularProgressIndicator());
+        }
         return SmartListLoader(
           itemCount: controller.bookingSessionModel.length,
           onRefresh: () {

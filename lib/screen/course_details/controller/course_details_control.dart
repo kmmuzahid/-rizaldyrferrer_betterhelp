@@ -24,10 +24,11 @@ class CourseDetailsController extends GetxController {
   RxString videoDuration = "".obs;
 
   Rxn<BetterPlayerController> betterPlayerController = Rxn<BetterPlayerController>();
+
   void initializePlayer() {
     final videoUrl = courseDetails.value?.data.video;
     if (videoUrl == null || videoUrl.isEmpty) return;
-    Rxn<BetterPlayerController> betterPlayerController = Rxn<BetterPlayerController>();
+    betterPlayerController = Rxn<BetterPlayerController>();
 
     isPlay.value = false;
 

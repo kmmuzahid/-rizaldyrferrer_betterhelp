@@ -12,20 +12,34 @@ class BookingController extends GetxController {
   var selectedDate = DateTime.now().obs;
   var selectedTime = "".obs;
 
-  final List<String> morningSlots = ["09:00 AM", "09:45 AM", "10:30 AM", "11:15 AM"];
+  final List<String> morningSlots = [
+    "09:00 AM",
+    "09:45 AM",
+    "10:00 AM",
+    "10:45 AM",
+    "11:00 AM",
+    "11:45 AM",
+  ];
 
   final List<String> afternoonSlots = [
     "12:00 PM",
     "12:45 PM",
-    "01:30 PM",
-    "02:15 PM",
+    "01:00 PM",
+    "01:45 PM",
+    "02:00 PM",
+    "02:45 PM",
     "03:00 PM",
     "03:45 PM",
-    "04:30 PM",
-    "05:15 PM",
   ];
 
-  final List<String> nightSlots = ["06:00 PM", "06:45 PM", "07:30 PM", "08:15 PM", "09:00 PM"];
+  final List<String> nightSlots = [
+    "06:00 PM",
+    "06:45 PM",
+    "07:00 PM",
+    "07:45 PM",
+    "08:00 PM",
+    "08:45 PM",
+  ];
 
   RxList<String> availableSlots = <String>[].obs;
 

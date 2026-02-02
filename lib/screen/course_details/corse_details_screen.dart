@@ -86,7 +86,7 @@ class CourseDetailScreen extends StatelessWidget {
               ),
             ),
           ],
-          if (controller.isPlay.value)
+          if (controller.isPlay.value && controller.betterPlayerController.value != null)
             BetterPlayer(controller: controller.betterPlayerController.value!),
         ],
       ),

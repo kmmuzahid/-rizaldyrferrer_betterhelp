@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 class BookingController extends GetxController {
   var selectedDate = DateTime.now().obs;
   var selectedTime = "".obs;
+  var isAvailableSlotsLoading = false.obs;
 
   final List<String> morningSlots = [
     "09:00 AM",
@@ -50,9 +51,10 @@ class BookingController extends GetxController {
   }
 
   onDaySelected(DateTime date) async {
-    if (selectedDate.value == date) return;
+    if (selectedDate.value == date && isAvailableSlotsLoading.value) return;
     selectedDate.value = date;
     availableSlots.clear();
+    isAvailableSlotsLoading.value = true;
     final response = await DioService.instance.request<List<String>>(
       input: RequestInput(
         endpoint: ApiEndPoints.getDoctorAvailableSlots,
@@ -74,6 +76,7 @@ class BookingController extends GetxController {
       availableSlots.clear();
     }
     availableSlots.refresh();
+    isAvailableSlotsLoading.value = false;
   }
 
   void selectTime(String time) {

@@ -25,38 +25,44 @@ class BookingScreen extends StatelessWidget {
       ),
       body: Obx(
         () => SingleChildScrollView(
-          
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Please select a time with you better health advocate from these given timeslots",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
-            ),
-            const SizedBox(height: 10),
-            _buildCalendar(),
-            const SizedBox(height: 10),
-              Column(
-                key: Key(
-                  'booking_${controller.availableSlots.length}${controller.selectedTime.toString()}',
-                ),
-                children: [
-                  _buildSectionHeader(Icons.wb_sunny_outlined, "Morning"),
-                  _buildTimeGrid(controller.morningSlots, controller.availableSlots),
-                  const SizedBox(height: 10),
-                  _buildSectionHeader(Icons.wb_twilight, "Afternoon"),
-                  _buildTimeGrid(controller.afternoonSlots, controller.availableSlots),
-                  const SizedBox(height: 10),
-                  _buildSectionHeader(Icons.wb_twilight, "Night"),
-                  _buildTimeGrid(controller.nightSlots, controller.availableSlots),
-                ],
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Please select a time with you better health advocate from these given timeslots",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
               ),
-            const SizedBox(height: 20),
-            _buildConfirmButton(),
-            20.height,
-          ],
-        ),
+              const SizedBox(height: 10),
+              _buildCalendar(),
+              const SizedBox(height: 10),
+              controller.isAvailableSlotsLoading.value
+                  ? const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 80),
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : Column(
+                      key: Key(
+                        'booking_${controller.availableSlots.length}${controller.selectedTime.toString()}',
+                      ),
+                      children: [
+                        _buildSectionHeader(Icons.wb_sunny_outlined, "Morning"),
+                        _buildTimeGrid(controller.morningSlots, controller.availableSlots),
+                        const SizedBox(height: 10),
+                        _buildSectionHeader(Icons.wb_twilight, "Afternoon"),
+                        _buildTimeGrid(controller.afternoonSlots, controller.availableSlots),
+                        const SizedBox(height: 10),
+                        _buildSectionHeader(Icons.wb_twilight, "Night"),
+                        _buildTimeGrid(controller.nightSlots, controller.availableSlots),
+                      ],
+                    ),
+              const SizedBox(height: 20),
+              _buildConfirmButton(),
+              20.height,
+            ],
+          ),
         ),
       ),
     );
@@ -64,33 +70,30 @@ class BookingScreen extends StatelessWidget {
 
   Widget _buildCalendar() {
     return Container(
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: TableCalendar(
-          focusedDay: controller.selectedDate.value,
-          selectedDayPredicate: (day) {
-            return controller.selectedDate.value == day;
-          },
-          onDaySelected: (selectedDay, focusedDay) {
-            controller.onDaySelected(selectedDay);
-          },
-          firstDay: DateTime.now(),
-          lastDay: DateTime.now().add(const Duration(days: 365)),
-          headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: false),
-          calendarStyle: CalendarStyle(
-            selectedDecoration: const BoxDecoration(
-              color: Color(0xFF4A919E),
-              shape: BoxShape.circle,
-            ),
-            todayDecoration: BoxDecoration(
-              color: Colors.teal.withOpacity(0.3),
-              shape: BoxShape.circle,
-            ),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: TableCalendar(
+        focusedDay: controller.selectedDate.value,
+        selectedDayPredicate: (day) {
+          if (controller.isAvailableSlotsLoading.value) return false;
+          return controller.selectedDate.value == day;
+        },
+        onDaySelected: (selectedDay, focusedDay) {
+          controller.onDaySelected(selectedDay);
+        },
+        firstDay: DateTime.now(),
+        lastDay: DateTime.now().add(const Duration(days: 365)),
+        headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: false),
+        calendarStyle: CalendarStyle(
+          selectedDecoration: const BoxDecoration(color: Color(0xFF4A919E), shape: BoxShape.circle),
+          todayDecoration: BoxDecoration(
+            color: Colors.teal.withOpacity(0.3),
+            shape: BoxShape.circle,
           ),
         ),
-      
+      ),
     );
   }
 
@@ -127,34 +130,34 @@ class BookingScreen extends StatelessWidget {
       ),
       itemBuilder: (context, index) {
         String time = slots[index];
-          bool isSelected = controller.selectedTime.value == time;
-          bool isSelectable = controller.isTimeSelectable(
-            selectedDate: controller.selectedDate.value,
-            time: time,
-          );
+        bool isSelected = controller.selectedTime.value == time;
+        bool isSelectable = controller.isTimeSelectable(
+          selectedDate: controller.selectedDate.value,
+          time: time,
+        );
 
         isSelectable = isSelectable && availableSlots.contains(time);
 
-          return GestureDetector(
-            onTap: isSelectable ? () => controller.selectTime(time) : null,
-            child: Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: isSelected && isSelectable
-                    ? const Color(0xFF3B8A99)
-                    : !isSelectable
-                    ? Colors.grey.withOpacity(0.8)
-                    : const Color(0xFFD6E2E5),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                time,
-                style: TextStyle(
-                  color: isSelected || !isSelectable ? Colors.white : const Color(0xFF4A919E),
-                  fontWeight: FontWeight.bold,
-                ),
+        return GestureDetector(
+          onTap: isSelectable ? () => controller.selectTime(time) : null,
+          child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: isSelected && isSelectable
+                  ? const Color(0xFF3B8A99)
+                  : !isSelectable
+                  ? Colors.grey.withOpacity(0.8)
+                  : const Color(0xFFD6E2E5),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              time,
+              style: TextStyle(
+                color: isSelected || !isSelectable ? Colors.white : const Color(0xFF4A919E),
+                fontWeight: FontWeight.bold,
               ),
             ),
+          ),
         );
       },
     );

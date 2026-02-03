@@ -10,6 +10,8 @@ import 'package:better_help/screen/notification/notification_screen_controller.d
 import 'package:better_help/service/repository/profile_repositroy/profile_repository.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
+import 'package:core_kit/core_kit.dart';
+import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
 
 class MyProfileScreenController extends GetxController {
@@ -63,4 +65,23 @@ class MyProfileScreenController extends GetxController {
     }
     return '';
   }
+
+  RxBool isReplaceBhaBhaaLoading = false.obs;
+
+  replaceBhaBhaa({required String choice, required String reason}) async {
+    if (isReplaceBhaBhaaLoading.value) return;
+    isReplaceBhaBhaaLoading.value = true;
+    await DioService.instance.request(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: ApiEndPoints.bhaBhaaReassignRequest,
+        method: RequestMethod.POST,
+        jsonBody: {"reason": reason, "assignPersonRole": choice == 'BHA' ? 'doctor' : 'assistant'},
+      ),
+      responseBuilder: (data) => data,
+    );
+    isReplaceBhaBhaaLoading.value = false;
+  }
+
+  
 }

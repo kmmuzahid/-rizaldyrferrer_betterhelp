@@ -2,8 +2,9 @@ import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
+import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:core_kit/image/common_image.dart';
+import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -21,9 +22,7 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
       backgroundColor: AppColors.white,
       body: Obx(() {
         if (controller.isLoading.value) {
-          return Center(
-            child: CircularProgressIndicator(color: AppColors.primary500),
-          );
+          return Center(child: CircularProgressIndicator(color: AppColors.primary500));
         }
 
         final profile = controller.profileData.value;
@@ -57,9 +56,7 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
                 Gap(height: AppSize.height(value: 12)),
                 Center(
                   child: AppButton(
-                    title: profile?.isSubscribed == true
-                        ? "Subscribed"
-                        : "Elevete Subscribe",
+                    title: profile?.isSubscribed == true ? "Subscribed" : "Elevete Subscribe",
                     fontSize: AppSize.width(value: 14),
                     width: AppSize.width(value: 150),
                     height: AppSize.height(value: 36),
@@ -153,6 +150,7 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
                 Gap(height: AppSize.height(value: 08)),
                 Divider(height: 0.3, color: AppColors.grey400),
                 Gap(height: AppSize.height(value: 12)),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -166,6 +164,34 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
                     GestureDetector(
                       onTap: () {
                         Get.toNamed(AppRoute.changePasswrodScreen);
+                      },
+                      child: AppText(
+                        text: "Click here",
+                        fontFamilyIndex: 2,
+                        fontSize: AppSize.width(value: 14),
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.blue500,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ],
+                ),
+                Gap(height: AppSize.height(value: 08)),
+                Divider(height: 0.3, color: AppColors.grey400),
+                Gap(height: AppSize.height(value: 12)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AppText(
+                      text: "Request to Reassing BHA/BHAA",
+                      fontFamilyIndex: 2,
+                      fontSize: AppSize.width(value: 14),
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.darkGrey,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        showReplaceBhaBhaaDialog();
                       },
                       child: AppText(
                         text: "Click here",
@@ -221,6 +247,92 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
           ),
         );
       }),
+    );
+  }
+
+
+
+  void showReplaceBhaBhaaDialog() {
+    final RxString selectedChoice = 'BHA'.obs;
+    final RxString reason = ''.obs;
+
+    showDialog(
+      context: Get.context!,
+      barrierDismissible: true,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        backgroundColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text("Reassign Role", style: TextStyle(color: Colors.blueGrey, fontSize: 14)),
+
+              const SizedBox(height: 10),
+
+              CommonDropDown(
+                enableInitalSelection: true,
+                hint: "Select BHA/BHAA",
+                items: ["BHA", "BHAA"],
+                onChanged: (value) {
+                  selectedChoice.value = value ?? 'BHA';
+                },
+                nameBuilder: (item) => item,
+              ),
+
+              const SizedBox(height: 16),
+
+              const CommonText(
+                text: 'Write down the reason for changing BHA, BHAA',
+                style: TextStyle(color: Colors.blueGrey, fontSize: 14),
+              ),
+
+              const SizedBox(height: 8),
+
+              SizedBox(
+                height: AppSize.height(value: 140),
+                child: CommonMultilineTextField(
+                  hintText: "Reason",
+                  validationType: ValidationType.validateRequired,
+                  onChanged: (value) {
+                    reason.value = value;
+                  },
+                ),
+              ),
+
+              20.height,
+
+              Obx(() {
+                return CommonButton(
+                  isLoading: controller.isReplaceBhaBhaaLoading.value,
+                  buttonRadius: 8,
+                  buttonColor: Colors.cyan,
+                  titleColor: Colors.white,
+                  buttonWidth: double.infinity,
+
+                  onTap: () async {
+                    if (reason.value.trim().isEmpty) {
+                      AppSnackBar.showWarning("Please enter reason");
+                      return;
+                    }
+
+                    await controller.replaceBhaBhaa(
+                      choice: selectedChoice.value,
+                      reason: reason.value,
+                    );
+
+                    Navigator.pop(context);
+                  },
+
+                  titleText: "Send Request",
+                );
+              }),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

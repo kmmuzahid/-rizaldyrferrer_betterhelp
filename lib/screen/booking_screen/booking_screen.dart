@@ -124,7 +124,7 @@ class BookingScreen extends StatelessWidget {
       itemCount: slots.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 2.5,
+        childAspectRatio: 4.2,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
       ),

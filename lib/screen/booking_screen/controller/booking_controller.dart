@@ -12,35 +12,20 @@ class BookingController extends GetxController {
   var selectedDate = DateTime.now().obs;
   var selectedTime = "".obs;
   var isAvailableSlotsLoading = false.obs;
+  var isBookingLoading = false.obs;
 
-  final List<String> morningSlots = [
-    "09:00 AM",
-    "09:45 AM",
-    "10:00 AM",
-    "10:45 AM",
-    "11:00 AM",
-    "11:45 AM",
-  ];
+  final List<String> morningSlots = ["09:00 AM", "10:00 AM", "11:00 AM"];
 
   final List<String> afternoonSlots = [
     "12:00 PM",
-    "12:45 PM",
     "01:00 PM",
-    "01:45 PM",
     "02:00 PM",
-    "02:45 PM",
     "03:00 PM",
-    "03:45 PM",
+    "04:00 PM",
+    "05:00 PM",
   ];
 
-  final List<String> nightSlots = [
-    "06:00 PM",
-    "06:45 PM",
-    "07:00 PM",
-    "07:45 PM",
-    "08:00 PM",
-    "08:45 PM",
-  ];
+  final List<String> nightSlots = ["06:00 PM", "07:00 PM", "08:00 PM"];
 
   RxList<String> availableSlots = <String>[].obs;
 
@@ -152,11 +137,13 @@ class BookingController extends GetxController {
   }
 
   void confirmBooking() async {
+    if (isBookingLoading.value) return;
     if (selectedTime.value.isEmpty) {
       showSnackBar('Please select a time slot', type: SnackBarType.warning);
       return;
     }
-    DioService.instance.request<dynamic>(
+    isBookingLoading.value = true;
+    final response = await DioService.instance.request<dynamic>(
       showMessage: true,
       input: RequestInput(
         endpoint: ApiEndPoints.createDoctorBooking,
@@ -171,5 +158,15 @@ class BookingController extends GetxController {
         return data;
       },
     );
+    isBookingLoading.value = false;
+    if (response.isSuccess) {
+      print(selectedTime.value);
+      print(availableSlots);
+      availableSlots.removeWhere(
+        (element) => element.toLowerCase() == selectedTime.value.toLowerCase(),
+      );
+      print(availableSlots);
+      availableSlots.refresh();
+    }
   }
 }

@@ -59,7 +59,7 @@ class BookingScreen extends StatelessWidget {
                       ],
                     ),
               const SizedBox(height: 20),
-              _buildConfirmButton(),
+              _buildConfirmButton(controller),
               20.height,
             ],
           ),
@@ -123,7 +123,7 @@ class BookingScreen extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: slots.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
+        crossAxisCount: 2,
         childAspectRatio: 2.5,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
@@ -135,6 +135,8 @@ class BookingScreen extends StatelessWidget {
           selectedDate: controller.selectedDate.value,
           time: time,
         );
+
+        String next45MinSlot = controller.getNext45MinSlot(time);
 
         isSelectable = isSelectable && availableSlots.contains(time);
 
@@ -151,7 +153,7 @@ class BookingScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              time,
+              '$time - $next45MinSlot',
               style: TextStyle(
                 color: isSelected || !isSelectable ? Colors.white : const Color(0xFF4A919E),
                 fontWeight: FontWeight.bold,
@@ -163,18 +165,15 @@ class BookingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildConfirmButton() {
-    return SizedBox(
-      width: double.infinity,
-      height: 55,
-      child: ElevatedButton(
-        onPressed: controller.confirmBooking,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF3B8A99),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-        child: const Text("Confirm Booking", style: TextStyle(fontSize: 18, color: Colors.white)),
-      ),
+  Widget _buildConfirmButton(BookingController controller) {
+    return CommonButton(
+      titleText: controller.isBookingLoading.value ? 'Processing...' : "Confirm Booking",
+      buttonWidth: double.infinity,
+      buttonRadius: 8,
+      buttonColor: Colors.cyan,
+      titleColor: Colors.white,
+      onTap: controller.confirmBooking,
+      isLoading: controller.isBookingLoading.value,
     );
   }
 }

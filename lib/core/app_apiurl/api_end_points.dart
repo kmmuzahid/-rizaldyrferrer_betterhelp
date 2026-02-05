@@ -77,5 +77,5 @@ class ApiEndPoints {
   static const termsOfService = "$baseUrl/setting?termsOfService";
   static const privacyPolicy = "$baseUrl/setting?privacyPolicy";
   static const taskStatistics = "$baseUrl/task/statistics";
-  static const bhaBhaaReassignRequest = "$baseUrl/bha-bhaa-reassign-request";
+  static const bhaBhaaReassignRequest = "$baseUrl/bha-bhaa-reassign";
 }

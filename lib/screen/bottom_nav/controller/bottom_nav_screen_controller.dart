@@ -1,4 +1,10 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-09 09:41:39
+ * @Email: km.muzahid@gmail.com
+ */
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/screen/supports_sections/main_supports/controller/support_screen_controller.dart';
 import 'package:get/get.dart';
 
 class BottomNavScreenController extends GetxController {
@@ -18,7 +24,6 @@ class BottomNavScreenController extends GetxController {
     }
   }
 
-
   void changeIndex(int index) {
     selectedIndex.value = index;
 
@@ -26,12 +31,14 @@ class BottomNavScreenController extends GetxController {
     if (index != 4) {
       productDetailsArguments.clear();
     }
+    if (index == 2) {
+      Get.find<SupportScreenController>().fetchBookingSession(page: 1);
+    }
   }
 
   static void navigateToHabits() {
     try {
-      BottomNavScreenController controller =
-          Get.find<BottomNavScreenController>();
+      BottomNavScreenController controller = Get.find<BottomNavScreenController>();
       controller.changeIndex(0);
     } catch (e) {
       Get.offNamed(AppRoute.bottomNav, arguments: {'initialIndex': 0});
@@ -40,8 +47,7 @@ class BottomNavScreenController extends GetxController {
 
   static void navigateToLearn() {
     try {
-      BottomNavScreenController controller =
-          Get.find<BottomNavScreenController>();
+      BottomNavScreenController controller = Get.find<BottomNavScreenController>();
       controller.changeIndex(1);
     } catch (e) {
       Get.offNamed(AppRoute.bottomNav, arguments: {'initialIndex': 1});
@@ -50,8 +56,8 @@ class BottomNavScreenController extends GetxController {
 
   static void navigateToSupport() {
     try {
-      BottomNavScreenController controller =
-          Get.find<BottomNavScreenController>();
+      BottomNavScreenController controller = Get.find<BottomNavScreenController>();
+   
       controller.changeIndex(2);
     } catch (e) {
       Get.offNamed(AppRoute.bottomNav, arguments: {'initialIndex': 2});
@@ -60,8 +66,7 @@ class BottomNavScreenController extends GetxController {
 
   static void navigateToProgress() {
     try {
-      BottomNavScreenController controller =
-          Get.find<BottomNavScreenController>();
+      BottomNavScreenController controller = Get.find<BottomNavScreenController>();
       controller.changeIndex(3);
     } catch (e) {
       Get.offNamed(AppRoute.bottomNav, arguments: {'initialIndex': 3});
@@ -70,8 +75,7 @@ class BottomNavScreenController extends GetxController {
 
   static void navigateToCommunity() {
     try {
-      BottomNavScreenController controller =
-          Get.find<BottomNavScreenController>();
+      BottomNavScreenController controller = Get.find<BottomNavScreenController>();
       controller.changeIndex(4);
     } catch (e) {
       Get.offNamed(AppRoute.bottomNav, arguments: {'initialIndex': 4});

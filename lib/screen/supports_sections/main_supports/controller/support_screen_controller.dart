@@ -4,6 +4,7 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
+import 'package:better_help/screen/menu_drawer/bookings_sessions/model/booking_session_model.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/supports_sections/main_supports/model/message_model.dart';
 import 'package:better_help/sockets/support_message_socket.dart';
@@ -15,11 +16,13 @@ class SupportScreenController extends GetxController {
   RxList<MessageModel> messageModel = RxList<MessageModel>([]);
   late String chatId;
   final MyProfileScreenController profileScreenController = Get.find();
+  Rxn<BookedSessionModel?> bookedSessionModel = Rxn();
 
   @override
   void onInit() {
     chatId = profileScreenController.profileData.value?.doctorChatId ?? '';
     getMessages(page: 1);
+    
     SocketService.instance.startListeningChat(
       chatId: chatId,
       onMessage: (data) {
@@ -29,6 +32,22 @@ class SupportScreenController extends GetxController {
     );
 
     super.onInit();
+  }
+
+  fetchBookingSession({bool refresh = false, int page = 1}) async {
+    final result = await DioService.instance.request<List<BookedSessionModel>>(
+      input: RequestInput(
+        endpoint: ApiEndPoints.getMyBooking,
+        queryParams: {'page': page, 'limit': 10},
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (response) {
+        return List<BookedSessionModel>.from(response.map((x) => BookedSessionModel.fromJson(x)));
+      },
+    );
+    if (result.isSuccess) {
+      bookedSessionModel.value = result.data?.first;
+    }
   }
 
   @override

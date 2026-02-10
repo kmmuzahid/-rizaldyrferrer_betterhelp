@@ -131,7 +131,7 @@ class QuestionnariesScreen extends StatelessWidget {
                 child: Slider(
                   value: controller.progressValue.value,
                   onChanged: (_) {},
-                  max: QuestionnariesScreenController.totalPages.toDouble(),
+                  max: (QuestionnariesScreenController.totalPages - 1).toDouble(),
                   min: 1,
                   activeColor: _getActiveSliderColor(pageIndex),
                   inactiveColor: _getInactiveSliderColor(pageIndex),
@@ -149,6 +149,7 @@ class QuestionnariesScreen extends StatelessWidget {
       child: PageView(
         controller: controller.pageController,
         onPageChanged: controller.onPageChanged,
+        physics: NeverScrollableScrollPhysics(),
         children: [
           SingleChildScrollView(child: _buildQuestionPage(controller, 0)),
           SingleChildScrollView(child: _buildQuestionPage(controller, 1)),
@@ -368,8 +369,7 @@ class QuestionnariesScreen extends StatelessWidget {
         title: isLoading
             ? 'Submitting...'
             : (isResult
-                  ? 'Continue'
-                  : (isGoals ? 'See Results' : AppString.next)),
+                  ? 'See Results' : (isGoals ? 'Continue' : AppString.next)),
         titleColor: isResult ? AppColors.white : AppColors.black,
         backgroundColor: isResult ? Colors.red : AppColors.white,
         onTap: isLoading

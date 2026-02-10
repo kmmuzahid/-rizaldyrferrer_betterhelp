@@ -219,7 +219,7 @@ class CourseDetailScreen extends StatelessWidget {
       children: [
         _badge(
           Icons.access_time,
-          (controller.courseDetails.value?.data.createdAt ?? DateTime.now()).checkTime,
+          (controller.courseDetails.value?.data.createdAt ?? DateTime.now()).date,
         ),
         10.width,
         _badge(

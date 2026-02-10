@@ -15,6 +15,7 @@ import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class SupportScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
@@ -141,18 +142,23 @@ class _SupportScreenState extends State<SupportScreen> {
                 fontWeight: FontWeight.bold,
               ),
               const Spacer(),
-              CommonText(
-                top: 4,
-                bottom: 4,
-                left: 8,
-                right: 8,
-                borderColor: Colors.white,
-                backgroundColor: Colors.white,
-                preffix: Icon(Icons.calendar_today_outlined),
-                text: "11:00 AM 10-27-2025",
-                textColor: AppColors.accelerationButton,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
+              GestureDetector(
+                onTap: () {
+                  Get.toNamed(AppRoute.bookingsSessions);
+                },
+                child: CommonText(
+                  top: 4,
+                  bottom: 4,
+                  left: 8,
+                  right: 8,
+                  borderColor: Colors.white,
+                  backgroundColor: Colors.white,
+                  preffix: Icon(Icons.calendar_today_outlined),
+                  text: getBookingDate() ?? 'No Appointment',
+                  textColor: AppColors.accelerationButton,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
@@ -188,6 +194,13 @@ class _SupportScreenState extends State<SupportScreen> {
         ),
       ],
     );
+  }
+
+  String? getBookingDate() {
+    if (controller.bookedSessionModel.value?.bookingDate == null) {
+      return null;
+    }
+    return '${DateFormat('dd-MM-yyyy').format(controller.bookedSessionModel.value?.bookingDate ?? DateTime.now())} ${controller.bookedSessionModel.value?.startTime}';
   }
 
   Widget _buildQuickActionCard({

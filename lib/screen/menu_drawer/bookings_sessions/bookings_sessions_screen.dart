@@ -152,6 +152,7 @@ class BookingsSessionsScreen extends StatelessWidget {
     BookingsSessionsController controller,
   ) {
     final isConfirmed = bookingSessionModel?.status == "confirmed";
+    final isJoinable = controller.isJoainable(bookingSessionModel);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 05)),
       height: AppSize.height(value: 65),
@@ -192,11 +193,11 @@ class BookingsSessionsScreen extends StatelessWidget {
           ),
           if (isConfirmed)
             AppButton(
-              title: "Join Now",
+              title: isJoinable ? "Join Now" : "Upcoming",
               titleColor: AppColors.white,
               padding: EdgeInsets.all(5),
               fontSize: 10,
-              backgroundColor: AppColors.primary500,
+              backgroundColor: isJoinable ? AppColors.primary500 : Colors.grey,
               height: AppSize.height(value: 30),
               width: AppSize.width(value: 100),
               onTap: () {

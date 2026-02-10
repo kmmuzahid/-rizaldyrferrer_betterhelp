@@ -4,13 +4,13 @@ import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
+import 'package:core_kit/snackbar/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class QuestionnariesScreenController extends GetxController {
   final PageController pageController = PageController();
-  final QuestionnariesScreenRepository _repository =
-      QuestionnariesScreenRepository();
+  final QuestionnariesScreenRepository _repository = QuestionnariesScreenRepository();
   final StorageService _storageService = StorageService();
 
   RxDouble progressValue = 1.0.obs;
@@ -23,8 +23,7 @@ class QuestionnariesScreenController extends GetxController {
   // Configuration
   static const int questionsPerPage = 5;
   static const int totalQuestionPages = 3;
-  static const int totalPages =
-      5; // 3 question pages + 1 goals page + 1 result page
+  static const int totalPages = 5; // 3 question pages + 1 goals page + 1 result page
 
   // Store answers for all questions (key: questionNumber, value: answer)
   RxMap<int, String> answers = <int, String>{}.obs;
@@ -57,8 +56,7 @@ class QuestionnariesScreenController extends GetxController {
     ],
   ];
 
-  int get totalQuestions =>
-      questionsByPage.fold(0, (sum, page) => sum + page.length);
+  int get totalQuestions => questionsByPage.fold(0, (sum, page) => sum + page.length);
 
   void selectAnswer(int questionNumber, String answer) {
     answers[questionNumber] = answer;
@@ -68,8 +66,16 @@ class QuestionnariesScreenController extends GetxController {
     return answers[questionNumber] == answer;
   }
 
-  void nextPage() {
+  void nextPage() { 
+    if ((currentPageIndex.value == 0 && answers.length < 5) ||
+        (currentPageIndex.value == 1 && answers.length < 10) ||
+        (currentPageIndex.value == 2 && answers.length < 15)) {
+      showSnackBar("Please answer all questions", type: SnackBarType.warning);
+      return;
+    }
     if (currentPageIndex.value < totalPages - 1) {
+
+     
       currentPageIndex.value++;
       pageController.animateToPage(
         currentPageIndex.value,
@@ -122,9 +128,7 @@ class QuestionnariesScreenController extends GetxController {
     }
 
     // Add goals question
-    final selectedGoalsList = selectedGoals
-        .map((index) => goalOptions[index])
-        .toList();
+    final selectedGoalsList = selectedGoals.map((index) => goalOptions[index]).toList();
     payload.add({
       'questions': AppString.whatdoYouwanttoAchieve,
       'questionOutput': selectedGoalsList.join(', '),
@@ -154,19 +158,11 @@ class QuestionnariesScreenController extends GetxController {
     }
 
     // Add goals question with list of selected goals
-    final selectedGoalsList = selectedGoals
-        .map((index) => goalOptions[index])
-        .toList();
-    responses.add({
-      'question': AppString.whatdoYouwanttoAchieve,
-      'answer': selectedGoalsList,
-    });
+    final selectedGoalsList = selectedGoals.map((index) => goalOptions[index]).toList();
+    responses.add({'question': AppString.whatdoYouwanttoAchieve, 'answer': selectedGoalsList});
 
     // Add scale question
-    responses.add({
-      'question': AppString.resultQuestion,
-      'answer': selectedScaleNumber.value ?? 0,
-    });
+    responses.add({'question': AppString.resultQuestion, 'answer': selectedScaleNumber.value ?? 0});
 
     return responses;
   }
@@ -204,9 +200,7 @@ class QuestionnariesScreenController extends GetxController {
       // Save responses to storage for OTP verification
       await _saveResponsesToStorage();
 
-      final response = await _repository.submitQuestionAnswers(
-        questionAnswers: payload,
-      );
+      final response = await _repository.submitQuestionAnswers(questionAnswers: payload);
 
       if (response != null && response['success'] == true) {
         apiResponseData.value = response['data'];
@@ -216,10 +210,7 @@ class QuestionnariesScreenController extends GetxController {
         await _saveResponsesToStorage();
         await _saveOutputToStorage(response['data']);
 
-        Get.offNamed(
-          AppRoute.questionnaireSummaryScreen,
-          arguments: response['data'],
-        );
+        Get.offNamed(AppRoute.questionnaireSummaryScreen, arguments: response['data']);
       } else {
         AppSnackBar.showError('Failed to submit answers. Please try again.');
       }
@@ -233,7 +224,7 @@ class QuestionnariesScreenController extends GetxController {
 
   String getCurrentStepText() {
     int currentStep = currentPageIndex.value + 1;
-    return '$currentStep/$totalPages';
+    return '$currentStep/${totalPages - 1}';
   }
 
   double getCompletionPercentage() {
@@ -242,8 +233,7 @@ class QuestionnariesScreenController extends GetxController {
 
   bool get isResultPage => currentPageIndex.value == totalPages - 1;
   bool get isGoalsPage => currentPageIndex.value == totalPages - 2;
-  bool get isLastQuestionPage =>
-      currentPageIndex.value == totalQuestionPages - 1;
+  bool get isLastQuestionPage => currentPageIndex.value == totalQuestionPages - 1;
 
   // Goals page multi-select options
   RxList<int> selectedGoals = <int>[].obs;

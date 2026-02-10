@@ -97,6 +97,41 @@ class BookingsSessionsController extends GetxController {
     fetchBookings();
   }
 
+  bool isJoainable(BookedSessionModel? model) {
+    if (model == null) return false;
+    DateTime bookingDateTime = model.bookingDate;
+
+    DateFormat timeFormat = DateFormat("h:mm a");
+    DateTime startTimeDate = timeFormat.parse(model.startTime);
+
+    DateTime finalStartDateTime = DateTime(
+      bookingDateTime.year,
+      bookingDateTime.month,
+      bookingDateTime.day,
+      startTimeDate.hour,
+      startTimeDate.minute,
+    );
+
+    DateTime finalEndDateTime = DateTime(
+      bookingDateTime.year,
+      bookingDateTime.month,
+      bookingDateTime.day,
+      startTimeDate.hour,
+      startTimeDate.minute + 45,
+    );
+
+    DateTime currentDateTime = DateTime.now();
+
+    if (currentDateTime.isAfter(finalEndDateTime)) {
+      return false;
+    }
+
+    if (currentDateTime.isBefore(finalStartDateTime)) {
+      return false;
+    }
+    return true;
+  }
+
   /// Fetch bookings from API
   Future<void> fetchBookings({bool refresh = false}) async {
     if (isLoading.value) return;

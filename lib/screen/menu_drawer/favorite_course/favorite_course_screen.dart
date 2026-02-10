@@ -111,7 +111,7 @@ class FavoriteCourseScreen extends GetView<FavoriteCourseController> {
                   onTap: () {
                     Get.toNamed(
                       AppRoute.courseDetailScreen,
-                      arguments: {'courseId': course.id},
+                      arguments: {'courseId': course.id, 'id': course.id},
                     );
                   },
                   margin: EdgeInsets.only(bottom: 10),

@@ -4,6 +4,7 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/screen/booking_screen/controller/booking_controller.dart';
+import 'package:better_help/screen/booking_screen/model/slots_model.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
 import 'package:core_kit/core_kit.dart';
@@ -48,14 +49,11 @@ class BookingScreen extends StatelessWidget {
                         'booking_${controller.availableSlots.length}${controller.selectedTime.toString()}',
                       ),
                       children: [
-                        _buildSectionHeader(Icons.wb_sunny_outlined, "Morning"),
-                        _buildTimeGrid(controller.morningSlots, controller.availableSlots),
-                        const SizedBox(height: 10),
-                        _buildSectionHeader(Icons.wb_twilight, "Afternoon"),
-                        _buildTimeGrid(controller.afternoonSlots, controller.availableSlots),
-                        const SizedBox(height: 10),
-                        _buildSectionHeader(Icons.wb_twilight, "Night"),
-                        _buildTimeGrid(controller.nightSlots, controller.availableSlots),
+                        _buildSectionHeader(Icons.wb_sunny_outlined, "Available Slots"),
+                        controller.availableSlots.isEmpty
+                            ? const Center(child: Text("No available slots"))
+                            : _buildTimeGrid(controller.availableSlots),
+                        
                       ],
                     ),
               const SizedBox(height: 20),
@@ -117,7 +115,7 @@ class BookingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTimeGrid(List<String> slots, List<String> availableSlots) {
+  Widget _buildTimeGrid(List<SlotsModel> slots) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -129,33 +127,29 @@ class BookingScreen extends StatelessWidget {
         crossAxisSpacing: 10,
       ),
       itemBuilder: (context, index) {
-        String time = slots[index];
-        bool isSelected = controller.selectedTime.value == time;
-        bool isSelectable = controller.isTimeSelectable(
-          selectedDate: controller.selectedDate.value,
-          time: time,
-        );
-
-        String next45MinSlot = controller.getNext45MinSlot(time);
-
-        isSelectable = isSelectable && availableSlots.contains(time);
+        final selectedSlot = slots[index];
+        final isSelected = index == controller.selectedIndex.value;
 
         return GestureDetector(
-          onTap: isSelectable ? () => controller.selectTime(time) : null,
+          onTap: selectedSlot.isAvailable
+              ? () => controller.selectTime(selectedSlot.startTime, index)
+              : null,
           child: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: isSelected && isSelectable
+              color: isSelected
                   ? const Color(0xFF3B8A99)
-                  : !isSelectable
+                  : !selectedSlot.isAvailable
                   ? Colors.grey.withOpacity(0.8)
                   : const Color(0xFFD6E2E5),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              '$time - $next45MinSlot',
+              '${selectedSlot.startTimeLocal} - ${selectedSlot.endTimeLocal}',
               style: TextStyle(
-                color: isSelected || !isSelectable ? Colors.white : const Color(0xFF4A919E),
+                color: (!selectedSlot.isAvailable || isSelected)
+                    ? Colors.white
+                    : const Color(0xFF4A919E),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -172,7 +166,9 @@ class BookingScreen extends StatelessWidget {
       buttonRadius: 8,
       buttonColor: Colors.cyan,
       titleColor: Colors.white,
-      onTap: controller.confirmBooking,
+      onTap: () {
+        controller.confirmBooking();
+      },
       isLoading: controller.isBookingLoading.value,
     );
   }

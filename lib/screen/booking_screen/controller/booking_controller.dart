@@ -4,6 +4,7 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
+import 'package:better_help/screen/booking_screen/model/slots_model.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
@@ -13,21 +14,11 @@ class BookingController extends GetxController {
   var selectedTime = "".obs;
   var isAvailableSlotsLoading = false.obs;
   var isBookingLoading = false.obs;
+  var selectedIndex = (-1).obs;
 
-  final List<String> morningSlots = ["09:00 AM", "10:00 AM", "11:00 AM"];
+ 
 
-  final List<String> afternoonSlots = [
-    "12:00 PM",
-    "01:00 PM",
-    "02:00 PM",
-    "03:00 PM",
-    "04:00 PM",
-    "05:00 PM",
-  ];
-
-  final List<String> nightSlots = ["06:00 PM", "07:00 PM", "08:00 PM"];
-
-  RxList<String> availableSlots = <String>[].obs;
+  RxList<SlotsModel> availableSlots = <SlotsModel>[].obs;
 
   @override
   void onInit() {
@@ -40,14 +31,14 @@ class BookingController extends GetxController {
     selectedDate.value = date;
     availableSlots.clear();
     isAvailableSlotsLoading.value = true;
-    final response = await DioService.instance.request<List<String>>(
+    final response = await DioService.instance.request<List<SlotsModel>>(
       input: RequestInput(
         endpoint: ApiEndPoints.getDoctorAvailableSlots,
         queryParams: {'date': selectedDate.value.toUtc().toIso8601String()},
         method: RequestMethod.GET,
       ),
       responseBuilder: (data) {
-        return (data as List).map((e) => e['startTime'].toString()).toList();
+        return (data as List).map((e) => SlotsModel.fromJson(e)).toList();
       },
     );
     if (response.isSuccess) {
@@ -64,8 +55,9 @@ class BookingController extends GetxController {
     isAvailableSlotsLoading.value = false;
   }
 
-  void selectTime(String time) {
+  void selectTime(String time, int index) {
     selectedTime.value = time;
+    selectedIndex.value = index;
   }
 
   String getNext45MinSlot(String inputTime) {
@@ -104,8 +96,10 @@ class BookingController extends GetxController {
     return DateTime(2026, 1, 1, hour, minute);
   }
 
-  bool isTimeSelectable({required DateTime selectedDate, required String time}) {
-    if (time.isEmpty || (time == nightSlots[nightSlots.length - 1])) return false;
+  bool isTimeSelectable({required DateTime selectedDate, required int index}) {
+    if (availableSlots[index].startTime.isEmpty ||
+        (availableSlots[index].startTime == availableSlots[availableSlots.length - 1].startTime))
+      return false;
 
     final now = DateTime.now();
 
@@ -116,12 +110,13 @@ class BookingController extends GetxController {
 
     if (selectedDay.isAfter(today)) return true;
 
-    final selectedDateTime = _combineDateAndTime(selectedDay, time);
+    final selectedDateTime = _combineDateAndTime(selectedDay, index);
 
     return selectedDateTime.isAfter(now);
   }
 
-  DateTime _combineDateAndTime(DateTime date, String time) {
+  DateTime _combineDateAndTime(DateTime date, int index) {
+    final time = availableSlots[index].startTime;
     final parts = time.split(' ');
     final timePart = parts[0];
     final period = parts[1].toUpperCase();
@@ -160,12 +155,9 @@ class BookingController extends GetxController {
     );
     isBookingLoading.value = false;
     if (response.isSuccess) {
-      print(selectedTime.value);
-      print(availableSlots);
-      availableSlots.removeWhere(
-        (element) => element.toLowerCase() == selectedTime.value.toLowerCase(),
+      availableSlots[selectedIndex.value] = availableSlots[selectedIndex.value].copyWith(
+        isAvailable: false,
       );
-      print(availableSlots);
       availableSlots.refresh();
     }
   }

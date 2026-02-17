@@ -41,6 +41,7 @@ dependencies:
   agora_rtc_engine: ^6.5.3
   flutter_local_notifications: 
   flutter_timezone:
+  wakelock_plus:
   intl:  
   core_kit:
     git:

@@ -1,6 +1,7 @@
+import 'package:better_help/service/timer_service/timer_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:better_help/service/timer_service/timer_service.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class TimerScreenController extends GetxController
     with GetTickerProviderStateMixin {
@@ -108,6 +109,7 @@ class TimerScreenController extends GetxController
       // Start from current position
       _progressAnimationController!.forward(from: startAnimationValue);
     }
+    WakelockPlus.enable();
   }
 
   void pauseTimer() {
@@ -117,6 +119,7 @@ class TimerScreenController extends GetxController
     if (_progressAnimationController != null) {
       _progressAnimationController!.stop();
     }
+    WakelockPlus.disable();
   }
 
   void resetTimer() {
@@ -134,6 +137,7 @@ class TimerScreenController extends GetxController
     if (_valueNotifier != null) {
       _valueNotifier!.value = 100.0;
     }
+    WakelockPlus.disable();
   }
 
   void setCustomTime(int totalSeconds) {
@@ -164,6 +168,7 @@ class TimerScreenController extends GetxController
     _progressAnimationController?.dispose();
     _valueNotifier?.dispose();
     _valueNotifier = null;
+    WakelockPlus.disable();
     super.onClose();
   }
 }

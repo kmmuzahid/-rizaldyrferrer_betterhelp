@@ -19,10 +19,7 @@ class TimerScreen extends GetView<TimerScreenController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white400,
-      appBar: AppBarWithBack(
-        text: AppString.startTimer,
-        backgroundColor: AppColors.white400,
-      ),
+      appBar: AppBarWithBack(text: AppString.startTimer, backgroundColor: AppColors.white400),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
         child: Column(
@@ -84,9 +81,7 @@ class TimerScreen extends GetView<TimerScreenController> {
             Obx(
               () => AppButton(
                 title: controller.isRunning.value ? "Pause" : "Start",
-                padding: EdgeInsets.symmetric(
-                  vertical: AppSize.height(value: 05),
-                ),
+                padding: EdgeInsets.symmetric(vertical: AppSize.height(value: 05)),
                 backgroundColor: AppColors.blue500,
                 fontSize: AppSize.width(value: 14),
                 titleColor: AppColors.white,
@@ -103,9 +98,7 @@ class TimerScreen extends GetView<TimerScreenController> {
             Gap(height: 20),
             AppButton(
               title: "Reset",
-              padding: EdgeInsets.symmetric(
-                vertical: AppSize.height(value: 05),
-              ),
+              padding: EdgeInsets.symmetric(vertical: AppSize.height(value: 05)),
               fontSize: AppSize.width(value: 14),
               backgroundColor: AppColors.white,
               titleColor: AppColors.black,
@@ -118,9 +111,7 @@ class TimerScreen extends GetView<TimerScreenController> {
             Gap(height: 20),
             AppButton(
               title: "Set Custom Time",
-              padding: EdgeInsets.symmetric(
-                vertical: AppSize.height(value: 05),
-              ),
+              padding: EdgeInsets.symmetric(vertical: AppSize.height(value: 05)),
               fontSize: AppSize.width(value: 14),
               backgroundColor: AppColors.white,
               titleColor: AppColors.blue500,
@@ -131,21 +122,17 @@ class TimerScreen extends GetView<TimerScreenController> {
               borderradius: 12,
             ),
             Gap(height: 30),
-
           ],
         ),
       ),
     );
   }
 
-  void _showTimePickerDialog(
-    BuildContext context,
-    TimerScreenController controller,
-  ) {
+  void _showTimePickerDialog(BuildContext context, TimerScreenController controller) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        int selectedMinutes = 25; // Default to 25 minutes
+        int selectedMinutes = 0; // Default to 25 minutes
         int selectedSeconds = 0; // Default to 0 seconds
 
         return StatefulBuilder(
@@ -176,7 +163,7 @@ class TimerScreen extends GetView<TimerScreenController> {
                           IconButton(
                             onPressed: () {
                               setState(() {
-                                if (selectedMinutes > 1) selectedMinutes--;
+                                if (selectedMinutes > 0) selectedMinutes -= 5;
                               });
                             },
                             icon: Icon(Icons.remove, color: AppColors.blue500),
@@ -194,7 +181,7 @@ class TimerScreen extends GetView<TimerScreenController> {
                           IconButton(
                             onPressed: () {
                               setState(() {
-                                if (selectedMinutes < 60) selectedMinutes++;
+                                if (selectedMinutes < 60) selectedMinutes += 5;
                               });
                             },
                             icon: Icon(Icons.add, color: AppColors.blue500),
@@ -219,7 +206,7 @@ class TimerScreen extends GetView<TimerScreenController> {
                           IconButton(
                             onPressed: () {
                               setState(() {
-                                if (selectedSeconds > 0) selectedSeconds--;
+                                if (selectedSeconds > 0) selectedSeconds -= 5;
                               });
                             },
                             icon: Icon(Icons.remove, color: AppColors.blue500),
@@ -237,7 +224,15 @@ class TimerScreen extends GetView<TimerScreenController> {
                           IconButton(
                             onPressed: () {
                               setState(() {
-                                if (selectedSeconds < 59) selectedSeconds++;
+                                if (selectedSeconds < 50) {
+                                  if (selectedSeconds < 10) {
+                                    selectedSeconds += 5;
+                                  } else {
+                                    selectedSeconds += 10;
+                                  }
+                                } else if (selectedSeconds < 59) {
+                                  selectedSeconds += 9;
+                                }
                               });
                             },
                             icon: Icon(Icons.add, color: AppColors.blue500),

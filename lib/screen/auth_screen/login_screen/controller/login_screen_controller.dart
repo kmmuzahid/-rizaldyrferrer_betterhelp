@@ -14,17 +14,24 @@ class LoginScreenController extends GetxController {
   final _authRepository = AuthReporsitory();
 
   // Text controllers
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
 
   // Loading state
   final isLoading = false.obs;
 
   @override
-  void onClose() {
+  void onInit() {
+    super.onInit();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+  }
+
+  @override
+  dispose() {
     emailController.dispose();
     passwordController.dispose();
-    super.onClose();
+    super.dispose();
   }
 
   // Validate inputs

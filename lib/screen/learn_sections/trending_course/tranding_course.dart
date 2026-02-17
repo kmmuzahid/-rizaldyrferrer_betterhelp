@@ -49,11 +49,11 @@ class TrandingCourse extends StatelessWidget {
               controller.searchController.text = '';
               controller.lastSearch = '';
               controller.trendingCourseList.clear();
-              controller.fetchTrendingCourse(page: 1);
+              controller.fetchCourse(page: 1);
             },
             limit: 10,
             onLoadMore: (page) {
-              controller.fetchTrendingCourse(page: page);
+              controller.fetchCourse(page: page);
             },
             itemCount: controller.trendingCourseList.length,
             itemBuilder: (context, index) {

@@ -16,6 +16,7 @@ import '../model/course_model.dart';
 class LearnScreenController extends GetxController {
   final CarouselSliderController carouselController = CarouselSliderController();
   var currentIndex = 0.obs;
+  var isCategoryLoading = true.obs;
 
   List<String> get backgroundImages => [
     AppStaticImages.dailyAffermation01,
@@ -53,9 +54,10 @@ class LearnScreenController extends GetxController {
   }
 
   void fetchCategory() async {
+    isCategoryLoading.value = true;
     final response = await DioService.instance.request(
       input: RequestInput(
-        queryParams: {"page": 1, "limit": 10},
+        queryParams: {"page": 1, "limit": 100},
         endpoint: ApiEndPoints.getCourseCategoryList,
         method: RequestMethod.GET,
       ),
@@ -66,40 +68,41 @@ class LearnScreenController extends GetxController {
       final data = response.data;
       categoryList.assignAll(data ?? []);
     }
+    isCategoryLoading.value = false;
   }
 
-  void fetchRecentCourse() async {
+  // void fetchRecentCourse() async {
     
-    final response = await DioService.instance.request(
-      // showMessage: true,
-      input: RequestInput(
-        queryParams: {"page": 1, "limit": 10},
-        endpoint: ApiEndPoints.getCourseList,
-        method: RequestMethod.GET,
-      ),
-      responseBuilder: (data) => (data as List).map((e) => CourseModel.fromJson(e)).toList(),
-    );
-    if (response.isSuccess) {
-      final data = response.data;
-      recentCourseList.assignAll(data ?? []);
-    }
-  }
+  //   final response = await DioService.instance.request(
+  //     // showMessage: true,
+  //     input: RequestInput(
+  //       queryParams: {"page": 1, "limit": 10},
+  //       endpoint: ApiEndPoints.getCourseList,
+  //       method: RequestMethod.GET,
+  //     ),
+  //     responseBuilder: (data) => (data as List).map((e) => CourseModel.fromJson(e)).toList(),
+  //   );
+  //   if (response.isSuccess) {
+  //     final data = response.data;
+  //     recentCourseList.assignAll(data ?? []);
+  //   }
+  // }
 
-  void fetchTrendingCourse() async {
-    final response = await DioService.instance.request(
-      input: RequestInput(
-        queryParams: {"page": 1, "limit": 10, "trending": true},
-        endpoint: ApiEndPoints.getCourseList,
-        method: RequestMethod.GET,
-      ),
-      responseBuilder: (data) => (data as List).map((e) => CourseModel.fromJson(e)).toList(),
-    );
+  // void fetchTrendingCourse() async {
+  //   final response = await DioService.instance.request(
+  //     input: RequestInput(
+  //       queryParams: {"page": 1, "limit": 10, "trending": true},
+  //       endpoint: ApiEndPoints.getCourseList,
+  //       method: RequestMethod.GET,
+  //     ),
+  //     responseBuilder: (data) => (data as List).map((e) => CourseModel.fromJson(e)).toList(),
+  //   );
 
-    if (response.isSuccess) {
-      final data = response.data;
-      trendingCourseList.assignAll(data ?? []);
-    }
-  }
+  //   if (response.isSuccess) {
+  //     final data = response.data;
+  //     trendingCourseList.assignAll(data ?? []);
+  //   }
+  // }
 
   toggleFavouriteTrending(int index) async {
     final course = trendingCourseList[index];
@@ -134,10 +137,9 @@ class LearnScreenController extends GetxController {
   }
 
   @override
-  void onInit() {
-    fetchCategory();
-    fetchTrendingCourse();
-    fetchRecentCourse();
+  void onInit() { 
+    // fetchTrendingCourse();
+    // fetchRecentCourse();
     super.onInit();
   }
 }

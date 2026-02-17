@@ -4,6 +4,7 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
+import 'package:better_help/screen/learn_sections/main_learn/model/category_model.dart';
 import 'package:better_help/screen/learn_sections/main_learn/model/course_model.dart';
 import 'package:core_kit/network/dio_service.dart';
 import 'package:core_kit/network/request_input.dart';
@@ -12,24 +13,29 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_workers/utils/debouncer.dart';
 
 class TrendingCourseController extends GetxController {
-  RxList<CourseModel> trendingCourseList = RxList<CourseModel>([]);
-  bool isTrending = false;
+  RxList<CourseModel> trendingCourseList = RxList<CourseModel>([]); 
   TextEditingController searchController = TextEditingController();
   String lastSearch = '';
   final Debouncer debouncer = Debouncer(delay: Duration(milliseconds: 500));
   RxBool isLoading = false.obs;
+  late CategoryModel category;
+
+  bool get isRecent => category.name.toLowerCase().replaceAll(" ", "").trim().startsWith("recent");
+  bool get isTrending =>
+      category.name.toLowerCase().replaceAll(" ", "").trim().startsWith("trending");
+  
 
   @override
   void onInit() {
-    super.onInit();
-    isTrending = Get.arguments == null ? false : Get.arguments['isTrending'] ?? false;
-    fetchTrendingCourse(page: 1);
+    super.onInit(); 
+    category = Get.arguments['category'];
+    fetchCourse(page: 1);
     searchController.addListener(() {
       debouncer.call(() {
         if (lastSearch != searchController.text) {
           trendingCourseList.clear();
           lastSearch = searchController.text;
-          fetchTrendingCourse(
+          fetchCourse(
             searchQuery: searchController.text.isEmpty ? null : searchController.text,
             page: 1,
           );
@@ -54,13 +60,14 @@ class TrendingCourseController extends GetxController {
     }
   }
 
-  fetchTrendingCourse({String? searchQuery, required int page}) async {
+  fetchCourse({String? searchQuery, required int page}) async {
     isLoading.value = true;
     final result = await DioService.instance.request(
       input: RequestInput(
         queryParams: {
           "page": page,
           "limit": 10,
+          if (!(isRecent || isTrending)) "categoryId": category.id,
           if (isTrending) "trending": true,
           if (searchQuery != null) "searchTerm": searchQuery,
         },
@@ -78,6 +85,8 @@ class TrendingCourseController extends GetxController {
     isLoading.value = false;
   }
 
+
+   
   @override
   void dispose() {
     searchController.dispose();

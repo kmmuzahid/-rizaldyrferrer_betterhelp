@@ -7,7 +7,6 @@ import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
-import 'package:better_help/widget/app_course_card/app_course_card.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:core_kit/core_kit.dart';
@@ -115,90 +114,7 @@ class _LearnScreenState extends State<LearnScreen> {
                     ),
                   ),
                 ),
-                // CarouselSlider(
-                //   carouselController: controller.carouselController,
-                //   items: controller.backgroundImages.asMap().entries.map((
-                //     entry,
-                //   ) {
-                //     int index = entry.key;
-                //     String imagePath = entry.value;
-                //     return ClipRRect(
-                //       borderRadius: BorderRadius.circular(12),
-                //       child: Container(
-                //         width: double.infinity,
-                //         decoration: BoxDecoration(
-                //           image: DecorationImage(
-                //             image: AssetImage(imagePath),
-                //             fit: BoxFit.cover,
-                //           ),
-                //         ),
-                //         child: Container(
-                //           padding: EdgeInsets.symmetric(
-                //             horizontal: AppSize.width(value: 22),
-                //             vertical: AppSize.height(value: 21),
-                //           ),
-                //           decoration: BoxDecoration(
-                //             gradient: LinearGradient(
-                //               begin: Alignment.topCenter,
-                //               end: Alignment.bottomCenter,
-                //               colors: [
-                //                 Colors.transparent,
-                //                 Colors.black.withValues(alpha: 0.3),
-                //               ],
-                //             ),
-                //           ),
-                //           child: Column(
-                //             crossAxisAlignment: CrossAxisAlignment.start,
-                //             children: [
-                //               Expanded(
-                //                 child: AppText(
-                //                   text: controller.quoteList[index],
-                //                   fontFamilyIndex: 4,
-                //                   fontSize: AppSize.width(value: 16),
-                //                   fontWeight: FontWeight.w500,
-                //                   color: AppColors.white,
-                //                   maxLines: 3,
-                //                   textAlign: TextAlign.start,
-                //                   overflow: TextOverflow.ellipsis,
-                //                 ),
-                //               ),
-                //               Gap(height: 12),
-                //               Align(
-                //                 alignment: Alignment.centerRight,
-                //                 child: AppText(
-                //                   text: controller.quoteAuthorList[index],
-                //                   fontFamilyIndex: 4,
-                //                   fontSize: AppSize.width(value: 14),
-                //                   fontWeight: FontWeight.w500,
-                //                   color: AppColors.white,
-                //                 ),
-                //               ),
-                //             ],
-                //           ),
-                //         ),
-                //       ),
-                //     );
-                //   }).toList(),
-                //   options: CarouselOptions(
-                //     height: AppSize.height(value: 137),
-                //     aspectRatio: 16 / 9,
-                //     viewportFraction: 0.85,
-                //     initialPage: 0,
-                //     enableInfiniteScroll: true,
-                //     autoPlay: true,
-                //     autoPlayInterval: const Duration(seconds: 4),
-                //     autoPlayAnimationDuration: const Duration(
-                //       milliseconds: 800,
-                //     ),
-                //     autoPlayCurve: Curves.linear,
-                //     enlargeCenterPage: true,
-                //     enlargeFactor: 0.2,
-                //     scrollDirection: Axis.horizontal,
-                //     onPageChanged: (index, reason) {
-                //       controller.updateCurrentIndex(index);
-                //     },
-                //   ),
-                // ),
+             
                 Gap(height: 16),
                 Center(
                   child: Obx(
@@ -237,238 +153,73 @@ class _LearnScreenState extends State<LearnScreen> {
                         fontWeight: FontWeight.w500,
                         color: AppColors.grey500,
                       ),
-                      InkWell(
-                        onTap: () {
-                          Get.toNamed(AppRoute.allCategoriesScreen);
-                        },
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        child: AppText(
-                          text: "See all",
-                          color: AppColors.blue500,
-                          fontFamilyIndex: 2,
-                          fontSize: AppSize.width(value: 14),
-                          fontWeight: FontWeight.w600,
-                          decoration: TextDecoration.underline,
-                          decorationColor: AppColors.blue500,
-                        ),
-                      ),
+                    
                     ],
                   ),
                 ),
-                8.height,
-                SizedBox(
-                  height: 95.h,
-                  child: Obx(() {
-                    return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
-                      itemCount: controller.categoryList.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Get.toNamed(
-                              AppRoute.trendingCourse,
-                              arguments: {'categoryName': controller.categoryList[index].name},
-                            );
-                          },
-                          child: Container(
-                            width: AppSize.width(value: 88),
-                            margin: EdgeInsets.only(right: AppSize.width(value: 12)),
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: AppColors.red50,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CommonImage(src: controller.categoryList[index].image, size: 32),
-                                Gap(height: 4),
-                                Expanded(
-                                  child: AppText(
-                                    text: controller.categoryList[index].name,
-                                    fontFamilyIndex: 2,
-                                    fontSize: AppSize.width(value: 12),
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.textPrimaryBlack,
-                                    maxLines: 2,
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  }),
-                ),
+              
                 Gap(height: 20),
               ],
             ),
           ),
 
-          //! Trending Courses Section - As Sliver
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AppText(
-                    text: "Trending Courses",
-                    fontFamilyIndex: 2,
-                    fontSize: AppSize.width(value: 16),
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.grey500,
-                  ),
-                  InkWell(
-                    hoverColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    onTap: () {
-                      Get.toNamed(
-                        AppRoute.trendingCourse,
-                        arguments: {'isTrending': true, 'title': 'Trending Courses'},
-                      );
-                    },
-                    child: AppText(
-                      text: "See all",
-                      color: AppColors.blue500,
-                      fontFamilyIndex: 2,
-                      fontSize: AppSize.width(value: 14),
-                      fontWeight: FontWeight.w600,
-                      decoration: TextDecoration.underline,
-                      decorationColor: AppColors.blue500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          SliverToBoxAdapter(child: Gap(height: 12)),
-
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: AppSize.height(value: 250),
-              child: Obx(() {
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
-                  itemCount: controller.trendingCourseList.length,
-                  itemBuilder: (context, index) {
-                    final course = controller.trendingCourseList[index];
-                    return Container(
-                      width: AppSize.width(value: 240),
-                      margin: EdgeInsets.only(right: AppSize.width(value: 16)),
-                      child: CourseCard(
-                        onTap: () {
-                          Get.toNamed(
-                            AppRoute.courseDetailScreen,
-                            arguments: {'id': course.id},
-                          );
-                        },
-                        onFavoritePressed: () {
-                          controller.toggleFavouriteTrending(index);
-                        },
-                        isFavorited: course.isFavorite,
-                        imageUrl: course.thumbnail,
-                        title: course.title,
-                        instructor: course.categoryName,
-                        rating: course.rating,
-                        views: "${course.viewCont} views",
-                        date: CoreUtils.formatDateTime(course.createdAt),
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
+            sliver: Obx(
+              () => controller.isCategoryLoading.value
+                  ? SliverToBoxAdapter(child: const Center(child: CircularProgressIndicator()))
+                  : SliverGrid.builder(
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 100,
+                        crossAxisSpacing: 8,
+                        mainAxisSpacing: 8,
+                        childAspectRatio: .95,
                       ),
-                    );
-                  },
-                );
-              }),
-            ),
-          ),
-
-          SliverToBoxAdapter(child: Gap(height: 20)),
-
-          //! Recent Course Section - As Sliver
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AppText(
-                    text: "Recent Course",
-                    fontFamilyIndex: 2,
-                    fontSize: AppSize.width(value: 16),
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.grey500,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Get.toNamed(AppRoute.trendingCourse, arguments: {'title': 'Recent Course'});
-                    },
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.indigo,
-                    child: AppText(
-                      text: "See all",
-                      color: AppColors.blue500,
-                      fontFamilyIndex: 2,
-                      fontSize: AppSize.width(value: 14),
-                      fontWeight: FontWeight.w600,
-                      decoration: TextDecoration.underline,
-                      decorationColor: AppColors.blue500,
+                      itemCount: controller.categoryList.length,
+                      itemBuilder: (context, index) {
+                        return _category(index);
+                      },
                     ),
-                  ),
-                ],
-              ),
             ),
           ),
 
-          SliverToBoxAdapter(child: Gap(height: 12)),
-
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: AppSize.height(value: 250),
-              child: Obx(() {
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
-                  itemCount: controller.recentCourseList.length,
-                  itemBuilder: (context, index) {
-                    final course = controller.recentCourseList[index];
-                    return Container(
-                      width: 240,
-                      height: AppSize.height(value: 300),
-                      margin: EdgeInsets.only(right: AppSize.width(value: 16)),
-                      child: CourseCard(
-                        onTap: () {
-                          Get.toNamed(
-                            AppRoute.courseDetailScreen,
-                            arguments: {'id': course.id},
-                          );
-                        },
-                        isFavorited: course.isFavorite,
-                        onFavoritePressed: () {
-                          controller.toggleFavouriteRecent(index);
-                        },
-                        imageUrl: course.thumbnail,
-                        title: course.title,
-                        instructor: course.categoryName,
-                        rating: course.rating,
-                        views: "${course.viewCont} views",
-                        date: CoreUtils.formatDateTime(
-                          course.createdAt,
-                        ),
-                      ),
-                    );
-                  },
-                );
-              }),
-            ),
-          ),
           SliverToBoxAdapter(child: SizedBox(height: 100)),
         ],
+      ),
+    );
+  }
+
+  GestureDetector _category(int index) {
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(
+          AppRoute.trendingCourse,
+          arguments: {'category': controller.categoryList[index]},
+        );
+      },
+      child: Container(
+        width: AppSize.width(value: 88),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(color: AppColors.red50, borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CommonImage(src: controller.categoryList[index].image, size: 32),
+            Gap(height: 4),
+            Expanded(
+              child: AppText(
+                text: controller.categoryList[index].name,
+                fontFamilyIndex: 2,
+                fontSize: AppSize.width(value: 12),
+                fontWeight: FontWeight.w500,
+                color: AppColors.textPrimaryBlack,
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

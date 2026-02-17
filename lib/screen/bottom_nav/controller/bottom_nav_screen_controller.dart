@@ -4,6 +4,7 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/screen/learn_sections/main_learn/controller/learn_screen_controller.dart';
 import 'package:better_help/screen/supports_sections/main_supports/controller/support_screen_controller.dart';
 import 'package:get/get.dart';
 
@@ -32,7 +33,10 @@ class BottomNavScreenController extends GetxController {
       productDetailsArguments.clear();
     }
     if (index == 2) {
-      Get.find<SupportScreenController>().fetchBookingSession(page: 1);
+      Get.find<SupportScreenController>().fetchBookingSession(page: 1); 
+    }
+    if (index == 1) {
+      Get.find<LearnScreenController>().fetchCategory();
     }
   }
 

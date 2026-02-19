@@ -12,7 +12,6 @@ import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 class BookingsSessionsController extends GetxController {
   RxList<BookedSessionModel> bookingSessionModel = RxList();
@@ -60,35 +59,16 @@ class BookingsSessionsController extends GetxController {
 
   joinSession(BookedSessionModel? bookingSessionModel) async {
     if (bookingSessionModel == null) return;
-    DateTime bookingDateTime = bookingSessionModel.bookingDate;
-
-    DateFormat timeFormat = DateFormat("h:mm a");
-    DateTime startTimeDate = timeFormat.parse(bookingSessionModel.startTime);
-
-    DateTime finalStartDateTime = DateTime(
-      bookingDateTime.year,
-      bookingDateTime.month,
-      bookingDateTime.day,
-      startTimeDate.hour,
-      startTimeDate.minute,
-    );
-
-    DateTime finalEndDateTime = DateTime(
-      bookingDateTime.year,
-      bookingDateTime.month,
-      bookingDateTime.day,
-      startTimeDate.hour,
-      startTimeDate.minute + 45,
-    );
+ 
 
     DateTime currentDateTime = DateTime.now();
 
-    if (currentDateTime.isAfter(finalEndDateTime)) {
+    if (currentDateTime.isAfter(bookingSessionModel.startTime)) {
       showSnackBar('Session Over', type: SnackBarType.warning);
       return;
     }
 
-    if (currentDateTime.isBefore(finalStartDateTime)) {
+    if (currentDateTime.isBefore(bookingSessionModel.endTime)) {
       showSnackBar('Session Not Started', type: SnackBarType.warning);
       return;
     }
@@ -99,34 +79,15 @@ class BookingsSessionsController extends GetxController {
 
   bool isJoainable(BookedSessionModel? model) {
     if (model == null) return false;
-    DateTime bookingDateTime = model.bookingDate;
-
-    DateFormat timeFormat = DateFormat("h:mm a");
-    DateTime startTimeDate = timeFormat.parse(model.startTime);
-
-    DateTime finalStartDateTime = DateTime(
-      bookingDateTime.year,
-      bookingDateTime.month,
-      bookingDateTime.day,
-      startTimeDate.hour,
-      startTimeDate.minute,
-    );
-
-    DateTime finalEndDateTime = DateTime(
-      bookingDateTime.year,
-      bookingDateTime.month,
-      bookingDateTime.day,
-      startTimeDate.hour,
-      startTimeDate.minute + 45,
-    );
+ 
 
     DateTime currentDateTime = DateTime.now();
 
-    if (currentDateTime.isAfter(finalEndDateTime)) {
+    if (currentDateTime.isAfter(model.startTime)) {
       return false;
     }
 
-    if (currentDateTime.isBefore(finalStartDateTime)) {
+    if (currentDateTime.isBefore(model.endTime)) {
       return false;
     }
     return true;

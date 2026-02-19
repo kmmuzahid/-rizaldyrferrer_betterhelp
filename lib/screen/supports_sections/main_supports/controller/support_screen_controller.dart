@@ -18,8 +18,13 @@ class SupportScreenController extends GetxController {
   final MyProfileScreenController profileScreenController = Get.find();
   Rxn<BookedSessionModel?> bookedSessionModel = Rxn();
 
+  late DateTime _todayDayStart;
+  late DateTime _todayDayEnd;
   @override
   void onInit() {
+    super.onInit();
+    _todayDayStart = startOfDayLocal(DateTime.now());
+    _todayDayEnd = endOfDayLocal(DateTime.now());
     chatId = profileScreenController.profileData.value?.doctorChatId ?? '';
     getMessages(page: 1);
     
@@ -34,11 +39,25 @@ class SupportScreenController extends GetxController {
     super.onInit();
   }
 
+  
+  // Start of day in local time
+  DateTime startOfDayLocal(DateTime localDate) =>
+      DateTime(localDate.year, localDate.month, localDate.day, 0, 0);
+
+  // End of day in local time
+  DateTime endOfDayLocal(DateTime localDate) =>
+      DateTime(localDate.year, localDate.month, localDate.day, 23, 59);
+
   fetchBookingSession({bool refresh = false, int page = 1}) async {
     final result = await DioService.instance.request<List<BookedSessionModel>>(
       input: RequestInput(
         endpoint: ApiEndPoints.getMyBooking,
-        queryParams: {'page': page, 'limit': 10},
+        queryParams: {
+          'page': page,
+          'limit': 1,
+          'dayStartTime': _todayDayStart.toIso8601String(),
+          'dayEndTime': _todayDayEnd.toIso8601String(),
+        },
         method: RequestMethod.GET,
       ),
       responseBuilder: (response) {

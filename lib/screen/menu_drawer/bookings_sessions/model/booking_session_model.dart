@@ -34,10 +34,9 @@ class BookedSessionModel {
   String id;
   User userId;
   User doctorId;
-  User assistantId;
-  DateTime bookingDate;
-  String startTime;
-  String endTime;
+  User assistantId; 
+  DateTime startTime;
+  DateTime endTime;
   int scheduledDuration;
   String status;
   String channelName;
@@ -46,8 +45,7 @@ class BookedSessionModel {
     required this.id,
     required this.userId,
     required this.doctorId,
-    required this.assistantId,
-    required this.bookingDate,
+    required this.assistantId, 
     required this.startTime,
     required this.endTime,
     required this.scheduledDuration,
@@ -61,10 +59,9 @@ class BookedSessionModel {
       id: json['_id'] ?? '',
       userId: User.fromJson(json['userId'] ?? {}),
       doctorId: User.fromJson(json['doctorId'] ?? {}),
-      assistantId: User.fromJson(json['assistantId'] ?? {}),
-      bookingDate: DateTime.parse(json['bookingDate'] ?? '1970-01-01T00:00:00.000Z'),
-      startTime: json['startTime'] ?? '',
-      endTime: json['endTime'] ?? '',
+      assistantId: User.fromJson(json['assistantId'] ?? {}), 
+      startTime: DateTime.parse(json['startTime'] ?? '1970-01-01T00:00:00.000Z'),
+      endTime: DateTime.parse(json['endTime'] ?? '1970-01-01T00:00:00.000Z'),
       scheduledDuration: json['scheduledDuration'] ?? 0,
       status: json['status'] ?? 'pending',
       channelName: json['channelName'] ?? '',
@@ -77,8 +74,7 @@ class BookedSessionModel {
       '_id': id,
       'userId': userId.toJson(),
       'doctorId': doctorId.toJson(),
-      'assistantId': assistantId.toJson(),
-      'bookingDate': bookingDate.toIso8601String(),
+      'assistantId': assistantId.toJson(), 
       'startTime': startTime,
       'endTime': endTime,
       'scheduledDuration': scheduledDuration,

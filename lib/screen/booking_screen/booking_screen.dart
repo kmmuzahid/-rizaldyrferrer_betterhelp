@@ -46,14 +46,13 @@ class BookingScreen extends StatelessWidget {
                     )
                   : Column(
                       key: Key(
-                        'booking_${controller.availableSlots.length}${controller.selectedTime.toString()}',
+                        'booking_${controller.availableSlots.length}${controller.selectedSlot.value?.startTimeLocal}',
                       ),
                       children: [
                         _buildSectionHeader(Icons.wb_sunny_outlined, "Available Slots"),
                         controller.availableSlots.isEmpty
                             ? const Center(child: Text("No available slots"))
                             : _buildTimeGrid(controller.availableSlots),
-                        
                       ],
                     ),
               const SizedBox(height: 20),
@@ -73,21 +72,35 @@ class BookingScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       child: TableCalendar(
-        focusedDay: controller.selectedDate.value,
+        key: Key('table_calendar_booking_${controller.availableDate.length}'),
+        focusedDay: controller.focuseDate.value,
+        onPageChanged: (date) {
+          controller.getAvailableDate(date);
+        },
         selectedDayPredicate: (day) {
           if (controller.isAvailableSlotsLoading.value) return false;
-          return controller.selectedDate.value == day;
+          return controller.selectedDate.value?.toLocal().date == day.toLocal().date;
         },
         onDaySelected: (selectedDay, focusedDay) {
           controller.onDaySelected(selectedDay);
+        },
+        enabledDayPredicate: (day) {
+          final index = controller.availableDate.indexWhere((e) => e.date == day.toLocal().date);
+          return index != -1;
         },
         firstDay: DateTime.now(),
         lastDay: DateTime.now().add(const Duration(days: 365)),
         headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: false),
         calendarStyle: CalendarStyle(
           selectedDecoration: const BoxDecoration(color: Color(0xFF4A919E), shape: BoxShape.circle),
+          defaultDecoration: BoxDecoration(
+            color: Colors.teal.withOpacity(0.2),
+            shape: BoxShape.circle,
+          ),
+          defaultTextStyle: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+          todayTextStyle: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
           todayDecoration: BoxDecoration(
-            color: Colors.teal.withOpacity(0.3),
+            color: Colors.teal.withOpacity(0.2),
             shape: BoxShape.circle,
           ),
         ),
@@ -128,11 +141,11 @@ class BookingScreen extends StatelessWidget {
       ),
       itemBuilder: (context, index) {
         final selectedSlot = slots[index];
-        final isSelected = index == controller.selectedIndex.value;
+        final isSelected = selectedSlot == controller.selectedSlot.value;
 
         return GestureDetector(
           onTap: selectedSlot.isAvailable
-              ? () => controller.selectTime(selectedSlot.startTime, index)
+              ? () => controller.selectTime(selectedSlot, index)
               : null,
           child: Container(
             alignment: Alignment.center,

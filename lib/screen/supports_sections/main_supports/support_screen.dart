@@ -197,10 +197,10 @@ class _SupportScreenState extends State<SupportScreen> {
   }
 
   String? getBookingDate() {
-    if (controller.bookedSessionModel.value?.bookingDate == null) {
+    if (controller.bookedSessionModel.value?.startTime == null) {
       return null;
     }
-    return '${DateFormat('dd-MM-yyyy').format(controller.bookedSessionModel.value?.bookingDate ?? DateTime.now())} ${controller.bookedSessionModel.value?.startTime}';
+    return '${DateFormat('dd-MM-yyyy').format(controller.bookedSessionModel.value?.startTime ?? DateTime.now())} ${controller.bookedSessionModel.value?.startTime.time}';
   }
 
   Widget _buildQuickActionCard({

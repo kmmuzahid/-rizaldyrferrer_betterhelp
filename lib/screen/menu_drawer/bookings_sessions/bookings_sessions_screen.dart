@@ -1,3 +1,8 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-09 09:41:39
+ * @Email: km.muzahid@gmail.com
+ */
 import 'package:better_help/screen/menu_drawer/bookings_sessions/controller/bookings_sessions_controller.dart';
 import 'package:better_help/screen/menu_drawer/bookings_sessions/model/booking_session_model.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
@@ -182,7 +187,7 @@ class BookingsSessionsScreen extends StatelessWidget {
                 Gap(height: 03),
                 CommonText(
                   text:
-                      "${CoreUtils.formatDateToShortMonth(bookingSessionModel?.bookingDate ?? DateTime.now())} (${bookingSessionModel?.startTime} - ${bookingSessionModel?.endTime})",
+                      "${CoreUtils.formatDateToShortMonth(bookingSessionModel?.startTime ?? DateTime.now())} (${bookingSessionModel?.startTime.time} - ${bookingSessionModel?.endTime.time})",
                   // fontFamilyIndex: 2,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,

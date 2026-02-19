@@ -10,31 +10,76 @@ import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
 
 class BookingController extends GetxController {
-  var selectedDate = DateTime.now().obs;
-  var selectedTime = "".obs;
+  Rxn<DateTime> selectedDate = Rxn<DateTime>();
+  Rxn<SlotsModel> selectedSlot = Rxn<SlotsModel>();
   var isAvailableSlotsLoading = false.obs;
   var isBookingLoading = false.obs;
   var selectedIndex = (-1).obs;
+  var focuseDate = DateTime.now().obs;
 
- 
+
 
   RxList<SlotsModel> availableSlots = <SlotsModel>[].obs;
 
+  RxList<DateTime> availableDate = <DateTime>[].obs;
+  late DateTime _todayDayStart;
+  late DateTime _todayDayEnd;
   @override
   void onInit() {
     super.onInit();
-    onDaySelected(DateTime.now());
+    _todayDayStart = startOfDayLocal(DateTime.now());
+    _todayDayEnd = endOfDayLocal(DateTime.now());
+    getAvailableDate(DateTime.now());
+  }
+
+  // Start of day in local time
+  DateTime startOfDayLocal(DateTime localDate) =>
+      DateTime(localDate.year, localDate.month, localDate.day, 0, 0);
+
+  // End of day in local time
+  DateTime endOfDayLocal(DateTime localDate) =>
+      DateTime(localDate.year, localDate.month, localDate.day, 23, 59);
+
+  getAvailableDate(DateTime date) async {
+    focuseDate.value = date;
+    final result = await DioService.instance.request<List<DateTime>>(
+      input: RequestInput(
+        endpoint: ApiEndPoints.availableBookingDate,
+        method: RequestMethod.GET,
+        queryParams: {'date': date.toUtc().toIso8601String()},
+      ),
+      responseBuilder: (data) {
+        return List.from(data).map((e) => DateTime.parse(e).toLocal()).toList();
+      },
+    );
+    if (result.isSuccess && result.data != null) {
+      for (var dateTime in result.data!) {
+        if (!availableDate.contains(dateTime)) {
+          availableDate.add(dateTime);
+        }
+      }
+
+      if (availableDate.isNotEmpty && availableSlots.isEmpty) {
+        selectedDate.value = null;
+        onDaySelected(availableDate.first);
+      }
+    }
   }
 
   onDaySelected(DateTime date) async {
     if (selectedDate.value == date && isAvailableSlotsLoading.value) return;
+    selectedSlot.value = null;
+
     selectedDate.value = date;
     availableSlots.clear();
     isAvailableSlotsLoading.value = true;
     final response = await DioService.instance.request<List<SlotsModel>>(
       input: RequestInput(
         endpoint: ApiEndPoints.getDoctorAvailableSlots,
-        queryParams: {'date': selectedDate.value.toUtc().toIso8601String()},
+        queryParams: {
+          'startTime': _todayDayStart.toUtc().toIso8601String(),
+          'endTime': _todayDayEnd.toUtc().toIso8601String(),
+        },
         method: RequestMethod.GET,
       ),
       responseBuilder: (data) {
@@ -55,88 +100,13 @@ class BookingController extends GetxController {
     isAvailableSlotsLoading.value = false;
   }
 
-  void selectTime(String time, int index) {
-    selectedTime.value = time;
+  void selectTime(SlotsModel slot, int index) {
+    selectedSlot.value = slot;
     selectedIndex.value = index;
-  }
-
-  String getNext45MinSlot(String inputTime) {
-    final input = _parseTime(inputTime);
-
-    final next = input.add(const Duration(minutes: 45));
-
-    final endTime = _formatTime(next);
-
-    return endTime.length == 7 ? "0$endTime" : endTime;
-  }
-
-  String _formatTime(DateTime time) {
-    int hour = time.hour;
-    final minute = time.minute.toString().padLeft(2, '0');
-    final meridian = hour >= 12 ? 'PM' : 'AM';
-
-    hour = hour % 12;
-    if (hour == 0) hour = 12;
-
-    return "$hour:$minute $meridian";
-  }
-
-  DateTime _parseTime(String time) {
-    final parts = time.split(' ');
-    final timePart = parts[0];
-    final meridian = parts[1];
-
-    final hourMinute = timePart.split(':');
-    int hour = int.parse(hourMinute[0]);
-    final minute = int.parse(hourMinute[1]);
-
-    if (meridian == 'PM' && hour != 12) hour += 12;
-    if (meridian == 'AM' && hour == 12) hour = 0;
-
-    return DateTime(2026, 1, 1, hour, minute);
-  }
-
-  bool isTimeSelectable({required DateTime selectedDate, required int index}) {
-    if (availableSlots[index].startTime.isEmpty ||
-        (availableSlots[index].startTime == availableSlots[availableSlots.length - 1].startTime))
-      return false;
-
-    final now = DateTime.now();
-
-    final today = DateTime(now.year, now.month, now.day);
-    final selectedDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
-
-    if (selectedDay.isBefore(today)) return false;
-
-    if (selectedDay.isAfter(today)) return true;
-
-    final selectedDateTime = _combineDateAndTime(selectedDay, index);
-
-    return selectedDateTime.isAfter(now);
-  }
-
-  DateTime _combineDateAndTime(DateTime date, int index) {
-    final time = availableSlots[index].startTime;
-    final parts = time.split(' ');
-    final timePart = parts[0];
-    final period = parts[1].toUpperCase();
-
-    final hourMinute = timePart.split(':');
-    int hour = int.parse(hourMinute[0]);
-    final minute = int.parse(hourMinute[1]);
-
-    if (period == 'PM' && hour != 12) hour += 12;
-    if (period == 'AM' && hour == 12) hour = 0;
-
-    return DateTime(date.year, date.month, date.day, hour, minute);
   }
 
   void confirmBooking() async {
     if (isBookingLoading.value) return;
-    if (selectedTime.value.isEmpty) {
-      showSnackBar('Please select a time slot', type: SnackBarType.warning);
-      return;
-    }
     isBookingLoading.value = true;
     final response = await DioService.instance.request<dynamic>(
       showMessage: true,
@@ -144,9 +114,10 @@ class BookingController extends GetxController {
         endpoint: ApiEndPoints.createDoctorBooking,
         method: RequestMethod.POST,
         jsonBody: {
-          "bookingDate": selectedDate.value.toUtc().toIso8601String(),
-          "startTime": selectedTime.value,
-          "endTime": getNext45MinSlot(selectedTime.value),
+          "dayStartTime": _todayDayStart.toUtc().toIso8601String(),
+          "dayEndTime": _todayDayEnd.toUtc().toIso8601String(),
+          "startTime": selectedSlot.value?.startTime.toIso8601String(),
+          "endTime": selectedSlot.value?.endTime.toIso8601String(),
         },
       ),
       responseBuilder: (data) {
@@ -155,6 +126,7 @@ class BookingController extends GetxController {
     );
     isBookingLoading.value = false;
     if (response.isSuccess) {
+      selectedSlot.value == null;
       availableSlots[selectedIndex.value] = availableSlots[selectedIndex.value].copyWith(
         isAvailable: false,
       );

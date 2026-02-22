@@ -187,7 +187,7 @@ class BookingsSessionsScreen extends StatelessWidget {
                 Gap(height: 03),
                 CommonText(
                   text:
-                      "${CoreUtils.formatDateToShortMonth(bookingSessionModel?.startTime ?? DateTime.now())} (${bookingSessionModel?.startTime.time} - ${bookingSessionModel?.endTime.time})",
+                      "${CoreUtils.formatDateToShortMonth(bookingSessionModel?.startTime.toLocal() ?? DateTime.now())} (${bookingSessionModel?.startTime.toLocal().time} - ${bookingSessionModel?.endTime.toLocal().time})",
                   // fontFamilyIndex: 2,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,

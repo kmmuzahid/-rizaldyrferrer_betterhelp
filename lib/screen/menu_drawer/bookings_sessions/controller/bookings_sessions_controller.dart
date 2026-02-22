@@ -63,12 +63,12 @@ class BookingsSessionsController extends GetxController {
 
     DateTime currentDateTime = DateTime.now();
 
-    if (currentDateTime.isAfter(bookingSessionModel.startTime)) {
+    if (currentDateTime.isAfter(bookingSessionModel.endTime)) {
       showSnackBar('Session Over', type: SnackBarType.warning);
       return;
     }
 
-    if (currentDateTime.isBefore(bookingSessionModel.endTime)) {
+    if (currentDateTime.isBefore(bookingSessionModel.startTime)) {
       showSnackBar('Session Not Started', type: SnackBarType.warning);
       return;
     }
@@ -81,16 +81,12 @@ class BookingsSessionsController extends GetxController {
     if (model == null) return false;
  
 
-    DateTime currentDateTime = DateTime.now();
+    DateTime currentDateTime = DateTime.now().toLocal();
 
-    if (currentDateTime.isAfter(model.startTime)) {
-      return false;
-    }
+    return currentDateTime.isAfter(model.startTime.toLocal()) &&
+        currentDateTime.isBefore(model.endTime.toLocal());
 
-    if (currentDateTime.isBefore(model.endTime)) {
-      return false;
-    }
-    return true;
+    
   }
 
   /// Fetch bookings from API

@@ -67,8 +67,16 @@ class BookingScreen extends StatelessWidget {
                           ],
                         ),
                         controller.availableSlots.isEmpty
-                            ? const Center(child: Text("No available slots"))
-                            : _buildTimeGrid(controller.availableSlots),
+                            ? const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 100),
+                                  child: Text("No available slots"),
+                                ),
+                              )
+                            : ConstrainedBox(
+                                constraints: BoxConstraints(minHeight: 200),
+                                child: _buildTimeGrid(controller.availableSlots),
+                              ),
                       ],
                     ),
               const SizedBox(height: 20),

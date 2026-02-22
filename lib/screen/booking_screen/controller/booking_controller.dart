@@ -17,8 +17,6 @@ class BookingController extends GetxController {
   var selectedIndex = (-1).obs;
   var focuseDate = DateTime.now().subtract(Duration(days: 1)).obs;
 
-
-
   RxList<SlotsModel> availableSlots = <SlotsModel>[].obs;
 
   RxList<DateTime> availableDate = <DateTime>[].obs;
@@ -52,16 +50,15 @@ class BookingController extends GetxController {
         return List.from(data).map((e) => DateTime.parse(e).toLocal()).toList();
       },
     );
+    final yesterday = DateTime.now().subtract(Duration(days: 1));
     if (result.isSuccess && result.data != null) {
       for (var dateTime in result.data!) {
-        if (!availableDate.contains(dateTime)) {
-          
+        if (!availableDate.contains(dateTime) && dateTime.isAfter(yesterday)) {
           availableDate.add(dateTime);
         }
       }
 
       if (availableDate.isNotEmpty && availableSlots.isEmpty) {
-        
         onDaySelected(availableDate.first);
       }
     }
@@ -69,7 +66,7 @@ class BookingController extends GetxController {
 
   onDaySelected(DateTime date) async {
     if (selectedDate.value == date && isAvailableSlotsLoading.value) return;
-    selectedSlot.value = null; 
+    selectedSlot.value = null;
 
     selectedDate.value = date;
     availableSlots.clear();

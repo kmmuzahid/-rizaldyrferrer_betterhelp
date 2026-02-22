@@ -15,7 +15,7 @@ class BookingController extends GetxController {
   var isAvailableSlotsLoading = false.obs;
   var isBookingLoading = false.obs;
   var selectedIndex = (-1).obs;
-  var focuseDate = DateTime.now().obs;
+  var focuseDate = DateTime.now().subtract(Duration(days: 1)).obs;
 
 
 
@@ -55,12 +55,13 @@ class BookingController extends GetxController {
     if (result.isSuccess && result.data != null) {
       for (var dateTime in result.data!) {
         if (!availableDate.contains(dateTime)) {
+          
           availableDate.add(dateTime);
         }
       }
 
       if (availableDate.isNotEmpty && availableSlots.isEmpty) {
-        selectedDate.value = null;
+        
         onDaySelected(availableDate.first);
       }
     }
@@ -68,7 +69,7 @@ class BookingController extends GetxController {
 
   onDaySelected(DateTime date) async {
     if (selectedDate.value == date && isAvailableSlotsLoading.value) return;
-    selectedSlot.value = null;
+    selectedSlot.value = null; 
 
     selectedDate.value = date;
     availableSlots.clear();
@@ -88,7 +89,14 @@ class BookingController extends GetxController {
     );
     if (response.isSuccess) {
       if (response.data?.isNotEmpty ?? false) {
-        availableSlots.assignAll(response.data ?? []);
+        if (date.date == DateTime.now().date) {
+          availableSlots.assignAll(
+            response.data?.where((e) => e.startTime.toLocal().isAfter(DateTime.now().toLocal())) ??
+                [],
+          );
+        } else {
+          availableSlots.assignAll(response.data ?? []);
+        }
       } else {
         showSnackBar('No available slots found', type: SnackBarType.warning);
       }

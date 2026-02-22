@@ -10,6 +10,7 @@ import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class BookingScreen extends StatelessWidget {
@@ -49,7 +50,22 @@ class BookingScreen extends StatelessWidget {
                         'booking_${controller.availableSlots.length}${controller.selectedSlot.value?.startTimeLocal}',
                       ),
                       children: [
-                        _buildSectionHeader(Icons.wb_sunny_outlined, "Available Slots"),
+                        Row(
+                          children: [
+                            _buildSectionHeader(Icons.wb_sunny_outlined, "Available Slots"),
+                            const Spacer(),
+                            Text(
+                              DateFormat(
+                                'MMM dd yyyy',
+                              ).format(controller.selectedDate.value?.toLocal() ?? DateTime.now()),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.questionBg02TextColor,
+                              ),
+                            ),
+                          ],
+                        ),
                         controller.availableSlots.isEmpty
                             ? const Center(child: Text("No available slots"))
                             : _buildTimeGrid(controller.availableSlots),

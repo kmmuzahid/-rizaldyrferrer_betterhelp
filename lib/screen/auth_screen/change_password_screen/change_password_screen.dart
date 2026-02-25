@@ -27,13 +27,17 @@ class ChangePasswordScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Gap(height: AppSize.height(value: 50)),
-              AppText(
-                text: AppString.changePassword,
-                fontSize: AppSize.width(value: 35),
-                lineHeight: 1,
-                fontFamilyIndex: 1,
-                fontWeight: FontWeight.w600,
-                color: AppColors.blue900,
+              Obx(
+                () => AppText(
+                  text: controller.isForgetPassword.value
+                      ? 'Reset Password'
+                      : AppString.changePassword,
+                  fontSize: AppSize.width(value: 35),
+                  lineHeight: 1,
+                  fontFamilyIndex: 1,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.blue900,
+                ),
               ),
               Gap(height: AppSize.height(value: 12)),
               AppText(
@@ -48,17 +52,21 @@ class ChangePasswordScreen extends StatelessWidget {
               ),
               Gap(height: AppSize.height(value: 30)),
               //! Set Password
-              AppText(
-                text: 'Current Password',
-                fontFamilyIndex: 2,
-                fontSize: AppSize.width(value: 16),
-                fontWeight: FontWeight.w500,
-                color: AppColors.secondary,
+              Obx(
+                () => AppText(
+                  text: controller.isForgetPassword.value ? 'New Password' : 'Current Password',
+                  fontFamilyIndex: 2,
+                  fontSize: AppSize.width(value: 16),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.secondary,
+                ),
               ),
               Gap(height: AppSize.height(value: 05)),
               AppTextInput(
                 controller: controller.currentPasswordController,
-                hintText: "Enter new password",
+                hintText: controller.isForgetPassword.value
+                    ? "Enter new password"
+                    : "Enter current password",
                 borderColor: AppColors.borderColor,
                 backgroundColor: AppColors.white,
                 keyboardType: TextInputType.visiblePassword,
@@ -66,17 +74,23 @@ class ChangePasswordScreen extends StatelessWidget {
               ),
               //! Confirm Password
               Gap(height: AppSize.height(value: 20)),
-              AppText(
-                text: 'New Password',
-                fontFamilyIndex: 2,
-                fontSize: AppSize.width(value: 16),
-                fontWeight: FontWeight.w500,
-                color: AppColors.secondary,
+              Obx(
+                () => AppText(
+                  text: controller.isForgetPassword.value
+                      ? 'Confirm New Password'
+                      : 'Confirm Password',
+                  fontFamilyIndex: 2,
+                  fontSize: AppSize.width(value: 16),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.secondary,
+                ),
               ),
               Gap(height: AppSize.height(value: 05)),
               AppTextInput(
                 controller: controller.newPasswordController,
-                hintText: "Confirm new password",
+                hintText: controller.isForgetPassword.value
+                    ? "Confirm new password"
+                    : "Confirm password",
                 borderColor: AppColors.borderColor,
                 backgroundColor: AppColors.white,
                 keyboardType: TextInputType.visiblePassword,

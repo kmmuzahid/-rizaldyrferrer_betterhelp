@@ -276,7 +276,7 @@ class AuthReporsitory {
   }
 
   //! Reset Password (after forgot password OTP verification)
-  Future<dynamic> resetPassword({required String newPassword, required String oldPassword}) async {
+  Future<dynamic> changePassword({required String newPassword, required String oldPassword}) async {
     appLog('AuthRepository: Resetting password...');
 
     try {
@@ -286,7 +286,40 @@ class AuthReporsitory {
       final body = {"newPassword": newPassword, "oldPassword": oldPassword};
 
       final response = await _apiServices.apiPatchServices(
-        url: ApiEndPoints.resetPassoword,
+        url: ApiEndPoints.forgotPassoword,
+        body: body,
+        options: Options(headers: {'token': forgetToken}),
+      );
+
+      if (response != null && response['success'] == true) {
+        appLog('AuthRepository: Password reset successfully');
+        await _storageService.remove('forget_token');
+        return response;
+      } else {
+        appLog('AuthRepository: Password reset failed');
+        return null;
+      }
+    } catch (e) {
+      errorLog('AuthRepository: Exception during password reset', e);
+      return null;
+    }
+  }
+
+  //! Reset Password (after forgot password OTP verification)
+  Future<dynamic> forgetPassword({
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    appLog('AuthRepository: Resetting password...');
+
+    try {
+      final forgetToken = await _storageService.getString('forget_token');
+      appLog('AuthRepository: forgetToken - $forgetToken');
+
+      final body = {"newPassword": newPassword, "confirmPassword": confirmPassword};
+
+      final response = await _apiServices.apiPatchServices(
+        url: ApiEndPoints.resetPassword,
         body: body,
         options: Options(headers: {'token': forgetToken}),
       );

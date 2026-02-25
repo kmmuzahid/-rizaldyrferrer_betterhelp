@@ -77,14 +77,13 @@ class OtpVerificationController extends GetxController {
           Get.offAllNamed(AppRoute.loginScreen);
         }
       } else if (sourceScreen == 'forgotpassword') {
-        final response = await _authRepository.verifyForgotPasswordOtp(
-          otp: otp,
-        );
+        final response = await _authRepository.verifyForgotPasswordOtp(otp: otp);
 
         if (response != null) {
+          print(response);
           appLog('OtpVerificationController: Forgot password OTP verified');
           AppSnackBar.showSuccess('OTP verified successfully!');
-          Get.offNamed(AppRoute.changePasswrodScreen);
+          Get.offNamed(AppRoute.changePasswrodScreen, arguments: {'isForgetPassword': true});
         }
       }
     } catch (e) {

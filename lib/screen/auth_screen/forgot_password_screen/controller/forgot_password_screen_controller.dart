@@ -1,3 +1,8 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-09 09:41:39
+ * @Email: km.muzahid@gmail.com
+ */
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/service/repository/auth_repository/auth_reporsitory.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
@@ -35,7 +40,7 @@ class ForgotPasswordScreenController extends GetxController {
 
     final response = await _authRepository.forgotPassword(
       email: emailController.text.trim(),
-    );
+    ); 
 
     isLoading.value = false;
 

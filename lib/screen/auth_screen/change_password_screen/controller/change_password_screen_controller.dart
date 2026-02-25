@@ -15,6 +15,15 @@ class ChangePasswordScreenController extends GetxController {
   final currentPasswordController = TextEditingController();
   final newPasswordController = TextEditingController();
   final isLoading = false.obs;
+  var isForgetPassword = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    if (Get.arguments != null) {
+      isForgetPassword.value = Get.arguments['isForgetPassword'] ?? false;
+    }
+  }
 
   @override
   void onClose() {
@@ -45,7 +54,12 @@ class ChangePasswordScreenController extends GetxController {
 
     isLoading.value = true;
 
-    final response = await _authRepository.resetPassword(
+    final response = isForgetPassword.value
+        ? await _authRepository.forgetPassword(
+            newPassword: newPasswordController.text,
+            confirmPassword: currentPasswordController.text,
+          )
+        : await _authRepository.changePassword(
       newPassword: newPasswordController.text,
       oldPassword: currentPasswordController.text,
     );

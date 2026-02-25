@@ -6,11 +6,11 @@
 class ApiEndPoints {
   ApiEndPoints._();
   //live
-  // static const imageUrl = "http://54.241.114.7:5000";
-  // static const liveDomain = "http://54.241.114.7:5000";
+  static const imageUrl = "http://54.241.114.7:5000";
+  static const liveDomain = "http://54.241.114.7:5000";
   //local
-  static const imageUrl = "http://10.10.7.65:5003";
-  static const liveDomain = "http://10.10.7.65:5003";
+  // static const imageUrl = "http://10.10.7.65:5003";
+  // static const liveDomain = "http://10.10.7.65:5003";
 
   // static const localDomain = "http://10.10.7.65:5003";
   static const domain = liveDomain;
@@ -26,7 +26,7 @@ class ApiEndPoints {
   static const changePassword = "$baseUrl/auth/change-password";
   static const forgotPassworResendOtp = "$baseUrl/otp/resend-otp";
   static const forgotPasswordOtpMatch = "$baseUrl/auth/forgot-password-otp-match";
-  static const resetPassoword = "$baseUrl/auth/change-password";
+  static const forgotPassoword = "$baseUrl/auth/change-password";
   static const getAllArticle = "$baseUrl/article";
   static getSingleArticle(var id) => "$baseUrl/article/$id";
   static const savedArticle = "$baseUrl/favorite/saved";
@@ -81,4 +81,5 @@ class ApiEndPoints {
 
   static const getDoctorAvailableSlots = "$baseUrl/doctor-booking/my-doctor-available-slots";
   static const availableBookingDate = "$baseUrl/doctor-booking/my-doctor-available-date";
+  static const resetPassword = "$baseUrl/auth/forgot-password-reset";
 }

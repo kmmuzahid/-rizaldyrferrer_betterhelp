@@ -17,11 +17,13 @@ class TermsConditionsScreen extends StatelessWidget {
       ),
       backgroundColor: AppColors.white,
       body: Obx(() {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: CommonText(
-            text: Get.find<TermsAndConditionsScreenController>().termsAndConditions.value,
-            isDescription: true,
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: CommonText(
+              text: Get.find<TermsAndConditionsScreenController>().termsAndConditions.value,
+              isDescription: true,
+            ),
           ),
         );
       }

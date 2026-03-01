@@ -88,6 +88,7 @@ class MyApp extends StatelessWidget {
           tertiary: const Color(0xFFF59E0B), // SnackBar Warning
           error: const Color(0xFFEF4444), // SnackBar Erro
         ),
+ 
       ),
       getPages: AppRoute.appRoutes,
       builder: (context, child) {

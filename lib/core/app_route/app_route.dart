@@ -34,6 +34,7 @@ import 'package:better_help/screen/notification/notification_screen.dart';
 import 'package:better_help/screen/onboarding_screen/onbarding_screen.dart';
 import 'package:better_help/screen/progress_sections/main_progress/progress_screen.dart';
 import 'package:better_help/screen/questionnaries_screen/questionnaries_screen.dart';
+import 'package:better_help/screen/questionnaries_screen/widgets/analyze_screen.dart';
 import 'package:better_help/screen/report_problem/report_problem_screen.dart';
 import 'package:better_help/screen/splash_screen/splash_screen.dart';
 import 'package:better_help/screen/subscription/subscription_and_payment.dart';
@@ -117,6 +118,7 @@ class AppRoute {
 
   static const String bookingScreen = "/bookingScreen";
   static const String reportProblemScreen = "/reportProblemScreen";
+  static const String analyzeScreen = "/analyzeScreen";
 
   //! Get Pages for all the Screen
 
@@ -141,6 +143,13 @@ class AppRoute {
     GetPage(
       name: AppRoute.bookingScreen,
       page: () => BookingScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 300),
+    ),
+    //! Analyze Screen Route
+    GetPage(
+      name: AppRoute.analyzeScreen,
+      page: () => AnalyzingScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
     ),

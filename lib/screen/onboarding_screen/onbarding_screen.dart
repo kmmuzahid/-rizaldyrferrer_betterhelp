@@ -74,11 +74,11 @@ class OnbardingScreen extends StatelessWidget {
                       controller: controller.pageController,
                       onPageChanged: controller.onPageChanged,
                       children: [
+                        onBoadingPage5(),
                         onBoadingPage1(),
                         onBoadingPage2(),
                         onBoadingPage3(),
                         onBoadingPage4(),
-                        onBoadingPage5(),
                       ],
                     ),
                   ),
@@ -152,7 +152,7 @@ Widget onBoadingPage4() => Padding(
 
     child: FittedBox(
       fit: BoxFit.contain,
-      child: Image.asset(AppStaticImages.onboardingGif2),
+      child: Image.asset(AppStaticImages.onboardingGif5),
     ),
   ),
 );

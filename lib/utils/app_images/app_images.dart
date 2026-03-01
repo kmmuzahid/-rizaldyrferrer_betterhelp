@@ -1,3 +1,8 @@
+/*
+ * @Author: Km Muzahid
+ * @Date: 2026-01-09 09:41:39
+ * @Email: km.muzahid@gmail.com
+ */
 class AppStaticImages {
   AppStaticImages._();
   static const String appBarlogo = "assets/images/appbarLogo.png";
@@ -70,6 +75,8 @@ class AppStaticImages {
   static const String pentagon = "assets/images/pentagone.png";
 
   static const String onboardingGif = "assets/images/num_001.gif";
+  static const String check_01 = "assets/images/check_01.svg";
+  static const String check_02 = "assets/images/check_02.png";
   static const String onboardingGif1 = "assets/images/1a Splash 1.gif";
   static const String onboardingGif2 = "assets/images/1b Splash 2.gif";
 

@@ -23,9 +23,7 @@ class SplashScreenController extends GetxController {
     }
 
     // Case 3: NO accessToken but HAS questionnaire responses -> Go to free trial
-    if ((accessToken == null || accessToken.isEmpty) &&
-        responses != null &&
-        responses.isNotEmpty) {
+    if ((accessToken == null || accessToken.isEmpty) && responses != null && responses.isNotEmpty) {
       Get.offNamed(AppRoute.signupScreen);
       return;
     }
@@ -35,8 +33,10 @@ class SplashScreenController extends GetxController {
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
+    StorageService.instance.removeQuestionnaireOutput();
+    StorageService.instance.removeQuestionnaireResponses();
     _navigateBasedOnStoredData();
   }
 }

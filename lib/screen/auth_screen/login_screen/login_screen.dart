@@ -1,12 +1,10 @@
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/auth_screen/login_screen/controller/login_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
-import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
-import 'package:better_help/widget/app_button/app_button_with_icon.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/app_text_input/app_text_input.dart';
 import 'package:flutter/material.dart';
@@ -116,29 +114,29 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               Gap(height: 12),
-              Center(child: AppText(text: "Or", fontFamilyIndex: 2)),
-              Gap(height: 12),
-              //! Google Login
-              IconAppButton(
-                iconAlignment: CustomIconAlignment.left,
-                title: AppString.continueWithGoogle,
-                backgroundColor: AppColors.white,
-                borderColor: AppColors.borderColor,
-                titleColor: AppColors.secondary,
-                icon: AppIcons.google,
-                onTap: () {},
-              ),
-              Gap(height: 12),
-              //! Apple Login
-              IconAppButton(
-                iconAlignment: CustomIconAlignment.left,
-                title: AppString.continueWithApple,
-                backgroundColor: AppColors.white,
-                borderColor: AppColors.borderColor,
-                titleColor: AppColors.secondary,
-                icon: AppIcons.apple,
-                onTap: () {},
-              ),
+              // Center(child: AppText(text: "Or", fontFamilyIndex: 2)),
+              // Gap(height: 12),
+              // //! Google Login
+              // IconAppButton(
+              //   iconAlignment: CustomIconAlignment.left,
+              //   title: AppString.continueWithGoogle,
+              //   backgroundColor: AppColors.white,
+              //   borderColor: AppColors.borderColor,
+              //   titleColor: AppColors.secondary,
+              //   icon: AppIcons.google,
+              //   onTap: () {},
+              // ),
+              // Gap(height: 12),
+              // //! Apple Login
+              // IconAppButton(
+              //   iconAlignment: CustomIconAlignment.left,
+              //   title: AppString.continueWithApple,
+              //   backgroundColor: AppColors.white,
+              //   borderColor: AppColors.borderColor,
+              //   titleColor: AppColors.secondary,
+              //   icon: AppIcons.apple,
+              //   onTap: () {},
+              // ),
               Gap(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

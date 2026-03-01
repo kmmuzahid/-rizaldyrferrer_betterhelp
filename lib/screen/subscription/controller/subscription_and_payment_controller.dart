@@ -9,10 +9,12 @@ import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/control
 import 'package:better_help/sockets/support_message_socket.dart';
 import 'package:core_kit/network/dio_service.dart';
 import 'package:core_kit/network/request_input.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SubscriptionAndPaymentController extends GetxController {
   var isLoadingDependency = true.obs;
+  late PageController pageController;
   final List<Map<String, String>> subscriptionPlans = [
     {
       "name": "Free",
@@ -46,7 +48,7 @@ class SubscriptionAndPaymentController extends GetxController {
     },
   ].obs;
 
-  onSubscribe(int index) async {
+  onSubscribe(int index) async { 
     final response = await DioService.instance.request(
       showMessage: true,
       input: RequestInput(endpoint: ApiEndPoints.createSubscription, method: RequestMethod.POST),
@@ -71,8 +73,13 @@ class SubscriptionAndPaymentController extends GetxController {
       }
       isLoadingDependency.value = false;
     });
-   
-
+    pageController = PageController();
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    pageController.dispose();
+    super.onClose();
   }
 }

@@ -24,11 +24,13 @@ class PrivacyPolicyScreen extends StatelessWidget {
       ),
       backgroundColor: AppColors.white,
       body: Obx(() {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: CommonText(
-            text: Get.find<PrivacyPolicyScreenController>().privacyPolicy.value,
-            isDescription: true,
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: CommonText(
+              text: Get.find<PrivacyPolicyScreenController>().privacyPolicy.value,
+              isDescription: true,
+            ),
           ),
         );
       }

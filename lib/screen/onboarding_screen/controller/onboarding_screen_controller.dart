@@ -56,12 +56,12 @@ class OnboardingScreenController extends GetxController {
 
   Future<void> goToSubscriptionScreen() async {
     //! Clean up any existing controllers before navigation
-    Get.delete<OnboardingScreenController>();
 
     //! Check if questionnaire responses are already saved
     final savedResponses = await _storageService.getQuestionnaireResponses();
 
     if (savedResponses != null && savedResponses.isNotEmpty) {
+      Get.delete<OnboardingScreenController>();
       //! Questionnaire already completed, skip to free trial screen
       appLog('Questionnaire responses found, navigating to free trial screen');
       Get.offAllNamed(AppRoute.signupScreen);
@@ -70,7 +70,7 @@ class OnboardingScreenController extends GetxController {
       appLog(
         'No questionnaire responses found, navigating to before question screen',
       );
-      Get.offAllNamed(AppRoute.beforeQuestionScreen);
+      Get.toNamed(AppRoute.beforeQuestionScreen);
     }
   }
 

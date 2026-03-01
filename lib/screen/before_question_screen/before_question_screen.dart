@@ -1,5 +1,6 @@
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/before_question_screen/controller/before_question_screen_controller.dart';
+import 'package:better_help/screen/before_question_screen/widget/policy_agreement_widget.dart';
 import 'package:better_help/screen/questionnaries_screen/controller/questionnaries_screen_controller.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
@@ -77,8 +78,15 @@ class BeforeQuestionScreen extends StatelessWidget {
                 title: AppString.begin,
                 onTap: () {
                   // Delete any existing questionnaire controller before navigating
+                  Get.dialog(
+                    PolicyAgreementWidget(
+                      onAgree: () {
                   Get.delete<QuestionnariesScreenController>();
-                  Get.offAllNamed(AppRoute.questionariescreen);
+                        Get.back();
+                        Get.toNamed(AppRoute.questionariescreen);
+                      },
+                    ),
+                  ); 
                 },
                 backgroundColor: AppColors.primary500,
                 height: AppSize.height(value: 48),

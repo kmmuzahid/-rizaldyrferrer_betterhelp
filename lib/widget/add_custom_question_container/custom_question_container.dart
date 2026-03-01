@@ -36,7 +36,7 @@ class CustomQuestionContainer extends StatelessWidget {
           Gap(height: AppSize.height(value: 14)),
           AppText(
             text: questionText,
-            fontFamilyIndex: 5,
+            fontFamilyIndex: 1,
             fontWeight: FontWeight.w600,
             fontSize: AppSize.width(value: 16),
             lineHeight: 1.40,
@@ -63,8 +63,8 @@ class CustomQuestionContainer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _buildAnswerOption('rarely', AppString.rarely),
-            _buildAnswerOption('frequently', AppString.frequently),
             _buildAnswerOption('sometimes', AppString.sometimes),
+            _buildAnswerOption('frequently', AppString.frequently),
           ],
         );
       }),
@@ -90,7 +90,7 @@ class CustomQuestionContainer extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? activeColor : AppColors.grey500,
+                  color: activeColor,
                   width: 2,
                 ),
                 color: isSelected ? activeColor : Colors.transparent,

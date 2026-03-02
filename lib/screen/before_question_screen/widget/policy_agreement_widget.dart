@@ -5,6 +5,8 @@
  */
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
+import 'package:better_help/utils/app_images/app_images.dart';
+import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +26,11 @@ class PolicyAgreementWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Image.asset(
+              AppStaticImages.appBarlogo,
+              height: AppSize.height(value: 65),
+              width: AppSize.width(value: 174),
+            ).center,
             CommonText(
               text: 'Privacy & User Agreement',
               style: TextStyle(fontFamily: 'Inter'),

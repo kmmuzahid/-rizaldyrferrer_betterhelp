@@ -102,7 +102,7 @@ class BookingScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       child: TableCalendar(
-        key: Key('table_calendar_booking_${controller.availableDate.length}'),
+        key: Key('table_calendar_booking_${controller.allData.length} }'),
         focusedDay: controller.focuseDate.value.toLocal(),
         onPageChanged: (date) {
           controller.getAvailableDate(date);
@@ -115,11 +115,13 @@ class BookingScreen extends StatelessWidget {
           controller.onDaySelected(selectedDay);
         },
         enabledDayPredicate: (day) {
-          final index = controller.availableDate.indexWhere((e) => e.date == day.toLocal().date);
+          final index = controller.availableDate.indexWhere(
+            (e) => e.toLocal().date == day.toLocal().date,
+          );
           return index != -1;
         },
-        firstDay: DateTime.now(),
-        lastDay: DateTime.now().add(const Duration(days: 365)),
+        firstDay: DateTime.now().toLocal(),
+        lastDay: DateTime.now().toLocal().add(const Duration(days: 365)),
         headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: false),
         calendarStyle: CalendarStyle(
           selectedDecoration: const BoxDecoration(color: Color(0xFF4A919E), shape: BoxShape.circle),

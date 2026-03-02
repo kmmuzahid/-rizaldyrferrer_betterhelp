@@ -5,6 +5,7 @@
  */
 import 'package:better_help/screen/subscription/controller/subscription_and_payment_controller.dart';
 import 'package:better_help/screen/subscription/pages/subscription_inital_page.dart';
+import 'package:better_help/screen/subscription/pages/subscription_item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -21,17 +22,29 @@ class SubscriptionAndPayment extends StatelessWidget {
         if (controller.isLoadingDependency.value) {
           return Center(child: CircularProgressIndicator());
         }
-        final subscriptionPlans = controller.subscriptionPlans;
+        final subscriptionPlans = controller.subscriptionPlan;
         return PageView.builder(
           controller: controller.pageController,
           physics: NeverScrollableScrollPhysics(),
           itemCount: subscriptionPlans.length + 1,
           itemBuilder: (context, index) {
-            var plan = subscriptionPlans[index];
             if (index == 0) {
-              return SubscriptionInitalPage();
+              return SubscriptionInitalPage(
+                onLearnMore: () {
+                  controller.pageController.nextPage(
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.ease,
+                  );
+                },
+              );
             }
-            return Container();
+            var plan = subscriptionPlans[index - 1];
+            return SubscriptionItem(
+              plan: plan,
+              controller: controller.pageController,
+              index: index,
+              totalSubscription: subscriptionPlans.length,
+            );
           },
         );
       }),

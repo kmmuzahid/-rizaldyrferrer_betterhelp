@@ -72,17 +72,16 @@ class _HabitsScreenState extends State<HabitsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
-              child: AppText(
-                text: "Daily Affirmations",
-                fontFamilyIndex: 2,
-                fontSize: AppSize.width(value: 14),
-                fontWeight: FontWeight.w800,
-                color: AppColors.grey500,
-              ),
-            ),
-            Gap(height: 08),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
+            //   child: AppText(
+            //     text: "Daily Affirmations",
+            //     fontFamilyIndex: 2,
+            //     fontSize: AppSize.width(value: 14),
+            //     fontWeight: FontWeight.w800,
+            //     color: AppColors.grey500,
+            //   ),
+            // ), 
             Obx(
               () => CarouselSlider(
                 carouselController: controller.carouselController,

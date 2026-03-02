@@ -14,6 +14,7 @@ class BookingController extends GetxController {
   Rxn<SlotsModel> selectedSlot = Rxn<SlotsModel>();
   var isAvailableSlotsLoading = false.obs;
   var isBookingLoading = false.obs;
+  var isAvailableDateLoading = false.obs;
   var selectedIndex = (-1).obs;
   var focuseDate = DateTime.now().subtract(Duration(days: 1)).obs;
 
@@ -39,6 +40,7 @@ class BookingController extends GetxController {
       DateTime(localDate.year, localDate.month, localDate.day, 23, 59);
 
   getAvailableDate(DateTime date) async {
+    isAvailableDateLoading.value = true;
     focuseDate.value = date;
     final result = await DioService.instance.request<List<DateTime>>(
       input: RequestInput(
@@ -62,6 +64,7 @@ class BookingController extends GetxController {
         onDaySelected(availableDate.first);
       }
     }
+    isAvailableDateLoading.value = false;
   }
 
   onDaySelected(DateTime date) async {
@@ -121,8 +124,8 @@ class BookingController extends GetxController {
         jsonBody: {
           "dayStartTime": _todayDayStart.toUtc().toIso8601String(),
           "dayEndTime": _todayDayEnd.toUtc().toIso8601String(),
-          "startTime": selectedSlot.value?.startTime.toIso8601String(),
-          "endTime": selectedSlot.value?.endTime.toIso8601String(),
+          "startTime": selectedSlot.value?.startTime.toUtc().toIso8601String(),
+          "endTime": selectedSlot.value?.endTime.toUtc().toIso8601String(),
         },
       ),
       responseBuilder: (data) {

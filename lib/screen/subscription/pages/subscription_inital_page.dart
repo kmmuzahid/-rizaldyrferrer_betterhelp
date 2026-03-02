@@ -10,7 +10,8 @@ import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 
 class SubscriptionInitalPage extends StatelessWidget {
-  const SubscriptionInitalPage({super.key});
+  const SubscriptionInitalPage({super.key, required this.onLearnMore});
+  final Function() onLearnMore;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +63,7 @@ class SubscriptionInitalPage extends StatelessWidget {
 
           100.height,
           CommonButton(
+            onTap: onLearnMore,
             titleText: 'Learn More',
             buttonWidth: double.infinity,
             buttonRadius: 12,

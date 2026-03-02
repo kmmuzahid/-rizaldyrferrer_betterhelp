@@ -36,7 +36,13 @@ class BookingScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
               ),
               const SizedBox(height: 10),
-              _buildCalendar(),
+              Stack(
+                children: [
+                  _buildCalendar(),
+                  if (controller.isAvailableDateLoading.value)
+                    const Positioned.fill(child: Center(child: CircularProgressIndicator())),
+                ],
+              ),
               const SizedBox(height: 10),
               controller.isAvailableSlotsLoading.value
                   ? const Center(
@@ -97,7 +103,7 @@ class BookingScreen extends StatelessWidget {
       ),
       child: TableCalendar(
         key: Key('table_calendar_booking_${controller.availableDate.length}'),
-        focusedDay: controller.focuseDate.value,
+        focusedDay: controller.focuseDate.value.toLocal(),
         onPageChanged: (date) {
           controller.getAvailableDate(date);
         },
@@ -182,7 +188,7 @@ class BookingScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              '${selectedSlot.startTimeLocal} - ${selectedSlot.endTimeLocal}',
+              '${selectedSlot.startTimeLocal} - ${DateFormat("h:mm a").format(selectedSlot.endTime.subtract(Duration(minutes: 5)))}',
               style: TextStyle(
                 color: (!selectedSlot.isAvailable || isSelected)
                     ? Colors.white

@@ -79,6 +79,7 @@ class AppStaticImages {
   static const String check_02 = "assets/images/check_02.png";
   static const String onboardingGif1 = "assets/images/1a Splash 1.gif";
   static const String onboardingGif2 = "assets/images/1b Splash 2.gif";
+  static const String onboarding_background_01 = "assets/images/onboarding_background.gif";
 
   static const String onboardingGif3 = "assets/images/1c Splash 3.gif";
   static const String onboardingGif4 = "assets/images/1d Splash 4-gif.gif";

@@ -15,6 +15,7 @@ import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class BookingsSessionsScreen extends StatelessWidget {
   const BookingsSessionsScreen({super.key});
@@ -23,10 +24,7 @@ class BookingsSessionsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<BookingsSessionsController>();
     return Scaffold(
-      appBar: AppBarWithBack(
-        text: "Booked Sessions",
-        backgroundColor: AppColors.white,
-      ),
+      appBar: AppBarWithBack(text: "Booked Sessions", backgroundColor: AppColors.white),
       backgroundColor: AppColors.white,
       body: Obx(() {
         if (controller.isLoading.value && controller.bookingSessionModel.isEmpty) {
@@ -40,11 +38,8 @@ class BookingsSessionsScreen extends StatelessWidget {
           onLoadMore: (page) {
             controller.fetchBookingSession(refresh: false, page: page);
           },
-          itemBuilder: (context, index) => _itemBuilder(
-            controller.bookingSessionModel[index],
-            controller,
-            index,
-          ),
+          itemBuilder: (context, index) =>
+              _itemBuilder(controller.bookingSessionModel[index], controller, index),
         );
       }),
     );
@@ -59,21 +54,14 @@ class BookingsSessionsScreen extends StatelessWidget {
       children: [
         if ((index > 0 &&
                 controller.bookingSessionModel.length > index &&
-                controller.bookingSessionModel[index - 1].status ==
-                    "confirmed" &&
+                controller.bookingSessionModel[index - 1].status == "confirmed" &&
                 controller.bookingSessionModel[index].status != "confirmed") ||
-            (index == 0 &&
-                controller.bookingSessionModel[index].status !=
-                    "confirmed")) ...[
+            (index == 0 && controller.bookingSessionModel[index].status != "confirmed")) ...[
           SizedBox(
             child: Row(
               children: [
                 Expanded(child: Container(height: 1.2, color: Colors.grey)),
-                CommonText(
-                  text: 'Completed Sessions',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+                CommonText(text: 'Completed Sessions', fontSize: 16, fontWeight: FontWeight.w500),
                 Expanded(child: Container(height: 1.2, color: Colors.grey)),
               ],
             ),
@@ -85,9 +73,7 @@ class BookingsSessionsScreen extends StatelessWidget {
           margin: EdgeInsets.only(bottom: AppSize.height(value: 15)),
           decoration: ShapeDecoration(
             color: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(9.27),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9.27)),
             shadows: [
               BoxShadow(
                 color: Color(0x14000000),
@@ -130,9 +116,7 @@ class BookingsSessionsScreen extends StatelessWidget {
                       Gap(height: 02),
                       AppText(
                         text: bookingSessionModel?.doctorId.email ?? '',
-                        color: const Color(
-                          0xFF131927,
-                        ) /* Text-Color-text-primary-black */,
+                        color: const Color(0xFF131927) /* Text-Color-text-primary-black */,
                         fontSize: 12,
                         fontFamilyIndex: 2,
                         fontWeight: FontWeight.w400,
@@ -162,9 +146,7 @@ class BookingsSessionsScreen extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 05)),
       height: AppSize.height(value: 65),
       decoration: BoxDecoration(
-        color: isConfirmed
-            ? const Color(0xFFEAF5F7)
-            : const Color.fromARGB(255, 237, 237, 237),
+        color: isConfirmed ? const Color(0xFFEAF5F7) : const Color.fromARGB(255, 237, 237, 237),
         borderRadius: BorderRadius.circular(9.27),
       ),
       child: Row(
@@ -187,7 +169,7 @@ class BookingsSessionsScreen extends StatelessWidget {
                 Gap(height: 03),
                 CommonText(
                   text:
-                      "${CoreUtils.formatDateToShortMonth(bookingSessionModel?.startTime.toLocal() ?? DateTime.now())} (${bookingSessionModel?.startTime.toLocal().time} - ${bookingSessionModel?.endTime.toLocal().time})",
+                      "${CoreUtils.formatDateToShortMonth(bookingSessionModel?.startTime.toLocal() ?? DateTime.now())} (${bookingSessionModel?.startTime.toLocal().time} - ${DateFormat("h:mm a").format(bookingSessionModel?.endTime.subtract(Duration(minutes: 5)).toLocal() ?? DateTime.now())}",
                   // fontFamilyIndex: 2,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,

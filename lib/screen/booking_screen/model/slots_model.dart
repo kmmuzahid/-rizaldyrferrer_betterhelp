@@ -20,8 +20,8 @@ class SlotsModel {
 
   factory SlotsModel.fromJson(Map json) {
     return SlotsModel(
-      startTime: DateTime.parse(json['startTime']).toLocal(),
-      endTime: DateTime.parse(json['endTime']).toLocal(),
+      startTime: DateTime.parse(json['startTime']),
+      endTime: DateTime.parse(json['endTime']),
     );
   }
 

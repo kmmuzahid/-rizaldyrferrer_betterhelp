@@ -28,7 +28,7 @@ class LearnScreenController extends GetxController {
     AppStaticImages.dailyAffermation07,
     AppStaticImages.dailyAffermation08,
   ].obs;
- 
+
   RxList<CategoryModel> categoryList = <CategoryModel>[].obs;
   RxList<CourseModel> recentCourseList = <CourseModel>[].obs;
   RxList<CourseModel> trendingCourseList = <CourseModel>[].obs;
@@ -66,13 +66,20 @@ class LearnScreenController extends GetxController {
 
     if (response.isSuccess) {
       final data = response.data;
-      categoryList.assignAll(data ?? []);
+      data?.forEach((element) {
+        final name = element.name.toLowerCase();
+        if (name.startsWith('recent') || name.startsWith('trending')) {
+          categoryList.insert(0, element);
+        } else {
+          categoryList.add(element);
+        }
+      });
     }
     isCategoryLoading.value = false;
   }
 
   // void fetchRecentCourse() async {
-    
+
   //   final response = await DioService.instance.request(
   //     // showMessage: true,
   //     input: RequestInput(
@@ -137,7 +144,7 @@ class LearnScreenController extends GetxController {
   }
 
   @override
-  void onInit() { 
+  void onInit() {
     // fetchTrendingCourse();
     // fetchRecentCourse();
     super.onInit();

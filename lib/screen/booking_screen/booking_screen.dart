@@ -17,6 +17,7 @@ class BookingScreen extends StatelessWidget {
   BookingScreen({super.key});
 
   final BookingController controller = Get.put(BookingController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,10 +61,10 @@ class BookingScreen extends StatelessWidget {
                           children: [
                             _buildSectionHeader(Icons.wb_sunny_outlined, "Available Slots"),
                             const Spacer(),
-                            Text(
-                              DateFormat(
-                                'MMM dd yyyy',
-                              ).format(controller.selectedDate.value?.toLocal() ?? DateTime.now()),
+                            Text( 
+                              DateFormat('MMM dd yyyy').format(
+                                controller.selectedDate.value?.toUtc() ?? DateTime.now().toUtc(),
+                              ),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -80,7 +81,7 @@ class BookingScreen extends StatelessWidget {
                                 ),
                               )
                             : ConstrainedBox(
-                                constraints: BoxConstraints(minHeight: 200),
+                                constraints: const BoxConstraints(minHeight: 200),
                                 child: _buildTimeGrid(controller.availableSlots),
                               ),
                       ],
@@ -102,40 +103,86 @@ class BookingScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       child: TableCalendar(
-        key: Key('table_calendar_booking_${controller.allData.length} }'),
-        focusedDay: controller.focuseDate.value.toLocal(),
+        key: Key('table_calendar_booking_${controller.allData.length}'),
+        focusedDay: controller.focuseDate.value,
         onPageChanged: (date) {
           controller.getAvailableDate(date);
         },
         selectedDayPredicate: (day) {
           if (controller.isAvailableSlotsLoading.value) return false;
-          return controller.selectedDate.value?.toLocal().date == day.toLocal().date;
+          final selected = controller.selectedDate.value;
+          if (selected == null) return false;
+          return controller.isSameUtcDay(selected, day);
         },
         onDaySelected: (selectedDay, focusedDay) {
+          controller.focuseDate.value = focusedDay;
           controller.onDaySelected(selectedDay);
         },
         enabledDayPredicate: (day) {
-          final index = controller.availableDate.indexWhere(
-            (e) => e.toLocal().date == day.toLocal().date,
-          );
-          return index != -1;
+          return controller.availableDate.any((e) => controller.isSameUtcDay(e, day));
         },
-        firstDay: DateTime.now().toLocal(),
-        lastDay: DateTime.now().toLocal().add(const Duration(days: 365)),
-        headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: false),
-        calendarStyle: CalendarStyle(
-          selectedDecoration: const BoxDecoration(color: Color(0xFF4A919E), shape: BoxShape.circle),
-          defaultDecoration: BoxDecoration(
-            color: Colors.teal.withOpacity(0.2),
-            shape: BoxShape.circle,
-          ),
-          defaultTextStyle: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-          todayTextStyle: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-          todayDecoration: BoxDecoration(
-            color: Colors.teal.withOpacity(0.2),
-            shape: BoxShape.circle,
-          ),
+        firstDay: DateTime.now(),
+        lastDay: DateTime.now().add(const Duration(days: 365)),
+        headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: false), 
+        calendarBuilders: CalendarBuilders(
+          defaultBuilder: (context, day, focusedDay) =>
+              _buildDayCell(context, day, isSelected: false),
+          selectedBuilder: (context, day, focusedDay) =>
+              _buildDayCell(context, day, isSelected: true),
+          todayBuilder: (context, day, focusedDay) =>
+              _buildDayCell(context, day, isSelected: false),
+          disabledBuilder: (context, day, focusedDay) => _buildDisabledDayCell(context, day),
+          outsideBuilder: (context, day, focusedDay) => _buildDisabledDayCell(context, day),
         ),
+        calendarStyle: const CalendarStyle(outsideDaysVisible: false),
+      ),
+    );
+  }
+
+  Widget _buildDayCell(BuildContext context, DateTime day, {required bool isSelected}) {
+    final isAvailable = controller.availableDate.any((e) => controller.isSameUtcDay(e, day));
+    final isToday = controller.isSameUtcDay(day, DateTime.now());
+
+    Color bgColor;
+    Color textColor;
+
+    if (isSelected) {
+      bgColor = const Color(0xFF4A919E);
+      textColor = Colors.white;
+    } else if (isAvailable) {
+      bgColor = Colors.teal.withOpacity(0.2);
+      textColor = Colors.black;
+    } else if (isToday) {
+      bgColor = Colors.teal.withOpacity(0.2);
+      textColor = Colors.black;
+    } else {
+      bgColor = Colors.transparent;
+      textColor = Colors.grey.shade400;
+    }
+
+    return Container(
+      margin: const EdgeInsets.all(4),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
+      child: Text(
+        '${day.day}',
+        style: TextStyle(
+          color: textColor,
+          fontWeight: (isSelected || isAvailable) ? FontWeight.w600 : FontWeight.w400,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDisabledDayCell(BuildContext context, DateTime day) {
+    return Container(
+      margin: const EdgeInsets.all(4),
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(color: Colors.transparent, shape: BoxShape.circle),
+      child: Text(
+        '${day.day}',
+        style: TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.w400,
+      ),
       ),
     );
   }
@@ -190,7 +237,7 @@ class BookingScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              '${selectedSlot.startTimeLocal} - ${DateFormat("h:mm a").format(selectedSlot.endTime.subtract(Duration(minutes: 5)))}',
+              '${selectedSlot.startTimeLocal} - ${DateFormat("h:mm a").format(selectedSlot.endTime.subtract(const Duration(minutes: 5)))}',
               style: TextStyle(
                 color: (!selectedSlot.isAvailable || isSelected)
                     ? Colors.white

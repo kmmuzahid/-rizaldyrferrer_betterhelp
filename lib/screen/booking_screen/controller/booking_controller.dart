@@ -43,21 +43,21 @@ class BookingController extends GetxController {
   DateTime startOfMonth(DateTime date) => DateTime(date.year, date.month, 1);
   DateTime endOfMonth(DateTime date) => DateTime(date.year, date.month + 1, 0);
 
-  DateTime normalizeDate(DateTime date) {
-    final local = date.toLocal();
-    return DateTime(local.year, local.month, local.day);
+  DateTime normalizeToUtcDate(DateTime date) {
+    final utc = date.toUtc();
+    return DateTime.utc(utc.year, utc.month, utc.day);
   }
 
-  bool _isSameDay(DateTime a, DateTime b) {
-    final localA = a.toLocal();
-    final localB = b.toLocal();
-    return localA.year == localB.year && localA.month == localB.month && localA.day == localB.day;
+  bool isSameUtcDay(DateTime a, DateTime b) {
+    final utcA = a.toUtc();
+    final utcB = b.toUtc();
+    return utcA.year == utcB.year && utcA.month == utcB.month && utcA.day == utcB.day;
   }
 
   void addDateIfNotExists(List<DateTime> list, DateTime newDate) {
-    final exists = list.any((date) => _isSameDay(date, newDate));
+    final exists = list.any((date) => isSameUtcDay(date, newDate));
     if (!exists) {
-      list.add(normalizeDate(newDate));
+      list.add(normalizeToUtcDate(newDate));
     }
   }
 
@@ -96,16 +96,15 @@ class BookingController extends GetxController {
     if (availableDate.isNotEmpty) {
       onDaySelected(availableDate.first);
     }
- 
   }
 
   onDaySelected(DateTime date) async {
     selectedDate.value = null;
-    selectedDate.value = date;
+    selectedDate.value = normalizeToUtcDate(date);
     selectedIndex.value = -1;
     selectedSlot.value = null;
 
-    final newData = allData.where((slot) => _isSameDay(slot.startTime, date)).toList();
+    final newData = allData.where((slot) => isSameUtcDay(slot.startTime, date)).toList();
 
     availableSlots.assignAll(newData);
     availableSlots.refresh();
@@ -116,9 +115,12 @@ class BookingController extends GetxController {
     selectedIndex.value = index;
   }
 
-  void confirmBooking() async {
+void confirmBooking() async {
     if (isBookingLoading.value) return;
     isBookingLoading.value = true;
+
+    // ✅ Save reference BEFORE nulling it
+    final bookedSlot = selectedSlot.value;
 
     final response = await DioService.instance.request<dynamic>(
       showMessage: true,
@@ -128,8 +130,8 @@ class BookingController extends GetxController {
         jsonBody: {
           "dayStartTime": _todayDayStart.toUtc().toIso8601String(),
           "dayEndTime": _todayDayEnd.toUtc().toIso8601String(),
-          "startTime": selectedSlot.value?.startTime.toUtc().toIso8601String(),
-          "endTime": selectedSlot.value?.endTime.toUtc().toIso8601String(),
+          "startTime": bookedSlot?.startTime.toUtc().toIso8601String(),
+          "endTime": bookedSlot?.endTime.toUtc().toIso8601String(),
         },
       ),
       responseBuilder: (data) => data,
@@ -137,14 +139,29 @@ class BookingController extends GetxController {
 
     isBookingLoading.value = false;
 
-    if (response.isSuccess) { 
-      selectedSlot.value = null;
+    if (response.isSuccess) {
+      // ✅ Update availableSlots UI
       if (selectedIndex.value >= 0 && selectedIndex.value < availableSlots.length) {
         availableSlots[selectedIndex.value] = availableSlots[selectedIndex.value].copyWith(
           isAvailable: false,
         );
         availableSlots.refresh();
       }
+
+      // ✅ Now safe to use bookedSlot — selectedSlot not nulled yet
+      if (bookedSlot != null) {
+        final index = allData.indexWhere(
+          (e) => e.startTime.toUtc().isAtSameMomentAs(bookedSlot.startTime.toUtc()),
+        );
+        if (index != -1) {
+          allData[index] = allData[index].copyWith(
+            isAvailable: false,
+          ); // ✅ mark unavailable, don't remove
+        }
+      }
+
+      // ✅ Clear selection last
+      selectedSlot.value = null;
       selectedIndex.value = -1;
     }
   }

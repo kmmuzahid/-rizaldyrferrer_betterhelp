@@ -103,7 +103,9 @@ class _SupportScreenState extends State<SupportScreen> {
                                           onButtonTap: (value) {
                                             controller.sendMessage(message: value, index: index);
                                           },
-                                          timestamp: message.createdAt.date == DateTime.now().date
+                                          timestamp:
+                                              message.createdAt.toLocal().date ==
+                                                  DateTime.now().toLocal().date
                                               ? CoreUtils.formatTime(message.createdAt.toLocal())
                                               : CoreUtils.formatDateTimeToHms(
                                                   message.createdAt.toLocal(),

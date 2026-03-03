@@ -1,8 +1,3 @@
-/*
- * @Author: Km Muzahid
- * @Date: 2026-01-10 14:55:08
- * @Email: km.muzahid@gmail.com
- */
 import 'package:better_help/screen/booking_screen/controller/booking_controller.dart';
 import 'package:better_help/screen/booking_screen/model/slots_model.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
@@ -15,7 +10,6 @@ import 'package:table_calendar/table_calendar.dart';
 
 class BookingScreen extends StatelessWidget {
   BookingScreen({super.key});
-
   final BookingController controller = Get.put(BookingController());
 
   @override
@@ -24,7 +18,6 @@ class BookingScreen extends StatelessWidget {
       appBar: AppBarWithBack(
         text: "Booking Session",
         backgroundColor: AppColors.white,
-        actions: [],
       ),
       body: Obx(
         () => SingleChildScrollView(
@@ -33,7 +26,7 @@ class BookingScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "Please select a time with you better health advocate from these given timeslots",
+                "Please select a time with your better health advocate from these given timeslots",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
               ),
               const SizedBox(height: 10),
@@ -54,17 +47,18 @@ class BookingScreen extends StatelessWidget {
                     )
                   : Column(
                       key: Key(
-                        'booking_${controller.availableSlots.length}${controller.selectedSlot.value?.startTimeLocal}',
+                        'booking_${controller.availableSlots.length}'
+                        '${controller.selectedSlot.value?.startTime.toIso8601String()}',
                       ),
                       children: [
                         Row(
                           children: [
                             _buildSectionHeader(Icons.wb_sunny_outlined, "Available Slots"),
                             const Spacer(),
-                            Text( 
-                              DateFormat('MMM dd yyyy').format(
-                                controller.selectedDate.value?.toUtc() ?? DateTime.now().toUtc(),
-                              ),
+                            Text(
+                              DateFormat(
+                                'MMM dd yyyy',
+                              ).format(controller.selectedDate.value?.toLocal() ?? DateTime.now()),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -105,32 +99,39 @@ class BookingScreen extends StatelessWidget {
       child: TableCalendar(
         key: Key('table_calendar_booking_${controller.allData.length}'),
         focusedDay: controller.focuseDate.value,
-        onPageChanged: (date) {
-          controller.getAvailableDate(date);
+        firstDay: controller.startOfMonth(DateTime.now().toLocal()),
+        lastDay: controller.endOfMonth(DateTime.now().add(const Duration(days: 365)).toLocal()),
+
+        // Triggered when calendar page changes (month navigation)
+        onPageChanged: (focusedDay) {
+          controller.focuseDate.value = focusedDay.toLocal();
+          controller.getAvailableDate(focusedDay);
         },
-        selectedDayPredicate: (day) {
-          if (controller.isAvailableSlotsLoading.value) return false;
-          final selected = controller.selectedDate.value;
-          if (selected == null) return false;
-          return controller.isSameUtcDay(selected, day);
-        },
+
+        // Highlight the selected day
+        selectedDayPredicate: (day) =>
+            controller.selectedDate.value != null &&
+            controller.isSameLocalDay(controller.selectedDate.value!, day),
+
+        // Handle user selecting a day
         onDaySelected: (selectedDay, focusedDay) {
           controller.focuseDate.value = focusedDay;
           controller.onDaySelected(selectedDay);
         },
-        enabledDayPredicate: (day) {
-          return controller.availableDate.any((e) => controller.isSameUtcDay(e, day));
-        },
-        firstDay: DateTime.now(),
-        lastDay: DateTime.now().add(const Duration(days: 365)),
-        headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: false), 
+
+        // Enable only available days
+        enabledDayPredicate: (day) =>
+            controller.availableDate.any((e) => controller.isSameLocalDay(e, day)),
+
+        headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: false),
+
         calendarBuilders: CalendarBuilders(
           defaultBuilder: (context, day, focusedDay) =>
               _buildDayCell(context, day, isSelected: false),
           selectedBuilder: (context, day, focusedDay) =>
               _buildDayCell(context, day, isSelected: true),
           todayBuilder: (context, day, focusedDay) =>
-              _buildDayCell(context, day, isSelected: false),
+              _buildDayCell(context, day, isSelected: false, isTodayBuilder: true),
           disabledBuilder: (context, day, focusedDay) => _buildDisabledDayCell(context, day),
           outsideBuilder: (context, day, focusedDay) => _buildDisabledDayCell(context, day),
         ),
@@ -139,9 +140,14 @@ class BookingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDayCell(BuildContext context, DateTime day, {required bool isSelected}) {
-    final isAvailable = controller.availableDate.any((e) => controller.isSameUtcDay(e, day));
-    final isToday = controller.isSameUtcDay(day, DateTime.now());
+  Widget _buildDayCell(
+    BuildContext context,
+    DateTime day, {
+    required bool isSelected,
+    bool isTodayBuilder = false,
+  }) {
+    final isAvailable = controller.availableDate.any((e) => controller.isSameLocalDay(e, day));
+    final isToday = controller.isSameLocalDay(day, DateTime.now());
 
     Color bgColor;
     Color textColor;
@@ -149,10 +155,7 @@ class BookingScreen extends StatelessWidget {
     if (isSelected) {
       bgColor = const Color(0xFF4A919E);
       textColor = Colors.white;
-    } else if (isAvailable) {
-      bgColor = Colors.teal.withOpacity(0.2);
-      textColor = Colors.black;
-    } else if (isToday) {
+    } else if (isAvailable || isToday) {
       bgColor = Colors.teal.withOpacity(0.2);
       textColor = Colors.black;
     } else {
@@ -163,7 +166,11 @@ class BookingScreen extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(4),
       alignment: Alignment.center,
-      decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
+      decoration: BoxDecoration(
+        color: bgColor,
+        shape: BoxShape.circle,
+        border: isTodayBuilder ? Border.all(color: Colors.teal.withOpacity(0.2), width: 2) : null,
+      ),
       child: Text(
         '${day.day}',
         style: TextStyle(
@@ -175,14 +182,20 @@ class BookingScreen extends StatelessWidget {
   }
 
   Widget _buildDisabledDayCell(BuildContext context, DateTime day) {
+    final isToday = controller.isSameLocalDay(day, DateTime.now());
     return Container(
       margin: const EdgeInsets.all(4),
       alignment: Alignment.center,
-      decoration: const BoxDecoration(color: Colors.transparent, shape: BoxShape.circle),
+      decoration: BoxDecoration(
+        color: isToday ? Colors.black.withOpacity(0.1) : Colors.transparent,
+        shape: BoxShape.circle,
+      ),
       child: Text(
         '${day.day}',
-        style: TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.w400,
-      ),
+        style: TextStyle(
+          color: isToday ? Colors.teal : Colors.grey.shade400,
+          fontWeight: FontWeight.w400,
+        ),
       ),
     );
   }
@@ -219,27 +232,28 @@ class BookingScreen extends StatelessWidget {
         crossAxisSpacing: 10,
       ),
       itemBuilder: (context, index) {
-        final selectedSlot = slots[index];
-        final isSelected = selectedSlot == controller.selectedSlot.value;
+        final slot = slots[index];
+        final isSelected = slot == controller.selectedSlot.value;
+        final startLocal = slot.startTime.toLocal();
+        final endLocal = slot.endTime.toLocal().subtract(const Duration(minutes: 5));
 
         return GestureDetector(
-          onTap: selectedSlot.isAvailable
-              ? () => controller.selectTime(selectedSlot, index)
-              : null,
+          onTap: slot.isAvailable ? () => controller.selectTime(slot, index) : null,
           child: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: isSelected
                   ? const Color(0xFF3B8A99)
-                  : !selectedSlot.isAvailable
+                  : !slot.isAvailable
                   ? Colors.grey.withOpacity(0.8)
                   : const Color(0xFFD6E2E5),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              '${selectedSlot.startTimeLocal} - ${DateFormat("h:mm a").format(selectedSlot.endTime.subtract(const Duration(minutes: 5)))}',
+              '${DateFormat("h:mm a").format(startLocal)} - '
+              '${DateFormat("h:mm a").format(endLocal)}',
               style: TextStyle(
-                color: (!selectedSlot.isAvailable || isSelected)
+                color: (!slot.isAvailable || isSelected)
                     ? Colors.white
                     : const Color(0xFF4A919E),
                 fontWeight: FontWeight.bold,
@@ -258,9 +272,7 @@ class BookingScreen extends StatelessWidget {
       buttonRadius: 8,
       buttonColor: Colors.cyan,
       titleColor: Colors.white,
-      onTap: () {
-        controller.confirmBooking();
-      },
+      onTap: controller.confirmBooking,
       isLoading: controller.isBookingLoading.value,
     );
   }

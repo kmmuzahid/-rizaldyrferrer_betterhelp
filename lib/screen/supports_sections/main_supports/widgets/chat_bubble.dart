@@ -3,17 +3,18 @@
  * @Date: 2026-01-11 14:49:38
  * @Email: km.muzahid@gmail.com
  */
+import 'package:better_help/screen/supports_sections/main_supports/controller/support_screen_controller.dart';
 import 'package:better_help/screen/supports_sections/main_supports/model/message_model.dart';
-import 'package:core_kit/button/common_button.dart';
-import 'package:core_kit/text/common_text.dart';
-import 'package:core_kit/utils/core_screen_utils.dart';
+import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CommonChatBubble extends StatelessWidget {
   final MessageModel message;
   final bool isSender;
   final String? timestamp;
   final Function(String) onButtonTap;
+  final int index;
 
   const CommonChatBubble({
     super.key,
@@ -21,6 +22,7 @@ class CommonChatBubble extends StatelessWidget {
     required this.isSender,
     this.timestamp,
     required this.onButtonTap,
+    required this.index,
   });
 
   @override
@@ -71,6 +73,7 @@ class CommonChatBubble extends StatelessWidget {
                       return CommonButton(
                         titleText: '${index + 1}',
                         buttonWidth: 30,
+                        buttonHeight: 40,
                         buttonColor: const Color(0xFFE0F2F1), // Light teal
                         titleColor: const Color(0xFF00796B),
                         onTap: () {
@@ -78,6 +81,16 @@ class CommonChatBubble extends StatelessWidget {
                         },
                       );
                     }),
+                    if (showReply(message.messageType))
+                      CommonButton(
+                        titleText: 'Reply',
+                        buttonColor: const Color(0xFFE0F2F1), // Light teal
+                        titleColor: const Color(0xFF00796B),
+                        buttonHeight: 40,
+                        onTap: () {
+                          Get.find<SupportScreenController>().replyIndex.value = index;
+                        },
+                      ).start,
                   ],
                 ),
               ),
@@ -97,6 +110,8 @@ class CommonChatBubble extends StatelessWidget {
       ),
     );
   }
+
+  bool showReply(String type) => type == 'regular';
 
   int getLength(String type) {
     if (type == 'one_to_five') {

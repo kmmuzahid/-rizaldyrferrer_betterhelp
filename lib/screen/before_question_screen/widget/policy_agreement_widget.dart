@@ -34,7 +34,7 @@ class PolicyAgreementWidget extends StatelessWidget {
             CommonText(
               text: 'Privacy & User Agreement',
               style: TextStyle(fontFamily: 'Inter'),
-              fontSize: 24,
+              fontSize: 18,
               fontWeight: FontWeight.w500,
               textColor: AppColors.textPrimaryBlack,
             ),

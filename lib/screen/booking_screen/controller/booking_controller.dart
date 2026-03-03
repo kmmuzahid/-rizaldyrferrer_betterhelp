@@ -1,8 +1,3 @@
-/*
- * @Author: Km Muzahid
- * @Date: 2026-01-10 14:55:55
- * @Email: km.muzahid@gmail.com
- */
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/booking_screen/model/slots_model.dart';
 import 'package:core_kit/core_kit.dart';
@@ -17,97 +12,109 @@ class BookingController extends GetxController {
   var isAvailableDateLoading = false.obs;
   var selectedIndex = (-1).obs;
   var focuseDate = DateTime.now().obs;
-
   RxList<SlotsModel> availableSlots = <SlotsModel>[].obs;
   RxList<DateTime> availableDate = <DateTime>[].obs;
-
   final List<SlotsModel> allData = [];
-
-  late DateTime _todayDayStart;
-  late DateTime _todayDayEnd;
 
   @override
   void onInit() {
     super.onInit();
-    _todayDayStart = startOfDayLocal(DateTime.now());
-    _todayDayEnd = endOfDayLocal(DateTime.now());
-    getAvailableDate(DateTime.now());
+    final nowLocal = DateTime.now();
+    final localToday = DateTime(nowLocal.year, nowLocal.month, nowLocal.day);
+
+    focuseDate.value = localToday;
+    getAvailableDate(localToday);
   }
-
-  DateTime startOfDayLocal(DateTime localDate) =>
-      DateTime(localDate.year, localDate.month, localDate.day, 0, 0);
-
-  DateTime endOfDayLocal(DateTime localDate) =>
-      DateTime(localDate.year, localDate.month, localDate.day, 23, 59);
 
   DateTime startOfMonth(DateTime date) => DateTime(date.year, date.month, 1);
-  DateTime endOfMonth(DateTime date) => DateTime(date.year, date.month + 1, 0);
+  DateTime endOfMonth(DateTime date) => DateTime(date.year, date.month + 1, 1);
 
-  DateTime normalizeToUtcDate(DateTime date) {
-    final utc = date.toUtc();
-    return DateTime.utc(utc.year, utc.month, utc.day);
+  DateTime normalizeToLocalDate(DateTime date) {
+    final local = date.toLocal();
+    return DateTime(local.year, local.month, local.day);
   }
 
-  bool isSameUtcDay(DateTime a, DateTime b) {
-    final utcA = a.toUtc();
-    final utcB = b.toUtc();
-    return utcA.year == utcB.year && utcA.month == utcB.month && utcA.day == utcB.day;
+  bool isSameLocalDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 
-  void addDateIfNotExists(List<DateTime> list, DateTime newDate) {
-    final exists = list.any((date) => isSameUtcDay(date, newDate));
-    if (!exists) {
-      list.add(normalizeToUtcDate(newDate));
+  void addDateIfNotExists(List<DateTime> list, DateTime utcDateTime) {
+    final localDay = normalizeToLocalDate(utcDateTime);
+    if (!list.any((date) => isSameLocalDay(date, localDay))) {
+      list.add(localDay);
     }
   }
 
   void addSlotsIfNotExists(List<SlotsModel> list, SlotsModel newSlot) {
-    final exists = list.any((slot) => slot.startTime.toUtc() == newSlot.startTime.toUtc());
-    if (!exists) {
+    if (!list.any((slot) => slot.startTime.toUtc().isAtSameMomentAs(newSlot.startTime.toUtc()))) {
       list.add(newSlot);
     }
   }
+  
 
-  getAvailableDate(DateTime date) async {
-    focuseDate.value = date;
+  Future<void> getAvailableDate(DateTime date) async {
+    final localMonthStart = startOfMonth(date);
+    final localMonthEnd = endOfMonth(date);
+
+    focuseDate.value = normalizeToLocalDate(date);
     isAvailableDateLoading.value = true;
 
     ResponseState<List<SlotsModel>?> response = await DioService.instance.request<List<SlotsModel>>(
       input: RequestInput(
         endpoint: ApiEndPoints.getDoctorAvailableSlots,
         queryParams: {
-          'startTime': startOfMonth(date).toUtc().toIso8601String(),
-          'endTime': endOfMonth(date).toUtc().toIso8601String(),
+          'startTime': DateTime.now().toUtc().toIso8601String(),
+          'endTime': localMonthEnd.toUtc().toIso8601String(),
         },
         method: RequestMethod.GET,
       ),
-      responseBuilder: (data) {
-        return (data as List).map((e) => SlotsModel.fromJson(e)).toList();
-      },
+      responseBuilder: (data) => (data as List).map((e) => SlotsModel.fromJson(e)).toList(),
     );
 
-    for (SlotsModel element in response.data ?? []) {
+    allData.clear();
+    availableDate.clear();
+
+    for (final element in response.data ?? []) {
       addSlotsIfNotExists(allData, element);
       addDateIfNotExists(availableDate, element.startTime);
     }
 
+    // Sort dates and data to ensure consistency
+    availableDate.sort();
+    allData.sort((a, b) => a.startTime.compareTo(b.startTime));
+
     isAvailableDateLoading.value = false;
 
     if (availableDate.isNotEmpty) {
-      onDaySelected(availableDate.first);
+      // Prioritize today if available
+      final today = normalizeToLocalDate(DateTime.now());
+      final todayIndex = availableDate.indexWhere((d) => isSameLocalDay(d, today));
+
+      if (todayIndex != -1) {
+        onDaySelected(availableDate[todayIndex]);
+      } else {
+        onDaySelected(availableDate.first);
+      }
+    } else {
+      selectedDate.value = null;
+      availableSlots.clear();
     }
   }
 
-  onDaySelected(DateTime date) async {
-    selectedDate.value = null;
-    selectedDate.value = normalizeToUtcDate(date);
+  void onDaySelected(DateTime date) {
+    // Treat the date fields from TableCalendar as the intended Local day
+    final localDay = DateTime(date.year, date.month, date.day);
+
+    selectedDate.value = localDay;
     selectedIndex.value = -1;
     selectedSlot.value = null;
 
-    final newData = allData.where((slot) => isSameUtcDay(slot.startTime, date)).toList();
+    final newData = allData.where((slot) {
+      final slotLocalDay = normalizeToLocalDate(slot.startTime);
+      return isSameLocalDay(slotLocalDay, localDay);
+    }).toList();
 
     availableSlots.assignAll(newData);
-    availableSlots.refresh();
   }
 
   void selectTime(SlotsModel slot, int index) {
@@ -115,12 +122,17 @@ class BookingController extends GetxController {
     selectedIndex.value = index;
   }
 
-void confirmBooking() async {
+  Future<void> confirmBooking() async {
     if (isBookingLoading.value) return;
-    isBookingLoading.value = true;
 
-    // ✅ Save reference BEFORE nulling it
     final bookedSlot = selectedSlot.value;
+    if (bookedSlot == null) return;
+
+    final localDay = normalizeToLocalDate(bookedSlot.startTime.toLocal());
+    final dayStartUtc = DateTime.utc(localDay.year, localDay.month, localDay.day, 0, 0);
+    final dayEndUtc = DateTime.utc(localDay.year, localDay.month, localDay.day, 23, 59, 59);
+
+    isBookingLoading.value = true;
 
     final response = await DioService.instance.request<dynamic>(
       showMessage: true,
@@ -128,10 +140,10 @@ void confirmBooking() async {
         endpoint: ApiEndPoints.createDoctorBooking,
         method: RequestMethod.POST,
         jsonBody: {
-          "dayStartTime": _todayDayStart.toUtc().toIso8601String(),
-          "dayEndTime": _todayDayEnd.toUtc().toIso8601String(),
-          "startTime": bookedSlot?.startTime.toUtc().toIso8601String(),
-          "endTime": bookedSlot?.endTime.toUtc().toIso8601String(),
+          "dayStartTime": dayStartUtc.toIso8601String(),
+          "dayEndTime": dayEndUtc.toIso8601String(),
+          "startTime": bookedSlot.startTime.toUtc().toIso8601String(),
+          "endTime": bookedSlot.endTime.toUtc().toIso8601String(),
         },
       ),
       responseBuilder: (data) => data,
@@ -140,7 +152,6 @@ void confirmBooking() async {
     isBookingLoading.value = false;
 
     if (response.isSuccess) {
-      // ✅ Update availableSlots UI
       if (selectedIndex.value >= 0 && selectedIndex.value < availableSlots.length) {
         availableSlots[selectedIndex.value] = availableSlots[selectedIndex.value].copyWith(
           isAvailable: false,
@@ -148,19 +159,13 @@ void confirmBooking() async {
         availableSlots.refresh();
       }
 
-      // ✅ Now safe to use bookedSlot — selectedSlot not nulled yet
-      if (bookedSlot != null) {
-        final index = allData.indexWhere(
-          (e) => e.startTime.toUtc().isAtSameMomentAs(bookedSlot.startTime.toUtc()),
-        );
-        if (index != -1) {
-          allData[index] = allData[index].copyWith(
-            isAvailable: false,
-          ); // ✅ mark unavailable, don't remove
-        }
+      final index = allData.indexWhere(
+        (e) => e.startTime.toUtc().isAtSameMomentAs(bookedSlot.startTime.toUtc()),
+      );
+      if (index != -1) {
+        allData[index] = allData[index].copyWith(isAvailable: false);
       }
 
-      // ✅ Clear selection last
       selectedSlot.value = null;
       selectedIndex.value = -1;
     }

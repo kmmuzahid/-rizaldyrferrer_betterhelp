@@ -13,21 +13,25 @@ import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
 
 class SupportScreenController extends GetxController {
-  RxList<MessageModel> messageModel = RxList<MessageModel>([]);
+  RxList<MessageModel> messageModel = RxList<MessageModel>([]); 
+  String replyMessage = '';
   late String chatId;
   final MyProfileScreenController profileScreenController = Get.find();
   Rxn<BookedSessionModel?> bookedSessionModel = Rxn();
+  RxBool isLoading = false.obs;
+
+  RxInt replyIndex = (-1).obs;
 
   late DateTime _todayDayStart;
   late DateTime _todayDayEnd;
   @override
   void onInit() {
-    super.onInit();
+    super.onInit(); 
     _todayDayStart = startOfDayLocal(DateTime.now());
     _todayDayEnd = endOfDayLocal(DateTime.now());
     chatId = profileScreenController.profileData.value?.doctorChatId ?? '';
     getMessages(page: 1);
-    
+
     SocketService.instance.startListeningChat(
       chatId: chatId,
       onMessage: (data) {
@@ -39,7 +43,6 @@ class SupportScreenController extends GetxController {
     super.onInit();
   }
 
-  
   // Start of day in local time
   DateTime startOfDayLocal(DateTime localDate) =>
       DateTime(localDate.year, localDate.month, localDate.day, 0, 0);
@@ -71,11 +74,12 @@ class SupportScreenController extends GetxController {
 
   @override
   void dispose() {
-    SocketService.instance.stopListeningChat(chatId: chatId);
+    SocketService.instance.stopListeningChat(chatId: chatId); 
     super.dispose();
   }
 
   getMessages({int page = 1}) async {
+    isLoading.value = true;
     final result = await DioService.instance.request<List<MessageModel>>(
       input: RequestInput(
         queryParams: {'page': page, 'limit': 20},
@@ -91,6 +95,7 @@ class SupportScreenController extends GetxController {
     if (result.isSuccess) {
       messageModel.addAll(result.data ?? []);
     }
+    isLoading.value = false;
   }
 
   sendMessage({required String message, required int index}) async {

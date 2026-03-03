@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/supports_sections/main_supports/controller/support_screen_controller.dart'
@@ -79,33 +81,113 @@ class _SupportScreenState extends State<SupportScreen> {
                       right: BorderSide(color: Colors.grey.shade200),
                     ),
                   ),
-                  child: Column(
+                  child: Stack(
                     children: [
-                      Expanded(
-                        child: SmartListLoader(
-                          isReverse: true,
-                          onLoadMore: (page) {
-                            controller.getMessages(page: page);
-                          },
-                          itemCount: controller.messageModel.length,
-                          itemBuilder: (context, index) {
-                            final message = controller.messageModel[index];
-                            return CommonChatBubble(
-                              message: message,
-                              onButtonTap: (value) {
-                                controller.sendMessage(message: value, index: index);
-                              },
-                              timestamp: message.createdAt.date == DateTime.now().date
-                                  ? CoreUtils.formatTime(message.createdAt)
-                                  : CoreUtils.formatDateTimeToHms(message.createdAt),
-                              isSender:
-                                  message.sender.id == profileController.profileData.value?.id,
-                            );
-                          },
+                      Positioned.fill(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: controller.isLoading.value && controller.messageModel.isEmpty
+                                  ? const Center(child: CircularProgressIndicator())
+                                  : SmartListLoader(
+                                      isReverse: true,
+                                      onLoadMore: (page) {
+                                        controller.getMessages(page: page);
+                                      },
+                                      itemCount: controller.messageModel.length,
+                                      itemBuilder: (context, index) {
+                                        final message = controller.messageModel[index];
+                                        return CommonChatBubble(
+                                          message: message,
+                                          index: index,
+                                          onButtonTap: (value) {
+                                            controller.sendMessage(message: value, index: index);
+                                          },
+                                          timestamp: message.createdAt.date == DateTime.now().date
+                                              ? CoreUtils.formatTime(message.createdAt.toLocal())
+                                              : CoreUtils.formatDateTimeToHms(
+                                                  message.createdAt.toLocal(),
+                                                ),
+                                          isSender:
+                                              message.sender.id ==
+                                              profileController.profileData.value?.id,
+                                        );
+                                      },
+                                    ),
+                            ),
+
+                            Container(height: 30, color: Colors.white, width: double.infinity),
+                          ],
                         ),
                       ),
-                     
-                      20.height,
+                      if (controller.replyIndex > -1)
+                        Positioned.fill(
+                          child: GestureDetector(
+                            onTap: () {
+                              controller.replyIndex.value = -1;
+                            },
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                              child: Container(
+                                color: Colors.black.withAlpha(10),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 12,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(4.r),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          CommonText(
+                                            text: controller
+                                                .messageModel[controller.replyIndex.value]
+                                                .message,
+                                            maxLines: 10,
+                                            fontSize: 14,
+                                            textColor: Colors.black87,
+                                            textAlign: TextAlign.left,
+                                            isDescription: true,
+                                          ),
+                                          10.height,
+                                          CommonTextField(
+                                            validationType: ValidationType.validateRequired,
+                                            hintText: 'Reply to message',
+                                            onChanged: (value) {
+                                              controller.replyMessage = value;
+                                            },
+                                            suffixIcon: IconButton(
+                                              onPressed: () {
+                                                if (controller.replyMessage.isNotEmpty) {
+                                                  controller.sendMessage(
+                                                    message: controller.replyMessage,
+                                                    index: controller.replyIndex.value,
+                                                  );
+                                                  controller.replyMessage = '';
+                                                  controller.replyIndex.value = -1;
+                                                }
+                                              },
+                                              icon: Icon(Icons.send),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    20.height,
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -121,8 +203,6 @@ class _SupportScreenState extends State<SupportScreen> {
     );
   }
 
-
- 
   Column _header() {
     return Column(
       // Changed from SingleChildScrollView to Column
@@ -200,7 +280,7 @@ class _SupportScreenState extends State<SupportScreen> {
     if (controller.bookedSessionModel.value?.startTime == null) {
       return null;
     }
-    return '${DateFormat('dd-MM-yyyy').format(controller.bookedSessionModel.value?.startTime.toLocal() ?? DateTime.now())} ${DateFormat("h:mm a").format(controller.bookedSessionModel.value?.startTime.toLocal() ?? DateTime.now())}';
+    return '${DateFormat('MMM dd yyyy').format(controller.bookedSessionModel.value?.startTime.toLocal() ?? DateTime.now())} ${DateFormat("h:mm a").format(controller.bookedSessionModel.value?.startTime.toLocal() ?? DateTime.now())}';
   }
 
   Widget _buildQuickActionCard({

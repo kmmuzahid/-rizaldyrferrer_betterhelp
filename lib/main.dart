@@ -3,9 +3,9 @@
  * @Date: 2026-01-09 09:41:39
  * @Email: km.muzahid@gmail.com
  */
-import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_bindings/app_bindings.dart';
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/screen/notification/notification_service.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/service/timer_service/timer_service.dart';
@@ -13,14 +13,14 @@ import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/widget/app_deviceutils/app_device_utils.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:core_kit/initializer.dart';
-import 'package:core_kit/network/dio_service.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'widget/app_observer/app_observer.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
   // ignore: avoid_print
@@ -31,7 +31,9 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
   );
   if (notificationResponse.input?.isNotEmpty ?? false) {
     // ignore: avoid_print
-    print('notification action tapped with input: ${notificationResponse.input}');
+    print(
+      'notification action tapped with input: ${notificationResponse.input}',
+    );
   }
 }
 
@@ -64,6 +66,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return CoreKit.builder(
+      config: CorekitConfigImpl(),
+      navigatorKey: navigatorKey,
+      app: (corkitInitBuilder) {
+        return _materialApp(corkitInitBuilder);
+      },
+    );
+  }
+
+  Widget _materialApp(CorkitInitBuilder builder) {
     return GetMaterialApp(
       navigatorObservers: [NavigationObserver()],
       scaffoldMessengerKey: AppSnackBar.scaffoldMessengerKey,
@@ -72,7 +84,7 @@ class MyApp extends StatelessWidget {
       defaultTransition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 200),
       initialRoute: AppRoute.splashscreen,
-      navigatorKey: Get.key,
+      navigatorKey: navigatorKey,
       theme: ThemeData(
         scaffoldBackgroundColor: AppColors.white,
         inputDecorationTheme: const InputDecorationTheme(
@@ -88,34 +100,9 @@ class MyApp extends StatelessWidget {
           tertiary: const Color(0xFFF59E0B), // SnackBar Warning
           error: const Color(0xFFEF4444), // SnackBar Erro
         ),
- 
       ),
       getPages: AppRoute.appRoutes,
-      builder: (context, child) {
-        return CoreKit.init(
-          back: () {
-            Get.back();
-          },
-          designSize: const Size(428, 926),
-          imageBaseUrl: ApiEndPoints.imageUrl,
-          scaffoldMessangeKey: AppSnackBar.scaffoldMessengerKey,
-          dioServiceConfig: DioServiceConfig(
-            baseUrl: ApiEndPoints.baseUrl,
-            refreshTokenEndpoint: ApiEndPoints.refreshToken,
-            onLogout: () {
-              StorageService().removeTokens();
-              Get.offAllNamed(AppRoute.splashscreen);
-            },
-            enableDebugLogs: kDebugMode,
-          ),
-          tokenProvider: TokenProvider(
-            accessToken: () => StorageService().getAccessToken().then((v) => v ?? ''),
-            refreshToken: () => StorageService().getRefreshToken().then((v) => v ?? ''),
-            updateTokens: (data) => StorageService().saveAccessToken(data['accessToken']),
-          ),
-          child: child,
-        );
-      },
+      builder: builder,
     );
   }
 }

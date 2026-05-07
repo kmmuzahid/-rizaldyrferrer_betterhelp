@@ -7,7 +7,6 @@ import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import '../../utils/app_colors/app_colors.dart';
@@ -22,13 +21,16 @@ class BeforeQuestionScreen extends StatelessWidget {
   final controller = Get.put(BeforeQuestionScreenController());
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Stack(
         children: [
           Positioned.fill(
-            child: Image.asset(AppStaticImages.onboarding_background_01, fit: BoxFit.cover),
+            child: Image.asset(
+              AppStaticImages.onboarding_background_01,
+              fit: BoxFit.cover,
+            ),
           ),
           Positioned.fill(
             child: SafeArea(
@@ -62,7 +64,11 @@ class BeforeQuestionScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           Gap(height: AppSize.height(value: 85)),
-                          Center(child: Image.asset(AppStaticImages.beforeQuestionImage)),
+                          Center(
+                            child: Image.asset(
+                              AppStaticImages.beforeQuestionImage,
+                            ),
+                          ),
                           Gap(height: AppSize.height(value: 40)),
                           AppText(
                             text: AppString.weHavegotYourAttention,
@@ -92,7 +98,9 @@ class BeforeQuestionScreen extends StatelessWidget {
                               Get.dialog(
                                 PolicyAgreementWidget(
                                   onAgree: () {
-                                    Get.delete<QuestionnariesScreenController>();
+                                    Get.delete<
+                                      QuestionnariesScreenController
+                                    >();
                                     Get.back();
                                     Get.toNamed(AppRoute.questionariescreen);
                                   },
@@ -145,7 +153,7 @@ class BeforeQuestionScreen extends StatelessWidget {
             ),
           ),
         ],
-      ), 
+      ),
     );
   }
 }

@@ -22,7 +22,10 @@ class PolicyAgreementWidget extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       child: Container(
         padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16.0)),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.0),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -41,7 +44,8 @@ class PolicyAgreementWidget extends StatelessWidget {
             CommonText(
               top: 10,
               bottom: 10,
-              text: 'We value your privacy. Please read and accept our terms to continue.',
+              text:
+                  'We value your privacy. Please read and accept our terms to continue.',
               style: TextStyle(fontFamily: 'Inter'),
               fontSize: 16,
               maxLines: 5,

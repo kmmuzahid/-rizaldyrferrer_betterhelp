@@ -22,7 +22,9 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
       backgroundColor: AppColors.white,
       body: Obx(() {
         if (controller.isLoading.value) {
-          return Center(child: CircularProgressIndicator(color: AppColors.primary500));
+          return Center(
+            child: CircularProgressIndicator(color: AppColors.primary500),
+          );
         }
 
         final profile = controller.profileData.value;
@@ -56,7 +58,9 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
                 Gap(height: AppSize.height(value: 12)),
                 Center(
                   child: AppButton(
-                    title: profile?.isSubscribed == true ? "Subscribed" : "Elevete Subscribe",
+                    title: profile?.isSubscribed == true
+                        ? "Subscribed"
+                        : "Elevete Subscribe",
                     fontSize: AppSize.width(value: 14),
                     width: AppSize.width(value: 150),
                     height: AppSize.height(value: 36),
@@ -250,8 +254,6 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
     );
   }
 
-
-
   void showReplaceBhaBhaaDialog() {
     final RxString selectedChoice = 'BHA'.obs;
     final RxString reason = ''.obs;
@@ -263,12 +265,20 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         backgroundColor: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 20),
+          padding: const EdgeInsets.only(
+            left: 10,
+            right: 10,
+            top: 15,
+            bottom: 20,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Reassign Role", style: TextStyle(color: Colors.blueGrey, fontSize: 14)),
+              const Text(
+                "Reassign Role",
+                style: TextStyle(color: Colors.blueGrey, fontSize: 14),
+              ),
 
               const SizedBox(height: 10),
 
@@ -279,7 +289,7 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
                 onChanged: (value) {
                   selectedChoice.value = value ?? 'BHA';
                 },
-                nameBuilder: (item) => item,
+                nameBuilder: (item) => CommonText(text: item.item),
               ),
 
               const SizedBox(height: 16),

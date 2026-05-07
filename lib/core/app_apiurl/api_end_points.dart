@@ -6,11 +6,11 @@
 class ApiEndPoints {
   ApiEndPoints._();
   //live
-  static const imageUrl = "http://54.241.114.7:5000";
-  static const liveDomain = "http://54.241.114.7:5000";
+  // static const imageUrl = "http://54.241.114.7:5000";
+  // static const liveDomain = "http://54.241.114.7:5000";
   //local
-  // static const imageUrl = "http://10.10.7.65:5003";
-  // static const liveDomain = "http://10.10.7.65:5003";
+  static const imageUrl = "http://10.10.7.65:5007";
+  static const liveDomain = "http://10.10.7.65:5007";
 
   // static const localDomain = "http://10.10.7.65:5003";
   static const domain = liveDomain;
@@ -25,7 +25,8 @@ class ApiEndPoints {
   static const login = "$baseUrl/auth/login";
   static const changePassword = "$baseUrl/auth/change-password";
   static const forgotPassworResendOtp = "$baseUrl/otp/resend-otp";
-  static const forgotPasswordOtpMatch = "$baseUrl/auth/forgot-password-otp-match";
+  static const forgotPasswordOtpMatch =
+      "$baseUrl/auth/forgot-password-otp-match";
   static const forgotPassoword = "$baseUrl/auth/change-password";
   static const getAllArticle = "$baseUrl/article";
   static getSingleArticle(var id) => "$baseUrl/article/$id";
@@ -57,16 +58,20 @@ class ApiEndPoints {
   static const report = "$baseUrl/report";
   static getMyMessages(var id) => "$baseUrl/message/my-messages/$id";
   static const sendMessages = "$baseUrl/message/send-messages";
-  static const createDoctorBooking = "$baseUrl/doctor-booking/create-doctor-booking";
+  static const createDoctorBooking =
+      "$baseUrl/doctor-booking/create-doctor-booking";
   static const getFavouriteArticle = "$baseUrl/favorite/saved";
 
-  static const createSubscription = "$baseUrl/subscription/create-purchase-subscription";
+  static const createSubscription =
+      "$baseUrl/subscription/create-purchase-subscription";
   static const createVideoSession = "$baseUrl/doctor-booking/agora-token";
   static const getMyBooking = "$baseUrl/doctor-booking/my-booking";
   static taskBytheDate(var data) => "$baseUrl/task?dateTime=$data";
   static const seeAllBookings = "$baseUrl/doctor-booking/my-booking";
-  static taskCompleted(var taskId) => "$baseUrl/task/status/$taskId?status=completed";
-  static taskCancelled(var taskId) => "$baseUrl/task/status/$taskId?status=cancelled";
+  static taskCompleted(var taskId) =>
+      "$baseUrl/task/status/$taskId?status=completed";
+  static taskCancelled(var taskId) =>
+      "$baseUrl/task/status/$taskId?status=cancelled";
 
   static const notification = "$baseUrl/notification";
   static const notificationAllRead = "$baseUrl/notification/all-read";
@@ -78,8 +83,11 @@ class ApiEndPoints {
   static const taskStatistics = "$baseUrl/task/statistics";
   static const bhaBhaaReassignRequest = "$baseUrl/bha-bhaa-reassign";
 
-
-  static const getDoctorAvailableSlots = "$baseUrl/doctor-booking/my-doctor-available-slots";
-  static const availableBookingDate = "$baseUrl/doctor-booking/my-doctor-available-date";
+  static const getDoctorAvailableSlots =
+      "$baseUrl/doctor-booking/my-doctor-available-slots";
+  static const availableBookingDate =
+      "$baseUrl/doctor-booking/my-doctor-available-date";
   static const resetPassword = "$baseUrl/auth/forgot-password-reset";
+  static const generateTaskByAi = "$baseUrl/task/generate-by-ai";
+  static const createTask = "$baseUrl/task/create-task";
 }

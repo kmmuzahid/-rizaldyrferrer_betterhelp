@@ -41,6 +41,7 @@ import 'package:better_help/screen/subscription/subscription_and_payment.dart';
 import 'package:better_help/screen/supports_sections/main_supports/support_screen.dart';
 import 'package:better_help/screen/supports_sections/video_call_agora/video_call_screen.dart';
 import 'package:better_help/widget/app_confeti/habit_complete_screen.dart';
+import 'package:better_help/screen/habits_sections/main_habits/generate_task_based_on_preference_screen.dart';
 import 'package:get/get.dart';
 
 import '../../screen/before_question_screen/before_question_screen.dart';
@@ -119,6 +120,7 @@ class AppRoute {
   static const String bookingScreen = "/bookingScreen";
   static const String reportProblemScreen = "/reportProblemScreen";
   static const String analyzeScreen = "/analyzeScreen";
+  static const String generateTaskBasedOnPreference = "/generateTaskBasedOnPreference";
 
   //! Get Pages for all the Screen
 
@@ -301,6 +303,13 @@ class AppRoute {
         HabitBindings().dependencies();
         MenuBindings().dependencies();
       }),
+      middlewares: [AppInternerCheck()],
+    ),
+    GetPage(
+      name: AppRoute.generateTaskBasedOnPreference,
+      page: () => const GenerateTaskBasedOnPreferenceScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: const Duration(milliseconds: 300),
       middlewares: [AppInternerCheck()],
     ),
     //! Community Screen Route

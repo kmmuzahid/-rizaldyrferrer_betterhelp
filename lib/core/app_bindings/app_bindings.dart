@@ -1,3 +1,4 @@
+import 'package:better_help/screen/habits_sections/main_habits/controller/generate_task_based_on_preferense_controller.dart';
 import 'package:better_help/screen/menu_drawer/faqs/faq_screen_controller.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/menu_drawer/privacy_policy/privacy_policy_screen_controller.dart';
@@ -49,12 +50,12 @@ class AppInitialBindings implements Bindings {
       appLog('Registering SingupScreenController');
       return SingupScreenController();
     }, fenix: true);
-  
+
     Get.lazyPut<MyProfileScreenController>(() {
       appLog('Registering MyProfileScreenController');
       return MyProfileScreenController();
     }, fenix: true);
- 
+
     Get.lazyPut<NotificationScreenController>(() {
       appLog('Registering NotificationScreenController');
       return NotificationScreenController();
@@ -79,7 +80,10 @@ class AppInitialBindings implements Bindings {
       appLog('Registering PrivacyPolicyScreenController');
       return PrivacyPolicyScreenController();
     }, fenix: true);
+
+    Get.lazyPut<GenerateTaskBasedOnPreferenceController>(() {
+      appLog('Registering GenerateTaskBasedOnPreferenceController');
+      return GenerateTaskBasedOnPreferenceController();
+    }, fenix: true);
   }
-
-
 }

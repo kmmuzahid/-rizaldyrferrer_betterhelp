@@ -19,7 +19,10 @@ class StorageService {
   static const String _questionnaireOutputKey = 'questionnaire_output';
   static const String _createUserTokenKey = 'create_user_token';
   static String get userId => '695e1c0e085dd3d8713c17f7';
+  static const String _isFirstTimeUserKey = 'is_first_time_user';
   //static const String _settingsKey = 'app_settings';
+
+  /// Check if user is first time user
 
   /// Initialize the storage service
   Future<void> init() async {
@@ -32,6 +35,17 @@ class StorageService {
       await init();
     }
     return _prefs!;
+  }
+
+  Future<bool?> getIsFirstTimeUser() async {
+    final prefs = await _preferences;
+    return prefs.getBool(_isFirstTimeUserKey);
+  }
+
+  /// Save user is first time user status
+  Future<bool> setIsFirstTimeUser(bool isFirstTimeUser) async {
+    final prefs = await _preferences;
+    return await prefs.setBool(_isFirstTimeUserKey, isFirstTimeUser);
   }
 
   // ==================== Token Management ====================

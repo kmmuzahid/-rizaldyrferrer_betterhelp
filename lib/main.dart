@@ -90,6 +90,31 @@ class MyApp extends StatelessWidget {
         inputDecorationTheme: const InputDecorationTheme(
           fillColor: Colors.white,
           hintStyle: TextStyle(color: Colors.grey, fontStyle: FontStyle.normal),
+
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: AppColors.primary300),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: AppColors.primary300),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
         ),
 
         colorScheme: ColorScheme.fromSeed(
@@ -101,6 +126,7 @@ class MyApp extends StatelessWidget {
           error: const Color(0xFFEF4444), // SnackBar Erro
         ),
       ),
+
       getPages: AppRoute.appRoutes,
       builder: builder,
     );

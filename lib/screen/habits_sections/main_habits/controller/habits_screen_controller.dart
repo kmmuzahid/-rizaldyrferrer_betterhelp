@@ -1,9 +1,11 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/habits_sections/main_habits/model/daily_task_model.dart';
 import 'package:better_help/service/api/api_services.dart';
+import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
+import 'package:better_help/widget/generate_task/generate_task_dialog.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:get/get.dart';
@@ -98,6 +100,15 @@ class HabitsScreenController extends GetxController {
     super.onInit();
     // Fetch tasks for today on initialization
     fetchTasksByDate(selectedDate.value);
+    checkFirstTimeUser();
+  }
+
+  void checkFirstTimeUser() async {
+    final isFirstTimeUser = await StorageService.instance.getIsFirstTimeUser();
+
+    if (isFirstTimeUser == null || !isFirstTimeUser) {
+      Get.dialog(const GenerateTaskDialog());
+    }
   }
 
   /// Fetch tasks by date from API

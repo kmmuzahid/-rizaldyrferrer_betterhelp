@@ -1,7 +1,8 @@
+import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/generate_task/domain_selection_dialog.dart';
-import 'package:core_kit/utils/core_screen_utils.dart';
+import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -57,9 +58,6 @@ class _DifficultyDetailsDialogState extends State<DifficultyDetailsDialog> {
 
   @override
   void dispose() {
-    for (var controller in _textEditingControllers) {
-      controller.dispose();
-    }
     super.dispose();
   }
 
@@ -77,68 +75,97 @@ class _DifficultyDetailsDialogState extends State<DifficultyDetailsDialog> {
           }
         },
         behavior: HitTestBehavior.opaque,
-        child: Stack(
-          key: _dialogKey,
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF9F9F2),
-                borderRadius: BorderRadius.circular(24.r),
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AppText(
-                      text:
-                          "In your own words, how do you experience these difficulties? Please be as specific as you can to ensure that the recommended strategies target your needs.",
-                      fontFamilyIndex: 2,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF393433),
-                      textAlign: TextAlign.center,
-                      lineHeight: 1.4,
-                      maxLines: 10,
-                    ),
-                    Gap(height: 24.h),
-                    for (int i = 0; i < widget.difficultyDetails.length; i++)
-                      _DifficultyInputField(
-                        label: widget.difficultyDetails.keys.elementAt(i),
-                        controller: _textEditingControllers[i],
-                        iconKey: _iconKeys[i],
-                        onInfoTap: () {
-                          if (activeTooltip ==
-                              widget.difficultyDetails.values.elementAt(i)) {
-                            setState(() {
-                              activeTooltip = null;
-                            });
-                          } else {
-                            _showTooltip(
-                              widget.difficultyDetails.values.elementAt(i),
-                              i,
+        child: FormBuilder(
+          entity: null,
+          builder: (context, formKey, entity) => Stack(
+            key: _dialogKey,
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF9F9F2),
+                  borderRadius: BorderRadius.circular(24.r),
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AppText(
+                        text:
+                            "In your own words, how do you experience these difficulties? Please be as specific as you can to ensure that the recommended strategies target your needs.",
+                        fontFamilyIndex: 2,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF393433),
+                        textAlign: TextAlign.center,
+                        lineHeight: 1.4,
+                        maxLines: 10,
+                      ),
+                      Gap(height: 24.h),
+                      for (int i = 0; i < widget.difficultyDetails.length; i++)
+                        _DifficultyInputField(
+                          label: widget.difficultyDetails.keys.elementAt(i),
+                          controller: _textEditingControllers[i],
+                          iconKey: _iconKeys[i],
+                          onInfoTap: () {
+                            if (activeTooltip ==
+                                widget.difficultyDetails.values.elementAt(i)) {
+                              setState(() {
+                                activeTooltip = null;
+                              });
+                            } else {
+                              _showTooltip(
+                                widget.difficultyDetails.values.elementAt(i),
+                                i,
+                              );
+                            }
+                          },
+                        ),
+                      Gap(height: 32.h),
+                      _SubmitButton(
+                        onPressed: () {
+                          if (formKey.validateAndSave()) {
+                            if (_textEditingControllers.any(
+                              (element) => element.text.isEmpty,
+                            )) {
+                              return;
+                            }
+                            List<Map<String, String>> tasksData = [
+                              for (
+                                int i = 0;
+                                i < widget.difficultyDetails.length;
+                                i++
+                              )
+                                {
+                                  'name': widget.difficultyDetails.keys
+                                      .elementAt(i),
+                                  'definition': widget.difficultyDetails.values
+                                      .elementAt(i),
+                                  'userText': _textEditingControllers[i].text,
+                                },
+                            ];
+
+                            Get.back();
+                            Get.toNamed(
+                              AppRoute.generateTaskBasedOnPreference,
+                              arguments: tasksData,
                             );
                           }
                         },
                       ),
-                    Gap(height: 32.h),
-                    _SubmitButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            if (activeTooltip != null && tooltipY != null && tooltipX != null)
-              DynamicTooltip(
-                iconY: tooltipY!,
-                iconX: tooltipX!,
-                text: activeTooltip!,
-              ),
-          ],
+              if (activeTooltip != null && tooltipY != null && tooltipX != null)
+                DynamicTooltip(
+                  iconY: tooltipY!,
+                  iconX: tooltipX!,
+                  text: activeTooltip!,
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -189,21 +216,11 @@ class _DifficultyInputField extends StatelessWidget {
           ],
         ),
         Gap(height: 8.h),
-        Container(
-          margin: EdgeInsets.only(bottom: 16.h),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-          child: TextField(
-            controller: controller,
-            maxLines: 3,
-            style: TextStyle(fontSize: 14.sp, color: const Color(0xFF393433)),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.all(16),
-            ),
-          ),
+        CommonMultilineTextField(
+          controller: controller,
+          backgroundColor: Colors.white,
+          height: 100,
+          validationType: .validateRequired,
         ),
       ],
     );

@@ -13,6 +13,7 @@ import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/widget/app_deviceutils/app_device_utils.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:core_kit/initializer.dart';
+import 'package:core_kit/utils/core_screen_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
@@ -86,6 +87,23 @@ class MyApp extends StatelessWidget {
       initialRoute: AppRoute.splashscreen,
       navigatorKey: navigatorKey,
       theme: ThemeData(
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            side: BorderSide(color: Colors.black, width: 0),
+            textStyle: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+
+            padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 14.w),
+            elevation: 0,
+          ),
+        ),
         scaffoldBackgroundColor: AppColors.white,
         inputDecorationTheme: const InputDecorationTheme(
           fillColor: Colors.white,

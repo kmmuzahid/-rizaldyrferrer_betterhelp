@@ -2,7 +2,6 @@ import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/habits_sections/main_habits/model/task_info_model.dart';
 import 'package:core_kit/network/dio_service.dart';
 import 'package:core_kit/network/request_input.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class GenerateTaskBasedOnPreferenceController extends GetxController {
@@ -23,12 +22,13 @@ class GenerateTaskBasedOnPreferenceController extends GetxController {
     for (var taskData in aiTasks) {
       tasksToAdd.add({
         "name": taskData.name,
-        "task": taskData.task,
         "goal": taskData.goal,
-        "startDate": taskData.startDate.toIso8601String(),
-        "endDate": taskData.endDate.toIso8601String(),
+        "task": taskData.task,
         "type": taskData.type,
         "days": taskData.days,
+
+        "startDate": taskData.startDate.toIso8601String(),
+        "endDate": taskData.endDate.toIso8601String(),
       });
     }
 
@@ -43,13 +43,10 @@ class GenerateTaskBasedOnPreferenceController extends GetxController {
       },
     );
 
+    Get.snackbar(result.isSuccess ? "Success" : "Error", result.message ?? '');
+
     if (result.isSuccess) {
-      Get.snackbar(
-        "Success",
-        "Task added successfully",
-        backgroundColor: Colors.green.withOpacity(0.1),
-        colorText: Colors.green,
-      );
+      //TO-DO:call api for task list
     }
   }
 

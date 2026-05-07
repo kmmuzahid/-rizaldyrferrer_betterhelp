@@ -89,5 +89,5 @@ class ApiEndPoints {
       "$baseUrl/doctor-booking/my-doctor-available-date";
   static const resetPassword = "$baseUrl/auth/forgot-password-reset";
   static const generateTaskByAi = "$baseUrl/task/generate-by-ai";
-  static const createTask = "$baseUrl/task/create-task";
+  static const createTask = "$baseUrl/task/create-by-user";
 }

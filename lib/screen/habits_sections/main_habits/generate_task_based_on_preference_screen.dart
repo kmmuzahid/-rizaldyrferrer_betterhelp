@@ -37,15 +37,6 @@ class GenerateTaskBasedOnPreferenceScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: _RegenerateButton(
-                onPressed: () {
-                  controller.regenerateTasks();
-                },
-              ),
-            ),
-            Gap(height: 20.h),
             Obx(
               () => controller.isLoading.value
                   ? Center(
@@ -66,37 +57,34 @@ class GenerateTaskBasedOnPreferenceScreen extends StatelessWidget {
                       },
                     ),
             ),
-            _AddTaskButton(onPressed: () => controller.addTask()),
+            Obx(
+              () => controller.isLoading.value
+                  ? const SizedBox.shrink()
+                  : Column(
+                      children: [
+                        CommonButton(
+                          onTap: () => controller.addTask(),
+                          buttonColor: const Color(0xFFFF8D41),
+
+                          titleText: "Add Task",
+                          buttonWidth: 220,
+                        ),
+
+                        10.height,
+                        CommonButton(
+                          onTap: () {
+                            controller.regenerateTasks();
+                          },
+                          buttonColor: const Color(0xFF309AAD),
+                          buttonWidth: 220,
+                          titleText: "Regenerate Task",
+                        ),
+                      ],
+                    ),
+            ),
             Gap(height: 30.h),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _RegenerateButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  const _RegenerateButton({required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF309AAD),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-        elevation: 0,
-      ),
-      child: AppText(
-        text: "Regenerate Task",
-        fontSize: 14.sp,
-        fontWeight: FontWeight.w700,
-        color: Colors.white,
-        fontFamilyIndex: 2,
       ),
     );
   }
@@ -472,36 +460,6 @@ class _DayItem extends StatelessWidget {
             fontFamilyIndex: 2,
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _AddTaskButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  const _AddTaskButton({required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFFF8D41),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-          padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 14.w),
-          elevation: 0,
-        ),
-        child: AppText(
-          text: "Add Task",
-          fontSize: 18.sp,
-          fontWeight: FontWeight.w700,
-          color: Colors.white,
-          fontFamilyIndex: 2,
-        ),
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:better_help/widget/generate_task/difficulties_selection_dialog.dart';
+import 'package:better_help/widget/generate_task/difficulty_details_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,16 +15,6 @@ class DomainSelectionDialog extends StatefulWidget {
 class _DomainSelectionDialogState extends State<DomainSelectionDialog> {
   final GlobalKey _dialogKey = GlobalKey();
   final List<GlobalKey> iconKeys = List.generate(8, (index) => GlobalKey());
-  final List<String> domains = [
-    "Executive Inhibition (Self-Restraint)",
-    "Goal-Directed Persistence (Self-Motivation)",
-    "Planning and Problem-Solving",
-    "Self-Awareness (Meta-Cognition)",
-    "Verbal Working Memory",
-    "Non-Verbal Working Memory",
-    "Emotional Dysregulation",
-    "Other Areas (General Life Management)",
-  ];
 
   final Map<String, String> domainDescriptions = {
     "Executive Inhibition (Self-Restraint)":
@@ -134,11 +124,11 @@ class _DomainSelectionDialogState extends State<DomainSelectionDialog> {
                     child: ListView.separated(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: domains.length,
+                      itemCount: domainDescriptions.length,
                       separatorBuilder: (context, index) =>
                           const Gap(height: 16),
                       itemBuilder: (context, index) {
-                        final domain = domains[index];
+                        final domain = domainDescriptions.keys.elementAt(index);
                         final isSelected = selectedDomains.contains(domain);
                         return _buildDomainItem(domain, isSelected, index);
                       },
@@ -232,7 +222,7 @@ class _DomainSelectionDialogState extends State<DomainSelectionDialog> {
   }
 
   Widget _buildTooltip() {
-    return _DynamicTooltip(
+    return DynamicTooltip(
       iconY: tooltipY!,
       iconX: tooltipX!,
       text: domainDescriptions[activeTooltip!]!,
@@ -244,7 +234,11 @@ class _DomainSelectionDialogState extends State<DomainSelectionDialog> {
       onTap: () {
         if (selectedDomains.isNotEmpty) {
           Get.back();
-          Get.dialog(const DifficultiesSelectionDialog());
+          Get.dialog(
+            DifficultyDetailsDialog(
+              difficultyDetails: getSelectedDifficulties(),
+            ),
+          );
         }
       },
       child: Container(
@@ -273,24 +267,33 @@ class _DomainSelectionDialogState extends State<DomainSelectionDialog> {
       ),
     );
   }
+
+  Map<String, String> getSelectedDifficulties() {
+    Map<String, String> difficulties = {};
+    for (var domain in selectedDomains) {
+      difficulties[domain] = domainDescriptions[domain]!;
+    }
+    return difficulties;
+  }
 }
 
-class _DynamicTooltip extends StatefulWidget {
+class DynamicTooltip extends StatefulWidget {
   final double iconY;
   final double iconX;
   final String text;
 
-  const _DynamicTooltip({
+  const DynamicTooltip({
+    super.key,
     required this.iconY,
     required this.iconX,
     required this.text,
   });
 
   @override
-  State<_DynamicTooltip> createState() => _DynamicTooltipState();
+  State<DynamicTooltip> createState() => _DynamicTooltipState();
 }
 
-class _DynamicTooltipState extends State<_DynamicTooltip> {
+class _DynamicTooltipState extends State<DynamicTooltip> {
   final GlobalKey _bubbleKey = GlobalKey();
   double _bubbleHeight = 0;
 

@@ -10,7 +10,8 @@ import 'package:get/get.dart';
 
 class QuestionnariesScreenController extends GetxController {
   final PageController pageController = PageController();
-  final QuestionnariesScreenRepository _repository = QuestionnariesScreenRepository();
+  final QuestionnariesScreenRepository _repository =
+      QuestionnariesScreenRepository();
   final StorageService _storageService = StorageService();
 
   RxDouble progressValue = 1.0.obs;
@@ -23,7 +24,8 @@ class QuestionnariesScreenController extends GetxController {
   // Configuration
   static const int questionsPerPage = 5;
   static const int totalQuestionPages = 3;
-  static const int totalPages = 5; // 3 question pages + 1 goals page + 1 result page
+  static const int totalPages =
+      5; // 3 question pages + 1 goals page + 1 result page
 
   // Store answers for all questions (key: questionNumber, value: answer)
   RxMap<int, String> answers = <int, String>{}.obs;
@@ -56,7 +58,8 @@ class QuestionnariesScreenController extends GetxController {
     ],
   ];
 
-  int get totalQuestions => questionsByPage.fold(0, (sum, page) => sum + page.length);
+  int get totalQuestions =>
+      questionsByPage.fold(0, (sum, page) => sum + page.length);
 
   void selectAnswer(int questionNumber, String answer) {
     answers[questionNumber] = answer;
@@ -66,7 +69,7 @@ class QuestionnariesScreenController extends GetxController {
     return answers[questionNumber] == answer;
   }
 
-  void nextPage() { 
+  void nextPage() {
     if ((currentPageIndex.value == 0 && answers.length < 5) ||
         (currentPageIndex.value == 1 && answers.length < 10) ||
         (currentPageIndex.value == 2 && answers.length < 15)) {
@@ -74,8 +77,6 @@ class QuestionnariesScreenController extends GetxController {
       return;
     }
     if (currentPageIndex.value < totalPages - 1) {
-
-     
       currentPageIndex.value++;
       pageController.animateToPage(
         currentPageIndex.value,
@@ -110,6 +111,14 @@ class QuestionnariesScreenController extends GetxController {
   }
 
   Future<void> completeQuestionnaire() async {
+    if (selectedScaleWellbeing.value == null ||
+        selectedScaleProductivity.value == null) {
+      showSnackBar(
+        "Please rate both wellbeing and productivity",
+        type: SnackBarType.warning,
+      );
+      return;
+    }
     appLog('Questionnaire completed with ${answers.length} answers');
     await _submitAnswersToApi();
   }
@@ -128,16 +137,24 @@ class QuestionnariesScreenController extends GetxController {
     }
 
     // Add goals question
-    final selectedGoalsList = selectedGoals.map((index) => goalOptions[index]).toList();
+    final selectedGoalsList = selectedGoals
+        .map((index) => goalOptions[index])
+        .toList();
     payload.add({
       'questions': AppString.whatdoYouwanttoAchieve,
       'questionOutput': selectedGoalsList.join(', '),
     });
 
-    // Add scale question
+    // Add wellbeing scale question
     payload.add({
-      'questions': AppString.resultQuestion,
-      'questionOutput': selectedScaleNumber.value?.toString() ?? '',
+      'questions': AppString.resultQuestionWellbeing,
+      'questionOutput': selectedScaleWellbeing.value?.toString() ?? '',
+    });
+
+    // Add productivity scale question
+    payload.add({
+      'questions': AppString.resultQuestionProductivity,
+      'questionOutput': selectedScaleProductivity.value?.toString() ?? '',
     });
 
     return payload;
@@ -158,11 +175,23 @@ class QuestionnariesScreenController extends GetxController {
     }
 
     // Add goals question with list of selected goals
-    final selectedGoalsList = selectedGoals.map((index) => goalOptions[index]).toList();
-    responses.add({'question': AppString.whatdoYouwanttoAchieve, 'answer': selectedGoalsList});
+    final selectedGoalsList = selectedGoals
+        .map((index) => goalOptions[index])
+        .toList();
+    responses.add({
+      'question': AppString.whatdoYouwanttoAchieve,
+      'answer': selectedGoalsList,
+    });
 
-    // Add scale question
-    responses.add({'question': AppString.resultQuestion, 'answer': selectedScaleNumber.value ?? 0});
+    // Add scale questions
+    responses.add({
+      'question': AppString.resultQuestionWellbeing,
+      'answer': selectedScaleWellbeing.value ?? 0,
+    });
+    responses.add({
+      'question': AppString.resultQuestionProductivity,
+      'answer': selectedScaleProductivity.value ?? 0,
+    });
 
     return responses;
   }
@@ -200,7 +229,9 @@ class QuestionnariesScreenController extends GetxController {
       // Save responses to storage for OTP verification
       await _saveResponsesToStorage();
 
-      final response = await _repository.submitQuestionAnswers(questionAnswers: payload);
+      final response = await _repository.submitQuestionAnswers(
+        questionAnswers: payload,
+      );
 
       if (response != null && response['success'] == true) {
         apiResponseData.value = response['data'];
@@ -210,7 +241,10 @@ class QuestionnariesScreenController extends GetxController {
         await _saveResponsesToStorage();
         await _saveOutputToStorage(response['data']);
 
-        Get.offNamed(AppRoute.questionnaireSummaryScreen, arguments: response['data']);
+        Get.offNamed(
+          AppRoute.questionnaireSummaryScreen,
+          arguments: response['data'],
+        );
       } else {
         AppSnackBar.showError('Failed to submit answers. Please try again.');
       }
@@ -233,19 +267,28 @@ class QuestionnariesScreenController extends GetxController {
 
   bool get isResultPage => currentPageIndex.value == totalPages - 1;
   bool get isGoalsPage => currentPageIndex.value == totalPages - 2;
-  bool get isLastQuestionPage => currentPageIndex.value == totalQuestionPages - 1;
+  bool get isLastQuestionPage =>
+      currentPageIndex.value == totalQuestionPages - 1;
 
   // Goals page multi-select options
   RxList<int> selectedGoals = <int>[].obs;
 
-  // Scale selection (1-10) for result page
-  RxnInt selectedScaleNumber = RxnInt(null);
+  // Scale selections (1-10) for result page
+  RxnInt selectedScaleWellbeing = RxnInt(6);
+  RxnInt selectedScaleProductivity = RxnInt(8);
 
-  void selectScaleNumber(int number) {
-    selectedScaleNumber.value = number;
+  void selectScaleWellbeing(int number) {
+    selectedScaleWellbeing.value = number;
   }
 
-  bool isScaleNumberSelected(int number) => selectedScaleNumber.value == number;
+  void selectScaleProductivity(int number) {
+    selectedScaleProductivity.value = number;
+  }
+
+  bool isScaleWellbeingSelected(int number) =>
+      selectedScaleWellbeing.value == number;
+  bool isScaleProductivitySelected(int number) =>
+      selectedScaleProductivity.value == number;
 
   final List<String> goalOptions = [
     AppString.buildingBetterHabits,
@@ -277,7 +320,8 @@ class QuestionnariesScreenController extends GetxController {
     pageController.dispose();
     answers.clear();
     selectedGoals.clear();
-    selectedScaleNumber.value = null;
+    selectedScaleWellbeing.value = null;
+    selectedScaleProductivity.value = null;
     super.onClose();
   }
 }

@@ -11,7 +11,6 @@ import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class QuestionnariesScreen extends StatelessWidget {
@@ -23,7 +22,9 @@ class QuestionnariesScreen extends StatelessWidget {
     //   QuestionnariesScreenController(),
     //   tag: 'questionnaires',
     // );
-    final controller = Get.find<QuestionnariesScreenController>(tag: 'questionnaires');
+    final controller = Get.find<QuestionnariesScreenController>(
+      tag: 'questionnaires',
+    );
 
     return Obx(
       () => Scaffold(
@@ -50,7 +51,10 @@ class QuestionnariesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(QuestionnariesScreenController controller, BuildContext context) {
+  Widget _buildHeader(
+    QuestionnariesScreenController controller,
+    BuildContext context,
+  ) {
     return Column(
       children: [
         Gap(height: AppSize.height(value: 32)),
@@ -89,7 +93,10 @@ class QuestionnariesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressIndicator(QuestionnariesScreenController controller, BuildContext context) {
+  Widget _buildProgressIndicator(
+    QuestionnariesScreenController controller,
+    BuildContext context,
+  ) {
     final pageIndex = controller.currentPageIndex.value;
 
     return Container(
@@ -118,12 +125,15 @@ class QuestionnariesScreen extends StatelessWidget {
               return SliderTheme(
                 data: SliderTheme.of(context).copyWith(
                   trackHeight: AppSize.height(value: 6),
-                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 0),
+                  thumbShape: const RoundSliderThumbShape(
+                    enabledThumbRadius: 0,
+                  ),
                 ),
                 child: Slider(
                   value: controller.progressValue.value,
                   onChanged: (_) {},
-                  max: (QuestionnariesScreenController.totalPages - 1).toDouble(),
+                  max: (QuestionnariesScreenController.totalPages - 1)
+                      .toDouble(),
                   min: 1,
                   activeColor: _getActiveSliderColor(pageIndex),
                   inactiveColor: _getInactiveSliderColor(pageIndex),
@@ -153,14 +163,21 @@ class QuestionnariesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuestionPage(QuestionnariesScreenController controller, int pageIndex) {
+  Widget _buildQuestionPage(
+    QuestionnariesScreenController controller,
+    int pageIndex,
+  ) {
     final questions = controller.questionsByPage[pageIndex];
     final pageConfig = _getPageConfig(pageIndex);
-    final startQuestionNumber = pageIndex * QuestionnariesScreenController.questionsPerPage + 1;
+    final startQuestionNumber =
+        pageIndex * QuestionnariesScreenController.questionsPerPage + 1;
 
     return Container(
       padding: EdgeInsets.all(15),
-      decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: Column(
         children: [
           Image.asset(
@@ -202,44 +219,34 @@ class QuestionnariesScreen extends StatelessWidget {
   }
 
   Widget _buildResultPage() {
-    final controller = Get.find<QuestionnariesScreenController>(tag: 'questionnaires');
+    final controller = Get.find<QuestionnariesScreenController>(
+      tag: 'questionnaires',
+    );
 
     return Column(
       children: [
-        // Center(
-        //   child: AppText(
-        //     text: AppString.youCrusedIt,
-        //     fontWeight: FontWeight.w600,
-        //     fontSize: AppSize.width(value: 24),
-        //     color: AppColors.black,
-        //     fontFamilyIndex: 2,
-        //   ),
-        // ),
-        // Gap(height: AppSize.height(value: 08)),
-        // Center(
-        //   child: AppText(
-        //     text: AppString.youAreCloser,
-        //     color: AppColors.black,
-        //     fontFamilyIndex: 2,
-        //     fontSize: AppSize.width(value: 16),
-        //     fontWeight: FontWeight.w400,
-        //   ),
-        // ),
-        Gap(height: AppSize.height(value: 50)),
+        Gap(height: AppSize.height(value: 60)),
         Image.asset(
           AppStaticImages.resultImage,
-          height: AppSize.height(value: 250),
-          width: AppSize.width(value: 250),
+          height: AppSize.height(value: 230),
+          width: AppSize.width(value: 230),
         ),
-        Gap(height: AppSize.height(value: 11)),
+        Gap(height: AppSize.height(value: 15)),
         Container(
           padding: EdgeInsets.symmetric(
-            vertical: AppSize.height(value: 24),
-            horizontal: AppSize.width(value: 16),
+            vertical: AppSize.height(value: 30),
+            horizontal: AppSize.width(value: 20),
           ),
           decoration: BoxDecoration(
             color: AppColors.white,
-            borderRadius: BorderRadius.circular(AppSize.width(value: 08)),
+            borderRadius: BorderRadius.circular(AppSize.width(value: 16)),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: Column(
             children: [
@@ -252,63 +259,25 @@ class QuestionnariesScreen extends StatelessWidget {
                   color: AppColors.black,
                 ),
               ),
-              4.height,
-              Center(
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "If",
-                        style: TextStyle(
-                          color: AppColors.darkGrey,
-                          fontSize: AppSize.width(value: 16),
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                      TextSpan(
-                        text: " 1 represents struggling",
-                        style: TextStyle(
-                          color: AppColors.black,
-                          fontSize: AppSize.width(value: 16),
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                      TextSpan(
-                        text: " and",
-                        style: TextStyle(
-                          color: AppColors.darkGrey,
-                          fontSize: AppSize.width(value: 16),
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                      TextSpan(
-                        text: " 10 represents thriving",
-                        style: TextStyle(
-                          color: AppColors.black,
-                          fontSize: AppSize.width(value: 16),
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-
-                      TextSpan(
-                        text: ", how would you rate your overall wellbeing?",
-                        style: TextStyle(
-                          color: AppColors.darkGrey,
-                          fontSize: AppSize.width(value: 16),
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              Gap(height: AppSize.height(value: 20)),
+              _questions(
+                controller: controller,
+                boldText: "10 represents thriving",
+                endText: ", how would you rate your overall wellbeing in life?",
+                isSelected:
+                    (number) => controller.isScaleWellbeingSelected(number),
+                onSelect: (number) => controller.selectScaleWellbeing(number),
               ),
-              Gap(height: AppSize.height(value: 16)),
-              _buildScaleSelector(controller),
+              Gap(height: AppSize.height(value: 30)),
+              _questions(
+                controller: controller,
+                boldText: "10 means feeling productive",
+                endText:
+                    " in the ways that matter to you, where would you rate yourself today?",
+                isSelected:
+                    (number) => controller.isScaleProductivitySelected(number),
+                onSelect: (number) => controller.selectScaleProductivity(number),
+              ),
             ],
           ),
         ),
@@ -316,7 +285,61 @@ class QuestionnariesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildScaleSelector(QuestionnariesScreenController controller) {
+  Column _questions({
+    required QuestionnariesScreenController controller,
+    required String boldText,
+    required String endText,
+    required bool Function(int) isSelected,
+    required void Function(int) onSelect,
+  }) {
+    return Column(
+      children: [
+        Center(
+          child: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: "If ",
+                  style: TextStyle(
+                    color: AppColors.darkGrey,
+                    fontSize: AppSize.width(value: 18),
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                TextSpan(
+                  text: boldText,
+                  style: TextStyle(
+                    color: AppColors.textPrimaryBlack,
+                    fontSize: AppSize.width(value: 18),
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                TextSpan(
+                  text: endText,
+                  style: TextStyle(
+                    color: AppColors.darkGrey,
+                    fontSize: AppSize.width(value: 18),
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Gap(height: AppSize.height(value: 12)),
+        _buildScaleSelector(isSelected: isSelected, onSelect: onSelect),
+      ],
+    );
+  }
+
+  Widget _buildScaleSelector({
+    required bool Function(int) isSelected,
+    required void Function(int) onSelect,
+  }) {
     return Obx(
       () => Column(
         children: [
@@ -325,21 +348,22 @@ class QuestionnariesScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(5, (index) {
               final number = index + 1;
-              final isSelected = controller.isScaleNumberSelected(number);
+              final selected = isSelected(number);
               return GestureDetector(
-                onTap: () => controller.selectScaleNumber(number),
+                onTap: () => onSelect(number),
                 child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSize.width(value: 14),
-                    vertical: AppSize.height(value: 8),
-                  ),
+                  width: AppSize.width(value: 60),
+                  height: AppSize.height(value: 45),
+                  alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: isSelected ? Colors.redAccent : AppColors.resultBg,
-                    borderRadius: BorderRadius.circular(AppSize.width(value: 06)),
+                    color: selected ? AppColors.red500 : AppColors.ratingBg,
+                    borderRadius: BorderRadius.circular(
+                      AppSize.width(value: 08),
+                    ),
                   ),
                   child: AppText(
                     text: "$number",
-                    color: isSelected ? AppColors.white : AppColors.black,
+                    color: selected ? AppColors.white : AppColors.textPrimaryBlack,
                     fontSize: AppSize.width(value: 20),
                     fontWeight: FontWeight.w600,
                     textAlign: TextAlign.center,
@@ -355,21 +379,22 @@ class QuestionnariesScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(5, (index) {
               final number = index + 6;
-              final isSelected = controller.isScaleNumberSelected(number);
+              final selected = isSelected(number);
               return GestureDetector(
-                onTap: () => controller.selectScaleNumber(number),
+                onTap: () => onSelect(number),
                 child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSize.width(value: 14),
-                    vertical: AppSize.height(value: 8),
-                  ),
+                  width: AppSize.width(value: 60),
+                  height: AppSize.height(value: 45),
+                  alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: isSelected ? Colors.redAccent : AppColors.resultBg,
-                    borderRadius: BorderRadius.circular(AppSize.width(value: 06)),
+                    color: selected ? AppColors.red500 : AppColors.ratingBg,
+                    borderRadius: BorderRadius.circular(
+                      AppSize.width(value: 08),
+                    ),
                   ),
                   child: AppText(
                     text: "$number",
-                    color: isSelected ? AppColors.white : AppColors.black,
+                    color: selected ? AppColors.white : AppColors.textPrimaryBlack,
                     fontSize: AppSize.width(value: 20),
                     fontWeight: FontWeight.w600,
                     textAlign: TextAlign.center,
@@ -391,17 +416,19 @@ class QuestionnariesScreen extends StatelessWidget {
       final isLoading = controller.isLoading.value;
 
       return AppButton(
+        height: AppSize.height(value: 52),
+        borderradius: AppSize.width(value: 10),
         title: (isResult ? 'Submit' : (isGoals ? 'Continue' : AppString.next)),
-        titleColor: isResult ? AppColors.white : AppColors.black,
-        backgroundColor: isResult ? Colors.red : AppColors.white,
+        titleColor: AppColors.white,
+        backgroundColor: isResult ? AppColors.red500 : AppColors.blue500,
         onTap: isLoading
             ? null
             : (isResult
-                  ? () {
-                      controller.completeQuestionnaire();
-                      Get.toNamed(AppRoute.analyzeScreen);
-                    }
-                  : controller.nextPage),
+                ? () {
+                    controller.completeQuestionnaire();
+                    Get.toNamed(AppRoute.analyzeScreen);
+                  }
+                : controller.nextPage),
       );
     });
   }
@@ -453,13 +480,17 @@ class QuestionnariesScreen extends StatelessWidget {
                         color: isSelected
                             ? AppColors.questionBG05.withValues(alpha: 0.08)
                             : AppColors.blue50,
-                        borderRadius: BorderRadius.circular(AppSize.width(value: 12)),
+                        borderRadius: BorderRadius.circular(
+                          AppSize.width(value: 12),
+                        ),
                       ),
                       child: Row(
                         children: [
                           Icon(
                             Icons.check_circle,
-                            color: isSelected ? AppColors.questionBG05 : AppColors.white900,
+                            color: isSelected
+                                ? AppColors.questionBG05
+                                : AppColors.white900,
                             size: AppSize.width(value: 20),
                           ),
                           Gap(width: AppSize.width(value: 12)),
@@ -468,7 +499,9 @@ class QuestionnariesScreen extends StatelessWidget {
                             fontSize: AppSize.width(value: 14),
                             fontFamilyIndex: 4,
                             fontWeight: FontWeight.w600,
-                            color: isSelected ? AppColors.questionBG05 : AppColors.grey500,
+                            color: isSelected
+                                ? AppColors.questionBG05
+                                : AppColors.grey500,
                           ),
                         ],
                       ),

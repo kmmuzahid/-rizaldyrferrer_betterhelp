@@ -77,8 +77,10 @@ class AppString {
   static const String creatingAhealthierRoutine = "Creating a Healthier life";
 
   //! ============== Result Screen ==============
-  static const String resultQuestion =
-      "If 10 means thriving, how well do you feel in life?  Scale of 1-10";
+  static const String resultQuestionWellbeing =
+      "If 10 represents thriving, how would you rate your overall wellbeing in life?";
+  static const String resultQuestionProductivity =
+      "If 10 means feeling productive in the ways that matter to you, where would you rate yourself today?";
   static const String answer =
       "You Crushed It! You're closer than ever. Let's go!";
   static const String youCrusedIt = "You Crushed It!";

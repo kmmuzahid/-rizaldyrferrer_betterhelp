@@ -9,6 +9,7 @@ import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
+import 'package:better_help/widget/generate_task/generate_task_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -70,7 +71,8 @@ class UserDrawer extends StatelessWidget {
               vertical: AppSize.height(value: 20),
             ),
             width: MediaQuery.of(context).size.width * 0.75,
-            height: MediaQuery.of(context).size.height * 0.7, // Set a fixed height
+            height:
+                MediaQuery.of(context).size.height * 0.7, // Set a fixed height
             decoration: BoxDecoration(
               color: const Color(0xFF032F49),
               borderRadius: BorderRadius.circular(10),
@@ -97,44 +99,56 @@ class UserDrawer extends StatelessWidget {
                   Gap(height: 10),
                   //! General Settings
                   ...List.generate(generalSettingsIcons.length, (index) {
-                    return InkWell(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      onTap: () {
+                    return _generalSetting(
+                      generalSettingsPage,
+                      index,
+                      generalSettingsIcons,
+                      generalSettingTitle,
+                      () {
                         Get.back();
                         Get.toNamed(generalSettingsPage[index]);
                       },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
-                        margin: EdgeInsets.only(bottom: AppSize.height(value: 10)),
-                        width: double.infinity,
-                        height: AppSize.height(value: 48),
-                        decoration: ShapeDecoration(
-                          color: const Color(0xFF022134),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
-                        ),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              generalSettingsIcons[index],
-                              // height: AppSize.height(value: 10),
-                              // width: AppSize.width(value: 10),
-                            ),
-                            Gap(width: 10),
-                            AppText(
-                              text: generalSettingTitle[index],
-                              color: AppColors.white,
-                              fontFamilyIndex: 2,
-                              fontSize: AppSize.width(value: 14),
-                              fontWeight: FontWeight.w600,
-                            ),
-                            Spacer(),
-                            SvgPicture.asset(AppIcons.drawerForwart),
-                          ],
-                        ),
-                      ),
                     );
                   }),
+                  InkWell(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    onTap: () {
+                      Get.back();
+                      Get.dialog(const GenerateTaskDialog());
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSize.width(value: 20),
+                      ),
+                      margin: EdgeInsets.only(
+                        bottom: AppSize.height(value: 10),
+                      ),
+                      width: double.infinity,
+                      height: AppSize.height(value: 48),
+                      decoration: ShapeDecoration(
+                        color: const Color(0xFF022134),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(11),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.task_outlined, color: Colors.white),
+                          Gap(width: 10),
+                          AppText(
+                            text: "Generate AI tasks",
+                            color: AppColors.white,
+                            fontFamilyIndex: 2,
+                            fontSize: AppSize.width(value: 14),
+                            fontWeight: FontWeight.w600,
+                          ),
+                          Spacer(),
+                          SvgPicture.asset(AppIcons.drawerForwart),
+                        ],
+                      ),
+                    ),
+                  ),
                   Gap(height: 20),
                   AppText(
                     text: "Account Settings",
@@ -154,13 +168,19 @@ class UserDrawer extends StatelessWidget {
                         Get.toNamed(accountSettingPage[index]);
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
-                        margin: EdgeInsets.only(bottom: AppSize.height(value: 10)),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSize.width(value: 20),
+                        ),
+                        margin: EdgeInsets.only(
+                          bottom: AppSize.height(value: 10),
+                        ),
                         width: double.infinity,
                         height: AppSize.height(value: 48),
                         decoration: ShapeDecoration(
                           color: const Color(0xFF022134),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(11),
+                          ),
                         ),
                         child: Row(
                           children: [
@@ -208,6 +228,51 @@ class UserDrawer extends StatelessWidget {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  InkWell _generalSetting(
+    List<String> generalSettingsPage,
+    int index,
+    List<String> generalSettingsIcons,
+    List<String> generalSettingTitle,
+    void Function() onTap,
+  ) {
+    return InkWell(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
+        margin: EdgeInsets.only(bottom: AppSize.height(value: 10)),
+        width: double.infinity,
+        height: AppSize.height(value: 48),
+        decoration: ShapeDecoration(
+          color: const Color(0xFF022134),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(11),
+          ),
+        ),
+        child: Row(
+          children: [
+            SvgPicture.asset(
+              generalSettingsIcons[index],
+              // height: AppSize.height(value: 10),
+              // width: AppSize.width(value: 10),
+            ),
+            Gap(width: 10),
+            AppText(
+              text: generalSettingTitle[index],
+              color: AppColors.white,
+              fontFamilyIndex: 2,
+              fontSize: AppSize.width(value: 14),
+              fontWeight: FontWeight.w600,
+            ),
+            Spacer(),
+            SvgPicture.asset(AppIcons.drawerForwart),
+          ],
         ),
       ),
     );

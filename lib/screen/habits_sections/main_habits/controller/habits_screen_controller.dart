@@ -10,6 +10,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class HabitsScreenController extends GetxController {
   final _apiServices = ApiServices.instance;
@@ -453,26 +454,12 @@ class HabitsScreenController extends GetxController {
     if (startDate == null) {
       return 'Time not set';
     }
-
-    final startHour = startDate.hour;
-    final startMinute = startDate.minute.toString().padLeft(2, '0');
-    final startPeriod = startHour >= 12 ? AppString.pm : AppString.am;
-    final displayStartHour = startHour > 12
-        ? startHour - 12
-        : (startHour == 0 ? 12 : startHour);
-
-    if (endDate == null) {
-      return '${displayStartHour.toString().padLeft(2, '0')}:$startMinute $startPeriod';
-    }
-
-    final endHour = endDate.hour;
-    final endMinute = endDate.minute.toString().padLeft(2, '0');
-    final endPeriod = endHour >= 12 ? AppString.pm : AppString.am;
-    final displayEndHour = endHour > 12
-        ? endHour - 12
-        : (endHour == 0 ? 12 : endHour);
-
-    return '${displayStartHour.toString().padLeft(2, '0')}:$startMinute $startPeriod - ${displayEndHour.toString().padLeft(2, '0')}:$endMinute $endPeriod';
+    //format time hh:mm am/pm
+    final stTime = DateFormat('MMM dd, hh:mm a').format(startDate.toLocal());
+    final eTime = DateFormat(
+      'MMM dd, hh:mm a',
+    ).format(endDate?.toLocal() ?? DateTime.now());
+    return '$stTime - $eTime';
   }
 
   @override

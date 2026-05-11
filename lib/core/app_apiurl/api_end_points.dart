@@ -90,4 +90,6 @@ class ApiEndPoints {
   static const resetPassword = "$baseUrl/auth/forgot-password-reset";
   static const generateTaskByAi = "$baseUrl/task/generate-by-ai";
   static const createTask = "$baseUrl/task/create-by-user";
+  static taskStatus(var taskId, var status) =>
+      "$baseUrl/task/status/$taskId?status=$status";
 }

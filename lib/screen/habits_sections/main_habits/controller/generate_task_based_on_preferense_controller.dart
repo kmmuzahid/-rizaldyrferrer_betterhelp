@@ -1,5 +1,7 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/habits_sections/main_habits/model/task_info_model.dart';
+import 'package:better_help/service/storage_services/storage_services.dart';
+import 'package:better_help/widget/generate_task/task_created_dialog.dart';
 import 'package:core_kit/network/dio_service.dart';
 import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
@@ -43,10 +45,11 @@ class GenerateTaskBasedOnPreferenceController extends GetxController {
       },
     );
 
-    Get.snackbar(result.isSuccess ? "Success" : "Error", result.message ?? '');
-
     if (result.isSuccess) {
-      //TO-DO:call api for task list
+      StorageService.instance.setAiTaskGenerated(true);
+      Get.dialog(barrierDismissible: false, const TaskCreatedDialog());
+    } else {
+      Get.snackbar("Error", result.message ?? '');
     }
   }
 

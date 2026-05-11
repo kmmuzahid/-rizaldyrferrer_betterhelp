@@ -1,5 +1,7 @@
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/habits_sections/main_habits/controller/habits_screen_controller.dart';
+import 'package:better_help/screen/habits_sections/main_habits/model/daily_task_model.dart';
+import 'package:better_help/screen/habits_sections/main_habits/task_details_screen.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
@@ -48,12 +50,15 @@ class _HabitsScreenState extends State<HabitsScreen> {
         child: Obx(() {
           final profile = profileController.profileData.value;
 
-          final String subtitle = profile?.fullName != null && profile!.fullName!.isNotEmpty
+          final String subtitle =
+              profile?.fullName != null && profile!.fullName!.isNotEmpty
               ? profile.fullName!
               : AppString.mahbubulQareem;
 
           final String profileImageUrl = profileController.getProfileImageUrl();
-          final String? profileImage = profileImageUrl.isNotEmpty ? profileImageUrl : null;
+          final String? profileImage = profileImageUrl.isNotEmpty
+              ? profileImageUrl
+              : null;
 
           return FlexibleCustomAppBar(
             appBarHeight: AppSize.height(value: 70),
@@ -81,7 +86,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
             //     fontWeight: FontWeight.w800,
             //     color: AppColors.grey500,
             //   ),
-            // ), 
+            // ),
             Obx(
               () => CarouselSlider(
                 carouselController: controller.carouselController,
@@ -89,7 +94,8 @@ class _HabitsScreenState extends State<HabitsScreen> {
                   return ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: RotatedBox(
-                      quarterTurns: -1, // 90 degrees clockwise (use 3 for counter-clockwise)
+                      quarterTurns:
+                          -1, // 90 degrees clockwise (use 3 for counter-clockwise)
                       child: Image.asset(
                         imagePath,
                         fit: BoxFit.contain,
@@ -122,22 +128,27 @@ class _HabitsScreenState extends State<HabitsScreen> {
               child: Obx(
                 () => Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: List.generate(controller.dailyAffermationList.length, (index) {
-                    return GestureDetector(
-                      onTap: () => controller.goToSlide(index),
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: AppSize.width(value: 3)),
-                        height: AppSize.height(value: 8),
-                        width: AppSize.width(value: 32),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.5),
-                          color: controller.currentIndex.value == index
-                              ? AppColors.secondary900
-                              : AppColors.iconLightgrey,
+                  children: List.generate(
+                    controller.dailyAffermationList.length,
+                    (index) {
+                      return GestureDetector(
+                        onTap: () => controller.goToSlide(index),
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: AppSize.width(value: 3),
+                          ),
+                          height: AppSize.height(value: 8),
+                          width: AppSize.width(value: 32),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.5),
+                            color: controller.currentIndex.value == index
+                                ? AppColors.secondary900
+                                : AppColors.iconLightgrey,
+                          ),
                         ),
-                      ),
-                    );
-                  }),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
@@ -248,30 +259,43 @@ class _HabitsScreenState extends State<HabitsScreen> {
               // Show loading indicator while fetching tasks
               if (controller.isLoadingTasks.value) {
                 return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.width(value: 20),
+                  ),
                   child: Container(
                     height: AppSize.height(value: 220),
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: AppColors.white,
-                      border: Border.all(color: const Color(0xFFF0F0F0), width: 0.87),
+                      border: Border.all(
+                        color: const Color(0xFFF0F0F0),
+                        width: 0.87,
+                      ),
                       borderRadius: BorderRadius.circular(10.39),
                     ),
-                    child: Center(child: CircularProgressIndicator(color: AppColors.primary500)),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.primary500,
+                      ),
+                    ),
                   ),
                 );
               }
 
-              final schedules = controller.selectedDateSchedules;
-              if (schedules.isEmpty) {
+              if (controller.tasks.isEmpty) {
                 return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.width(value: 20),
+                  ),
                   child: Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(AppSize.width(value: 20)),
                     decoration: BoxDecoration(
                       color: AppColors.white,
-                      border: Border.all(color: const Color(0xFFF0F0F0), width: 0.87),
+                      border: Border.all(
+                        color: const Color(0xFFF0F0F0),
+                        width: 0.87,
+                      ),
                       borderRadius: BorderRadius.circular(10.39),
                     ),
                     child: Center(
@@ -286,22 +310,29 @@ class _HabitsScreenState extends State<HabitsScreen> {
                   ),
                 );
               }
+
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: schedules.asMap().entries.map((entry) {
-                    int index = entry.key;
-                    var schedule = entry.value;
-                    return Container(
-                      width: 300,
-                      margin: EdgeInsets.only(
-                        right: index < schedules.length - 1 ? AppSize.width(value: 12) : 0,
-                      ),
-                      child: _buildScheduleContainer(schedule, index),
-                    );
-                  }).toList(),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSize.width(value: 20),
+                ),
+                child: IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: controller.tasks.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      var task = entry.value;
+                      return Container(
+                        width: 300,
+                        margin: EdgeInsets.only(
+                          right: index < controller.tasks.length - 1
+                              ? AppSize.width(value: 12)
+                              : 0,
+                        ),
+                        child: _buildScheduleContainer(index, task),
+                      );
+                    }).toList(),
+                  ),
                 ),
               );
             }),
@@ -310,9 +341,13 @@ class _HabitsScreenState extends State<HabitsScreen> {
 
             Gap(height: 20),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSize.width(value: 20),
+              ),
               child: IconAppButton(
-                padding: EdgeInsets.symmetric(vertical: AppSize.height(value: 12)),
+                padding: EdgeInsets.symmetric(
+                  vertical: AppSize.height(value: 12),
+                ),
                 height: AppSize.height(value: 50),
                 iconAlignment: CustomIconAlignment.left,
                 title: AppString.startTimer,
@@ -336,193 +371,190 @@ class _HabitsScreenState extends State<HabitsScreen> {
   }
 
   // Helper method to build individual schedule container
-  Widget _buildScheduleContainer(Map<String, dynamic> schedule, int index) {
-    Color backgroundColor = _getBackgroundColor(schedule['backgroundColor']);
-
-    return Obx(() {
-      bool isExpanded = controller.expandedTaskIndex.value == index;
-
-      return Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          border: Border.all(width: 0.87, color: const Color(0xFFF0F0F0)),
-          borderRadius: BorderRadius.circular(10.39),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
+  Widget _buildScheduleContainer(int index, Rx<TaskModel> taskObs) {
+    final TaskModel taskData = taskObs.value;
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        border: Border.all(width: 0.87, color: const Color(0xFFF0F0F0)),
+        borderRadius: BorderRadius.circular(10.39),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: () {
+              //show details
+              Get.to(
+                () => TaskDetailsScreen(
+                  taskData: taskObs,
+                  controller: controller,
+                ),
+              );
+            },
+            child: Container(
               padding: EdgeInsets.symmetric(
                 horizontal: AppSize.width(value: 13),
                 vertical: AppSize.height(value: 10),
               ),
               width: double.infinity,
               decoration: BoxDecoration(
-                color: backgroundColor,
+                color: Color(0xffEAF5F7),
                 borderRadius: BorderRadius.circular(7),
               ),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        AppText(
-                          text: schedule['title'],
-                          fontFamilyIndex: 2,
-                          fontSize: AppSize.width(value: 14),
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.grey500,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        if (!isExpanded) // Only show subtitle if collapsed
-                          AppText(
-                            text: schedule['subtitle'],
-                            fontFamilyIndex: 2,
-                            fontSize: AppSize.width(value: 12),
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.primary900,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                      ],
-                    ),
+                  AppText(
+                    text: taskData.taskGoal,
+                    fontFamilyIndex: 2,
+                    maxLines: 2,
+                    textAlign: TextAlign.left,
+                    fontSize: AppSize.width(value: 16),
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimaryBlack,
                   ),
-                  InkWell(
-                    onTap: () {
-                      controller.toggleTaskExpansion(index);
-                    },
-                    child: Icon(
-                      isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                      color: AppColors.grey500,
-                    ),
+                  AppText(
+                    text: "Task Description",
+                    fontFamilyIndex: 2,
+                    textAlign: TextAlign.left,
+                    fontSize: AppSize.width(value: 12),
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.primary900,
                   ),
+                  Gap(height: 4),
+                  AppText(
+                    text: taskData.description,
+                    fontFamilyIndex: 2,
+                    textAlign: TextAlign.left,
+                    fontSize: AppSize.width(value: 12),
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.grey500,
+                    maxLines: 2,
+                  ),
+                  Gap(height: 12),
+                  AppText(
+                    text: "Target Domain",
+                    fontFamilyIndex: 2,
+                    textAlign: TextAlign.left,
+                    fontSize: AppSize.width(value: 12),
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.primary900,
+                    maxLines: 1,
+                  ),
+                  Gap(height: 4),
+                  AppText(
+                    text: taskData.title,
+                    fontFamilyIndex: 2,
+                    textAlign: TextAlign.left,
+                    fontSize: AppSize.width(value: 12),
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.grey500,
+                    maxLines: 2,
+                  ),
+                  Gap(height: 12),
                 ],
               ),
             ),
-            Gap(height: 10),
-
-            if (isExpanded) ...[
-              // Expanded Content
-              AppText(
-                text: "Task Description",
-                fontFamilyIndex: 2,
-                fontSize: AppSize.width(value: 12),
-                fontWeight: FontWeight.w700,
-                color: AppColors.primary900,
+          ),
+          Gap(height: 10),
+          Row(
+            children: [
+              Icon(
+                Icons.calendar_month_outlined,
+                size: 16,
+                color: AppColors.textMain,
               ),
-              Gap(height: 4),
+              Gap(width: 6),
               AppText(
-                text: schedule['subtitle'], // Using subtitle as full description
+                text: controller.formatTimeRange(
+                  taskData.startDate,
+                  taskData.endDate,
+                ),
                 fontFamilyIndex: 2,
+                textAlign: TextAlign.left,
                 fontSize: AppSize.width(value: 12),
-                fontWeight: FontWeight.w400,
-                color: AppColors.grey500,
-                maxLines: 10,
+                fontWeight: FontWeight.w500,
+                color: AppColors.textPrimaryBlack,
               ),
-              Gap(height: 12),
-
-              if (schedule['category'] != null) ...[
-                AppText(
-                  text: "Category",
-                  fontFamilyIndex: 2,
-                  fontSize: AppSize.width(value: 12),
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.primary900,
+            ],
+          ),
+          const Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              if (taskData.status == 'do_now')
+                Flexible(
+                  child: AppButton(
+                    height: AppSize.height(value: 36),
+                    width: AppSize.width(value: 125),
+                    title: "Completed",
+                    backgroundColor: AppColors.blue500,
+                    fontSize: AppSize.width(value: 12),
+                    titleColor: AppColors.white,
+                    onTap: () {
+                      if (taskData.id.isNotEmpty) {
+                        controller.markTaskAsCompleted(taskData.id);
+                      }
+                    },
+                  ),
                 ),
-                Gap(height: 4),
-                AppText(
-                  text: schedule['category'],
-                  fontFamilyIndex: 2,
-                  fontSize: AppSize.width(value: 12),
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.grey500,
+              if (taskData.status == 'pending') ...[
+                Flexible(
+                  child: AppButton(
+                    height: AppSize.height(value: 36),
+                    width: AppSize.width(value: 125),
+                    title: "Start Now",
+                    backgroundColor: AppColors.blue500,
+                    fontSize: AppSize.width(value: 12),
+                    titleColor: AppColors.white,
+                    onTap: () {
+                      if (taskData.id.isNotEmpty) {
+                        controller.startNow(taskData.id);
+                      }
+                    },
+                  ),
                 ),
-                Gap(height: 12),
-              ],
-
-              if (schedule['formattedStartDate'] != null &&
-                  schedule['formattedEndDate'] != null) ...[
-                AppText(
-                  text: "Date",
-                  fontFamilyIndex: 2,
-                  fontSize: AppSize.width(value: 12),
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.primary900,
+                Gap(width: 8),
+                Flexible(
+                  child: AppButton(
+                    height: AppSize.height(value: 35),
+                    width: AppSize.width(value: 115),
+                    title: "Postpone",
+                    fontSize: AppSize.width(value: 12),
+                    backgroundColor: AppColors.white50,
+                    titleColor: const Color.fromARGB(255, 168, 129, 129),
+                    onTap: () {
+                      if (taskData.id.isNotEmpty) {
+                        controller.postpone(taskData.id);
+                      }
+                    },
+                  ),
                 ),
-                Gap(height: 4),
-                AppText(
-                  text: "${schedule['formattedStartDate']} - ${schedule['formattedEndDate']}",
-                  fontFamilyIndex: 2,
-                  fontSize: AppSize.width(value: 12),
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.grey500,
-                ),
-                Gap(height: 12),
-              ],
-
-              if (isExpanded) ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Flexible(
-                      child: AppButton(
-                        height: AppSize.height(value: 36),
-                        width: AppSize.width(value: 125),
-                        title: "Completed",
-                        backgroundColor: AppColors.blue500,
-                        fontSize: AppSize.width(value: 12),
-                        titleColor: AppColors.white,
-                        onTap: () {
-                          if (schedule['id'] != null) {
-                            controller.markTaskAsCompleted(schedule['id']);
-                          }
-                        },
-                      ),
-                    ),
-                    Gap(width: 8),
-                    Flexible(
-                      child: AppButton(
-                        height: AppSize.height(value: 35),
-                        width: AppSize.width(value: 115),
-                        title: "Cancel",
-                        fontSize: AppSize.width(value: 12),
-                        backgroundColor: AppColors.white50,
-                        titleColor: const Color.fromARGB(255, 168, 129, 129),
-                        onTap: () {
-                          if (schedule['id'] != null) {
-                            controller.markTaskAsCancelled(schedule['id']);
-                          }
-                        },
-                      ),
-                    ),
-                    Gap(width: 8),
-                    Flexible(
-                      child: AppButton(
-                        height: AppSize.height(value: 35),
-                        width: AppSize.width(value: 115),
-                        title: "Talk to BHAA",
-                        fontSize: AppSize.width(value: 12),
-                        backgroundColor: AppColors.white50,
-                        titleColor: const Color.fromARGB(255, 168, 129, 129),
-                        onTap: () {
-                          // Handle talk to BHA action
-                        },
-                      ),
-                    ),
-                  ],
+                Gap(width: 8),
+                Flexible(
+                  child: AppButton(
+                    height: AppSize.height(value: 35),
+                    width: AppSize.width(value: 115),
+                    title: "Skip",
+                    fontSize: AppSize.width(value: 12),
+                    backgroundColor: AppColors.white50,
+                    titleColor: const Color.fromARGB(255, 168, 129, 129),
+                    onTap: () {
+                      if (taskData.id.isNotEmpty) {
+                        controller.markTaskAsCancelled(taskData.id);
+                      }
+                    },
+                  ),
                 ),
               ],
             ],
-          ],
-        ),
-      );
-    });
+          ),
+        ],
+      ),
+    );
   }
 
   // Helper method to get background color based on string
@@ -546,7 +578,6 @@ class _HabitsScreenState extends State<HabitsScreen> {
   }
 
   Widget _buildProfileLeading(String? profileImage) {
-
     return Padding(
       padding: EdgeInsets.only(left: AppSize.width(value: 20)),
       child: CommonImage(

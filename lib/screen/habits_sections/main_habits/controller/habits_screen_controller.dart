@@ -8,6 +8,7 @@ import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/generate_task/generate_task_dialog.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:core_kit/core_kit.dart';
+import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
 
 class HabitsScreenController extends GetxController {
@@ -24,7 +25,7 @@ class HabitsScreenController extends GetxController {
 
   // API related observables
   final RxBool isLoadingTasks = false.obs;
-  final RxList<TaskData> tasks = <TaskData>[].obs;
+  final RxList<Rx<TaskModel>> tasks = <Rx<TaskModel>>[].obs;
 
   // Quote data
   List<String> get quoteList => [
@@ -58,6 +59,63 @@ class HabitsScreenController extends GetxController {
     AppStaticImages.dailyAffermation07,
     AppStaticImages.dailyAffermation08,
   ].obs;
+
+  void startNow(String id) async {
+    final result = await DioService.instance.request(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: ApiEndPoints.taskStatus(id, "do_now"),
+        method: .PATCH,
+      ),
+      responseBuilder: (data) => data,
+    );
+    if (result.isSuccess) {
+      final index = tasks.indexWhere((element) => element.value.id == id);
+
+      if (index != -1) {
+        tasks[index].value = tasks[index].value.copyWith(status: "do_now");
+        tasks.refresh();
+      }
+    }
+  }
+
+  void postpone(String id) async {
+    final result = await DioService.instance.request(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: ApiEndPoints.taskStatus(id, "postpone"),
+        method: .PATCH,
+      ),
+      responseBuilder: (data) => data,
+    );
+    if (result.isSuccess) {
+      final index = tasks.indexWhere((element) => element.value.id == id);
+
+      if (index != -1) {
+        tasks[index].value = tasks[index].value.copyWith(status: "postpone");
+        tasks.refresh();
+      }
+    }
+  }
+
+  void skip(String id) async {
+    final result = await DioService.instance.request(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: ApiEndPoints.taskStatus(id, "skip"),
+        method: .PATCH,
+      ),
+      responseBuilder: (data) => data,
+    );
+    if (result.isSuccess) {
+      final index = tasks.indexWhere((element) => element.value.id == id);
+
+      if (index != -1) {
+        tasks[index].value = tasks[index].value.copyWith(status: "skip");
+        tasks.refresh();
+      }
+    }
+  }
 
   // Method to update current index
   void updateCurrentIndex(int index) {
@@ -104,7 +162,8 @@ class HabitsScreenController extends GetxController {
   }
 
   void checkFirstTimeUser() async {
-    final isFirstTimeUser = await StorageService.instance.getIsFirstTimeUser();
+    final isFirstTimeUser = await StorageService.instance
+        .isFirstAiTaskGenereted();
 
     if (isFirstTimeUser == null || !isFirstTimeUser) {
       Get.dialog(const GenerateTaskDialog());
@@ -136,7 +195,7 @@ class HabitsScreenController extends GetxController {
         final taskResponse = TaskResponse.fromJson(response);
 
         if (taskResponse.data != null) {
-          tasks.value = taskResponse.data!;
+          tasks.value = taskResponse.data!.map((task) => task.obs).toList();
           appLog('Loaded ${tasks.length} tasks for ${_formatDate(date)}');
         } else {
           tasks.clear();
@@ -372,39 +431,13 @@ class HabitsScreenController extends GetxController {
     return scheduleTemplates[templateIndex];
   }
 
-  // Get schedules for selected date (now from API)
-  List<Map<String, dynamic>> get selectedDateSchedules {
-    if (tasks.isEmpty) {
-      return [];
-    }
-
-    // Convert API tasks to schedule format
-    // Filter to only show pending tasks as requested
-    return tasks.where((task) => task.status?.toLowerCase() == 'pending').map((
-      task,
-    ) {
-      return {
-        'id': task.id,
-        'title': task.title ?? 'Untitled Task',
-        'subtitle': task.description ?? 'No description',
-        'duration': _calculateDuration(task.startDate, task.endDate),
-        'time': _formatTimeRange(task.startDate, task.endDate),
-        'backgroundColor': _getColorForCategory(task.category),
-        'status': task.status,
-        'category': task.category,
-        'formattedStartDate': _formatDateTime(task.startDate),
-        'formattedEndDate': _formatDateTime(task.endDate),
-      };
-    }).toList();
-  }
-
-  String _formatDateTime(DateTime? date) {
-    if (date == null) return 'N/A';
+  // Helper method to format date as string key
+  String _formatDate(DateTime date) {
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
   /// Calculate duration between start and end date
-  String _calculateDuration(DateTime? startDate, DateTime? endDate) {
+  String calculateDuration(DateTime? startDate, DateTime? endDate) {
     if (startDate == null || endDate == null) {
       return '0${AppString.minuteMeditation}';
     }
@@ -412,11 +445,11 @@ class HabitsScreenController extends GetxController {
     final duration = endDate.difference(startDate);
     final minutes = duration.inMinutes;
 
-    return '$minutes${AppString.minuteMeditation}';
+    return '$minutes-minute';
   }
 
   /// Format time range for display
-  String _formatTimeRange(DateTime? startDate, DateTime? endDate) {
+  String formatTimeRange(DateTime? startDate, DateTime? endDate) {
     if (startDate == null) {
       return 'Time not set';
     }
@@ -429,7 +462,7 @@ class HabitsScreenController extends GetxController {
         : (startHour == 0 ? 12 : startHour);
 
     if (endDate == null) {
-      return '$displayStartHour:$startMinute$startPeriod';
+      return '${displayStartHour.toString().padLeft(2, '0')}:$startMinute $startPeriod';
     }
 
     final endHour = endDate.hour;
@@ -439,40 +472,7 @@ class HabitsScreenController extends GetxController {
         ? endHour - 12
         : (endHour == 0 ? 12 : endHour);
 
-    return '$displayStartHour:$startMinute$startPeriod - $displayEndHour:$endMinute$endPeriod';
-  }
-
-  /// Get background color based on category
-  String _getColorForCategory(String? category) {
-    if (category == null) return 'primary50';
-
-    switch (category.toLowerCase()) {
-      case 'meditation':
-      case 'mindfulness':
-        return 'primary50';
-      case 'exercise':
-      case 'fitness':
-        return 'green50';
-      case 'focus':
-      case 'work':
-        return 'blue50';
-      case 'energy':
-      case 'morning':
-        return 'orange50';
-      case 'stress':
-      case 'urgent':
-        return 'red50';
-      case 'calm':
-      case 'evening':
-        return 'babygreen50';
-      default:
-        return 'primary50';
-    }
-  }
-
-  // Helper method to format date as string key
-  String _formatDate(DateTime date) {
-    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+    return '${displayStartHour.toString().padLeft(2, '0')}:$startMinute $startPeriod - ${displayEndHour.toString().padLeft(2, '0')}:$endMinute $endPeriod';
   }
 
   @override

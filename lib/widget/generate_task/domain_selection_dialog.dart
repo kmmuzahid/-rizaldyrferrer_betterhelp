@@ -106,7 +106,7 @@ class _DomainSelectionDialogState extends State<DomainSelectionDialog> {
                   AppText(
                     text: "8 Domains of Life\nManagement Difficulties",
                     fontFamilyIndex: 1,
-                    fontSize: AppSize.width(value: 26),
+                    fontSize: AppSize.width(value: 22),
                     fontWeight: FontWeight.w700,
                     color: const Color(0xFF393433),
                     lineHeight: 1.2,

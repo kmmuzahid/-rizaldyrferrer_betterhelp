@@ -20,10 +20,13 @@ class SubscriptionAndPaymentController extends GetxController {
   late PageController pageController;
   final RxList<SubscriptionPlan> subscriptionPlan = RxList<SubscriptionPlan>();
 
-  onSubscribe(int index) async { 
+  onSubscribe(int index) async {
     final response = await DioService.instance.request(
       showMessage: true,
-      input: RequestInput(endpoint: ApiEndPoints.createSubscription, method: RequestMethod.POST),
+      input: RequestInput(
+        endpoint: ApiEndPoints.createSubscription,
+        method: RequestMethod.POST,
+      ),
       responseBuilder: (data) {
         return data;
       },
@@ -37,6 +40,14 @@ class SubscriptionAndPaymentController extends GetxController {
   @override
   void onInit() async {
     pageController = PageController();
+
+    // final response = await DioService.instance.request(
+    //   showMessage: true,
+    //   input: RequestInput(endpoint: ApiEndPoints.getSubscriptionPlan, method: RequestMethod.GET),
+    //   responseBuilder: (data) {
+    //     return data;
+    //   },
+    // );
 
     for (int i = 0; i < 3; i++) {
       subscriptionPlan.add(
@@ -65,9 +76,8 @@ class SubscriptionAndPaymentController extends GetxController {
     isLoadingDependency.value = true;
     final profileController = Get.find<MyProfileScreenController>();
     profileController.fetchProfile().then((value) {
-      if (profileController.profileData.value?.isSubscribed == true) {
-        return Get.toNamed(AppRoute.bottomNav);
-      }
+      if (profileController.profileData.value?.isSubscribed == true) {}
+      return Get.toNamed(AppRoute.bottomNav);
       isLoadingDependency.value = false;
     });
     super.onInit();

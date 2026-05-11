@@ -1,3 +1,4 @@
+import 'package:better_help/screen/habits_sections/main_habits/controller/habits_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
@@ -56,6 +57,7 @@ class TaskCreatedDialog extends StatelessWidget {
               titleText: "Go to Home",
               buttonColor: AppColors.primary500,
               onTap: () {
+                Get.find<HabitsScreenController>().refreshTasks();
                 Get.back();
                 Get.back();
               },

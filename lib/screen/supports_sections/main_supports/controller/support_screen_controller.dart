@@ -4,6 +4,7 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
+import 'package:better_help/screen/habits_sections/main_habits/controller/habits_screen_controller.dart';
 import 'package:better_help/screen/menu_drawer/bookings_sessions/model/booking_session_model.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/supports_sections/main_supports/model/message_model.dart';
@@ -109,7 +110,10 @@ class SupportScreenController extends GetxController {
 
     String? status = updatedMessage.status;
 
-    if (updatedMessage.messageType == 'pending-start-time') {
+    final bool isTaksRelated =
+        updatedMessage.messageType == 'pending-start-time';
+
+    if (isTaksRelated) {
       if (message == '1') {
         status = 'do_now';
       } else if (message == '2') {
@@ -158,6 +162,13 @@ class SupportScreenController extends GetxController {
       );
       if (index != -1) {
         messageModel[index] = updatedMessage;
+      }
+
+      if (isTaksRelated && status != null && updatedMessage.taskId != null) {
+        Get.find<HabitsScreenController>().updateTaskStatus(
+          updatedMessage.taskId!,
+          status,
+        );
       }
     }
   }

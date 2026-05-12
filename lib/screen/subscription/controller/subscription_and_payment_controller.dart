@@ -6,10 +6,8 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
-import 'package:better_help/screen/subscription/model/subscription_plan.dart';
+import 'package:better_help/screen/subscription/model/subscription_model.dart';
 import 'package:better_help/sockets/support_message_socket.dart';
-import 'package:better_help/utils/app_colors/app_colors.dart';
-import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:core_kit/network/dio_service.dart';
 import 'package:core_kit/network/request_input.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +16,8 @@ import 'package:get/get.dart';
 class SubscriptionAndPaymentController extends GetxController {
   var isLoadingDependency = true.obs;
   late PageController pageController;
-  final RxList<SubscriptionPlan> subscriptionPlan = RxList<SubscriptionPlan>();
+  final RxList<SubscriptionModel> subscriptionPlan =
+      RxList<SubscriptionModel>();
 
   onSubscribe(int index) async {
     final response = await DioService.instance.request(
@@ -48,32 +47,16 @@ class SubscriptionAndPaymentController extends GetxController {
         method: RequestMethod.GET,
       ),
       responseBuilder: (data) {
-        print(data);
-        return data;
+        return List<SubscriptionModel>.from(
+          data.map((x) => SubscriptionModel.fromJson(x)),
+        );
       },
     );
 
-    for (int i = 0; i < 3; i++) {
-      subscriptionPlan.add(
-        SubscriptionPlan(
-          title: 'Ignite Plan $i',
-          subtitle: 'First 14 days free= Then \$69/Month',
-          image: AppStaticImages.subscription01,
-          backgroundColor: Color.fromARGB(255, 206, 231, 225 + i * 10),
-          featureList: [
-            'Initial consultation with an expert Advocate',
-            'Monthly progress report',
-            'Daily check-ins and reminders from your  Advocate Assistant',
-            'Guided courses and resources',
-            'Private forum + live Q&A sessions',
-            'Milestones & recognition to celebrate your growth',
-          ],
-          buttonColor: AppColors.blue800,
-          buttonTextColor: Colors.white,
-          applePrdocutId: '1',
-          googleProductId: '1',
-        ),
-      );
+    if (response.isSuccess) {
+      subscriptionPlan.value = response.data ?? [];
+      print(response.data!.first.buttonColor);
+      print(response.data!.first.buttonTextColor);
     }
 
     SocketService.instance.connect();
@@ -81,7 +64,7 @@ class SubscriptionAndPaymentController extends GetxController {
     final profileController = Get.find<MyProfileScreenController>();
     profileController.fetchProfile().then((value) {
       if (profileController.profileData.value?.isSubscribed == true) {}
-      return Get.toNamed(AppRoute.bottomNav);
+      // return Get.toNamed(AppRoute.bottomNav);
       isLoadingDependency.value = false;
     });
     super.onInit();

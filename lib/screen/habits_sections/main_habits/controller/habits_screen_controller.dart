@@ -121,6 +121,15 @@ class HabitsScreenController extends GetxController {
     }
   }
 
+  void updateTaskStatus(String taskId, String status) {
+    final index = tasks.indexWhere((element) => element.value.id == taskId);
+
+    if (index != -1) {
+      tasks[index].value = tasks[index].value.copyWith(status: status);
+      tasks.refresh();
+    }
+  }
+
   // Method to update current index
   void updateCurrentIndex(int index) {
     currentIndex.value = index;

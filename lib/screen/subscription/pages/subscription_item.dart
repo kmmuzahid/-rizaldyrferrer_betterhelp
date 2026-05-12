@@ -4,7 +4,7 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/screen/subscription/controller/subscription_and_payment_controller.dart';
-import 'package:better_help/screen/subscription/model/subscription_plan.dart';
+import 'package:better_help/screen/subscription/model/subscription_model.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
@@ -13,7 +13,6 @@ import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,16 +25,20 @@ class SubscriptionItem extends StatelessWidget {
     required this.index,
     required this.totalSubscription,
   });
-  final SubscriptionPlan plan;
+  final SubscriptionModel plan;
   final PageController controller;
   final int index;
   final int totalSubscription;
 
   @override
   Widget build(BuildContext context) {
+    final backgroundColor = Color(int.parse(plan.backgroundColor ?? '00'));
+    final buttonTextColor = Color(int.parse(plan.buttonTextColor ?? '00'));
+    final buttonColor = Color(int.parse(plan.buttonColor ?? '00'));
+
     return Stack(
       children: [
-        Positioned.fill(child: Container(color: plan.backgroundColor)),
+        Positioned.fill(child: Container(color: backgroundColor)),
         Positioned(
           right: 0,
           top: 0,
@@ -59,7 +62,7 @@ class SubscriptionItem extends StatelessWidget {
                           width: 25,
                           height: 25,
                           padding: EdgeInsets.all(4),
-                          color: plan.backgroundColor,
+                          color: backgroundColor,
                           child: SvgPicture.asset(AppIcons.appbarBackIcon),
                         ),
                       ),
@@ -82,20 +85,22 @@ class SubscriptionItem extends StatelessWidget {
                   child: ListView.builder(
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     itemBuilder: (context, index) {
-                      return _buildFeatureList(index, context);
+                      return _buildFeatureList(index, context, buttonColor);
                     },
-                    itemCount: plan.featureList.length + 5,
+                    itemCount: (plan.featureList?.length ?? 0) + 5,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: AppButton(
-                    titleColor: plan.buttonTextColor,
+                    titleColor: buttonTextColor,
                     onTap: () {
-                      Get.find<SubscriptionAndPaymentController>().onSubscribe(index - 1);
+                      Get.find<SubscriptionAndPaymentController>().onSubscribe(
+                        index - 1,
+                      );
                     },
                     borderradius: 12,
-                    backgroundColor: plan.buttonColor,
+                    backgroundColor: buttonColor,
                     title: 'Start My Journey',
                   ),
                 ),
@@ -107,15 +112,17 @@ class SubscriptionItem extends StatelessWidget {
     );
   }
 
-  Widget _buildFeatureList(int index, BuildContext context) {
+  Widget _buildFeatureList(int index, BuildContext context, Color buttonColor) {
     if (index == 0) {
       return ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * .3),
-        child: CommonImage(src: plan.image, fill: BoxFit.contain),
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * .3,
+        ),
+        child: CommonImage(src: plan.image ?? '', fill: BoxFit.contain),
       );
     } else if (index == 1) {
       return AppText(
-        text: plan.title,
+        text: plan.title ?? '',
         fontFamilyIndex: 1,
         fontSize: 40,
         color: Color(0xff080B10),
@@ -124,7 +131,7 @@ class SubscriptionItem extends StatelessWidget {
       );
     } else if (index == 2) {
       return CommonText(
-        text: plan.subtitle,
+        text: plan.subtitle ?? '',
         style: GoogleFonts.inter(),
         fontSize: 20,
         textColor: Color(0xff080B10),
@@ -150,7 +157,7 @@ class SubscriptionItem extends StatelessWidget {
             text: '\$199',
             fontFamilyIndex: 2,
             fontSize: 36,
-            color: plan.buttonColor,
+            color: buttonColor,
             fontWeight: FontWeight.w600,
             textAlign: TextAlign.left,
           ),
@@ -169,7 +176,7 @@ class SubscriptionItem extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(
-          children: List.generate(plan.featureList.length, (index) {
+          children: List.generate(plan.featureList?.length ?? 0, (index) {
             return _buildFeatureItem(index);
           }),
         ),
@@ -191,7 +198,7 @@ class SubscriptionItem extends StatelessWidget {
           ),
           Expanded(
             child: AppText(
-              text: plan.featureList[index],
+              text: plan.featureList?[index] ?? "",
               fontFamilyIndex: 2,
               fontSize: 18,
               maxLines: 5,
@@ -206,10 +213,16 @@ class SubscriptionItem extends StatelessWidget {
   }
 
   goNextPage() {
-    controller.nextPage(duration: Duration(milliseconds: 300), curve: Curves.ease);
+    controller.nextPage(
+      duration: Duration(milliseconds: 300),
+      curve: Curves.ease,
+    );
   }
 
   goPreviousPage() {
-    controller.previousPage(duration: Duration(milliseconds: 300), curve: Curves.ease);
+    controller.previousPage(
+      duration: Duration(milliseconds: 300),
+      curve: Curves.ease,
+    );
   }
 }

@@ -13,7 +13,7 @@ import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
 
 class SupportScreenController extends GetxController {
-  RxList<MessageModel> messageModel = RxList<MessageModel>([]); 
+  RxList<MessageModel> messageModel = RxList<MessageModel>([]);
   String replyMessage = '';
   late String chatId;
   final MyProfileScreenController profileScreenController = Get.find();
@@ -26,7 +26,7 @@ class SupportScreenController extends GetxController {
   late DateTime _todayDayEnd;
   @override
   void onInit() {
-    super.onInit(); 
+    super.onInit();
     _todayDayStart = startOfDayLocal(DateTime.now());
     _todayDayEnd = endOfDayLocal(DateTime.now());
     chatId = profileScreenController.profileData.value?.doctorChatId ?? '';
@@ -64,7 +64,9 @@ class SupportScreenController extends GetxController {
         method: RequestMethod.GET,
       ),
       responseBuilder: (response) {
-        return List<BookedSessionModel>.from(response.map((x) => BookedSessionModel.fromJson(x)));
+        return List<BookedSessionModel>.from(
+          response.map((x) => BookedSessionModel.fromJson(x)),
+        );
       },
     );
     if (result.isSuccess) {
@@ -74,7 +76,7 @@ class SupportScreenController extends GetxController {
 
   @override
   void dispose() {
-    SocketService.instance.stopListeningChat(chatId: chatId); 
+    SocketService.instance.stopListeningChat(chatId: chatId);
     super.dispose();
   }
 
@@ -98,9 +100,13 @@ class SupportScreenController extends GetxController {
     isLoading.value = false;
   }
 
-  sendMessage({required String message, required int index}) async {
+  sendMessage({
+    required String message,
+    required int index,
+    int? delayMinute,
+  }) async {
     final updatedMessage = messageModel[index].copyWith(isResponseSent: true);
-    print(profileScreenController.profileData.value?.id);
+
     messageModel.insert(
       0,
       updatedMessage.copyWith(
@@ -124,6 +130,10 @@ class SupportScreenController extends GetxController {
           'chatId': chatId,
           'messageType': updatedMessage.messageType,
           'messageId': updatedMessage.id,
+          'messageQuestion': updatedMessage.message,
+          'taskId': updatedMessage.taskId,
+          'status': updatedMessage.status,
+          if (delayMinute != null) 'delayMinute': delayMinute,
         },
       ),
       responseBuilder: (data) {
@@ -131,7 +141,9 @@ class SupportScreenController extends GetxController {
       },
     );
     if (result.isSuccess) {
-      final index = messageModel.indexWhere((element) => element.id == updatedMessage.id);
+      final index = messageModel.indexWhere(
+        (element) => element.id == updatedMessage.id,
+      );
       if (index != -1) {
         messageModel[index] = updatedMessage;
       }

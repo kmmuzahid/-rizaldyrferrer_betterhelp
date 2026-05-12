@@ -18,6 +18,8 @@ class MessageModel {
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isReply;
+  final String? status;
+  final String? taskId;
 
   MessageModel({
     required this.id,
@@ -34,6 +36,8 @@ class MessageModel {
     required this.createdAt,
     required this.updatedAt,
     required this.isReply,
+    this.status,
+    this.taskId,
   });
 
   factory MessageModel.fromJson(Map<String, dynamic>? json) {
@@ -52,6 +56,8 @@ class MessageModel {
       createdAt: DateTime.tryParse(json?['createdAt'] ?? '') ?? DateTime.now(),
       updatedAt: DateTime.tryParse(json?['updatedAt'] ?? '') ?? DateTime.now(),
       isReply: json?['isReply'] ?? false,
+      status: json?['taskStatus'] ?? '',
+      taskId: json?['taskId'] ?? '',
     );
   }
 
@@ -71,6 +77,8 @@ class MessageModel {
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? isResponseSent,
+    String? status,
+    String? taskId,
   }) {
     return MessageModel(
       id: id ?? this.id,
@@ -87,6 +95,8 @@ class MessageModel {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isReply: isResponseSent ?? isReply,
+      status: status ?? this.status,
+      taskId: taskId ?? this.taskId,
     );
   }
 }
@@ -97,7 +107,12 @@ class Sender {
   final String fullName;
   final String role;
 
-  Sender({required this.id, required this.profile, required this.fullName, required this.role});
+  Sender({
+    required this.id,
+    required this.profile,
+    required this.fullName,
+    required this.role,
+  });
 
   factory Sender.fromJson(Map<String, dynamic>? json) {
     return Sender(

@@ -6,6 +6,7 @@ import 'package:better_help/screen/supports_sections/main_supports/controller/su
     show SupportScreenController;
 import 'package:better_help/screen/supports_sections/main_supports/widgets/chat_bubble.dart';
 import 'package:better_help/screen/supports_sections/main_supports/widgets/common_chat_header.dart';
+import 'package:better_help/screen/supports_sections/main_supports/widgets/delay_picker.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
@@ -67,7 +68,10 @@ class _SupportScreenState extends State<SupportScreen> {
                 children: [
                   _header(),
                   10.height,
-                  CommonChatHeader(title: 'Health Assistant', subtitle: 'Health Assistant'),
+                  CommonChatHeader(
+                    title: 'Health Assistant',
+                    subtitle: 'Health Assistant',
+                  ),
                 ],
               ),
             ),
@@ -87,8 +91,12 @@ class _SupportScreenState extends State<SupportScreen> {
                         child: Column(
                           children: [
                             Expanded(
-                              child: controller.isLoading.value && controller.messageModel.isEmpty
-                                  ? const Center(child: CircularProgressIndicator())
+                              child:
+                                  controller.isLoading.value &&
+                                      controller.messageModel.isEmpty
+                                  ? const Center(
+                                      child: CircularProgressIndicator(),
+                                    )
                                   : SmartListLoader(
                                       isReverse: true,
                                       onLoadMore: (page) {
@@ -96,29 +104,73 @@ class _SupportScreenState extends State<SupportScreen> {
                                       },
                                       itemCount: controller.messageModel.length,
                                       itemBuilder: (context, index) {
-                                        final message = controller.messageModel[index];
+                                        final message =
+                                            controller.messageModel[(controller
+                                                        .messageModel
+                                                        .length -
+                                                    1) -
+                                                index];
                                         return CommonChatBubble(
                                           message: message,
                                           index: index,
-                                          onButtonTap: (value) {
-                                            controller.sendMessage(message: value, index: index);
+                                          onButtonTap: (value) async {
+                                            if (message.messageType ==
+                                                    'pending-start-time' &&
+                                                value == '2' &&
+                                                message.status == 'pending') {
+                                              final delay =
+                                                  await Get.dialog<int>(
+                                                    DelayPicker(
+                                                      onSelect: (delay) {
+                                                        controller.sendMessage(
+                                                          message: value,
+                                                          index: index,
+                                                          delayMinute: delay,
+                                                        );
+                                                      },
+                                                    ),
+                                                  );
+                                              if (delay != null) {
+                                                controller.sendMessage(
+                                                  message: value,
+                                                  index: index,
+                                                  delayMinute: delay,
+                                                );
+                                              }
+                                              return;
+                                            }
+                                            controller.sendMessage(
+                                              message: value,
+                                              index: index,
+                                            );
                                           },
                                           timestamp:
-                                              message.createdAt.toLocal().date ==
+                                              message.createdAt
+                                                      .toLocal()
+                                                      .date ==
                                                   DateTime.now().toLocal().date
-                                              ? CoreUtils.formatTime(message.createdAt.toLocal())
+                                              ? CoreUtils.formatTime(
+                                                  message.createdAt.toLocal(),
+                                                )
                                               : CoreUtils.formatDateTimeToHms(
                                                   message.createdAt.toLocal(),
                                                 ),
                                           isSender:
                                               message.sender.id ==
-                                              profileController.profileData.value?.id,
+                                              profileController
+                                                  .profileData
+                                                  .value
+                                                  ?.id,
                                         );
                                       },
                                     ),
                             ),
 
-                            Container(height: 30, color: Colors.white, width: double.infinity),
+                            Container(
+                              height: 30,
+                              color: Colors.white,
+                              width: double.infinity,
+                            ),
                           ],
                         ),
                       ),
@@ -144,13 +196,17 @@ class _SupportScreenState extends State<SupportScreen> {
                                       ),
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius: BorderRadius.circular(4.r),
+                                        borderRadius: BorderRadius.circular(
+                                          4.r,
+                                        ),
                                       ),
                                       child: Column(
                                         children: [
                                           CommonText(
                                             text: controller
-                                                .messageModel[controller.replyIndex.value]
+                                                .messageModel[controller
+                                                    .replyIndex
+                                                    .value]
                                                 .message,
                                             maxLines: 10,
                                             fontSize: 14,
@@ -160,20 +216,27 @@ class _SupportScreenState extends State<SupportScreen> {
                                           ),
                                           10.height,
                                           CommonTextField(
-                                            validationType: ValidationType.validateRequired,
+                                            validationType:
+                                                ValidationType.validateRequired,
                                             hintText: 'Reply to message',
                                             onChanged: (value) {
                                               controller.replyMessage = value;
                                             },
                                             suffixIcon: IconButton(
                                               onPressed: () {
-                                                if (controller.replyMessage.isNotEmpty) {
+                                                if (controller
+                                                    .replyMessage
+                                                    .isNotEmpty) {
                                                   controller.sendMessage(
-                                                    message: controller.replyMessage,
-                                                    index: controller.replyIndex.value,
+                                                    message:
+                                                        controller.replyMessage,
+                                                    index: controller
+                                                        .replyIndex
+                                                        .value,
                                                   );
                                                   controller.replyMessage = '';
-                                                  controller.replyIndex.value = -1;
+                                                  controller.replyIndex.value =
+                                                      -1;
                                                 }
                                               },
                                               icon: Icon(Icons.send),
@@ -296,7 +359,10 @@ class _SupportScreenState extends State<SupportScreen> {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(12),
-        decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(8),
+        ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -27,24 +27,38 @@ class CommonChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final maxWidth = BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.55);
+    final maxWidth = BoxConstraints(
+      maxWidth: MediaQuery.of(context).size.width * 0.55,
+    );
     return Align(
       alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         decoration: BoxDecoration(
-          border: BoxBorder.all(color: !isSender ? Colors.grey.shade200 : Colors.transparent),
+          border: BoxBorder.all(
+            color: !isSender ? Colors.grey.shade200 : Colors.transparent,
+          ),
         ),
         padding: !isSender ? EdgeInsets.only(right: 10) : EdgeInsets.zero,
-        margin: !isSender ? EdgeInsets.only(bottom: 10, left: 5) : EdgeInsets.only(bottom: 10),
+        margin: !isSender
+            ? EdgeInsets.only(bottom: 10, left: 5)
+            : EdgeInsets.only(bottom: 10),
         child: Column(
-          crossAxisAlignment: isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          crossAxisAlignment: isSender
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
           children: [
             Container(
               constraints: maxWidth,
-              margin: EdgeInsets.only(top: 8, left: isSender ? 0 : 10, right: isSender ? 10 : 0),
+              margin: EdgeInsets.only(
+                top: 8,
+                left: isSender ? 0 : 10,
+                right: isSender ? 10 : 0,
+              ),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: isSender ? const Color(0xFFE0F2F1) : const Color(0xFFEEEEEE),
+                color: isSender
+                    ? const Color(0xFFE0F2F1)
+                    : const Color(0xFFEEEEEE),
                 borderRadius: BorderRadius.circular(4.r),
               ),
               child: CommonText(
@@ -74,6 +88,14 @@ class CommonChatBubble extends StatelessWidget {
                         titleText: '${index + 1}',
                         buttonWidth: 30,
                         buttonHeight: 40,
+                        borderWidth: 1.1,
+                        borderColor:
+                            (index == 1 &&
+                                        message.messageType ==
+                                            'pending-start-time'
+                                    ? Colors.red
+                                    : Colors.teal)
+                                .withValues(alpha: .2),
                         buttonColor: const Color(0xFFE0F2F1), // Light teal
                         titleColor: const Color(0xFF00796B),
                         onTap: () {
@@ -84,11 +106,14 @@ class CommonChatBubble extends StatelessWidget {
                     if (showReply(message.messageType))
                       CommonButton(
                         titleText: 'Reply',
+                        borderWidth: 1.1,
+                        borderColor: Colors.teal.withValues(alpha: .2),
                         buttonColor: const Color(0xFFE0F2F1), // Light teal
                         titleColor: const Color(0xFF00796B),
                         buttonHeight: 40,
                         onTap: () {
-                          Get.find<SupportScreenController>().replyIndex.value = index;
+                          Get.find<SupportScreenController>().replyIndex.value =
+                              index;
                         },
                       ).start,
                   ],
@@ -111,18 +136,15 @@ class CommonChatBubble extends StatelessWidget {
     );
   }
 
-  bool showReply(String type) => type == 'regular';
+  bool showReply(String type) => type == 'reply';
 
   int getLength(String type) {
-    if (type == 'one_to_five') {
+    if (type == 'reply' || type == 'regular') {
+      return 0;
+    } else if (type == 'pending-reminder-before') {
       return 5;
-    } else if (type == 'task_pending_reminder' ||
-        type == 'task_completed_question' ||
-        type == 'task_completed_reminder') {
-      return 2;
-    } else if (type == 'assistant_question') {
+    } else {
       return 3;
     }
-    return 0;
   }
 }

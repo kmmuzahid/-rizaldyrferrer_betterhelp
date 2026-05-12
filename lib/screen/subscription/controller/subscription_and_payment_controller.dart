@@ -41,13 +41,17 @@ class SubscriptionAndPaymentController extends GetxController {
   void onInit() async {
     pageController = PageController();
 
-    // final response = await DioService.instance.request(
-    //   showMessage: true,
-    //   input: RequestInput(endpoint: ApiEndPoints.getSubscriptionPlan, method: RequestMethod.GET),
-    //   responseBuilder: (data) {
-    //     return data;
-    //   },
-    // );
+    final response = await DioService.instance.request(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: ApiEndPoints.package,
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) {
+        print(data);
+        return data;
+      },
+    );
 
     for (int i = 0; i < 3; i++) {
       subscriptionPlan.add(

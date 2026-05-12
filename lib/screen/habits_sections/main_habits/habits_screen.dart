@@ -3,6 +3,7 @@ import 'package:better_help/screen/habits_sections/main_habits/controller/habits
 import 'package:better_help/screen/habits_sections/main_habits/model/daily_task_model.dart';
 import 'package:better_help/screen/habits_sections/main_habits/task_details_screen.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
+import 'package:better_help/screen/supports_sections/main_supports/widgets/delay_picker.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
@@ -528,7 +529,13 @@ class _HabitsScreenState extends State<HabitsScreen> {
                     titleColor: const Color.fromARGB(255, 168, 129, 129),
                     onTap: () {
                       if (taskData.id.isNotEmpty) {
-                        controller.postpone(taskData.id);
+                        Get.dialog<int>(
+                          DelayPicker(
+                            onSelect: (delay) {
+                              controller.postpone(taskData.id, delay);
+                            },
+                          ),
+                        );
                       }
                     },
                   ),
@@ -544,7 +551,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
                     titleColor: const Color.fromARGB(255, 168, 129, 129),
                     onTap: () {
                       if (taskData.id.isNotEmpty) {
-                        controller.markTaskAsCancelled(taskData.id);
+                        controller.skip(taskData.id);
                       }
                     },
                   ),

@@ -65,8 +65,9 @@ class HabitsScreenController extends GetxController {
     final result = await DioService.instance.request(
       showMessage: true,
       input: RequestInput(
-        endpoint: ApiEndPoints.taskStatus(id, "do_now"),
+        endpoint: ApiEndPoints.taskStatus(id),
         method: .PATCH,
+        queryParams: {'status': "do_now"},
       ),
       responseBuilder: (data) => data,
     );
@@ -80,12 +81,13 @@ class HabitsScreenController extends GetxController {
     }
   }
 
-  void postpone(String id) async {
+  void postpone(String id, int delayMinute) async {
     final result = await DioService.instance.request(
       showMessage: true,
       input: RequestInput(
-        endpoint: ApiEndPoints.taskStatus(id, "postpone"),
+        endpoint: ApiEndPoints.taskStatus(id),
         method: .PATCH,
+        queryParams: {'status': "postpone", 'delayMinute': delayMinute},
       ),
       responseBuilder: (data) => data,
     );
@@ -103,8 +105,9 @@ class HabitsScreenController extends GetxController {
     final result = await DioService.instance.request(
       showMessage: true,
       input: RequestInput(
-        endpoint: ApiEndPoints.taskStatus(id, "skip"),
+        endpoint: ApiEndPoints.taskStatus(id),
         method: .PATCH,
+        queryParams: {'status': "skip"},
       ),
       responseBuilder: (data) => data,
     );
@@ -241,29 +244,6 @@ class HabitsScreenController extends GetxController {
       }
     } catch (e) {
       appLog('Error marking task as completed: $e');
-      showSnackBar("An error occurred", type: SnackBarType.error);
-    }
-  }
-
-  /// Mark task as cancelled
-  Future<void> markTaskAsCancelled(String taskId) async {
-    try {
-      appLog('Marking task $taskId as cancelled');
-      final response = await _apiServices.apiPatchServices(
-        url: ApiEndPoints.taskCancelled(taskId),
-      );
-
-      if (response != null && response['success'] == true) {
-        appLog('Task $taskId marked as cancelled successfully');
-        // Refresh tasks to reflect status change
-        await refreshTasks();
-        showSnackBar("Task cancelled successfully", type: SnackBarType.success);
-      } else {
-        appLog('Failed to mark task $taskId as cancelled');
-        showSnackBar("Failed to cancel task", type: SnackBarType.error);
-      }
-    } catch (e) {
-      appLog('Error marking task as cancelled: $e');
       showSnackBar("An error occurred", type: SnackBarType.error);
     }
   }

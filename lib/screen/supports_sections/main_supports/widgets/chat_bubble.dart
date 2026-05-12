@@ -28,7 +28,7 @@ class CommonChatBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final maxWidth = BoxConstraints(
-      maxWidth: MediaQuery.of(context).size.width * 0.55,
+      maxWidth: MediaQuery.of(context).size.width * 0.59,
     );
     return Align(
       alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
@@ -139,12 +139,11 @@ class CommonChatBubble extends StatelessWidget {
   bool showReply(String type) => type == 'reply';
 
   int getLength(String type) {
-    if (type == 'reply' || type == 'regular') {
-      return 0;
-    } else if (type == 'pending-reminder-before') {
+    if (type == 'pending-reminder-before') {
       return 5;
-    } else {
+    } else if (type == 'completion-feedback' || type == 'pending-start-time') {
       return 3;
     }
+    return 0;
   }
 }

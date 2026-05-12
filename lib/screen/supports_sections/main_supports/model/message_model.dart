@@ -51,7 +51,7 @@ class MessageModel {
       replyTo: json?['replyTo'] ?? '',
       isPinned: json?['isPinned'] ?? false,
       deletedByUsers: List<String>.from(json?['deletedByUsers'] ?? []),
-      messageType: json?['messageType'] ?? 'text',
+      messageType: json?['messageType'] ?? '',
       reactionUsers: List<dynamic>.from(json?['reactionUsers'] ?? []),
       createdAt: DateTime.tryParse(json?['createdAt'] ?? '') ?? DateTime.now(),
       updatedAt: DateTime.tryParse(json?['updatedAt'] ?? '') ?? DateTime.now(),

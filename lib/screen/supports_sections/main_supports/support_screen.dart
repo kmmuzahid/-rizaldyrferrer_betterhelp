@@ -99,49 +99,43 @@ class _SupportScreenState extends State<SupportScreen> {
                                     )
                                   : SmartListLoader(
                                       isReverse: true,
+                                      limit: 20,
                                       onLoadMore: (page) {
                                         controller.getMessages(page: page);
                                       },
                                       itemCount: controller.messageModel.length,
-                                      itemBuilder: (context, index) {
+                                      itemBuilder: (context, i) {
+                                        final finalIndex =
+                                            (controller.messageModel.length -
+                                                1) -
+                                            i;
                                         final message =
-                                            controller.messageModel[(controller
-                                                        .messageModel
-                                                        .length -
-                                                    1) -
-                                                index];
+                                            controller.messageModel[finalIndex];
                                         return CommonChatBubble(
                                           message: message,
-                                          index: index,
+                                          index: finalIndex,
                                           onButtonTap: (value) async {
                                             if (message.messageType ==
                                                     'pending-start-time' &&
                                                 value == '2' &&
                                                 message.status == 'pending') {
-                                              final delay =
-                                                  await Get.dialog<int>(
-                                                    DelayPicker(
-                                                      onSelect: (delay) {
-                                                        controller.sendMessage(
-                                                          message: value,
-                                                          index: index,
-                                                          delayMinute: delay,
-                                                        );
-                                                      },
-                                                    ),
-                                                  );
-                                              if (delay != null) {
-                                                controller.sendMessage(
-                                                  message: value,
-                                                  index: index,
-                                                  delayMinute: delay,
-                                                );
-                                              }
+                                              Get.dialog<int>(
+                                                DelayPicker(
+                                                  onSelect: (delay) {
+                                                    controller.sendMessage(
+                                                      message: value,
+                                                      index: finalIndex,
+                                                      delayMinute: delay,
+                                                    );
+                                                  },
+                                                ),
+                                              );
+
                                               return;
                                             }
                                             controller.sendMessage(
                                               message: value,
-                                              index: index,
+                                              index: finalIndex,
                                             );
                                           },
                                           timestamp:

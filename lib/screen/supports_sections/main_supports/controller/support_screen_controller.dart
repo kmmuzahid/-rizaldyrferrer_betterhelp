@@ -107,12 +107,24 @@ class SupportScreenController extends GetxController {
   }) async {
     final updatedMessage = messageModel[index].copyWith(isResponseSent: true);
 
+    String? status = updatedMessage.status;
+
+    if (updatedMessage.messageType == 'pending-start-time') {
+      if (message == '1') {
+        status = 'do_now';
+      } else if (message == '2') {
+        status = 'postpone';
+      } else {
+        status = 'skip';
+      }
+    }
+
     messageModel.insert(
       0,
       updatedMessage.copyWith(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         message: message,
-        messageType: 'regular',
+        status: status,
         sender: Sender(
           id: profileScreenController.profileData.value?.id ?? '',
           profile: '',

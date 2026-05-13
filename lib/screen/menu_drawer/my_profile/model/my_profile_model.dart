@@ -3,7 +3,7 @@ import 'dart:convert';
 class Welcome {
   bool? success;
   String? message;
-  Data? data;
+  ProfileData? data;
 
   Welcome({this.success, this.message, this.data});
 
@@ -14,7 +14,7 @@ class Welcome {
   factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
     success: json["success"],
     message: json["message"],
-    data: json["data"] == null ? null : Data.fromJson(json["data"]),
+    data: json["data"] == null ? null : ProfileData.fromJson(json["data"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -24,7 +24,7 @@ class Welcome {
   };
 }
 
-class Data {
+class ProfileData {
   String? id;
   String? profile;
   String? fullName;
@@ -47,8 +47,9 @@ class Data {
   int? pendingTask;
   int? completedTask;
   String? doctorChatId;
+  String? subscriptionPlanType;
 
-  Data({
+  ProfileData({
     this.id,
     this.profile,
     this.fullName,
@@ -71,13 +72,15 @@ class Data {
     this.pendingTask,
     this.completedTask,
     this.doctorChatId,
+    this.subscriptionPlanType,
   });
 
-  factory Data.fromRawJson(String str) => Data.fromJson(json.decode(str));
+  factory ProfileData.fromRawJson(String str) =>
+      ProfileData.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory ProfileData.fromJson(Map<String, dynamic> json) => ProfileData(
     id: json["_id"],
     doctorChatId: json["chatId"],
     profile: json["profile"],
@@ -104,6 +107,7 @@ class Data {
     totalTask: json["totalTask"],
     pendingTask: json["pendingTask"],
     completedTask: json["completedTask"],
+    subscriptionPlanType: json["subscriptionPlanType"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -129,5 +133,6 @@ class Data {
     "totalTask": totalTask,
     "pendingTask": pendingTask,
     "completedTask": completedTask,
+    "subscriptionPlanType": subscriptionPlanType,
   };
 }

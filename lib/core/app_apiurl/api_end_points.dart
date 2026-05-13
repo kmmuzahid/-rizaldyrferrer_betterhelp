@@ -62,8 +62,7 @@ class ApiEndPoints {
       "$baseUrl/doctor-booking/create-doctor-booking";
   static const getFavouriteArticle = "$baseUrl/favorite/saved";
 
-  static const createSubscription =
-      "$baseUrl/subscription/create-purchase-subscription";
+  static const createSubscription = "$baseUrl/subscription/create";
   static const createVideoSession = "$baseUrl/doctor-booking/agora-token";
   static const getMyBooking = "$baseUrl/doctor-booking/my-booking";
   static taskBytheDate(var data) => "$baseUrl/task?dateTime=$data";
@@ -92,5 +91,5 @@ class ApiEndPoints {
   static const createTask = "$baseUrl/task/create-by-user";
   static taskStatus(var taskId) => "$baseUrl/task/status/$taskId";
 
-  static const package = "$baseUrl/package";
+  static const package = "$baseUrl/package/user";
 }

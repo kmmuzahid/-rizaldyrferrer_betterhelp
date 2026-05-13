@@ -25,7 +25,7 @@ class EditProfileContrller extends GetxController {
   final addressController = TextEditingController();
 
   // Profile data
-  var profileData = Rxn<Data>();
+  var profileData = Rxn<ProfileData>();
 
   @override
   void onInit() {

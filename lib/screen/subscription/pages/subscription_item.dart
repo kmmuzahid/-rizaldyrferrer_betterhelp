@@ -5,7 +5,6 @@
  */
 import 'package:better_help/screen/subscription/controller/subscription_and_payment_controller.dart';
 import 'package:better_help/screen/subscription/model/subscription_model.dart';
-import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
@@ -62,7 +61,7 @@ class SubscriptionItem extends StatelessWidget {
                           width: 25,
                           height: 25,
                           padding: EdgeInsets.all(4),
-                          color: backgroundColor,
+                          color: Colors.transparent,
                           child: SvgPicture.asset(AppIcons.appbarBackIcon),
                         ),
                       ),
@@ -75,7 +74,7 @@ class SubscriptionItem extends StatelessWidget {
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                             isUnderlined: true,
-                            color: AppColors.textPrimaryBlack,
+                            color: Colors.black,
                           ),
                         ),
                     ],
@@ -139,22 +138,17 @@ class SubscriptionItem extends StatelessWidget {
         textAlign: TextAlign.left,
       );
     } else if (index == 3) {
+      final controller = Get.find<SubscriptionAndPaymentController>();
+      final product = controller.storeProducts[plan.productId];
+
+      // Use localized price from store
+      final String priceText = product?.price ??
+          (plan.price == 0 ? 'Free' : '\$${plan.price}');
+
       return Row(
         children: [
-          Text(
-            '\$447',
-            style: GoogleFonts.inter(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              color: Color(0xff6D717F),
-              decoration: TextDecoration.lineThrough,
-              decorationColor: Color(0xff032F49),
-              decorationThickness: 2,
-            ),
-          ),
-          10.width,
           AppText(
-            text: '\$199',
+            text: priceText,
             fontFamilyIndex: 2,
             fontSize: 36,
             color: buttonColor,
@@ -163,7 +157,9 @@ class SubscriptionItem extends StatelessWidget {
           ),
           10.width,
           AppText(
-            text: '/ First 3 months',
+            text: plan.price == 0
+                ? '/ Lifetime'
+                : '/ ${plan.duration ?? "First 3 months"}',
             fontFamilyIndex: 2,
             fontSize: 18,
             color: Color(0xff61656E),

@@ -11,45 +11,53 @@ import 'package:get/get.dart';
 
 class SubscriptionAndPayment extends StatelessWidget {
   const SubscriptionAndPayment({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     Get.put(SubscriptionAndPaymentController());
     return Scaffold(
-      
       body: Obx(() {
         final controller = Get.find<SubscriptionAndPaymentController>();
         if (controller.isLoadingDependency.value) {
           return Center(child: CircularProgressIndicator());
         }
         final subscriptionPlans = controller.subscriptionPlan;
-        return PageView.builder(
-          controller: controller.pageController,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: subscriptionPlans.length + 1,
-          itemBuilder: (context, index) {
-            if (index == 0) {
-              return SubscriptionInitalPage(
-                onLearnMore: () {
-                  controller.pageController.nextPage(
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.ease,
-                  );
-                },
-              );
-            }
-            var plan = subscriptionPlans[index - 1];
-            return SubscriptionItem(
-              plan: plan,
+        return Stack(
+          children: [
+            PageView.builder(
               controller: controller.pageController,
-              index: index,
-              totalSubscription: subscriptionPlans.length,
-            );
-          },
+              // physics: NeverScrollableScrollPhysics(),
+              itemCount: subscriptionPlans.length + 1,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return SubscriptionInitalPage(
+                    onLearnMore: () {
+                      controller.pageController.nextPage(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.ease,
+                      );
+                    },
+                  );
+                }
+                var plan = subscriptionPlans[index - 1];
+                return SubscriptionItem(
+                  plan: plan,
+                  controller: controller.pageController,
+                  index: index,
+                  totalSubscription: subscriptionPlans.length,
+                );
+              },
+            ),
+            if (controller.isPurchaseLoading.value)
+              Container(
+                color: Colors.black26,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+          ],
         );
       }),
     );
   }
-
 }
-

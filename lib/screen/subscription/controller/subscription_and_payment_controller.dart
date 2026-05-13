@@ -3,6 +3,9 @@
  * @Date: 2026-01-09 09:41:39
  * @Email: km.muzahid@gmail.com
  */
+import 'dart:async';
+import 'dart:io';
+
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
@@ -12,39 +15,33 @@ import 'package:core_kit/network/dio_service.dart';
 import 'package:core_kit/network/request_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
 class SubscriptionAndPaymentController extends GetxController {
   var isLoadingDependency = true.obs;
+  var isPurchaseLoading = false.obs;
   late PageController pageController;
   final RxList<SubscriptionModel> subscriptionPlan =
       RxList<SubscriptionModel>();
 
-  onSubscribe(int index) async {
-    final response = await DioService.instance.request(
-      showMessage: true,
-      input: RequestInput(
-        endpoint: ApiEndPoints.createSubscription,
-        method: RequestMethod.POST,
-      ),
-      responseBuilder: (data) {
-        return data;
-      },
-    );
+  final InAppPurchase _iap = InAppPurchase.instance;
+  late StreamSubscription<List<PurchaseDetails>> _subscription;
+  final RxMap<String, ProductDetails> storeProducts =
+      <String, ProductDetails>{}.obs;
 
-    if (response.isSuccess) {
-      return Get.toNamed(AppRoute.bottomNav);
+  bool isRestoreChecked = false;
+
+  _fetchSubscriptionPlan() async {
+    String platform = 'apple';
+    if (Platform.isAndroid) {
+      platform = 'google';
     }
-  }
-
-  @override
-  void onInit() async {
-    pageController = PageController();
 
     final response = await DioService.instance.request(
-      showMessage: true,
       input: RequestInput(
         endpoint: ApiEndPoints.package,
         method: RequestMethod.GET,
+        queryParams: {"platform": platform},
       ),
       responseBuilder: (data) {
         return List<SubscriptionModel>.from(
@@ -55,24 +52,208 @@ class SubscriptionAndPaymentController extends GetxController {
 
     if (response.isSuccess) {
       subscriptionPlan.value = response.data ?? [];
-      print(response.data!.first.buttonColor);
-      print(response.data!.first.buttonTextColor);
+
+      final productIds = subscriptionPlan
+          .where(
+            (e) =>
+                (e.price ?? 0) > 0 &&
+                e.productId != null &&
+                e.productId!.isNotEmpty,
+          )
+          .map((e) => e.productId!)
+          .toSet();
+
+      if (productIds.isNotEmpty) {
+        final ProductDetailsResponse response = await _iap.queryProductDetails(
+          productIds,
+        );
+        if (response.error != null) {
+          debugPrint("IAP Error: ${response.error}");
+          subscriptionPlan.value = subscriptionPlan
+              .takeWhile((e) => (e.price ?? 0) == 0)
+              .toList();
+          isLoadingDependency.value = false;
+          return;
+        }
+
+        for (var product in response.productDetails) {
+          storeProducts[product.id] = product;
+        }
+
+        // Only show plans available in Google or Apple Store
+        final availableProductIds = response.productDetails
+            .map((p) => p.id)
+            .toSet();
+
+        subscriptionPlan.value = subscriptionPlan.where((plan) {
+          if ((plan.price ?? 0) == 0) return true;
+          return availableProductIds.contains(plan.productId);
+        }).toList();
+      }
+    }
+    isLoadingDependency.value = false;
+  }
+
+  onRestore({bool showLoader = true}) async {
+    if (showLoader) isPurchaseLoading.value = true;
+    try {
+      await _iap.restorePurchases();
+      print("Restore completed");
+    } catch (e) {
+      if (showLoader) {
+        Get.snackbar('Error', 'Failed to restore purchases: $e');
+      }
+      print("Restore error: $e");
+    } finally {
+      if (showLoader) isPurchaseLoading.value = false;
+    }
+  }
+
+  onSubscribe(int index) async {
+    if (isPurchaseLoading.value) return;
+    final plan = subscriptionPlan[index];
+
+    if ((plan.price ?? 0) == 0) {
+      //buy free plan
+      isPurchaseLoading.value = true;
+      final response = await DioService.instance.request(
+        showMessage: true,
+        input: RequestInput(
+          endpoint: ApiEndPoints.createSubscription,
+          method: RequestMethod.POST,
+          jsonBody: {"packageId": plan.id},
+        ),
+        responseBuilder: (data) {
+          return data;
+        },
+      );
+      isPurchaseLoading.value = false;
+
+      if (response.isSuccess) {
+        _onSuccess();
+      }
+    } else {
+      //buy subscription from store
+      final product = storeProducts[plan.productId];
+      if (product != null) {
+        isPurchaseLoading.value = true;
+        final PurchaseParam purchaseParam = PurchaseParam(
+          productDetails: product,
+        );
+        _iap.buyNonConsumable(purchaseParam: purchaseParam);
+      } else {
+        Get.snackbar('Error', 'Product not available in store');
+      }
+    }
+  }
+
+  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
+    purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
+      if (purchaseDetails.status == PurchaseStatus.pending) {
+        isPurchaseLoading.value = true;
+      } else {
+        isPurchaseLoading.value = false;
+        if (purchaseDetails.status == PurchaseStatus.error) {
+          Get.snackbar(
+            'Error',
+            purchaseDetails.error?.message ?? 'Purchase failed',
+          );
+        } else if (purchaseDetails.status == PurchaseStatus.purchased ||
+            purchaseDetails.status == PurchaseStatus.restored) {
+          bool valid = await _verifyPurchase(purchaseDetails);
+          if (valid) {
+            _onSuccess();
+          }
+        }
+        if (purchaseDetails.pendingCompletePurchase) {
+          await _iap.completePurchase(purchaseDetails);
+        }
+      }
+    });
+  }
+
+  void _onSuccess() {
+    Get.find<MyProfileScreenController>().fetchProfile();
+    Get.offAllNamed(AppRoute.bottomNav);
+  }
+
+  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async {
+    final plan = subscriptionPlan.firstWhereOrNull(
+      (e) => e.productId == purchaseDetails.productID,
+    );
+
+    final response = await DioService.instance.request(
+      showMessage: true,
+      input: RequestInput(
+        endpoint: ApiEndPoints.createSubscription,
+        method: RequestMethod.POST,
+        jsonBody: {
+          "packageId": plan?.id,
+          "productId": purchaseDetails.productID,
+          "purchaseToken":
+              purchaseDetails.verificationData.serverVerificationData,
+          "platform": Platform.isAndroid ? "google" : "apple",
+          "isRestore": purchaseDetails.status == PurchaseStatus.restored,
+        },
+      ),
+      responseBuilder: (data) => data,
+    );
+    return response.isSuccess;
+  }
+
+  @override
+  void onInit() async {
+    pageController = PageController();
+    isLoadingDependency.value = true;
+
+    final bool isAvailable = await _iap.isAvailable();
+    if (isAvailable) {
+      print("Store is available");
     }
 
+    final Stream<List<PurchaseDetails>> purchaseUpdated = _iap.purchaseStream;
+
+    _subscription = purchaseUpdated.listen(
+      (purchaseDetailsList) {
+        if (purchaseDetailsList.isNotEmpty) {
+          _listenToPurchaseUpdated(purchaseDetailsList);
+        } else if (!isRestoreChecked) {
+          isRestoreChecked = true;
+          _fetchSubscriptionPlan();
+        }
+      },
+      onDone: () {
+        _subscription.cancel();
+      },
+      onError: (error) {
+        isPurchaseLoading.value = false;
+        debugPrint("Purchase stream error: $error");
+      },
+    );
+
+    //get product id from the server
+
     SocketService.instance.connect();
-    isLoadingDependency.value = true;
     final profileController = Get.find<MyProfileScreenController>();
-    profileController.fetchProfile().then((value) {
-      if (profileController.profileData.value?.isSubscribed == true) {}
-      // return Get.toNamed(AppRoute.bottomNav);
+    await profileController.fetchProfile();
+
+    await onRestore(showLoader: false);
+
+    if (profileController.profileData.value?.subscriptionPlanType == null) {
+      _fetchSubscriptionPlan();
+    } else {
       isLoadingDependency.value = false;
-    });
+    }
+
+    //to skip subscription and payment
+    // _onSuccess();
     super.onInit();
   }
 
   @override
   void onClose() {
     pageController.dispose();
+    _subscription.cancel();
     super.onClose();
   }
 }

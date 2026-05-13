@@ -18,7 +18,7 @@ class MyProfileScreenController extends GetxController {
   final _profileRepository = ProfileRepository();
 
   var isLoading = false.obs;
-  var profileData = Rxn<Data>();
+  var profileData = Rxn<ProfileData>();
   var isNotificationListening = false.obs;
 
   @override
@@ -42,7 +42,9 @@ class MyProfileScreenController extends GetxController {
           isNotificationListening.value = true;
         }
       } else {
-        AppSnackBar.showError(response?['message']?.toString() ?? "Failed to load profile");
+        AppSnackBar.showError(
+          response?['message']?.toString() ?? "Failed to load profile",
+        );
         StorageService().clearAll();
         Get.offAllNamed(AppRoute.loginScreen);
       }
@@ -54,10 +56,12 @@ class MyProfileScreenController extends GetxController {
   }
 
   String getProfileImageUrl() {
-    if (profileData.value?.profile != null && profileData.value!.profile!.isNotEmpty) {
+    if (profileData.value?.profile != null &&
+        profileData.value!.profile!.isNotEmpty) {
       final profileUrl = profileData.value!.profile!;
       // Check if it's already a complete URL (starts with http/https)
-      if (profileUrl.startsWith('http://') || profileUrl.startsWith('https://')) {
+      if (profileUrl.startsWith('http://') ||
+          profileUrl.startsWith('https://')) {
         return profileUrl;
       }
       // Otherwise, prepend the base image URL
@@ -76,12 +80,13 @@ class MyProfileScreenController extends GetxController {
       input: RequestInput(
         endpoint: ApiEndPoints.bhaBhaaReassignRequest,
         method: RequestMethod.POST,
-        jsonBody: {"reason": reason, "assignPersonRole": choice == 'BHA' ? 'doctor' : 'assistant'},
+        jsonBody: {
+          "reason": reason,
+          "assignPersonRole": choice == 'BHA' ? 'doctor' : 'assistant',
+        },
       ),
       responseBuilder: (data) => data,
     );
     isReplaceBhaBhaaLoading.value = false;
   }
-
-  
 }

@@ -6,11 +6,11 @@
 class ApiEndPoints {
   ApiEndPoints._();
   //live
-  // static const imageUrl = "http://54.241.114.7:5000";
-  // static const liveDomain = "http://54.241.114.7:5000";
+  static const imageUrl = "http://54.241.114.7:5000";
+  static const liveDomain = "http://54.241.114.7:5000";
   //local
-  static const imageUrl = "http://10.10.7.65:5007";
-  static const liveDomain = "http://10.10.7.65:5007";
+  // static const imageUrl = "http://10.10.7.65:5007";
+  // static const liveDomain = "http://10.10.7.65:5007";
 
   // static const localDomain = "http://10.10.7.65:5003";
   static const domain = liveDomain;

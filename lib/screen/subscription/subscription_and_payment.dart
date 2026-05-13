@@ -27,9 +27,11 @@ class SubscriptionAndPayment extends StatelessWidget {
             PageView.builder(
               controller: controller.pageController,
               // physics: NeverScrollableScrollPhysics(),
-              itemCount: subscriptionPlans.length + 1,
+              itemCount:
+                  subscriptionPlans.length +
+                  (!controller.routeFromDrawer ? 1 : 0),
               itemBuilder: (context, index) {
-                if (index == 0) {
+                if (index == 0 && !controller.routeFromDrawer) {
                   return SubscriptionInitalPage(
                     onLearnMore: () {
                       controller.pageController.nextPage(
@@ -39,21 +41,28 @@ class SubscriptionAndPayment extends StatelessWidget {
                     },
                   );
                 }
-                var plan = subscriptionPlans[index - 1];
+                var plan =
+                    subscriptionPlans[index -
+                        (!controller.routeFromDrawer ? 1 : 0)];
                 return SubscriptionItem(
                   plan: plan,
+                  routeFromDrawer: controller.routeFromDrawer,
                   controller: controller.pageController,
                   index: index,
                   totalSubscription: subscriptionPlans.length,
+                  productDetails: controller.storeProducts[plan.productId],
+                  duration: (plan.price ?? 0) > 0
+                      ? controller.getDuration(
+                          controller.storeProducts[plan.productId]!,
+                        )
+                      : "Lifetime",
                 );
               },
             ),
             if (controller.isPurchaseLoading.value)
               Container(
                 color: Colors.black26,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
+                child: Center(child: CircularProgressIndicator()),
               ),
           ],
         );

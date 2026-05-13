@@ -62,6 +62,7 @@ class SubscriptionModel {
     this.v,
   });
 
-  factory SubscriptionModel.fromJson(Map<String, dynamic> json) => _$SubscriptionModelFromJson(json);
+  factory SubscriptionModel.fromJson(Map<String, dynamic> json) =>
+      _$SubscriptionModelFromJson(json);
   Map<String, dynamic> toJson() => _$SubscriptionModelToJson(this);
 }

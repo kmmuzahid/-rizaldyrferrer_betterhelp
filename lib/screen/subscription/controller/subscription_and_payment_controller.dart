@@ -1,3 +1,5 @@
+// ignore_for_file: duplicate_import, depend_on_referenced_packages, unused_import
+
 /*
  * @Author: Km Muzahid
  * @Date: 2026-01-09 09:41:39
@@ -16,9 +18,12 @@ import 'package:core_kit/network/request_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
+import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 
 class SubscriptionAndPaymentController extends GetxController {
   var isLoadingDependency = true.obs;
+  bool routeFromDrawer = false;
   var isPurchaseLoading = false.obs;
   late PageController pageController;
   final RxList<SubscriptionModel> subscriptionPlan =
@@ -41,7 +46,7 @@ class SubscriptionAndPaymentController extends GetxController {
       input: RequestInput(
         endpoint: ApiEndPoints.package,
         method: RequestMethod.GET,
-        queryParams: {"platform": platform},
+        queryParams: {"platform": platform, 'sort': 'price'},
       ),
       responseBuilder: (data) {
         return List<SubscriptionModel>.from(
@@ -92,6 +97,28 @@ class SubscriptionAndPaymentController extends GetxController {
       }
     }
     isLoadingDependency.value = false;
+  }
+
+  ProductDetails? getProduct(String productId) {
+    return storeProducts[productId];
+  }
+
+  String getDuration(ProductDetails product) {
+    if (Platform.isIOS && product is AppStoreProductDetails) {
+      final period = product.skProduct.subscriptionPeriod;
+
+      return "/${period?.numberOfUnits} ${period?.unit.name}";
+    }
+
+    if (Platform.isAndroid && product is GooglePlayProductDetails) {
+      final phases = product.productDetails.subscriptionOfferDetails;
+
+      final recurringPhase = phases?.first.pricingPhases.last;
+
+      return "/${recurringPhase?.billingPeriod}";
+    }
+
+    return '';
   }
 
   onRestore({bool showLoader = true}) async {
@@ -203,6 +230,9 @@ class SubscriptionAndPaymentController extends GetxController {
 
   @override
   void onInit() async {
+    if (Get.arguments != null) {
+      routeFromDrawer = Get.arguments['route_from'] == "drawer";
+    }
     pageController = PageController();
     isLoadingDependency.value = true;
 
@@ -246,7 +276,9 @@ class SubscriptionAndPaymentController extends GetxController {
     }
 
     //to skip subscription and payment
-    // _onSuccess();
+    // if (!routeFromDrawer) {
+    //   _onSuccess();
+    // }
     super.onInit();
   }
 

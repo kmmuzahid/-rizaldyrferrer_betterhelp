@@ -3,6 +3,7 @@
  * @Date: 2026-03-01 15:56:54
  * @Email: km.muzahid@gmail.com
  */
+import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/subscription/controller/subscription_and_payment_controller.dart';
 import 'package:better_help/screen/subscription/model/subscription_model.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
@@ -13,8 +14,9 @@ import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_instance/get_instance.dart';
-import 'package:get/state_manager.dart';
+import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
 class SubscriptionItem extends StatelessWidget {
   const SubscriptionItem({
@@ -23,18 +25,24 @@ class SubscriptionItem extends StatelessWidget {
     required this.controller,
     required this.index,
     required this.totalSubscription,
+    this.productDetails,
+    required this.duration,
+    this.routeFromDrawer = false,
   });
   final SubscriptionModel plan;
   final PageController controller;
   final int index;
   final int totalSubscription;
+  final ProductDetails? productDetails;
+  final String duration;
+  final bool routeFromDrawer;
 
   @override
   Widget build(BuildContext context) {
     final backgroundColor = Color(int.parse(plan.backgroundColor ?? '00'));
     final buttonTextColor = Color(int.parse(plan.buttonTextColor ?? '00'));
     final buttonColor = Color(int.parse(plan.buttonColor ?? '00'));
-
+    final profileController = Get.find<MyProfileScreenController>();
     return Stack(
       children: [
         Positioned.fill(child: Container(color: backgroundColor)),
@@ -84,25 +92,33 @@ class SubscriptionItem extends StatelessWidget {
                   child: ListView.builder(
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     itemBuilder: (context, index) {
-                      return _buildFeatureList(index, context, buttonColor);
+                      return _buildFeatureList(
+                        index,
+                        context,
+                        buttonColor,
+                        profileController,
+                      );
                     },
                     itemCount: (plan.featureList?.length ?? 0) + 5,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: AppButton(
-                    titleColor: buttonTextColor,
-                    onTap: () {
-                      Get.find<SubscriptionAndPaymentController>().onSubscribe(
-                        index - 1,
-                      );
-                    },
-                    borderradius: 12,
-                    backgroundColor: buttonColor,
-                    title: 'Start My Journey',
+                if ((profileController.profileData.value?.subscriptionId ==
+                        null ||
+                    profileController.profileData.value?.subscriptionId !=
+                        plan.id))
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: AppButton(
+                      titleColor: buttonTextColor,
+                      onTap: () {
+                        Get.find<SubscriptionAndPaymentController>()
+                            .onSubscribe(index - 1);
+                      },
+                      borderradius: 12,
+                      backgroundColor: buttonColor,
+                      title: 'Start My Journey',
+                    ),
                   ),
-                ),
               ],
             ),
           ),
@@ -111,7 +127,12 @@ class SubscriptionItem extends StatelessWidget {
     );
   }
 
-  Widget _buildFeatureList(int index, BuildContext context, Color buttonColor) {
+  Widget _buildFeatureList(
+    int index,
+    BuildContext context,
+    Color buttonColor,
+    MyProfileScreenController profileController,
+  ) {
     if (index == 0) {
       return ConstrainedBox(
         constraints: BoxConstraints(
@@ -120,13 +141,35 @@ class SubscriptionItem extends StatelessWidget {
         child: CommonImage(src: plan.image ?? '', fill: BoxFit.contain),
       );
     } else if (index == 1) {
-      return AppText(
-        text: plan.title ?? '',
-        fontFamilyIndex: 1,
-        fontSize: 40,
-        color: Color(0xff080B10),
-        fontWeight: FontWeight.w500,
-        textAlign: TextAlign.left,
+      return Row(
+        children: [
+          AppText(
+            text: plan.title ?? '',
+            fontFamilyIndex: 1,
+            fontSize: 40,
+            color: Color(0xff080B10),
+            fontWeight: FontWeight.w500,
+            textAlign: TextAlign.left,
+          ),
+          const Spacer(),
+          if (plan.id == profileController.profileData.value?.subscriptionId)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Color(
+                  int.parse(plan.buttonTextColor ?? '00'),
+                ).withValues(alpha: .9),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: AppText(
+                text: 'Current Plan',
+                fontFamilyIndex: 2,
+                fontSize: 16,
+                color: Color(int.parse(plan.buttonColor ?? '00')),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+        ],
       );
     } else if (index == 2) {
       return CommonText(
@@ -142,8 +185,9 @@ class SubscriptionItem extends StatelessWidget {
       final product = controller.storeProducts[plan.productId];
 
       // Use localized price from store
-      final String priceText = product?.price ??
-          (plan.price == 0 ? 'Free' : '\$${plan.price}');
+      final String priceText =
+          product?.price ??
+          (plan.price == 0 ? 'Free' : productDetails?.price ?? '');
 
       return Row(
         children: [
@@ -157,9 +201,7 @@ class SubscriptionItem extends StatelessWidget {
           ),
           10.width,
           AppText(
-            text: plan.price == 0
-                ? '/ Lifetime'
-                : '/ ${plan.duration ?? "First 3 months"}',
+            text: plan.price == 0 ? '/ Lifetime' : '/ $duration',
             fontFamilyIndex: 2,
             fontSize: 18,
             color: Color(0xff61656E),
@@ -216,9 +258,13 @@ class SubscriptionItem extends StatelessWidget {
   }
 
   goPreviousPage() {
-    controller.previousPage(
-      duration: Duration(milliseconds: 300),
-      curve: Curves.ease,
-    );
+    if (routeFromDrawer && index == 0) {
+      Get.back();
+    } else {
+      controller.previousPage(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.ease,
+      );
+    }
   }
 }

@@ -195,6 +195,24 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
                     ),
                     GestureDetector(
                       onTap: () {
+                        MyProfileScreenController myProfileScreenController =
+                            Get.find<MyProfileScreenController>();
+                        if (myProfileScreenController
+                                    .profileData
+                                    .value
+                                    ?.subscriptionPlanType ==
+                                'free' ||
+                            myProfileScreenController
+                                    .profileData
+                                    .value
+                                    ?.subscriptionPlanType ==
+                                null) {
+                          showSnackBar(
+                            'Upgrade Your Plan',
+                            type: SnackBarType.warning,
+                          );
+                          return;
+                        }
                         showReplaceBhaBhaaDialog();
                       },
                       child: AppText(

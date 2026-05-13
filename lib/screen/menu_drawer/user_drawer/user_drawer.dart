@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
@@ -10,6 +11,7 @@ import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/generate_task/generate_task_dialog.dart';
+import 'package:core_kit/snackbar/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -54,7 +56,7 @@ class UserDrawer extends StatelessWidget {
       "Privacy Policy",
     ];
     List<String> accountSettingPage = [
-      AppRoute.mySubscriptionScreen,
+      AppRoute.subscriptionscreen,
       AppRoute.faqsScreen,
       AppRoute.talkToSupportScreen,
       AppRoute.termsAndConditionsScreen,
@@ -106,6 +108,26 @@ class UserDrawer extends StatelessWidget {
                       generalSettingTitle,
                       () {
                         Get.back();
+                        if (index == 3) {
+                          MyProfileScreenController myProfileScreenController =
+                              Get.find<MyProfileScreenController>();
+                          if (myProfileScreenController
+                                      .profileData
+                                      .value
+                                      ?.subscriptionPlanType ==
+                                  'free' ||
+                              myProfileScreenController
+                                      .profileData
+                                      .value
+                                      ?.subscriptionPlanType ==
+                                  null) {
+                            showSnackBar(
+                              'Upgrade Your Plan',
+                              type: SnackBarType.warning,
+                            );
+                            return;
+                          }
+                        }
                         Get.toNamed(generalSettingsPage[index]);
                       },
                     );
@@ -115,6 +137,24 @@ class UserDrawer extends StatelessWidget {
                     highlightColor: Colors.transparent,
                     onTap: () {
                       Get.back();
+                      MyProfileScreenController myProfileScreenController =
+                          Get.find<MyProfileScreenController>();
+                      if (myProfileScreenController
+                                  .profileData
+                                  .value
+                                  ?.subscriptionPlanType ==
+                              'free' ||
+                          myProfileScreenController
+                                  .profileData
+                                  .value
+                                  ?.subscriptionPlanType ==
+                              null) {
+                        showSnackBar(
+                          'Upgrade Your Plan',
+                          type: SnackBarType.warning,
+                        );
+                        return;
+                      }
                       Get.dialog(const GenerateTaskDialog());
                     },
                     child: Container(
@@ -165,7 +205,11 @@ class UserDrawer extends StatelessWidget {
                       highlightColor: Colors.transparent,
                       onTap: () {
                         Get.back();
-                        Get.toNamed(accountSettingPage[index]);
+
+                        Get.toNamed(
+                          accountSettingPage[index],
+                          arguments: {'route_from': "drawer"},
+                        );
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(

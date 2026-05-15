@@ -47,7 +47,9 @@ class BookingsSessionsController extends GetxController {
         method: RequestMethod.GET,
       ),
       responseBuilder: (response) {
-        return List<BookedSessionModel>.from(response.map((x) => BookedSessionModel.fromJson(x)));
+        return List<BookedSessionModel>.from(
+          response.map((x) => BookedSessionModel.fromJson(x)),
+        );
       },
     );
     isLoading.value = false;
@@ -59,7 +61,6 @@ class BookingsSessionsController extends GetxController {
 
   joinSession(BookedSessionModel? bookingSessionModel) async {
     if (bookingSessionModel == null) return;
- 
 
     DateTime currentDateTime = DateTime.now();
 
@@ -73,20 +74,20 @@ class BookingsSessionsController extends GetxController {
       return;
     }
 
-    Get.toNamed(AppRoute.videoCallScreen, arguments: {'id': bookingSessionModel.id});
+    Get.toNamed(
+      AppRoute.videoCallScreen,
+      arguments: {'id': bookingSessionModel.id},
+    );
     fetchBookings();
   }
 
   bool isJoainable(BookedSessionModel? model) {
     if (model == null) return false;
- 
 
     DateTime currentDateTime = DateTime.now().toLocal();
 
     return currentDateTime.isAfter(model.startTime.toLocal()) &&
         currentDateTime.isBefore(model.endTime.toLocal());
-
-    
   }
 
   /// Fetch bookings from API
@@ -107,10 +108,10 @@ class BookingsSessionsController extends GetxController {
         '${ApiEndPoints.seeAllBookings}?page=${currentPage.value}&limit=10',
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('Bookings fetched successfully');
 
-        final bookingsResponse = BookingsResponse.fromJson(response);
+        final bookingsResponse = BookingsResponse.fromJson(response.data);
 
         if (bookingsResponse.data != null) {
           if (refresh) {

@@ -64,11 +64,15 @@ class LoginScreenController extends GetxController {
 
     isLoading.value = false;
 
-    if (response != null && response['success'] == true) { 
-      await StorageService.instance.saveAccessToken(response['data']['accessToken']);
-      await StorageService.instance.saveRefreshToken(response['data']['refreshToken']);
-      await StorageService.instance.saveUserData(response['data']['user']);
-      AppSnackBar.showSuccess(response['message'] ?? "Login successful");
+    if (response?.isSuccess ?? false) {
+      await StorageService.instance.saveAccessToken(
+        response!.data['accessToken'],
+      );
+      await StorageService.instance.saveRefreshToken(
+        response.data['refreshToken'],
+      );
+      await StorageService.instance.saveUserData(response.data['user']);
+      AppSnackBar.showSuccess(response.message ?? "Login successful");
       Get.offAllNamed(AppRoute.subscriptionscreen);
     }
   }

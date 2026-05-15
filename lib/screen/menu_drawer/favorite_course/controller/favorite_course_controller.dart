@@ -42,10 +42,10 @@ class FavoriteCourseController extends GetxController {
         '${ApiEndPoints.getFavouriteArticle}?page=${currentPage.value}&limit=10&type=course',
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('Saved courses fetched successfully');
 
-        final savedResponse = SavedArticleResponse.fromJson(response);
+        final savedResponse = SavedArticleResponse.fromJson(response.data);
 
         if (savedResponse.data?.allCourses != null) {
           if (refresh) {
@@ -106,7 +106,7 @@ class FavoriteCourseController extends GetxController {
         body: {'courseId': courseId},
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('Course removed from saved list successfully');
       } else {
         // Revert on failure

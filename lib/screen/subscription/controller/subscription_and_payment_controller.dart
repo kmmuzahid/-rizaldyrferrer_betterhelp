@@ -72,6 +72,7 @@ class SubscriptionAndPaymentController extends GetxController {
         final ProductDetailsResponse response = await _iap.queryProductDetails(
           productIds,
         );
+        print("Product IDs: $productIds");
         if (response.error != null) {
           debugPrint("IAP Error: ${response.error}");
           subscriptionPlan.value = subscriptionPlan

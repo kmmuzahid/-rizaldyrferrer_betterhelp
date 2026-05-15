@@ -202,10 +202,10 @@ class HabitsScreenController extends GetxController {
         ApiEndPoints.taskBytheDate(formattedDate),
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('Tasks fetched successfully');
 
-        final taskResponse = TaskResponse.fromJson(response);
+        final taskResponse = TaskResponse.fromJson(response.data);
 
         if (taskResponse.data != null) {
           tasks.value = taskResponse.data!.map((task) => task.obs).toList();

@@ -18,9 +18,9 @@ class CommunityRepository {
         '${ApiEndPoints.getAllArticle}?page=$page&limit=$limit',
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('CommunityRepository: Articles fetched successfully');
-        return ArticleModel.fromJson(response);
+        return ArticleModel.fromJson(response.data);
       } else {
         appLog('CommunityRepository: Failed to fetch articles');
         return null;
@@ -40,9 +40,9 @@ class CommunityRepository {
         ApiEndPoints.getSingleArticle(id),
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('CommunityRepository: Article fetched successfully');
-        return Datum.fromJson(response['data']);
+        return Datum.fromJson(response.data);
       } else {
         appLog('CommunityRepository: Failed to fetch article');
         return null;
@@ -61,7 +61,7 @@ class CommunityRepository {
         url: ApiEndPoints.createPost,
         body: description,
       );
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('CommunityRepository: Post created successfully');
         return response;
       } else {
@@ -84,9 +84,9 @@ class CommunityRepository {
         '${ApiEndPoints.getAllPost}?page=$page&limit=$limit',
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('CommunityRepository: Posts fetched successfully');
-        return PostModel.fromJson(response);
+        return PostModel.fromJson(response.data);
       } else {
         appLog('CommunityRepository: Failed to fetch posts');
         return null;
@@ -106,9 +106,9 @@ class CommunityRepository {
         '${ApiEndPoints.getHighlightPost}&page=$page&limit=$limit',
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('CommunityRepository: Highlight posts fetched successfully');
-        return PostModel.fromJson(response);
+        return PostModel.fromJson(response.data);
       } else {
         appLog('CommunityRepository: Failed to fetch highlight posts');
         return null;
@@ -131,9 +131,9 @@ class CommunityRepository {
         '${ApiEndPoints.getRecentPost}&page=$page&limit=$limit',
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('CommunityRepository: Recent posts fetched successfully');
-        return PostModel.fromJson(response);
+        return PostModel.fromJson(response.data);
       } else {
         appLog('CommunityRepository: Failed to fetch recent posts');
         return null;
@@ -156,9 +156,9 @@ class CommunityRepository {
         '${ApiEndPoints.getPopularPost}&page=$page&limit=$limit',
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('CommunityRepository: Popular posts fetched successfully');
-        return PostModel.fromJson(response);
+        return PostModel.fromJson(response.data);
       } else {
         appLog('CommunityRepository: Failed to fetch popular posts');
         return null;
@@ -182,7 +182,7 @@ class CommunityRepository {
         body: {},
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('CommunityRepository: Post liked/unliked successfully');
         return true;
       } else {
@@ -204,9 +204,9 @@ class CommunityRepository {
         ApiEndPoints.getSinglePost(postId),
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('CommunityRepository: Post fetched successfully');
-        return response;
+        return response.data;
       } else {
         appLog('CommunityRepository: Failed to fetch post');
         return null;
@@ -230,7 +230,7 @@ class CommunityRepository {
         body: {'postId': postId, 'message': message},
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('CommunityRepository: Comment created successfully');
         return response;
       } else {
@@ -257,7 +257,7 @@ class CommunityRepository {
         body: {'postId': postId, 'message': message, 'parentId': parentId},
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('CommunityRepository: Reply created successfully');
         return response;
       } else {
@@ -280,7 +280,7 @@ class CommunityRepository {
         body: {'commentId': commentId},
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('CommunityRepository: Comment reaction successful');
         return true;
       } else {
@@ -306,7 +306,7 @@ class CommunityRepository {
         body: {'commentId': commentId, 'replyId': replyId},
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('CommunityRepository: Reply reaction successful');
         return true;
       } else {
@@ -331,13 +331,11 @@ class CommunityRepository {
       final response = await _apiServices.apiPostServices(
         url: ApiEndPoints.toggleSaveArticle(articleId),
         body: {'articleId': articleId},
-        statusCodeStart: 200,
-        statusCodeEnd: 201,
       );
 
       appLog('CommunityRepository: API response received: $response');
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('CommunityRepository: Article save toggled successfully');
         return true;
       } else {

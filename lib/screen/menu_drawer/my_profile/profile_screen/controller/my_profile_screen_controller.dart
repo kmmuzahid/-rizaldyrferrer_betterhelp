@@ -32,8 +32,8 @@ class MyProfileScreenController extends GetxController {
       isLoading.value = true;
       final response = await _profileRepository.getMyProfile();
 
-      if (response != null && response['success'] == true) {
-        final profileResponse = Welcome.fromJson(response);
+      if (response?.isSuccess ?? false) {
+        final profileResponse = Welcome.fromJson(response?.data);
         profileData.value = profileResponse.data;
         if (isNotificationListening.value == false) {
           Get.find<NotificationScreenController>()
@@ -43,7 +43,7 @@ class MyProfileScreenController extends GetxController {
         }
       } else {
         AppSnackBar.showError(
-          response?['message']?.toString() ?? "Failed to load profile",
+          response?.message?.toString() ?? "Failed to load profile",
         );
         StorageService().clearAll();
         Get.offAllNamed(AppRoute.loginScreen);

@@ -42,10 +42,10 @@ class SavedArticleController extends GetxController {
         '${ApiEndPoints.getFavouriteArticle}?page=${currentPage.value}&limit=10&type=article',
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('Saved articles fetched successfully');
 
-        final savedResponse = SavedArticleResponse.fromJson(response);
+        final savedResponse = SavedArticleResponse.fromJson(response.data);
 
         if (savedResponse.data?.allArticles != null) {
           if (refresh) {
@@ -106,7 +106,7 @@ class SavedArticleController extends GetxController {
         body: {'articleId': articleId},
       );
 
-      if (response != null && response['success'] == true) {
+      if (response.isSuccess) {
         appLog('Article removed from saved list successfully');
       } else {
         // Revert on failure

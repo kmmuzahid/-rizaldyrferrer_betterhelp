@@ -3,6 +3,7 @@ import 'package:better_help/service/api/api_services.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_log/error_log.dart';
+import 'package:core_kit/network/response_state.dart';
 import 'package:dio/dio.dart';
 
 class AuthReporsitory {
@@ -11,35 +12,24 @@ class AuthReporsitory {
 
   //! Login user
   //! Returns the response data on success, null on failure
-  Future<dynamic> loginUser({
+  Future<ResponseState<dynamic>?> loginUser({
     required dynamic email,
     required dynamic password,
   }) async {
-    appLog('AuthRepository: Starting login...');
-    appLog('AuthRepository: Email - $email');
-
     try {
       final body = {"email": email, "password": password};
-
-      appLog('AuthRepository: Request body prepared');
-      appLog('AuthRepository: Calling API - ${ApiEndPoints.login}');
 
       final response = await _apiServices.apiPostServices(
         url: ApiEndPoints.login,
         body: body,
       );
 
-      if (response != null && response['success'] == true) {
-        appLog('AuthRepository: Login successful');
-        appLog('AuthRepository: Response - $response');
-
-        // Save tokens and user data
-        final data = response['data'];
+      if (response.isSuccess) {
+        final data = response.data;
         if (data != null) {
           await _storageService.saveAccessToken(data['accessToken']);
           await _storageService.saveRefreshToken(data['refreshToken']);
           await _storageService.saveUserData(data['user']);
-          appLog('AuthRepository: Tokens and user data saved');
         }
 
         return response;
@@ -80,14 +70,9 @@ class AuthReporsitory {
         body: body,
       );
 
-      if (response != null) {
-        appLog('AuthRepository: User created successfully');
-        appLog('AuthRepository: Response - $response');
-        return response;
-      } else {
-        appLog('AuthRepository: User creation failed - null response');
-        return null;
-      }
+      appLog('AuthRepository: User created successfully');
+      appLog('AuthRepository: Response - $response');
+      return response;
     } catch (e) {
       errorLog('AuthRepository: Exception during user creation', e);
       return null;
@@ -129,24 +114,19 @@ class AuthReporsitory {
       final response = await _apiServices.apiPostServices(
         url: ApiEndPoints.verifyOtp,
         body: body,
-        header: {'token': createUserToken},
+        header: {'token': ?createUserToken},
       );
 
-      if (response != null) {
-        appLog('AuthRepository: OTP verified successfully');
-        appLog('AuthRepository: Response - $response');
+      appLog('AuthRepository: OTP verified successfully');
+      appLog('AuthRepository: Response - $response');
 
-        //! Clear all stored data after successful verification
-        await _storageService.removeQuestionnaireResponses();
-        await _storageService.removeQuestionnaireOutput();
-        await _storageService.removeCreateUserToken();
-        appLog('AuthRepository: Cleared all questionnaire data from storage');
+      //! Clear all stored data after successful verification
+      await _storageService.removeQuestionnaireResponses();
+      await _storageService.removeQuestionnaireOutput();
+      await _storageService.removeCreateUserToken();
+      appLog('AuthRepository: Cleared all questionnaire data from storage');
 
-        return response;
-      } else {
-        appLog('AuthRepository: OTP verification failed - null response');
-        return null;
-      }
+      return response;
     } catch (e) {
       errorLog('AuthRepository: Exception during OTP verification', e);
       return null;
@@ -191,24 +171,18 @@ class AuthReporsitory {
         body: body,
       );
 
-      if (response != null) {
-        appLog('AuthRepository: Forgot password OTP sent successfully');
+      appLog('AuthRepository: Forgot password OTP sent successfully');
 
-        // Save forgetToken for OTP verification
-        if (response['data'] != null &&
-            response['data']['forgetToken'] != null) {
-          await _storageService.saveString(
-            'forget_token',
-            response['data']['forgetToken'],
-          );
-          appLog('AuthRepository: forgetToken saved');
-        }
-
-        return response;
-      } else {
-        appLog('AuthRepository: Forgot password failed');
-        return null;
+      // Save forgetToken for OTP verification
+      if (response.data != null && response.data['forgetToken'] != null) {
+        await _storageService.saveString(
+          'forget_token',
+          response.data['forgetToken'],
+        );
+        appLog('AuthRepository: forgetToken saved');
       }
+
+      return response;
     } catch (e) {
       errorLog('AuthRepository: Exception during forgot password', e);
       return null;
@@ -276,7 +250,10 @@ class AuthReporsitory {
   }
 
   //! Reset Password (after forgot password OTP verification)
-  Future<dynamic> changePassword({required String newPassword, required String oldPassword}) async {
+  Future<dynamic> changePassword({
+    required String newPassword,
+    required String oldPassword,
+  }) async {
     appLog('AuthRepository: Resetting password...');
 
     try {
@@ -316,7 +293,10 @@ class AuthReporsitory {
       final forgetToken = await _storageService.getString('forget_token');
       appLog('AuthRepository: forgetToken - $forgetToken');
 
-      final body = {"newPassword": newPassword, "confirmPassword": confirmPassword};
+      final body = {
+        "newPassword": newPassword,
+        "confirmPassword": confirmPassword,
+      };
 
       final response = await _apiServices.apiPatchServices(
         url: ApiEndPoints.resetPassword,

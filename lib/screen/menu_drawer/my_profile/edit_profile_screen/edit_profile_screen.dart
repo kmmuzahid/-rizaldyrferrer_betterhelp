@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:better_help/screen/menu_drawer/my_profile/edit_profile_screen/controller/edit_profile_contrller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
@@ -79,7 +81,11 @@ class CompleteProfileScreen extends GetView<EditProfileContrller> {
                             borderRadius: BorderRadius.circular(10),
                             image: DecorationImage(
                               image: controller.selectedImage.value != null
-                                  ? FileImage(controller.selectedImage.value!)
+                                  ? FileImage(
+                                      File(
+                                        controller.selectedImage.value!.path,
+                                      ),
+                                    )
                                   : (controller.profileData.value?.profile !=
                                                 null &&
                                             controller

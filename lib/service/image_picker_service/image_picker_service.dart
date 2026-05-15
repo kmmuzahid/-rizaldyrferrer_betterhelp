@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,7 +10,7 @@ class ImagePickerService {
   final ImagePicker _picker = ImagePicker();
 
   /// Direct method to pick from camera
-  Future<File?> pickFromCamera(BuildContext context) async {
+  Future<XFile?> pickFromCamera(BuildContext context) async {
     try {
       log('🔍 Starting camera picker...');
 
@@ -26,30 +27,12 @@ class ImagePickerService {
 
       if (permissionStatus.isGranted) {
         log('✅ Camera permission granted, opening camera...');
-        final XFile? pickedFile = await _picker.pickImage(
+        return _picker.pickImage(
           source: ImageSource.camera,
           imageQuality: 85,
           maxWidth: 1000,
           maxHeight: 1000,
         );
-
-        if (pickedFile != null) {
-          final file = File(pickedFile.path);
-          if (await file.exists()) {
-            log('✅ Camera image captured: ${pickedFile.path}');
-            return file;
-          } else {
-            log('❌ Camera image file does not exist: ${pickedFile.path}');
-            if (context.mounted) {
-              _showErrorDialog(context, 'Camera Error',
-                  'Captured image file is invalid or missing.');
-            }
-            return null;
-          }
-        } else {
-          log('❌ No image captured from camera');
-          return null;
-        }
       }
       return null;
     } catch (e) {
@@ -62,7 +45,7 @@ class ImagePickerService {
   }
 
   /// Direct method to pick from gallery
-  Future<File?> pickFromGallery(BuildContext context) async {
+  Future<XFile?> pickFromGallery(BuildContext context) async {
     try {
       log('🔍 Starting gallery picker...');
 
@@ -78,41 +61,20 @@ class ImagePickerService {
       }
 
       log('✅ Storage permission granted, opening gallery...');
-      final XFile? pickedFile = await _picker.pickImage(
+      return _picker.pickImage(
         source: ImageSource.gallery,
         imageQuality: 85,
         maxWidth: 1000,
         maxHeight: 1000,
       );
-
-      if (pickedFile != null) {
-        final file = File(pickedFile.path);
-        if (await file.exists()) {
-          log('✅ Gallery image selected: ${pickedFile.path}');
-          return file;
-        } else {
-          log('❌ Gallery image file does not exist: ${pickedFile.path}');
-          if (context.mounted) {
-            _showErrorDialog(context, 'Gallery Error',
-                'Selected image file is invalid or missing.');
-          }
-          return null;
-        }
-      } else {
-        log('❌ No image selected from gallery');
-        return null;
-      }
     } catch (e) {
-      log('❌ Gallery error: $e');
-      if (context.mounted) {
-        _showErrorDialog(context, 'Gallery Error', e.toString());
-      }
+      print(e);
       return null;
     }
   }
 
   /// Show choice dialog with direct buttons - PROPERLY FIXED VERSION
-  Future<File?> pickImage(BuildContext context) async {
+  Future<XFile?> pickImage(BuildContext context) async {
     try {
       final result = await showModalBottomSheet<String>(
         context: context,
@@ -141,10 +103,7 @@ class ImagePickerService {
 
                   const Text(
                     'Select Image Source',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
 
@@ -175,8 +134,10 @@ class ImagePickerService {
                         color: Colors.green[50],
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child:
-                          const Icon(Icons.photo_library, color: Colors.green),
+                      child: const Icon(
+                        Icons.photo_library,
+                        color: Colors.green,
+                      ),
                     ),
                     title: const Text('Gallery'),
                     subtitle: const Text('Choose from gallery'),
@@ -250,7 +211,10 @@ class ImagePickerService {
 
   /// Show permission dialog
   void _showPermissionDialog(
-      BuildContext context, String permissionType, String feature) {
+    BuildContext context,
+    String permissionType,
+    String feature,
+  ) {
     if (!context.mounted) return;
 
     showDialog(
@@ -258,7 +222,8 @@ class ImagePickerService {
       builder: (context) => AlertDialog(
         title: Text('$permissionType Permission Required'),
         content: Text(
-            'Please allow access to $feature in your device settings to use this feature.'),
+          'Please allow access to $feature in your device settings to use this feature.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -305,7 +270,9 @@ class ImagePickerService {
 
     if (Platform.isAndroid) {
       final androidInfo = await DeviceInfoPlugin().androidInfo;
-      log('📱 Android Version: ${androidInfo.version.release} (SDK: ${androidInfo.version.sdkInt})');
+      log(
+        '📱 Android Version: ${androidInfo.version.release} (SDK: ${androidInfo.version.sdkInt})',
+      );
 
       if (androidInfo.version.sdkInt >= 33) {
         final photosStatus = await Permission.photos.status;

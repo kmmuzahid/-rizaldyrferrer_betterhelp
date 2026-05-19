@@ -17,6 +17,7 @@ import 'package:get/get_instance/get_instance.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:better_help/core/app_route/app_route.dart';
 
 class SubscriptionItem extends StatelessWidget {
   const SubscriptionItem({
@@ -108,15 +109,81 @@ class SubscriptionItem extends StatelessWidget {
                         plan.id))
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: AppButton(
-                      titleColor: buttonTextColor,
-                      onTap: () {
-                        Get.find<SubscriptionAndPaymentController>()
-                            .onSubscribe(index - 1);
-                      },
-                      borderradius: 12,
-                      backgroundColor: buttonColor,
-                      title: 'Start My Journey',
+                    child: Column(
+                      children: [
+                        AppButton(
+                          titleColor: buttonTextColor,
+                          onTap: () {
+                            Get.find<SubscriptionAndPaymentController>()
+                                .onSubscribe(index - 1);
+                          },
+                          borderradius: 12,
+                          backgroundColor: buttonColor,
+                          title: 'Start My Journey',
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Get.find<SubscriptionAndPaymentController>()
+                                    .onRestore();
+                              },
+                              child: AppText(
+                                text: 'Restore Purchases',
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                fontFamilyIndex: 1,
+                                color: Colors.black54,
+                                isUnderlined: true,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Get.toNamed(AppRoute.termsAndConditionsScreen);
+                              },
+                              child: AppText(
+                                text: 'Terms of Use',
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                fontFamilyIndex: 1,
+                                color: Colors.black54,
+                                isUnderlined: true,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            AppText(
+                              text: '•',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              fontFamilyIndex: 1,
+                              color: Colors.black54,
+                            ),
+                            const SizedBox(width: 16),
+                            GestureDetector(
+                              onTap: () {
+                                Get.toNamed(AppRoute.privacyPolicyScreen);
+                              },
+                              child: AppText(
+                                text: 'Privacy Policy',
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                fontFamilyIndex: 1,
+                                color: Colors.black54,
+                                isUnderlined: true,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                      ],
                     ),
                   ),
               ],

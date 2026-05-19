@@ -50,3 +50,12 @@ flutter {
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }
+
+configurations.all {
+    resolutionStrategy {
+        force("androidx.core:core:1.13.1")
+        force("androidx.core:core-ktx:1.13.1")
+        // Downgrade navigationevent as well, assuming 1.0.0 exists
+        force("androidx.navigationevent:navigationevent-android:1.0.0")
+    }
+}

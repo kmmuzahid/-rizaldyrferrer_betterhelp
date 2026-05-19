@@ -68,6 +68,8 @@ class SubscriptionAndPaymentController extends GetxController {
           .map((e) => e.productId!)
           .toSet();
 
+      print(productIds);
+
       if (productIds.isNotEmpty) {
         final ProductDetailsResponse response = await _iap.queryProductDetails(
           productIds,

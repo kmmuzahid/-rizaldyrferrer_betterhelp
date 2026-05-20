@@ -252,9 +252,28 @@ class SubscriptionItem extends StatelessWidget {
       final product = controller.storeProducts[plan.productId];
 
       // Use localized price from store
-      final String priceText =
-          product?.price ??
-          (plan.price == 0 ? 'Free' : productDetails?.price ?? '');
+      String priceText;
+      if ((plan.price ?? 0) == 0) {
+        String currencySymbol = '\$';
+        bool isSuffix = false;
+        if (controller.storeProducts.isNotEmpty) {
+          final firstProduct = controller.storeProducts.values.first;
+          final storePrice = firstProduct.price.trim();
+          if (storePrice.isNotEmpty) {
+            final firstChar = storePrice.substring(0, 1);
+            if (RegExp(r'[0-9.,\s\u00a0]').hasMatch(firstChar)) {
+              isSuffix = true;
+            }
+            final extracted = storePrice.replaceAll(RegExp(r'[0-9.,\s\u00a0]'), '');
+            if (extracted.isNotEmpty) {
+              currencySymbol = extracted;
+            }
+          }
+        }
+        priceText = isSuffix ? '0 $currencySymbol' : '${currencySymbol}0';
+      } else {
+        priceText = product?.price ?? productDetails?.price ?? '';
+      }
 
       return Row(
         children: [

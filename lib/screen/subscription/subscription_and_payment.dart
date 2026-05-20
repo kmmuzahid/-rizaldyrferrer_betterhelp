@@ -26,7 +26,12 @@ class SubscriptionAndPayment extends StatelessWidget {
           children: [
             PageView.builder(
               controller: controller.pageController,
-              // physics: NeverScrollableScrollPhysics(),
+              physics: controller.currentPage.value == 0 && !controller.routeFromDrawer
+                  ? const NeverScrollableScrollPhysics()
+                  : const BouncingScrollPhysics(),
+              onPageChanged: (index) {
+                controller.currentPage.value = index;
+              },
               itemCount:
                   subscriptionPlans.length +
                   (!controller.routeFromDrawer ? 1 : 0),
@@ -51,11 +56,7 @@ class SubscriptionAndPayment extends StatelessWidget {
                   index: index,
                   totalSubscription: subscriptionPlans.length,
                   productDetails: controller.storeProducts[plan.productId],
-                  duration: (plan.price ?? 0) > 0
-                      ? controller.getDuration(
-                          controller.storeProducts[plan.productId]!,
-                        )
-                      : "Lifetime",
+                  duration: controller.getPlanDuration(plan),
                 );
               },
             ),

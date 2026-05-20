@@ -28,6 +28,7 @@ class SubscriptionAndPaymentController extends GetxController {
   late PageController pageController;
   final RxList<SubscriptionModel> subscriptionPlan =
       RxList<SubscriptionModel>();
+  var currentPage = 0.obs;
 
   final InAppPurchase _iap = InAppPurchase.instance;
   late StreamSubscription<List<PurchaseDetails>> _subscription;
@@ -68,13 +69,10 @@ class SubscriptionAndPaymentController extends GetxController {
           .map((e) => e.productId!)
           .toSet();
 
-      print(productIds);
-
       if (productIds.isNotEmpty) {
         final ProductDetailsResponse response = await _iap.queryProductDetails(
           productIds,
         );
-        print("Product IDs: $productIds");
         if (response.error != null) {
           debugPrint("IAP Error: ${response.error}");
           subscriptionPlan.value = subscriptionPlan
@@ -109,19 +107,64 @@ class SubscriptionAndPaymentController extends GetxController {
   String getDuration(ProductDetails product) {
     if (Platform.isIOS && product is AppStoreProductDetails) {
       final period = product.skProduct.subscriptionPeriod;
-
-      return "/${period?.numberOfUnits} ${period?.unit.name}";
+      if (period != null) {
+        final numberOfUnits = period.numberOfUnits;
+        final unitName = period.unit.name.toLowerCase();
+        String unitStr = '';
+        if (unitName.contains('month')) {
+          unitStr = numberOfUnits == 1 ? 'Month' : 'Months';
+        } else if (unitName.contains('year')) {
+          unitStr = numberOfUnits == 1 ? 'Year' : 'Years';
+        } else if (unitName.contains('week')) {
+          unitStr = numberOfUnits == 1 ? 'Week' : 'Weeks';
+        } else if (unitName.contains('day')) {
+          unitStr = numberOfUnits == 1 ? 'Day' : 'Days';
+        } else {
+          unitStr = period.unit.name;
+        }
+        return numberOfUnits == 1 ? unitStr : '$numberOfUnits $unitStr';
+      }
     }
 
     if (Platform.isAndroid && product is GooglePlayProductDetails) {
       final phases = product.productDetails.subscriptionOfferDetails;
-
-      final recurringPhase = phases?.first.pricingPhases.last;
-
-      return "/${recurringPhase?.billingPeriod}";
+      if (phases != null && phases.isNotEmpty) {
+        final recurringPhase = phases.first.pricingPhases.last;
+        final period = recurringPhase.billingPeriod; // e.g. "P1M", "P1Y", "P1W"
+        final regExp = RegExp(r'P(\d+)([WMYD])');
+        final match = regExp.firstMatch(period);
+        if (match != null) {
+          final amount = int.tryParse(match.group(1) ?? '1') ?? 1;
+          final unit = match.group(2);
+          String unitStr = '';
+          if (unit == 'M') {
+            unitStr = amount == 1 ? 'Month' : 'Months';
+          } else if (unit == 'Y') {
+            unitStr = amount == 1 ? 'Year' : 'Years';
+          } else if (unit == 'W') {
+            unitStr = amount == 1 ? 'Week' : 'Weeks';
+          } else if (unit == 'D') {
+            unitStr = amount == 1 ? 'Day' : 'Days';
+          }
+          return amount == 1 ? unitStr : '$amount $unitStr';
+        }
+        return period;
+      }
     }
 
     return '';
+  }
+
+  String getPlanDuration(SubscriptionModel plan) {
+    if ((plan.price ?? 0) == 0) {
+      return plan.duration ?? "Lifetime";
+    }
+    final product = storeProducts[plan.productId];
+    if (product == null) {
+      return plan.duration ?? "Month";
+    }
+    final durationStr = getDuration(product);
+    return durationStr.isEmpty ? (plan.duration ?? "Month") : durationStr;
   }
 
   onRestore({bool showLoader = true}) async {

@@ -102,7 +102,7 @@ class AppRoute {
   static const String calendartaskscreen = "/calendartaskscreen";
   static const String faqsScreen = "/faqsScreen";
   static const String favriteScreen = "/favriteScreen";
-  static const String mySubscriptionScreen = "/mySubscriptionScreen";
+  // static const String mySubscriptionScreen = "/mySubscriptionScreen";
   static const String privacyPolicyScreen = "/privacyPolicyScreen";
   static const String savedArticleScreen = "/savedArticleScreen";
   static const String talkToSupportScreen = "/talkToSupportScreen";
@@ -120,7 +120,8 @@ class AppRoute {
   static const String bookingScreen = "/bookingScreen";
   static const String reportProblemScreen = "/reportProblemScreen";
   static const String analyzeScreen = "/analyzeScreen";
-  static const String generateTaskBasedOnPreference = "/generateTaskBasedOnPreference";
+  static const String generateTaskBasedOnPreference =
+      "/generateTaskBasedOnPreference";
 
   //! Get Pages for all the Screen
 
@@ -464,14 +465,14 @@ class AppRoute {
       middlewares: [AppInternerCheck()],
     ),
     //! my subscription screen
-    GetPage(
-      name: AppRoute.mySubscriptionScreen,
-      page: () => MySubscriptionScreen(),
-      transition: Transition.rightToLeftWithFade,
-      transitionDuration: Duration(milliseconds: 400),
-      binding: MenuBindings(),
-      middlewares: [AppInternerCheck()],
-    ),
+    // GetPage(
+    //   name: AppRoute.mySubscriptionScreen,
+    //   page: () => MySubscriptionScreen(),
+    //   transition: Transition.rightToLeftWithFade,
+    //   transitionDuration: Duration(milliseconds: 400),P
+    //   binding: MenuBindings(),
+    //   middlewares: [AppInternerCheck()],
+    // ),
     //! privacy policy screen
     GetPage(
       name: AppRoute.privacyPolicyScreen,

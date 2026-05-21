@@ -70,23 +70,27 @@ class BeforeQuestionScreen extends StatelessWidget {
                             ),
                           ),
                           Gap(height: AppSize.height(value: 40)),
-                          AppText(
+                          CommonText(
                             text: AppString.weHavegotYourAttention,
-                            fontSize: AppSize.width(value: 28),
+                            fontSize: 24,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.grey500,
+                            textColor: AppColors.grey500,
+                            style: const TextStyle(
+                              fontFamily: 'PlayfairDisplay',
+                            ),
                           ),
 
-                          Gap(height: AppSize.height(value: 20)),
+                          Gap(height: AppSize.height(value: 8)),
 
-                          AppText(
+                          CommonText(
                             text: AppString.weHaveGotYourAttentionDetails,
-                            fontSize: AppSize.width(value: 16),
+                            fontSize: 16,
                             fontWeight: FontWeight.w400,
-                            color: AppColors.white900,
+                            textColor: AppColors.white900,
+                            style: const TextStyle(fontFamily: 'inter'),
                             maxLines: 4,
                             textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
+                            isDescription: true,
                           ),
 
                           Gap(height: AppSize.height(value: 40)),

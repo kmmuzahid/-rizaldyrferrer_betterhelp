@@ -264,8 +264,8 @@ class QuestionnariesScreen extends StatelessWidget {
                 controller: controller,
                 boldText: "10 represents thriving",
                 endText: ", how would you rate your overall wellbeing in life?",
-                isSelected:
-                    (number) => controller.isScaleWellbeingSelected(number),
+                isSelected: (number) =>
+                    controller.isScaleWellbeingSelected(number),
                 onSelect: (number) => controller.selectScaleWellbeing(number),
               ),
               Gap(height: AppSize.height(value: 30)),
@@ -274,9 +274,10 @@ class QuestionnariesScreen extends StatelessWidget {
                 boldText: "10 means feeling productive",
                 endText:
                     " in the ways that matter to you, where would you rate yourself today?",
-                isSelected:
-                    (number) => controller.isScaleProductivitySelected(number),
-                onSelect: (number) => controller.selectScaleProductivity(number),
+                isSelected: (number) =>
+                    controller.isScaleProductivitySelected(number),
+                onSelect: (number) =>
+                    controller.selectScaleProductivity(number),
               ),
             ],
           ),
@@ -363,7 +364,9 @@ class QuestionnariesScreen extends StatelessWidget {
                   ),
                   child: AppText(
                     text: "$number",
-                    color: selected ? AppColors.white : AppColors.textPrimaryBlack,
+                    color: selected
+                        ? AppColors.white
+                        : AppColors.textPrimaryBlack,
                     fontSize: AppSize.width(value: 20),
                     fontWeight: FontWeight.w600,
                     textAlign: TextAlign.center,
@@ -394,7 +397,9 @@ class QuestionnariesScreen extends StatelessWidget {
                   ),
                   child: AppText(
                     text: "$number",
-                    color: selected ? AppColors.white : AppColors.textPrimaryBlack,
+                    color: selected
+                        ? AppColors.white
+                        : AppColors.textPrimaryBlack,
                     fontSize: AppSize.width(value: 20),
                     fontWeight: FontWeight.w600,
                     textAlign: TextAlign.center,
@@ -424,11 +429,10 @@ class QuestionnariesScreen extends StatelessWidget {
         onTap: isLoading
             ? null
             : (isResult
-                ? () {
-                    controller.completeQuestionnaire();
-                    Get.toNamed(AppRoute.analyzeScreen);
-                  }
-                : controller.nextPage),
+                  ? () async {
+                      controller.completeQuestionnaire();
+                    }
+                  : controller.nextPage),
       );
     });
   }

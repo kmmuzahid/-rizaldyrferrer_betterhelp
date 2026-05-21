@@ -1,17 +1,19 @@
+import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/questionnaries_screen/repository/questionnaries_screen_repository.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
+import 'package:core_kit/network/dio_service.dart';
+import 'package:core_kit/network/request_input.dart';
 import 'package:core_kit/snackbar/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class QuestionnariesScreenController extends GetxController {
   final PageController pageController = PageController();
-  final QuestionnariesScreenRepository _repository =
-      QuestionnariesScreenRepository();
+
   final StorageService _storageService = StorageService();
 
   RxDouble progressValue = 1.0.obs;
@@ -22,7 +24,7 @@ class QuestionnariesScreenController extends GetxController {
   Rxn<Map<String, dynamic>> apiResponseData = Rxn<Map<String, dynamic>>();
 
   // Configuration
-  static const int questionsPerPage = 5;
+  static const int questionsPerPage = 4;
   static const int totalQuestionPages = 3;
   static const int totalPages =
       5; // 3 question pages + 1 goals page + 1 result page
@@ -32,29 +34,26 @@ class QuestionnariesScreenController extends GetxController {
 
   // Questions data organized by page
   final List<List<String>> questionsByPage = [
-    // Page 1 - Questions 1-5
+    // Page 1 - Questions 1-4
     [
       AppString.question1,
       AppString.question2,
       AppString.question3,
       AppString.question4,
-      AppString.question5,
     ],
-    // Page 2 - Questions 6-10
+    // Page 2 - Questions 5-8
     [
+      AppString.question5,
       AppString.question6,
       AppString.question7,
       AppString.question8,
+    ],
+    // Page 3 - Questions 9-12
+    [
       AppString.question9,
       AppString.question10,
-    ],
-    // Page 3 - Questions 11-15
-    [
       AppString.question11,
       AppString.question12,
-      AppString.question1, // Reusing for demo - replace with question13
-      AppString.question2, // Reusing for demo - replace with question14
-      AppString.question3, // Reusing for demo - replace with question15
     ],
   ];
 
@@ -70,9 +69,9 @@ class QuestionnariesScreenController extends GetxController {
   }
 
   void nextPage() {
-    if ((currentPageIndex.value == 0 && answers.length < 5) ||
-        (currentPageIndex.value == 1 && answers.length < 10) ||
-        (currentPageIndex.value == 2 && answers.length < 15)) {
+    if ((currentPageIndex.value == 0 && answers.length < 4) ||
+        (currentPageIndex.value == 1 && answers.length < 8) ||
+        (currentPageIndex.value == 2 && answers.length < 12)) {
       showSnackBar("Please answer all questions", type: SnackBarType.warning);
       return;
     }
@@ -111,6 +110,7 @@ class QuestionnariesScreenController extends GetxController {
   }
 
   Future<void> completeQuestionnaire() async {
+    if (isLoading.value) return;
     if (selectedScaleWellbeing.value == null ||
         selectedScaleProductivity.value == null) {
       showSnackBar(
@@ -120,13 +120,15 @@ class QuestionnariesScreenController extends GetxController {
       return;
     }
     appLog('Questionnaire completed with ${answers.length} answers');
-    await _submitAnswersToApi();
+
+    _submitAnswersToApi();
+    Get.toNamed(AppRoute.analyzeScreen);
   }
 
   List<Map<String, String>> _buildApiPayload() {
     final List<Map<String, String>> payload = [];
 
-    // Add 15 question answers
+    // Add 12 question answers
     for (int pageIndex = 0; pageIndex < questionsByPage.length; pageIndex++) {
       final questions = questionsByPage[pageIndex];
       for (int i = 0; i < questions.length; i++) {
@@ -164,7 +166,7 @@ class QuestionnariesScreenController extends GetxController {
   List<Map<String, dynamic>> _buildResponsesForOtp() {
     final List<Map<String, dynamic>> responses = [];
 
-    // Add 15 question answers
+    // Add 12 question answers
     for (int pageIndex = 0; pageIndex < questionsByPage.length; pageIndex++) {
       final questions = questionsByPage[pageIndex];
       for (int i = 0; i < questions.length; i++) {
@@ -222,38 +224,31 @@ class QuestionnariesScreenController extends GetxController {
   Future<void> _submitAnswersToApi() async {
     isLoading.value = true;
 
-    try {
-      final payload = _buildApiPayload();
-      appLog('Submitting payload: $payload');
+    final payload = _buildApiPayload();
+    appLog('Submitting payload: $payload');
 
-      // Save responses to storage for OTP verification
+    // Save responses to storage for OTP verification
+    await _saveResponsesToStorage();
+
+    final response = await DioService.instance.request<Map<String, dynamic>>(
+      input: RequestInput(endpoint: ApiEndPoints.questionAnswer, method: .POST),
+      responseBuilder: (data) => data ?? {},
+    );
+
+    if (response.isSuccess) {
+      apiResponseData.value = response.data ?? {};
+
+      // Save both responses and output to storage for OTP verification
       await _saveResponsesToStorage();
+      await _saveOutputToStorage(response.data ?? {});
 
-      final response = await _repository.submitQuestionAnswers(
-        questionAnswers: payload,
+      Get.offNamed(
+        AppRoute.questionnaireSummaryScreen,
+        arguments: response.data,
       );
-
-      if (response != null && response['success'] == true) {
-        apiResponseData.value = response['data'];
-        appLog('API Response: ${response['data']}');
-
-        // Save both responses and output to storage for OTP verification
-        await _saveResponsesToStorage();
-        await _saveOutputToStorage(response['data']);
-
-        Get.offNamed(
-          AppRoute.questionnaireSummaryScreen,
-          arguments: response['data'],
-        );
-      } else {
-        AppSnackBar.showError('Failed to submit answers. Please try again.');
-      }
-    } catch (e) {
-      appLog('Error submitting answers: $e');
-      AppSnackBar.showError('Something went wrong. Please try again.');
-    } finally {
-      isLoading.value = false;
     }
+
+    isLoading.value = false;
   }
 
   String getCurrentStepText() {
@@ -274,8 +269,8 @@ class QuestionnariesScreenController extends GetxController {
   RxList<int> selectedGoals = <int>[].obs;
 
   // Scale selections (1-10) for result page
-  RxnInt selectedScaleWellbeing = RxnInt(6);
-  RxnInt selectedScaleProductivity = RxnInt(8);
+  RxnInt selectedScaleWellbeing = RxnInt();
+  RxnInt selectedScaleProductivity = RxnInt();
 
   void selectScaleWellbeing(int number) {
     selectedScaleWellbeing.value = number;

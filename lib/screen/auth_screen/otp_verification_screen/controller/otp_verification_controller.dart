@@ -44,13 +44,13 @@ class OtpVerificationController extends GetxController {
     if (sourceScreen == 'forgotpassword') {
       appLog('OtpVerificationController: Resending forgot password OTP');
       final response = await _authRepository.resendForgotPasswordOtp();
-      if (response != null) {
+      if (response != null && response.isSuccess) {
         AppSnackBar.showSuccess('OTP sent successfully');
       }
     } else if (email.isNotEmpty) {
       appLog('OtpVerificationController: Resending OTP to $email');
       final response = await _authRepository.resendOtp(email: email);
-      if (response != null) {
+      if (response != null && response.isSuccess) {
         AppSnackBar.showSuccess('OTP sent successfully');
       }
     }
@@ -71,7 +71,7 @@ class OtpVerificationController extends GetxController {
       if (sourceScreen == 'signup') {
         final response = await _authRepository.verifyOtp(otp: otp);
 
-        if (response != null) {
+        if (response != null && response.isSuccess) {
           appLog('OtpVerificationController: OTP verified successfully');
           AppSnackBar.showSuccess('Account verified successfully!');
           Get.offAllNamed(AppRoute.loginScreen);
@@ -79,7 +79,7 @@ class OtpVerificationController extends GetxController {
       } else if (sourceScreen == 'forgotpassword') {
         final response = await _authRepository.verifyForgotPasswordOtp(otp: otp);
 
-        if (response != null) {
+        if (response != null && response.isSuccess) {
           print(response);
           appLog('OtpVerificationController: Forgot password OTP verified');
           AppSnackBar.showSuccess('OTP verified successfully!');

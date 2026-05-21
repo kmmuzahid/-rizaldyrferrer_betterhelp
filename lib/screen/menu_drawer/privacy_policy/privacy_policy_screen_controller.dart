@@ -22,10 +22,10 @@ class PrivacyPolicyScreenController extends GetxController {
   fetch() async {
     isLoading.value = true;
 
-    final result = await DioService.instance.request(
+    final result = await DioService.instance.request<String>(
       input: RequestInput(endpoint: ApiEndPoints.privacyPolicy, method: RequestMethod.GET),
-      responseBuilder: (response) {
-        return response['privacyPolicy']?.toString() ?? '';
+      responseBuilder: (data) {
+        return data?['privacyPolicy']?.toString() ?? '';
       },
     );
     privacyPolicy.value = result.data ?? '';

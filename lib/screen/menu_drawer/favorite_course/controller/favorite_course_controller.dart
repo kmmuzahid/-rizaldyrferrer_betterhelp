@@ -1,12 +1,11 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/menu_drawer/saved_article/model/saved_article_course_model.dart';
-import 'package:better_help/service/api/api_services.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
+import 'package:core_kit/core_kit.dart';
+import 'package:core_kit/network/request_input.dart';
 import 'package:get/get.dart';
 
 class FavoriteCourseController extends GetxController {
-  final _apiServices = ApiServices.instance;
-
   // Loading state
   final RxBool isLoading = false.obs;
 
@@ -28,52 +27,53 @@ class FavoriteCourseController extends GetxController {
   Future<void> fetchSavedCourses({bool refresh = false}) async {
     if (isLoading.value) return;
 
-    try {
-      if (refresh) {
-        currentPage.value = 1;
-        savedCourses.clear();
-        hasMore.value = true;
-      }
-
-      isLoading.value = true;
-      appLog('Fetching saved courses - Page: ${currentPage.value}');
-
-      final response = await _apiServices.apiGetServices(
-        '${ApiEndPoints.getFavouriteArticle}?page=${currentPage.value}&limit=10&type=course',
-      );
-
-      if (response.isSuccess) {
-        appLog('Saved courses fetched successfully');
-
-        final savedResponse = SavedArticleResponse.fromJson(response.data);
-
-        if (savedResponse.data?.allCourses != null) {
-          if (refresh) {
-            savedCourses.value = savedResponse.data!.allCourses!;
-          } else {
-            savedCourses.addAll(savedResponse.data!.allCourses!);
-          }
-
-          meta.value = savedResponse.meta;
-
-          // Check if there are more courses
-          if (savedResponse.meta != null) {
-            hasMore.value =
-                currentPage.value < (savedResponse.meta!.totalPage ?? 0);
-          }
-
-          appLog('Loaded ${savedCourses.length} saved courses');
-        } else {
-          appLog('No saved courses found');
-        }
-      } else {
-        appLog('Failed to fetch saved courses');
-      }
-    } catch (e) {
-      appLog('Error fetching saved courses: $e');
-    } finally {
-      isLoading.value = false;
+    if (refresh) {
+      currentPage.value = 1;
+      savedCourses.clear();
+      hasMore.value = true;
     }
+
+    isLoading.value = true;
+    appLog('Fetching saved courses - Page: ${currentPage.value}');
+
+    final response = await DioService.instance.request<SavedArticleResponse>(
+      input: RequestInput(
+        endpoint:
+            '${ApiEndPoints.getFavouriteArticle}?page=${currentPage.value}&limit=10&type=course',
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => SavedArticleResponse.fromJson(data),
+    );
+
+    if (response.isSuccess && response.data != null) {
+      appLog('Saved courses fetched successfully');
+
+      final savedResponse = response.data!;
+
+      if (savedResponse.data?.allCourses != null) {
+        if (refresh) {
+          savedCourses.value = savedResponse.data!.allCourses!;
+        } else {
+          savedCourses.addAll(savedResponse.data!.allCourses!);
+        }
+
+        meta.value = savedResponse.meta;
+
+        // Check if there are more courses
+        if (savedResponse.meta != null) {
+          hasMore.value =
+              currentPage.value < (savedResponse.meta!.totalPage ?? 0);
+        }
+
+        appLog('Loaded ${savedCourses.length} saved courses');
+      } else {
+        appLog('No saved courses found');
+      }
+    } else {
+      appLog('Failed to fetch saved courses');
+    }
+
+    isLoading.value = false;
   }
 
   /// Load more courses (pagination)
@@ -93,30 +93,28 @@ class FavoriteCourseController extends GetxController {
   Future<void> removeSavedCourse(String courseId, int index) async {
     appLog('Removing saved course: $courseId at index: $index');
 
-    try {
-      // Store the course in case we need to revert
-      final removedCourse = savedCourses[index];
+    // Store the course in case we need to revert
+    final removedCourse = savedCourses[index];
 
-      // Optimistically remove from UI
-      savedCourses.removeAt(index);
+    // Optimistically remove from UI
+    savedCourses.removeAt(index);
 
-      // Call API to unsave
-      final response = await _apiServices.apiPostServices(
-        url: ApiEndPoints.favoriteCourse,
-        body: {'courseId': courseId},
-      );
+    // Call API to unsave
+    final response = await DioService.instance.request(
+      input: RequestInput(
+        endpoint: ApiEndPoints.favoriteCourse,
+        method: RequestMethod.POST,
+        jsonBody: {'courseId': courseId},
+      ),
+      responseBuilder: (data) => data,
+    );
 
-      if (response.isSuccess) {
-        appLog('Course removed from saved list successfully');
-      } else {
-        // Revert on failure
-        appLog('Failed to remove course - reverting');
-        savedCourses.insert(index, removedCourse);
-      }
-    } catch (e) {
-      appLog('Error removing saved course: $e');
-      // Revert on error - refetch to ensure consistency
-      await refreshCourses();
+    if (response.isSuccess) {
+      appLog('Course removed from saved list successfully');
+    } else {
+      // Revert on failure
+      appLog('Failed to remove course - reverting');
+      savedCourses.insert(index, removedCourse);
     }
   }
 

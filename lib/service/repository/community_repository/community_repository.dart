@@ -1,32 +1,29 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/community_sections/main_community/model/article_model.dart';
 import 'package:better_help/screen/community_sections/main_community/model/post_model.dart';
-import 'package:better_help/service/api/api_services.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
-import 'package:better_help/utils/app_log/error_log.dart';
+import 'package:core_kit/core_kit.dart';
+import 'package:core_kit/network/request_input.dart';
 
 class CommunityRepository {
-  final _apiServices = ApiServices.instance;
-
   //! Get all articles with pagination
   Future<ArticleModel?> getAllArticles({int page = 1, int limit = 10}) async {
     appLog('CommunityRepository: Fetching all articles...');
     appLog('CommunityRepository: Page - $page, Limit - $limit');
 
-    try {
-      final response = await _apiServices.apiGetServices(
-        '${ApiEndPoints.getAllArticle}?page=$page&limit=$limit',
-      );
+    final response = await DioService.instance.request<ArticleModel>(
+      input: RequestInput(
+        endpoint: '${ApiEndPoints.getAllArticle}?page=$page&limit=$limit',
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => ArticleModel.fromJson(data),
+    );
 
-      if (response.isSuccess) {
-        appLog('CommunityRepository: Articles fetched successfully');
-        return ArticleModel.fromJson(response.data);
-      } else {
-        appLog('CommunityRepository: Failed to fetch articles');
-        return null;
-      }
-    } catch (e) {
-      errorLog('CommunityRepository: Exception during fetching articles', e);
+    if (response.isSuccess && response.data != null) {
+      appLog('CommunityRepository: Articles fetched successfully');
+      return response.data;
+    } else {
+      appLog('CommunityRepository: Failed to fetch articles');
       return null;
     }
   }
@@ -35,41 +32,41 @@ class CommunityRepository {
   Future<Datum?> getSingleArticle(String id) async {
     appLog('CommunityRepository: Fetching article with ID - $id');
 
-    try {
-      final response = await _apiServices.apiGetServices(
-        ApiEndPoints.getSingleArticle(id),
-      );
+    final response = await DioService.instance.request<Datum>(
+      input: RequestInput(
+        endpoint: ApiEndPoints.getSingleArticle(id),
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => Datum.fromJson(data),
+    );
 
-      if (response.isSuccess) {
-        appLog('CommunityRepository: Article fetched successfully');
-        return Datum.fromJson(response.data);
-      } else {
-        appLog('CommunityRepository: Failed to fetch article');
-        return null;
-      }
-    } catch (e) {
-      errorLog('CommunityRepository: Exception during fetching article', e);
+    if (response.isSuccess && response.data != null) {
+      appLog('CommunityRepository: Article fetched successfully');
+      return response.data;
+    } else {
+      appLog('CommunityRepository: Failed to fetch article');
       return null;
     }
   }
 
   //! Create a post
-  Future<dynamic> createApost(dynamic description) async {
+  Future<ResponseState<dynamic>?> createApost(dynamic description) async {
     appLog('CommunityRepository: Creating a post...');
-    try {
-      final response = await _apiServices.apiPostServices(
-        url: ApiEndPoints.createPost,
-        body: description,
-      );
-      if (response.isSuccess) {
-        appLog('CommunityRepository: Post created successfully');
-        return response;
-      } else {
-        appLog('CommunityRepository: Failed to create post');
-        return null;
-      }
-    } catch (e) {
-      errorLog('CommunityRepository: Exception during creating post', e);
+
+    final response = await DioService.instance.request(
+      input: RequestInput(
+        endpoint: ApiEndPoints.createPost,
+        method: RequestMethod.POST,
+        jsonBody: description is Map<String, dynamic> ? description : null,
+      ),
+      responseBuilder: (data) => data,
+    );
+
+    if (response.isSuccess) {
+      appLog('CommunityRepository: Post created successfully');
+      return response;
+    } else {
+      appLog('CommunityRepository: Failed to create post');
       return null;
     }
   }
@@ -79,20 +76,19 @@ class CommunityRepository {
     appLog('CommunityRepository: Fetching all posts...');
     appLog('CommunityRepository: Page - $page, Limit - $limit');
 
-    try {
-      final response = await _apiServices.apiGetServices(
-        '${ApiEndPoints.getAllPost}?page=$page&limit=$limit',
-      );
+    final response = await DioService.instance.request<PostModel>(
+      input: RequestInput(
+        endpoint: '${ApiEndPoints.getAllPost}?page=$page&limit=$limit',
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => PostModel.fromJson(data),
+    );
 
-      if (response.isSuccess) {
-        appLog('CommunityRepository: Posts fetched successfully');
-        return PostModel.fromJson(response.data);
-      } else {
-        appLog('CommunityRepository: Failed to fetch posts');
-        return null;
-      }
-    } catch (e) {
-      errorLog('CommunityRepository: Exception during fetching posts', e);
+    if (response.isSuccess && response.data != null) {
+      appLog('CommunityRepository: Posts fetched successfully');
+      return response.data;
+    } else {
+      appLog('CommunityRepository: Failed to fetch posts');
       return null;
     }
   }
@@ -101,23 +97,19 @@ class CommunityRepository {
   Future<PostModel?> getHighlightPosts({int page = 1, int limit = 10}) async {
     appLog('CommunityRepository: Fetching highlight posts...');
 
-    try {
-      final response = await _apiServices.apiGetServices(
-        '${ApiEndPoints.getHighlightPost}&page=$page&limit=$limit',
-      );
+    final response = await DioService.instance.request<PostModel>(
+      input: RequestInput(
+        endpoint: '${ApiEndPoints.getHighlightPost}&page=$page&limit=$limit',
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => PostModel.fromJson(data),
+    );
 
-      if (response.isSuccess) {
-        appLog('CommunityRepository: Highlight posts fetched successfully');
-        return PostModel.fromJson(response.data);
-      } else {
-        appLog('CommunityRepository: Failed to fetch highlight posts');
-        return null;
-      }
-    } catch (e) {
-      errorLog(
-        'CommunityRepository: Exception during fetching highlight posts',
-        e,
-      );
+    if (response.isSuccess && response.data != null) {
+      appLog('CommunityRepository: Highlight posts fetched successfully');
+      return response.data;
+    } else {
+      appLog('CommunityRepository: Failed to fetch highlight posts');
       return null;
     }
   }
@@ -126,23 +118,19 @@ class CommunityRepository {
   Future<PostModel?> getRecentPosts({int page = 1, int limit = 10}) async {
     appLog('CommunityRepository: Fetching recent posts...');
 
-    try {
-      final response = await _apiServices.apiGetServices(
-        '${ApiEndPoints.getRecentPost}&page=$page&limit=$limit',
-      );
+    final response = await DioService.instance.request<PostModel>(
+      input: RequestInput(
+        endpoint: '${ApiEndPoints.getRecentPost}&page=$page&limit=$limit',
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => PostModel.fromJson(data),
+    );
 
-      if (response.isSuccess) {
-        appLog('CommunityRepository: Recent posts fetched successfully');
-        return PostModel.fromJson(response.data);
-      } else {
-        appLog('CommunityRepository: Failed to fetch recent posts');
-        return null;
-      }
-    } catch (e) {
-      errorLog(
-        'CommunityRepository: Exception during fetching recent posts',
-        e,
-      );
+    if (response.isSuccess && response.data != null) {
+      appLog('CommunityRepository: Recent posts fetched successfully');
+      return response.data;
+    } else {
+      appLog('CommunityRepository: Failed to fetch recent posts');
       return null;
     }
   }
@@ -151,23 +139,19 @@ class CommunityRepository {
   Future<PostModel?> getPopularPosts({int page = 1, int limit = 10}) async {
     appLog('CommunityRepository: Fetching popular posts...');
 
-    try {
-      final response = await _apiServices.apiGetServices(
-        '${ApiEndPoints.getPopularPost}&page=$page&limit=$limit',
-      );
+    final response = await DioService.instance.request<PostModel>(
+      input: RequestInput(
+        endpoint: '${ApiEndPoints.getPopularPost}&page=$page&limit=$limit',
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => PostModel.fromJson(data),
+    );
 
-      if (response.isSuccess) {
-        appLog('CommunityRepository: Popular posts fetched successfully');
-        return PostModel.fromJson(response.data);
-      } else {
-        appLog('CommunityRepository: Failed to fetch popular posts');
-        return null;
-      }
-    } catch (e) {
-      errorLog(
-        'CommunityRepository: Exception during fetching popular posts',
-        e,
-      );
+    if (response.isSuccess && response.data != null) {
+      appLog('CommunityRepository: Popular posts fetched successfully');
+      return response.data;
+    } else {
+      appLog('CommunityRepository: Failed to fetch popular posts');
       return null;
     }
   }
@@ -176,21 +160,20 @@ class CommunityRepository {
   Future<bool> likePost(String postId) async {
     appLog('CommunityRepository: Liking post with ID - $postId');
 
-    try {
-      final response = await _apiServices.apiPostServices(
-        url: ApiEndPoints.getPostLike(postId),
-        body: {},
-      );
+    final response = await DioService.instance.request(
+      input: RequestInput(
+        endpoint: ApiEndPoints.getPostLike(postId),
+        method: RequestMethod.POST,
+        jsonBody: {},
+      ),
+      responseBuilder: (data) => data,
+    );
 
-      if (response.isSuccess) {
-        appLog('CommunityRepository: Post liked/unliked successfully');
-        return true;
-      } else {
-        appLog('CommunityRepository: Failed to like/unlike post');
-        return false;
-      }
-    } catch (e) {
-      errorLog('CommunityRepository: Exception during liking post', e);
+    if (response.isSuccess) {
+      appLog('CommunityRepository: Post liked/unliked successfully');
+      return true;
+    } else {
+      appLog('CommunityRepository: Failed to like/unlike post');
       return false;
     }
   }
@@ -199,73 +182,70 @@ class CommunityRepository {
   Future<dynamic> getSinglePost(String postId) async {
     appLog('CommunityRepository: Fetching post with ID - $postId');
 
-    try {
-      final response = await _apiServices.apiGetServices(
-        ApiEndPoints.getSinglePost(postId),
-      );
+    final response = await DioService.instance.request(
+      input: RequestInput(
+        endpoint: ApiEndPoints.getSinglePost(postId),
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => data,
+    );
 
-      if (response.isSuccess) {
-        appLog('CommunityRepository: Post fetched successfully');
-        return response.data;
-      } else {
-        appLog('CommunityRepository: Failed to fetch post');
-        return null;
-      }
-    } catch (e) {
-      errorLog('CommunityRepository: Exception during fetching post', e);
+    if (response.isSuccess) {
+      appLog('CommunityRepository: Post fetched successfully');
+      return response.data;
+    } else {
+      appLog('CommunityRepository: Failed to fetch post');
       return null;
     }
   }
 
   //! Create a comment on a post
-  Future<dynamic> createComment({
+  Future<ResponseState<dynamic>?> createComment({
     required String postId,
     required String message,
   }) async {
     appLog('CommunityRepository: Creating comment on post - $postId');
 
-    try {
-      final response = await _apiServices.apiPostServices(
-        url: ApiEndPoints.createComment,
-        body: {'postId': postId, 'message': message},
-      );
+    final response = await DioService.instance.request(
+      input: RequestInput(
+        endpoint: ApiEndPoints.createComment,
+        method: RequestMethod.POST,
+        jsonBody: {'postId': postId, 'message': message},
+      ),
+      responseBuilder: (data) => data,
+    );
 
-      if (response.isSuccess) {
-        appLog('CommunityRepository: Comment created successfully');
-        return response;
-      } else {
-        appLog('CommunityRepository: Failed to create comment');
-        return null;
-      }
-    } catch (e) {
-      errorLog('CommunityRepository: Exception during creating comment', e);
+    if (response.isSuccess) {
+      appLog('CommunityRepository: Comment created successfully');
+      return response;
+    } else {
+      appLog('CommunityRepository: Failed to create comment');
       return null;
     }
   }
 
   //! Create a reply to a comment
-  Future<dynamic> createReply({
+  Future<ResponseState<dynamic>?> createReply({
     required String postId,
     required String message,
     required String parentId,
   }) async {
     appLog('CommunityRepository: Creating reply to comment - $parentId');
 
-    try {
-      final response = await _apiServices.apiPostServices(
-        url: ApiEndPoints.createCommentReply,
-        body: {'postId': postId, 'message': message, 'parentId': parentId},
-      );
+    final response = await DioService.instance.request(
+      input: RequestInput(
+        endpoint: ApiEndPoints.createCommentReply,
+        method: RequestMethod.POST,
+        jsonBody: {'postId': postId, 'message': message, 'parentId': parentId},
+      ),
+      responseBuilder: (data) => data,
+    );
 
-      if (response.isSuccess) {
-        appLog('CommunityRepository: Reply created successfully');
-        return response;
-      } else {
-        appLog('CommunityRepository: Failed to create reply');
-        return null;
-      }
-    } catch (e) {
-      errorLog('CommunityRepository: Exception during creating reply', e);
+    if (response.isSuccess) {
+      appLog('CommunityRepository: Reply created successfully');
+      return response;
+    } else {
+      appLog('CommunityRepository: Failed to create reply');
       return null;
     }
   }
@@ -274,21 +254,20 @@ class CommunityRepository {
   Future<bool> reactOnComment(String commentId) async {
     appLog('CommunityRepository: Reacting on comment - $commentId');
 
-    try {
-      final response = await _apiServices.apiPostServices(
-        url: ApiEndPoints.reactOnComment,
-        body: {'commentId': commentId},
-      );
+    final response = await DioService.instance.request(
+      input: RequestInput(
+        endpoint: ApiEndPoints.reactOnComment,
+        method: RequestMethod.POST,
+        jsonBody: {'commentId': commentId},
+      ),
+      responseBuilder: (data) => data,
+    );
 
-      if (response.isSuccess) {
-        appLog('CommunityRepository: Comment reaction successful');
-        return true;
-      } else {
-        appLog('CommunityRepository: Failed to react on comment');
-        return false;
-      }
-    } catch (e) {
-      errorLog('CommunityRepository: Exception during reacting on comment', e);
+    if (response.isSuccess) {
+      appLog('CommunityRepository: Comment reaction successful');
+      return true;
+    } else {
+      appLog('CommunityRepository: Failed to react on comment');
       return false;
     }
   }
@@ -300,21 +279,20 @@ class CommunityRepository {
   }) async {
     appLog('CommunityRepository: Reacting on reply - $replyId');
 
-    try {
-      final response = await _apiServices.apiPostServices(
-        url: ApiEndPoints.reactOnCommentReply,
-        body: {'commentId': commentId, 'replyId': replyId},
-      );
+    final response = await DioService.instance.request(
+      input: RequestInput(
+        endpoint: ApiEndPoints.reactOnCommentReply,
+        method: RequestMethod.POST,
+        jsonBody: {'commentId': commentId, 'replyId': replyId},
+      ),
+      responseBuilder: (data) => data,
+    );
 
-      if (response.isSuccess) {
-        appLog('CommunityRepository: Reply reaction successful');
-        return true;
-      } else {
-        appLog('CommunityRepository: Failed to react on reply');
-        return false;
-      }
-    } catch (e) {
-      errorLog('CommunityRepository: Exception during reacting on reply', e);
+    if (response.isSuccess) {
+      appLog('CommunityRepository: Reply reaction successful');
+      return true;
+    } else {
+      appLog('CommunityRepository: Failed to react on reply');
       return false;
     }
   }
@@ -323,31 +301,23 @@ class CommunityRepository {
   Future<bool> toggleSaveArticle(String articleId) async {
     appLog('CommunityRepository: Toggling save for article - $articleId');
 
-    try {
+    final response = await DioService.instance.request(
+      input: RequestInput(
+        endpoint: ApiEndPoints.toggleSaveArticle(articleId),
+        method: RequestMethod.POST,
+        jsonBody: {'articleId': articleId},
+      ),
+      responseBuilder: (data) => data,
+    );
+
+    appLog('CommunityRepository: API response received: $response');
+
+    if (response.isSuccess) {
+      appLog('CommunityRepository: Article save toggled successfully');
+      return true;
+    } else {
       appLog(
-        'CommunityRepository: Calling API with body: {"articleId": "$articleId"}',
-      );
-
-      final response = await _apiServices.apiPostServices(
-        url: ApiEndPoints.toggleSaveArticle(articleId),
-        body: {'articleId': articleId},
-      );
-
-      appLog('CommunityRepository: API response received: $response');
-
-      if (response.isSuccess) {
-        appLog('CommunityRepository: Article save toggled successfully');
-        return true;
-      } else {
-        appLog(
-          'CommunityRepository: Failed to toggle article save - Response: $response',
-        );
-        return false;
-      }
-    } catch (e) {
-      errorLog(
-        'CommunityRepository: Exception during toggling article save',
-        e,
+        'CommunityRepository: Failed to toggle article save - Response: $response',
       );
       return false;
     }

@@ -41,9 +41,9 @@ class CreatingPostController extends GetxController {
 
       isSubmitting.value = false;
 
-      if (response != null) {
+      if (response != null && response.isSuccess) {
         showSnackBar(
-          response['message'] ?? "Post created successfully",
+          response.message ?? "Post created successfully",
           type: SnackBarType.success,
         );
 

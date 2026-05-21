@@ -280,7 +280,7 @@ class CommentsController extends GetxController {
         message: text.trim(),
       );
 
-      if (response != null && response['success'] == true) {
+      if (response != null && response.isSuccess) {
         appLog('Comment submitted successfully');
         commentController.clear();
         // Refresh comments
@@ -309,7 +309,7 @@ class CommentsController extends GetxController {
         parentId: parentId,
       );
 
-      if (response != null && response['success'] == true) {
+      if (response != null && response.isSuccess) {
         appLog('Reply submitted successfully');
         replyController.clear();
         replyingToCommentId.value = '';

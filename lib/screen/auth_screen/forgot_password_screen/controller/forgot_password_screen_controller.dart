@@ -44,8 +44,8 @@ class ForgotPasswordScreenController extends GetxController {
 
     isLoading.value = false;
 
-    if (response != null) {
-      AppSnackBar.showSuccess(response['message'] ?? "OTP sent to your email");
+    if (response != null && response.isSuccess) {
+      AppSnackBar.showSuccess(response.message ?? "OTP sent to your email");
       Get.toNamed(
         AppRoute.otpVerificationScreen,
         arguments: {

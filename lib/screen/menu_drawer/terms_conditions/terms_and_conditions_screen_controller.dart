@@ -21,10 +21,10 @@ class TermsAndConditionsScreenController extends GetxController {
   fetch() async {
     isLoading.value = true;
 
-    final result = await DioService.instance.request(
+    final result = await DioService.instance.request<String>(
       input: RequestInput(endpoint: ApiEndPoints.termsOfService, method: RequestMethod.GET),
-      responseBuilder: (response) {
-        return response['termsOfService']?.toString() ?? '';
+      responseBuilder: (data) {
+        return data?['termsOfService']?.toString() ?? '';
       },
     );
     termsAndConditions.value = result.data ?? '';

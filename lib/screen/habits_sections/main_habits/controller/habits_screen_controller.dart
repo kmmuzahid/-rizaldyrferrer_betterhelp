@@ -1,6 +1,5 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/habits_sections/main_habits/model/daily_task_model.dart';
-import 'package:better_help/service/api/api_services.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
@@ -13,8 +12,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class HabitsScreenController extends GetxController {
-  final _apiServices = ApiServices.instance;
-
   final CarouselSliderController carouselController =
       CarouselSliderController();
   var currentIndex = 0.obs;
@@ -185,45 +182,44 @@ class HabitsScreenController extends GetxController {
 
   /// Fetch tasks by date from API
   Future<void> fetchTasksByDate(DateTime date) async {
-    try {
-      isLoadingTasks.value = true;
+    isLoadingTasks.value = true;
 
-      // Format date to ISO 8601 format: "2026-01-12T00:00:00.000Z"
-      final formattedDate = DateTime(
-        date.year,
-        date.month,
-        date.day,
-        12,
-      ).toUtc().toIso8601String();
+    // Format date to ISO 8601 format: "2026-01-12T00:00:00.000Z"
+    final formattedDate = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      12,
+    ).toUtc().toIso8601String();
 
-      appLog('Fetching tasks for date: $formattedDate');
+    appLog('Fetching tasks for date: $formattedDate');
 
-      final response = await _apiServices.apiGetServices(
-        ApiEndPoints.taskBytheDate(formattedDate),
-      );
+    final response = await DioService.instance.request<TaskResponse>(
+      input: RequestInput(
+        endpoint: ApiEndPoints.taskBytheDate(formattedDate),
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => TaskResponse.fromJson(data),
+    );
 
-      if (response.isSuccess) {
-        appLog('Tasks fetched successfully');
+    if (response.isSuccess && response.data != null) {
+      appLog('Tasks fetched successfully');
 
-        final taskResponse = TaskResponse.fromJson(response.data);
+      final taskResponse = response.data!;
 
-        if (taskResponse.data != null) {
-          tasks.value = taskResponse.data!.map((task) => task.obs).toList();
-          appLog('Loaded ${tasks.length} tasks for ${_formatDate(date)}');
-        } else {
-          tasks.clear();
-          appLog('No tasks found for ${_formatDate(date)}');
-        }
+      if (taskResponse.data != null) {
+        tasks.value = taskResponse.data!.map((task) => task.obs).toList();
+        appLog('Loaded ${tasks.length} tasks for ${_formatDate(date)}');
       } else {
-        appLog('Failed to fetch tasks');
         tasks.clear();
+        appLog('No tasks found for ${_formatDate(date)}');
       }
-    } catch (e) {
-      appLog('Error fetching tasks: $e');
+    } else {
+      appLog('Failed to fetch tasks');
       tasks.clear();
-    } finally {
-      isLoadingTasks.value = false;
     }
+
+    isLoadingTasks.value = false;
   }
 
   /// Refresh tasks for current selected date
@@ -233,27 +229,26 @@ class HabitsScreenController extends GetxController {
 
   /// Mark task as completed
   Future<void> markTaskAsCompleted(String taskId) async {
-    try {
-      appLog('Marking task $taskId as completed');
-      final response = await _apiServices.apiPatchServices(
-        url: ApiEndPoints.taskCompleted(taskId),
-      );
+    appLog('Marking task $taskId as completed');
+    final response = await DioService.instance.request<Map<String, dynamic>>(
+      input: RequestInput(
+        endpoint: ApiEndPoints.taskCompleted(taskId),
+        method: RequestMethod.PATCH,
+      ),
+      responseBuilder: (data) => data ?? {},
+    );
 
-      if (response != null && response['success'] == true) {
-        appLog('Task $taskId marked as completed successfully');
-        // Refresh tasks to reflect status change
-        await refreshTasks();
-        showSnackBar("Task marked as completed", type: SnackBarType.success);
-      } else {
-        appLog('Failed to mark task $taskId as completed');
-        showSnackBar(
-          "Failed to mark task as completed",
-          type: SnackBarType.error,
-        );
-      }
-    } catch (e) {
-      appLog('Error marking task as completed: $e');
-      showSnackBar("An error occurred", type: SnackBarType.error);
+    if (response.isSuccess) {
+      appLog('Task $taskId marked as completed successfully');
+      // Refresh tasks to reflect status change
+      await refreshTasks();
+      showSnackBar("Task marked as completed", type: SnackBarType.success);
+    } else {
+      appLog('Failed to mark task $taskId as completed');
+      showSnackBar(
+        "Failed to mark task as completed",
+        type: SnackBarType.error,
+      );
     }
   }
 

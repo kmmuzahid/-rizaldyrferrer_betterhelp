@@ -75,14 +75,14 @@ class SingupScreenController extends GetxController {
         password: passwordController.text,
       );
 
-      if (response != null) {
+      if (response != null && response.isSuccess) {
         appLog('SignupController: Signup successful');
 
         // Save createUserToken from response
-        if (response['data'] != null &&
-            response['data']['createUserToken'] != null) {
+        if (response.data != null &&
+            response.data?['createUserToken'] != null) {
           await _storageService.saveCreateUserToken(
-            response['data']['createUserToken'],
+            response.data!['createUserToken'],
           );
           appLog('SignupController: createUserToken saved to storage');
         }

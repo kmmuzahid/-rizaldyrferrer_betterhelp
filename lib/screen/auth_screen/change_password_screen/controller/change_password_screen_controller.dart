@@ -66,9 +66,9 @@ class ChangePasswordScreenController extends GetxController {
 
     isLoading.value = false;
 
-    if (response != null) {
+    if (response != null && response.isSuccess) {
       AppSnackBar.showSuccess(
-        response['message'] ?? "Password changed successfully",
+        response.message ?? "Password changed successfully",
       );
       Get.offAllNamed(AppRoute.loginScreen);
     }

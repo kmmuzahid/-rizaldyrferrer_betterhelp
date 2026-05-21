@@ -7,7 +7,6 @@ import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/menu_drawer/bookings_sessions/model/booking_session_model.dart';
 import 'package:better_help/screen/menu_drawer/bookings_sessions/model/bookings_model.dart';
-import 'package:better_help/service/api/api_services.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:core_kit/network/request_input.dart';
@@ -16,7 +15,6 @@ import 'package:get/get.dart';
 class BookingsSessionsController extends GetxController {
   RxList<BookedSessionModel> bookingSessionModel = RxList();
   var isLoading = false.obs;
-  final _apiServices = ApiServices.instance;
 
   // Loading state
   //final RxBool isLoading = false.obs;
@@ -94,52 +92,51 @@ class BookingsSessionsController extends GetxController {
   Future<void> fetchBookings({bool refresh = false}) async {
     if (isLoading.value) return;
 
-    try {
-      if (refresh) {
-        currentPage.value = 1;
-        bookings.clear();
-        hasMore.value = true;
-      }
-
-      isLoading.value = true;
-      appLog('Fetching bookings - Page: ${currentPage.value}');
-
-      final response = await _apiServices.apiGetServices(
-        '${ApiEndPoints.seeAllBookings}?page=${currentPage.value}&limit=10',
-      );
-
-      if (response.isSuccess) {
-        appLog('Bookings fetched successfully');
-
-        final bookingsResponse = BookingsResponse.fromJson(response.data);
-
-        if (bookingsResponse.data != null) {
-          if (refresh) {
-            bookings.value = bookingsResponse.data!;
-          } else {
-            bookings.addAll(bookingsResponse.data!);
-          }
-
-          meta.value = bookingsResponse.meta;
-
-          // Check if there are more bookings
-          if (bookingsResponse.meta != null) {
-            hasMore.value =
-                currentPage.value < (bookingsResponse.meta!.totalPage ?? 0);
-          }
-
-          appLog('Loaded ${bookings.length} bookings');
-        } else {
-          appLog('No bookings found');
-        }
-      } else {
-        appLog('Failed to fetch bookings');
-      }
-    } catch (e) {
-      appLog('Error fetching bookings: $e');
-    } finally {
-      isLoading.value = false;
+    if (refresh) {
+      currentPage.value = 1;
+      bookings.clear();
+      hasMore.value = true;
     }
+
+    isLoading.value = true;
+    appLog('Fetching bookings - Page: ${currentPage.value}');
+
+    final response = await DioService.instance.request<BookingsResponse>(
+      input: RequestInput(
+        endpoint:
+            '${ApiEndPoints.seeAllBookings}?page=${currentPage.value}&limit=10',
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) => BookingsResponse.fromJson(data),
+    );
+
+    if (response.isSuccess && response.data != null) {
+      appLog('Bookings fetched successfully');
+
+      if (response.data?.data != null) {
+        if (refresh) {
+          bookings.value = response.data!.data!;
+        } else {
+          bookings.addAll(response.data!.data!);
+        }
+
+        meta.value = response.data!.meta;
+
+        // Check if there are more bookings
+        if (response.data?.meta != null) {
+          hasMore.value =
+              currentPage.value < (response.data!.meta!.totalPage ?? 0);
+        }
+
+        appLog('Loaded ${bookings.length} bookings');
+      } else {
+        appLog('No bookings found');
+      }
+    } else {
+      appLog('Failed to fetch bookings');
+    }
+
+    isLoading.value = false;
   }
 
   /// Load more bookings (pagination)

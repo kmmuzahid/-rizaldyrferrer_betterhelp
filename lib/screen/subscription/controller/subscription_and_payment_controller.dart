@@ -188,25 +188,30 @@ class SubscriptionAndPaymentController extends GetxController {
     if (isPurchaseLoading.value) return;
     final plan = subscriptionPlan[index + (routeFromDrawer ? 1 : 0)];
 
-    if ((plan.price ?? 0) == 0) {
-      //buy free plan
-      isPurchaseLoading.value = true;
-      final response = await _sendVerifyRequest(packageId: plan.id);
-      isPurchaseLoading.value = false;
-
-      _onSuccess(response, newSubscription: true);
-    } else {
-      //buy subscription from store
-      final product = storeProducts[plan.productId];
-      if (product != null) {
+    try {
+      if ((plan.price ?? 0) == 0) {
+        //buy free plan
         isPurchaseLoading.value = true;
-        final PurchaseParam purchaseParam = PurchaseParam(
-          productDetails: product,
-        );
-        _iap.buyNonConsumable(purchaseParam: purchaseParam);
+        final response = await _sendVerifyRequest(packageId: plan.id);
+        isPurchaseLoading.value = false;
+
+        _onSuccess(response, newSubscription: true);
       } else {
-        Get.snackbar('Error', 'Product not available in store');
+        //buy subscription from store
+        final product = storeProducts[plan.productId];
+        if (product != null) {
+          isPurchaseLoading.value = true;
+          final PurchaseParam purchaseParam = PurchaseParam(
+            productDetails: product,
+          );
+          _iap.buyNonConsumable(purchaseParam: purchaseParam);
+        } else {
+          Get.snackbar('Error', 'Product not available in store');
+        }
       }
+    } catch (e) {
+      isPurchaseLoading.value = false;
+      debugPrint("Subscribe error: $e");
     }
   }
 
@@ -249,13 +254,16 @@ class SubscriptionAndPaymentController extends GetxController {
     bool newSubscription = false,
   }) async {
     if (response == null) {
-      showSnackBar('Failed to verify purchase', type: .warning);
+      showSnackBar('Failed to verify purchase', type: SnackBarType.warning);
       return;
     }
 
     await Get.find<MyProfileScreenController>().fetchProfile();
     if ((response.active == true && !routeFromDrawer) || newSubscription) {
       Get.offAllNamed(AppRoute.bottomNav);
+    } else if (routeFromDrawer && response.active == true) {
+      showSnackBar('Subscription successful!', type: SnackBarType.success);
+      Get.back();
     }
   }
 
@@ -269,26 +277,30 @@ class SubscriptionAndPaymentController extends GetxController {
   }) async {
     if (isVerifying.value) return null;
     isVerifying.value = true;
-    final response = await DioService.instance.request(
-      input: RequestInput(
-        endpoint: ApiEndPoints.createSubscription,
-        method: RequestMethod.POST,
-        jsonBody: {
-          "packageId": packageId,
-          "productId": ?purchaseDetails?.productID,
-          "purchaseId": ?purchaseDetails?.purchaseID,
-          "platform": Platform.isAndroid ? "google" : "apple",
-          "trasactionDate": purchaseDetails?.transactionDate,
-          "status": ?purchaseDetails?.status.name,
-          "isRestore": purchaseDetails?.status == PurchaseStatus.restored,
-        },
-      ),
-      responseBuilder: (data) => PaymentVerificationModel.fromJson(data),
-    );
-
-    isVerifying.value = false;
-
-    return response.data;
+    try {
+      final response = await DioService.instance.request(
+        input: RequestInput(
+          endpoint: ApiEndPoints.createSubscription,
+          method: RequestMethod.POST,
+          jsonBody: {
+            "packageId": packageId,
+            "productId": purchaseDetails?.productID,
+            "purchaseId": purchaseDetails?.purchaseID,
+            "platform": Platform.isAndroid ? "google" : "apple",
+            "trasactionDate": purchaseDetails?.transactionDate,
+            "status": purchaseDetails?.status.name,
+            "isRestore": purchaseDetails?.status == PurchaseStatus.restored,
+          },
+        ),
+        responseBuilder: (data) => PaymentVerificationModel.fromJson(data),
+      );
+      return response.data;
+    } catch (e) {
+      debugPrint("Verification request error: $e");
+      return null;
+    } finally {
+      isVerifying.value = false;
+    }
   }
 
   @override
@@ -330,7 +342,7 @@ class SubscriptionAndPaymentController extends GetxController {
     final profileController = Get.find<MyProfileScreenController>();
     await profileController.fetchProfile();
 
-    await onRestore(showLoader: false);
+    if (!routeFromDrawer) await onRestore(showLoader: false);
 
     final planType = profileController.profileData.value?.subscriptionPlanType;
     if (planType == null || planType == 'free' || routeFromDrawer) {

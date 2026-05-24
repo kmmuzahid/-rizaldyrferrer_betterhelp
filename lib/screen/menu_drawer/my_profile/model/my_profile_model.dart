@@ -114,7 +114,7 @@ class ProfileData {
 
   String toRawJson() => json.encode(toJson());
 
-  factory ProfileData.fromJson(Map<String, dynamic> json) => ProfileData(
+  factory ProfileData.fromJson(dynamic json) => ProfileData(
     id: json["_id"],
     doctorChatId: json["chatId"],
     profile: json["profile"],
@@ -127,7 +127,8 @@ class ProfileData {
     address: json["address"],
     isSubscribed: json["isSubscribed"],
     hasAccess: json["hasAccess"],
-    subscriptionPackageId: json["subscriptionPackageId"] ?? json["subscriptionId"],
+    subscriptionPackageId:
+        json["subscriptionPackageId"] ?? json["subscriptionId"],
     subscriptionExpiredDate: json["subscriptionExpiredDate"] == null
         ? null
         : DateTime.tryParse(json["subscriptionExpiredDate"]),

@@ -10,6 +10,7 @@ import 'package:better_help/service/repository/auth_repository/auth_reporsitory.
 import 'package:better_help/service/repository/profile_repositroy/profile_repository.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
+import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -75,10 +76,12 @@ class LoginScreenController extends GetxController {
       );
       await StorageService.instance.saveUserData(response.data['user']);
 
-      final profile = await _profileRepsitory.getMyProfile();
+      final ResponseState<ProfileData?> profile = await _profileRepsitory
+          .getMyProfile();
+
       ProfileData? profileData;
       if (profile.isSuccess) {
-        profileData = response.data;
+        profileData = profile.data;
         Get.find<MyProfileScreenController>().profileData.value = profileData;
       }
       AppSnackBar.showSuccess(response.message ?? "Login successful");

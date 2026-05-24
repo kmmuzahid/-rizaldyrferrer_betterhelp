@@ -10,6 +10,7 @@ import 'package:better_help/screen/community_sections/creating_post/creating_pos
 import 'package:better_help/screen/community_sections/main_community/community_screen.dart';
 import 'package:better_help/screen/free_trial_screen/free_trial_screen.dart';
 import 'package:better_help/screen/habits_sections/home_screen.dart';
+import 'package:better_help/screen/habits_sections/main_habits/generate_task_based_on_preference_screen.dart';
 import 'package:better_help/screen/habits_sections/main_habits/habits_screen.dart';
 import 'package:better_help/screen/habits_sections/my_task/my_task.dart';
 import 'package:better_help/screen/habits_sections/timer_screen/timer_screen.dart';
@@ -23,7 +24,6 @@ import 'package:better_help/screen/menu_drawer/faqs/faqs_screen.dart';
 import 'package:better_help/screen/menu_drawer/favorite_course/favorite_course_screen.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/edit_profile_screen/edit_profile_screen.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/my_profle_screen.dart';
-import 'package:better_help/screen/menu_drawer/my_subscription/my_subscription_screen.dart';
 import 'package:better_help/screen/menu_drawer/privacy_policy/privacy_policy_screen.dart';
 import 'package:better_help/screen/menu_drawer/saved_article/saved_article_screen.dart';
 import 'package:better_help/screen/menu_drawer/talk_to_support/talk_to_support_screen.dart';
@@ -41,7 +41,6 @@ import 'package:better_help/screen/subscription/subscription_and_payment.dart';
 import 'package:better_help/screen/supports_sections/main_supports/support_screen.dart';
 import 'package:better_help/screen/supports_sections/video_call_agora/video_call_screen.dart';
 import 'package:better_help/widget/app_confeti/habit_complete_screen.dart';
-import 'package:better_help/screen/habits_sections/main_habits/generate_task_based_on_preference_screen.dart';
 import 'package:get/get.dart';
 
 import '../../screen/before_question_screen/before_question_screen.dart';

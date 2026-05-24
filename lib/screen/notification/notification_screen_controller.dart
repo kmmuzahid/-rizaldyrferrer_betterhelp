@@ -12,7 +12,8 @@ class NotificationScreenController extends GetxController {
   var unreadCount = 0.obs;
   var notificationList = <NotificationModel>[].obs;
   var isLoading = false.obs;
-  final MyProfileScreenController profileController = Get.find<MyProfileScreenController>();
+  final MyProfileScreenController profileController =
+      Get.find<MyProfileScreenController>();
 
   listenNotification() {
     SocketService.instance.startListeningNotification(
@@ -21,7 +22,9 @@ class NotificationScreenController extends GetxController {
         // if (notification.userId == profileController.profileData.value?.id) return;
         addSingleNotification(notification);
         if (Get.currentRoute != AppRoute.notificationScreen) {
-          NotificationService.instance.showNotification(title: notification.message);
+          NotificationService.instance.showNotification(
+            title: notification.message,
+          );
         }
       },
     );
@@ -68,7 +71,10 @@ class NotificationScreenController extends GetxController {
 
   markAllRead() async {
     final response = await DioService.instance.request<dynamic>(
-      input: RequestInput(endpoint: ApiEndPoints.notificationAllRead, method: RequestMethod.POST),
+      input: RequestInput(
+        endpoint: ApiEndPoints.notificationAllRead,
+        method: RequestMethod.POST,
+      ),
       responseBuilder: (data) {
         return data;
       },

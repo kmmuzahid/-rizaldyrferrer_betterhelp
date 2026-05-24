@@ -3,13 +3,13 @@
  * @Date: 2026-03-01 15:56:54
  * @Email: km.muzahid@gmail.com
  */
+import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/subscription/controller/subscription_and_payment_controller.dart';
 import 'package:better_help/screen/subscription/model/subscription_model.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
-import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,6 @@ import 'package:get/get_instance/get_instance.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:better_help/core/app_route/app_route.dart';
 
 class SubscriptionItem extends StatelessWidget {
   const SubscriptionItem({
@@ -29,6 +28,7 @@ class SubscriptionItem extends StatelessWidget {
     this.productDetails,
     required this.duration,
     this.routeFromDrawer = false,
+    this.isVerifying = false,
   });
   final SubscriptionModel plan;
   final PageController controller;
@@ -37,6 +37,7 @@ class SubscriptionItem extends StatelessWidget {
   final ProductDetails? productDetails;
   final String duration;
   final bool routeFromDrawer;
+  final bool isVerifying;
 
   @override
   Widget build(BuildContext context) {
@@ -103,23 +104,31 @@ class SubscriptionItem extends StatelessWidget {
                     itemCount: (plan.featureList?.length ?? 0) + 5,
                   ),
                 ),
-                if ((profileController.profileData.value?.subscriptionId ==
+                if ((profileController
+                            .profileData
+                            .value
+                            ?.subscriptionPackageId ==
                         null ||
-                    profileController.profileData.value?.subscriptionId !=
+                    profileController
+                            .profileData
+                            .value
+                            ?.subscriptionPackageId !=
                         plan.id))
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       children: [
-                        AppButton(
+                        CommonButton(
+                          isLoading: isVerifying,
                           titleColor: buttonTextColor,
+                          buttonWidth: .infinity,
                           onTap: () {
                             Get.find<SubscriptionAndPaymentController>()
                                 .onSubscribe(index - 1);
                           },
-                          borderradius: 12,
-                          backgroundColor: buttonColor,
-                          title: 'Start My Journey',
+                          buttonRadius: 12,
+                          buttonColor: buttonColor,
+                          titleText: 'Start My Journey',
                         ),
                         const SizedBox(height: 12),
                         Row(
@@ -219,7 +228,8 @@ class SubscriptionItem extends StatelessWidget {
             textAlign: TextAlign.left,
           ),
           const Spacer(),
-          if (plan.id == profileController.profileData.value?.subscriptionId)
+          if (plan.id ==
+              profileController.profileData.value?.subscriptionPackageId)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
@@ -264,7 +274,10 @@ class SubscriptionItem extends StatelessWidget {
             if (RegExp(r'[0-9.,\s\u00a0]').hasMatch(firstChar)) {
               isSuffix = true;
             }
-            final extracted = storePrice.replaceAll(RegExp(r'[0-9.,\s\u00a0]'), '');
+            final extracted = storePrice.replaceAll(
+              RegExp(r'[0-9.,\s\u00a0]'),
+              '',
+            );
             if (extracted.isNotEmpty) {
               currencySymbol = extracted;
             }

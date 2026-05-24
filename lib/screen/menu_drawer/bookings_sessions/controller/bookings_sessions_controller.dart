@@ -120,13 +120,15 @@ class BookingsSessionsController extends GetxController {
           bookings.addAll(response.data!.data!);
         }
 
-        meta.value = response.data!.meta;
+        // Check if there are more bookings based on length of fetched items
+        hasMore.value = response.data!.data!.length >= 10;
 
-        // Check if there are more bookings
-        if (response.data?.meta != null) {
-          hasMore.value =
-              currentPage.value < (response.data!.meta!.totalPage ?? 0);
-        }
+        meta.value = BookingMeta(
+          page: currentPage.value,
+          limit: 10,
+          total: bookings.length,
+          totalPage: hasMore.value ? currentPage.value + 1 : currentPage.value,
+        );
 
         appLog('Loaded ${bookings.length} bookings');
       } else {

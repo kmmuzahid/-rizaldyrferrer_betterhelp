@@ -42,29 +42,24 @@ class EditProfileContrller extends GetxController {
   }
 
   Future<void> loadProfileData() async {
-    try {
-      isLoading.value = true;
-      appLog('🔄 Loading profile data for edit...');
+    isLoading.value = true;
+    appLog('🔄 Loading profile data for edit...');
 
-      final response = await _profileRepository.getMyProfile();
+    final response = await _profileRepository.getMyProfile();
 
-      if (response?.isSuccess ?? false) {
-        final profileResponse = Welcome.fromJson(response?.data);
-        profileData.value = profileResponse.data;
+    if (response.isSuccess) {
+      profileData.value = response.data;
 
-        // Populate controllers with existing data
-        fullNameController.text = profileData.value?.fullName ?? '';
-        phoneController.text = profileData.value?.phone ?? '';
-        addressController.text = profileData.value?.address ?? '';
+      // Populate controllers with existing data
+      fullNameController.text = profileData.value?.fullName ?? '';
+      phoneController.text = profileData.value?.phone ?? '';
+      addressController.text = profileData.value?.address ?? '';
 
-        _hasLoadedData = true; // Mark as loaded
-        appLog('✅ Profile data loaded successfully');
-      }
-    } catch (e) {
-      appLog('❌ Error loading profile: $e');
-    } finally {
-      isLoading.value = false;
+      _hasLoadedData = true; // Mark as loaded
+      appLog('✅ Profile data loaded successfully');
     }
+
+    isLoading.value = false;
   }
 
   Future<void> pickAndUpdateImage(BuildContext context) async {

@@ -57,13 +57,15 @@ class SavedArticleController extends GetxController {
           savedArticles.addAll(savedResponse.data!.allArticles!);
         }
 
-        meta.value = savedResponse.meta;
+        // Check if there are more articles based on length of fetched items
+        hasMore.value = savedResponse.data!.allArticles!.length >= 10;
 
-        // Check if there are more articles
-        if (savedResponse.meta != null) {
-          hasMore.value =
-              currentPage.value < (savedResponse.meta!.totalPage ?? 0);
-        }
+        meta.value = Meta(
+          page: currentPage.value,
+          limit: 10,
+          total: savedArticles.length,
+          totalPage: hasMore.value ? currentPage.value + 1 : currentPage.value,
+        );
 
         appLog('Loaded ${savedArticles.length} saved articles');
       } else {

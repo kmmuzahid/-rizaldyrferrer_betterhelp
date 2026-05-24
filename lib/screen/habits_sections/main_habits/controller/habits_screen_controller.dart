@@ -1,6 +1,8 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/habits_sections/main_habits/model/daily_task_model.dart';
+import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
+import 'package:better_help/sockets/support_message_socket.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
@@ -167,16 +169,38 @@ class HabitsScreenController extends GetxController {
   void onInit() {
     super.onInit();
     // Fetch tasks for today on initialization
+    SocketService.instance.connect();
     fetchTasksByDate(selectedDate.value);
     checkFirstTimeUser();
   }
 
-  void checkFirstTimeUser() async {
-    final isFirstTimeUser = await StorageService.instance
-        .isFirstAiTaskGenereted();
+  void checkFirstTimeUser() {
+    final profileController = Get.find<MyProfileScreenController>();
 
-    if (isFirstTimeUser == null || !isFirstTimeUser) {
-      Get.dialog(const GenerateTaskDialog());
+    void runCheck(dynamic profile) async {
+      if (profile == null) return;
+
+      print('😎 ${profile.subscriptionPlanType}');
+
+      if (profile.subscriptionPlanType == 'free') {
+        return;
+      }
+      final isFirstTimeUser = await StorageService.instance
+          .isFirstAiTaskGenereted();
+
+      if (isFirstTimeUser == null || !isFirstTimeUser) {
+        Get.dialog(const GenerateTaskDialog());
+      }
+    }
+
+    // If profile data is already fetched, run the check immediately
+    if (profileController.profileData.value != null) {
+      runCheck(profileController.profileData.value);
+    } else {
+      // Otherwise, wait for it to be fetched using GetX's 'once' worker
+      once(profileController.profileData, (dynamic profile) {
+        runCheck(profile);
+      });
     }
   }
 

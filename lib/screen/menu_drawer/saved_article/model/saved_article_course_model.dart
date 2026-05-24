@@ -11,12 +11,10 @@ class SavedArticleResponse {
     this.data,
   });
 
-  factory SavedArticleResponse.fromJson(Map<String, dynamic> json) {
+  factory SavedArticleResponse.fromJson(dynamic json) {
+    if (json == null) return SavedArticleResponse();
     return SavedArticleResponse(
-      success: json['success'] as bool?,
-      message: json['message'] as String?,
-      meta: json['meta'] != null ? Meta.fromJson(json['meta']) : null,
-      data: json['data'] != null ? Data.fromJson(json['data']) : null,
+      data: Data.fromJson(json as Map<String, dynamic>),
     );
   }
 

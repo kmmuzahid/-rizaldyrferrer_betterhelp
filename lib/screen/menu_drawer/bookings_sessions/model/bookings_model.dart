@@ -1,35 +1,24 @@
 class BookingsResponse {
-  final bool? success;
-  final String? message;
-  final BookingMeta? meta;
+  BookingMeta? meta;
   final List<BookingsModel>? data;
 
   BookingsResponse({
-    this.success,
-    this.message,
     this.meta,
     this.data,
   });
 
   // Decoder (fromJson)
-  factory BookingsResponse.fromJson(Map<String, dynamic>? json) {
+  factory BookingsResponse.fromJson(dynamic json) {
     if (json == null) return BookingsResponse();
     
     return BookingsResponse(
-      success: json['success'] as bool?,
-      message: json['message'] as String?,
-      meta: json['meta'] != null ? BookingMeta.fromJson(json['meta']) : null,
-      data: json['data'] != null
-          ? (json['data'] as List).map((item) => BookingsModel.fromJson(item)).toList()
-          : null,
+      data: (json as List).map((item) => BookingsModel.fromJson(item)).toList(),
     );
   }
 
   // Encoder (toJson)
   Map<String, dynamic> toJson() {
     return {
-      'success': success,
-      'message': message,
       'meta': meta?.toJson(),
       'data': data?.map((item) => item.toJson()).toList(),
     };

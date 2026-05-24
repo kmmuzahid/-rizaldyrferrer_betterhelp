@@ -11,9 +11,10 @@ import 'dart:io';
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
+import 'package:better_help/screen/subscription/model/payment_verification_model.dart';
 import 'package:better_help/screen/subscription/model/subscription_model.dart';
 import 'package:better_help/sockets/support_message_socket.dart';
-import 'package:core_kit/network/dio_service.dart';
+import 'package:core_kit/core_kit.dart';
 import 'package:core_kit/network/request_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -36,6 +37,7 @@ class SubscriptionAndPaymentController extends GetxController {
       <String, ProductDetails>{}.obs;
 
   bool isRestoreChecked = false;
+  RxBool isVerifying = false.obs;
 
   _fetchSubscriptionPlan() async {
     String platform = 'apple';
@@ -184,27 +186,15 @@ class SubscriptionAndPaymentController extends GetxController {
 
   onSubscribe(int index) async {
     if (isPurchaseLoading.value) return;
-    final plan = subscriptionPlan[index];
+    final plan = subscriptionPlan[index + (routeFromDrawer ? 1 : 0)];
 
     if ((plan.price ?? 0) == 0) {
       //buy free plan
       isPurchaseLoading.value = true;
-      final response = await DioService.instance.request(
-        showMessage: true,
-        input: RequestInput(
-          endpoint: ApiEndPoints.createSubscription,
-          method: RequestMethod.POST,
-          jsonBody: {"packageId": plan.id},
-        ),
-        responseBuilder: (data) {
-          return data;
-        },
-      );
+      final response = await _sendVerifyRequest(packageId: plan.id);
       isPurchaseLoading.value = false;
 
-      if (response.isSuccess) {
-        _onSuccess();
-      }
+      _onSuccess(response, newSubscription: true);
     } else {
       //buy subscription from store
       final product = storeProducts[plan.productId];
@@ -233,10 +223,19 @@ class SubscriptionAndPaymentController extends GetxController {
           );
         } else if (purchaseDetails.status == PurchaseStatus.purchased ||
             purchaseDetails.status == PurchaseStatus.restored) {
-          bool valid = await _verifyPurchase(purchaseDetails);
-          if (valid) {
-            _onSuccess();
-          }
+          final response = await _sendVerifyRequest(
+            packageId: plandId(purchaseDetails) ?? '',
+            purchaseDetails: purchaseDetails,
+          );
+
+          final isNewSubscription =
+              Get.find<MyProfileScreenController>()
+                  .profileData
+                  .value
+                  ?.subscriptionPackageId ==
+              null;
+
+          _onSuccess(response, newSubscription: isNewSubscription);
         }
         if (purchaseDetails.pendingCompletePurchase) {
           await _iap.completePurchase(purchaseDetails);
@@ -245,33 +244,51 @@ class SubscriptionAndPaymentController extends GetxController {
     });
   }
 
-  void _onSuccess() {
-    Get.find<MyProfileScreenController>().fetchProfile();
-    Get.offAllNamed(AppRoute.bottomNav);
+  void _onSuccess(
+    PaymentVerificationModel? response, {
+    bool newSubscription = false,
+  }) async {
+    if (response == null) {
+      showSnackBar('Failed to verify purchase', type: .warning);
+      return;
+    }
+
+    await Get.find<MyProfileScreenController>().fetchProfile();
+    if ((response.active == true && !routeFromDrawer) || newSubscription) {
+      Get.offAllNamed(AppRoute.bottomNav);
+    }
   }
 
-  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async {
-    final plan = subscriptionPlan.firstWhereOrNull(
-      (e) => e.productId == purchaseDetails.productID,
-    );
+  String? plandId(PurchaseDetails purchaseDetails) => subscriptionPlan
+      .firstWhereOrNull((e) => e.productId == purchaseDetails.productID)
+      ?.id;
 
+  Future<PaymentVerificationModel?> _sendVerifyRequest({
+    String? packageId,
+    PurchaseDetails? purchaseDetails,
+  }) async {
+    if (isVerifying.value) return null;
+    isVerifying.value = true;
     final response = await DioService.instance.request(
-      showMessage: true,
       input: RequestInput(
         endpoint: ApiEndPoints.createSubscription,
         method: RequestMethod.POST,
         jsonBody: {
-          "packageId": plan?.id,
-          "productId": purchaseDetails.productID,
-          "purchaseToken":
-              purchaseDetails.verificationData.serverVerificationData,
+          "packageId": packageId,
+          "productId": ?purchaseDetails?.productID,
+          "purchaseId": ?purchaseDetails?.purchaseID,
           "platform": Platform.isAndroid ? "google" : "apple",
-          "isRestore": purchaseDetails.status == PurchaseStatus.restored,
+          "trasactionDate": purchaseDetails?.transactionDate,
+          "status": ?purchaseDetails?.status.name,
+          "isRestore": purchaseDetails?.status == PurchaseStatus.restored,
         },
       ),
-      responseBuilder: (data) => data,
+      responseBuilder: (data) => PaymentVerificationModel.fromJson(data),
     );
-    return response.isSuccess;
+
+    isVerifying.value = false;
+
+    return response.data;
   }
 
   @override
@@ -315,7 +332,8 @@ class SubscriptionAndPaymentController extends GetxController {
 
     await onRestore(showLoader: false);
 
-    if (profileController.profileData.value?.subscriptionPlanType == null) {
+    final planType = profileController.profileData.value?.subscriptionPlanType;
+    if (planType == null || planType == 'free' || routeFromDrawer) {
       _fetchSubscriptionPlan();
     } else {
       isLoadingDependency.value = false;

@@ -1,30 +1,25 @@
 import 'dart:convert';
 
 class ArticleModel {
-  bool? success;
-  String? message;
   Meta? meta;
-  List<Datum>? data;
+  final List<Datum>? data;
 
-  ArticleModel({this.success, this.message, this.meta, this.data});
+  ArticleModel({this.meta, this.data});
 
   factory ArticleModel.fromRawJson(String str) =>
       ArticleModel.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory ArticleModel.fromJson(Map<String, dynamic> json) => ArticleModel(
-    success: json["success"],
-    message: json["message"],
-    meta: json["meta"] == null ? null : Meta.fromJson(json["meta"]),
-    data: json["data"] == null
-        ? []
-        : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
-  );
+  factory ArticleModel.fromJson(dynamic json) {
+    if (json == null) return ArticleModel();
+
+    return ArticleModel(
+      data: (json as List).map((x) => Datum.fromJson(x)).toList(),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
-    "success": success,
-    "message": message,
     "meta": meta?.toJson(),
     "data": data == null
         ? []

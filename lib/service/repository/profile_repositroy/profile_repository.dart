@@ -1,4 +1,5 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
+import 'package:better_help/screen/menu_drawer/my_profile/model/my_profile_model.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:core_kit/network/request_input.dart';
@@ -7,13 +8,13 @@ class ProfileRepository {
   final _storageServices = StorageService();
 
   /// Get user profile
-  Future<ResponseState<dynamic>?> getMyProfile() async {
+  Future<ResponseState<ProfileData?>> getMyProfile() async {
     final response = await DioService.instance.request(
       input: RequestInput(
         endpoint: ApiEndPoints.getMyProfile,
         method: RequestMethod.GET,
       ),
-      responseBuilder: (data) => data,
+      responseBuilder: (data) => ProfileData.fromJson(data),
     );
 
     return response;

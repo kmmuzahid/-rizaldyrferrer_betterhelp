@@ -151,13 +151,15 @@ class CommunityScreenController extends GetxController {
           articles.addAll(result.data!);
         }
 
-        articleMeta.value = result.meta;
+        // Check if there are more articles based on length of fetched items
+        hasMoreArticles.value = result.data!.length >= 10;
 
-        // Check if there are more articles
-        if (result.meta != null) {
-          hasMoreArticles.value =
-              currentPage.value < (result.meta!.totalPage ?? 0);
-        }
+        articleMeta.value = article_model.Meta(
+          page: currentPage.value,
+          limit: 10,
+          total: articles.length,
+          totalPage: hasMoreArticles.value ? currentPage.value + 1 : currentPage.value,
+        );
       } else {
         appLog('Failed to fetch articles');
       }
@@ -282,13 +284,15 @@ class CommunityScreenController extends GetxController {
           posts.addAll(newPosts);
         }
 
-        postMeta.value = result.meta;
+        // Check if there are more posts based on length of fetched items
+        hasMorePosts.value = result.data!.length >= 10;
 
-        // Check if there are more posts
-        if (result.meta != null) {
-          hasMorePosts.value =
-              currentPostPage.value < (result.meta!.totalPage ?? 0);
-        }
+        postMeta.value = Meta(
+          page: currentPostPage.value,
+          limit: 10,
+          total: posts.length,
+          totalPage: hasMorePosts.value ? currentPostPage.value + 1 : currentPostPage.value,
+        );
       } else {
         appLog('Failed to fetch posts');
       }

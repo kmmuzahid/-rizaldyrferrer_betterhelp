@@ -1,33 +1,20 @@
 class TaskResponse {
-  final bool? success;
-  final String? message;
-  final Meta? meta;
   final List<TaskModel>? data;
 
-  TaskResponse({this.success, this.message, this.meta, this.data});
+  TaskResponse({this.data});
 
   // Decoder (fromJson)
-  factory TaskResponse.fromJson(Map<String, dynamic>? json) {
+  factory TaskResponse.fromJson(dynamic json) {
     if (json == null) return TaskResponse();
 
     return TaskResponse(
-      success: json['success'] as bool?,
-      message: json['message'] as String?,
-      meta: json['meta'] != null ? Meta.fromJson(json['meta']) : null,
-      data: json['data'] != null
-          ? (json['data'] as List).map((e) => TaskModel.fromJson(e)).toList()
-          : null,
+      data: (json as List).map((e) => TaskModel.fromJson(e)).toList(),
     );
   }
 
   // Encoder (toJson)
   Map<String, dynamic> toJson() {
-    return {
-      'success': success,
-      'message': message,
-      'meta': meta?.toJson(),
-      'data': data?.map((e) => e.toJson()).toList(),
-    };
+    return {'data': data?.map((e) => e.toJson()).toList()};
   }
 }
 

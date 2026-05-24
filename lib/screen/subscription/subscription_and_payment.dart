@@ -26,7 +26,9 @@ class SubscriptionAndPayment extends StatelessWidget {
           children: [
             PageView.builder(
               controller: controller.pageController,
-              physics: controller.currentPage.value == 0 && !controller.routeFromDrawer
+              physics:
+                  controller.currentPage.value == 0 &&
+                      !controller.routeFromDrawer
                   ? const NeverScrollableScrollPhysics()
                   : const BouncingScrollPhysics(),
               onPageChanged: (index) {
@@ -51,6 +53,7 @@ class SubscriptionAndPayment extends StatelessWidget {
                         (!controller.routeFromDrawer ? 1 : 0)];
                 return SubscriptionItem(
                   plan: plan,
+                  isVerifying: controller.isVerifying.value,
                   routeFromDrawer: controller.routeFromDrawer,
                   controller: controller.pageController,
                   index: index,

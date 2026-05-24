@@ -28,31 +28,26 @@ class MyProfileScreenController extends GetxController {
   }
 
   Future<void> fetchProfile() async {
-    try {
-      isLoading.value = true;
-      final response = await _profileRepository.getMyProfile();
+    isLoading.value = true;
+    final response = await _profileRepository.getMyProfile();
 
-      if (response?.isSuccess ?? false) {
-        final profileResponse = Welcome.fromJson(response?.data);
-        profileData.value = profileResponse.data;
-        if (isNotificationListening.value == false) {
-          Get.find<NotificationScreenController>()
-            ..getUnreadCount()
-            ..listenNotification();
-          isNotificationListening.value = true;
-        }
-      } else {
-        AppSnackBar.showError(
-          response?.message?.toString() ?? "Failed to load profile",
-        );
-        StorageService().clearAll();
-        Get.offAllNamed(AppRoute.loginScreen);
+    if (response.isSuccess) {
+      profileData.value = response.data;
+      if (isNotificationListening.value == false) {
+        Get.find<NotificationScreenController>()
+          ..getUnreadCount()
+          ..listenNotification();
+        isNotificationListening.value = true;
       }
-    } catch (e) {
-      AppSnackBar.showError("Error loading profile");
-    } finally {
-      isLoading.value = false;
+    } else {
+      AppSnackBar.showError(
+        response.message?.toString() ?? "Failed to load profile",
+      );
+      StorageService().clearAll();
+      Get.offAllNamed(AppRoute.loginScreen);
     }
+
+    isLoading.value = false;
   }
 
   String getProfileImageUrl() {

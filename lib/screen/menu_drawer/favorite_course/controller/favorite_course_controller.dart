@@ -57,13 +57,15 @@ class FavoriteCourseController extends GetxController {
           savedCourses.addAll(savedResponse.data!.allCourses!);
         }
 
-        meta.value = savedResponse.meta;
+        // Check if there are more courses based on length of fetched items
+        hasMore.value = savedResponse.data!.allCourses!.length >= 10;
 
-        // Check if there are more courses
-        if (savedResponse.meta != null) {
-          hasMore.value =
-              currentPage.value < (savedResponse.meta!.totalPage ?? 0);
-        }
+        meta.value = Meta(
+          page: currentPage.value,
+          limit: 10,
+          total: savedCourses.length,
+          totalPage: hasMore.value ? currentPage.value + 1 : currentPage.value,
+        );
 
         appLog('Loaded ${savedCourses.length} saved courses');
       } else {

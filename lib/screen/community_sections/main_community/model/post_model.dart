@@ -1,26 +1,19 @@
 class PostModel {
-  final bool? success;
-  final String? message;
-  final Meta? meta;
+  Meta? meta;
   final List<Post>? data;
 
-  PostModel({this.success, this.message, this.meta, this.data});
+  PostModel({this.meta, this.data});
 
-  factory PostModel.fromJson(Map<String, dynamic> json) {
+  factory PostModel.fromJson(dynamic json) {
+    if (json == null) return PostModel();
+
     return PostModel(
-      success: json['success'] as bool?,
-      message: json['message'] as String?,
-      meta: json['meta'] != null ? Meta.fromJson(json['meta']) : null,
-      data: json['data'] != null
-          ? (json['data'] as List).map((e) => Post.fromJson(e)).toList()
-          : null,
+      data: (json as List).map((e) => Post.fromJson(e)).toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'success': success,
-      'message': message,
       'meta': meta?.toJson(),
       'data': data?.map((e) => e.toJson()).toList(),
     };

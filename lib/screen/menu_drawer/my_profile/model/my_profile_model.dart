@@ -1,29 +1,5 @@
 import 'dart:convert';
 
-class Welcome {
-  bool? success;
-  String? message;
-  ProfileData? data;
-
-  Welcome({this.success, this.message, this.data});
-
-  factory Welcome.fromRawJson(String str) => Welcome.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
-  factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
-    success: json["success"],
-    message: json["message"],
-    data: json["data"] == null ? null : ProfileData.fromJson(json["data"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "success": success,
-    "message": message,
-    "data": data?.toJson(),
-  };
-}
-
 class ProfileData {
   String? id;
   String? profile;
@@ -36,7 +12,8 @@ class ProfileData {
   String? address;
   bool? isSubscribed;
   bool? hasAccess;
-  dynamic subscriptionId;
+  String? subscriptionPackageId;
+  DateTime? subscriptionExpiredDate;
   bool? isFreeTrial;
   dynamic assistantId;
   dynamic doctorId;
@@ -61,7 +38,8 @@ class ProfileData {
     this.address,
     this.isSubscribed,
     this.hasAccess,
-    this.subscriptionId,
+    this.subscriptionPackageId,
+    this.subscriptionExpiredDate,
     this.isFreeTrial,
     this.assistantId,
     this.doctorId,
@@ -74,6 +52,62 @@ class ProfileData {
     this.doctorChatId,
     this.subscriptionPlanType,
   });
+
+  copyWith({
+    String? id,
+    String? profile,
+    String? fullName,
+    String? email,
+    String? role,
+    String? phone,
+    bool? isActive,
+    bool? isDeleted,
+    String? address,
+    bool? isSubscribed,
+    bool? hasAccess,
+    String? subscriptionPackageId,
+    DateTime? subscriptionExpiredDate,
+    bool? isFreeTrial,
+    dynamic assistantId,
+    dynamic doctorId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? v,
+    int? totalTask,
+    int? pendingTask,
+    int? completedTask,
+    String? doctorChatId,
+    String? subscriptionPlanType,
+  }) {
+    return ProfileData(
+      id: id ?? this.id,
+      profile: profile ?? this.profile,
+      fullName: fullName ?? this.fullName,
+      email: email ?? this.email,
+      role: role ?? this.role,
+      phone: phone ?? this.phone,
+      isActive: isActive ?? this.isActive,
+      isDeleted: isDeleted ?? this.isDeleted,
+      address: address ?? this.address,
+      isSubscribed: isSubscribed ?? this.isSubscribed,
+      hasAccess: hasAccess ?? this.hasAccess,
+      subscriptionPackageId:
+          subscriptionPackageId ?? this.subscriptionPackageId,
+      subscriptionExpiredDate:
+          subscriptionExpiredDate ?? this.subscriptionExpiredDate,
+      isFreeTrial: isFreeTrial ?? this.isFreeTrial,
+      assistantId: assistantId ?? this.assistantId,
+      doctorId: doctorId ?? this.doctorId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      v: v ?? this.v,
+      totalTask: totalTask ?? this.totalTask,
+      pendingTask: pendingTask ?? this.pendingTask,
+      completedTask: completedTask ?? this.completedTask,
+      doctorChatId: doctorChatId ?? this.doctorChatId,
+      subscriptionPlanType: subscriptionPlanType ?? this.subscriptionPlanType,
+    );
+  }
 
   factory ProfileData.fromRawJson(String str) =>
       ProfileData.fromJson(json.decode(str));
@@ -93,7 +127,10 @@ class ProfileData {
     address: json["address"],
     isSubscribed: json["isSubscribed"],
     hasAccess: json["hasAccess"],
-    subscriptionId: json["subscriptionId"],
+    subscriptionPackageId: json["subscriptionPackageId"] ?? json["subscriptionId"],
+    subscriptionExpiredDate: json["subscriptionExpiredDate"] == null
+        ? null
+        : DateTime.tryParse(json["subscriptionExpiredDate"]),
     isFreeTrial: json["isFreeTrial"],
     assistantId: json["assistantId"],
     doctorId: json["doctorId"],
@@ -123,7 +160,7 @@ class ProfileData {
     "address": address,
     "isSubscribed": isSubscribed,
     "hasAccess": hasAccess,
-    "subscriptionId": subscriptionId,
+    "subscriptionId": subscriptionPackageId,
     "isFreeTrial": isFreeTrial,
     "assistantId": assistantId,
     "doctorId": doctorId,

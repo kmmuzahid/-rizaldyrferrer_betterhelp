@@ -4,7 +4,10 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/screen/menu_drawer/my_profile/model/my_profile_model.dart';
+import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/service/repository/auth_repository/auth_reporsitory.dart';
+import 'package:better_help/service/repository/profile_repositroy/profile_repository.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +15,7 @@ import 'package:get/get.dart';
 
 class LoginScreenController extends GetxController {
   final _authRepository = AuthReporsitory();
+  final _profileRepsitory = ProfileRepository();
 
   // Text controllers
   late TextEditingController emailController;
@@ -62,8 +66,6 @@ class LoginScreenController extends GetxController {
       password: passwordController.text,
     );
 
-    isLoading.value = false;
-
     if (response?.isSuccess ?? false) {
       await StorageService.instance.saveAccessToken(
         response!.data['accessToken'],
@@ -72,8 +74,21 @@ class LoginScreenController extends GetxController {
         response.data['refreshToken'],
       );
       await StorageService.instance.saveUserData(response.data['user']);
+
+      final profile = await _profileRepsitory.getMyProfile();
+      ProfileData? profileData;
+      if (profile.isSuccess) {
+        profileData = response.data;
+        Get.find<MyProfileScreenController>().profileData.value = profileData;
+      }
       AppSnackBar.showSuccess(response.message ?? "Login successful");
-      Get.offAllNamed(AppRoute.subscriptionscreen);
+      isLoading.value = false;
+
+      if (profileData?.subscriptionPackageId == null) {
+        Get.offAllNamed(AppRoute.subscriptionscreen);
+      } else {
+        Get.offAllNamed(AppRoute.bottomNav);
+      }
     }
   }
 }

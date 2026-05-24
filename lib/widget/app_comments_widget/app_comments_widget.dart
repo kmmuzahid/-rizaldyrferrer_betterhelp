@@ -74,135 +74,7 @@ class CommentsController extends GetxController {
     if (Get.arguments != null && Get.arguments is String) {
       postId = Get.arguments as String;
       loadRealComments();
-    } else {
-      loadComments(); // Fallback to mock data
     }
-  }
-
-  void loadComments() {
-    // Your mock data
-    final mockData = {
-      "comments": [
-        {
-          "id": 1,
-          "user": "Rundownby",
-          "avatar": "https://i.pravatar.cc/150?img=3",
-          "text":
-              "This is incredible. I have always looked forward to your work.",
-          "likes": 1200,
-          "replies": [
-            {
-              "id": 11,
-              "user": "Dadaboyy",
-              "avatar": "https://i.pravatar.cc/150?img=4",
-              "text": "Totally agree! This is on another level.",
-              "likes": 450,
-              "replies": [
-                {
-                  "id": 111,
-                  "user": "marvel_fanatic",
-                  "avatar": "https://i.pravatar.cc/150?img=5",
-                  "text": "Exactly, I've been waiting for this too!",
-                  "likes": 120,
-                  "replies": [
-                    {
-                      "id": 1111,
-                      "user": "tech_guru",
-                      "avatar": "https://i.pravatar.cc/150?img=6",
-                      "text": "Haha same here, this blew my mind 🤯",
-                      "likes": 75,
-                      "replies": [],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              "id": 12,
-              "user": "creative_guy",
-              "avatar": "https://i.pravatar.cc/150?img=7",
-              "text": "Man, I wish I had your skills 🔥",
-              "likes": 210,
-              "replies": [],
-            },
-          ],
-        },
-        {
-          "id": 2,
-          "user": "Dadaboyy",
-          "avatar": "https://i.pravatar.cc/150?img=8",
-          "text": "Seems like I'm still a beginner, cause what!! This is huge.",
-          "likes": 1800,
-          "replies": [
-            {
-              "id": 21,
-              "user": "newbie123",
-              "avatar": "https://i.pravatar.cc/150?img=9",
-              "text": "Same here bro, this is crazy inspiring!",
-              "likes": 90,
-              "replies": [
-                {
-                  "id": 211,
-                  "user": "old_timer",
-                  "avatar": "https://i.pravatar.cc/150?img=10",
-                  "text": "Trust me, we all start somewhere! Keep going 💪",
-                  "likes": 60,
-                  "replies": [
-                    {
-                      "id": 2111,
-                      "user": "mentor_guy",
-                      "avatar": "https://i.pravatar.cc/150?img=11",
-                      "text": "That's the spirit! Everyone grows step by step.",
-                      "likes": 35,
-                      "replies": [],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          "id": 3,
-          "user": "marvel_fanatic",
-          "avatar": "https://i.pravatar.cc/150?img=12",
-          "text": "You've got to commission this man.",
-          "likes": 1800,
-          "replies": [
-            {
-              "id": 31,
-              "user": "comic_lover",
-              "avatar": "https://i.pravatar.cc/150?img=13",
-              "text": "Marvel should really hire him officially.",
-              "likes": 500,
-              "replies": [
-                {
-                  "id": 311,
-                  "user": "studio_artist",
-                  "avatar": "https://i.pravatar.cc/150?img=14",
-                  "text": "That would be a dream come true!",
-                  "likes": 150,
-                  "replies": [
-                    {
-                      "id": 3111,
-                      "user": "fanboy",
-                      "avatar": "https://i.pravatar.cc/150?img=15",
-                      "text": "I'd love to see his work in actual comics 😍",
-                      "likes": 95,
-                      "replies": [],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-
-    comments.value = (mockData['comments'] as List)
-        .map((comment) => Comment.fromJson(comment))
-        .toList();
   }
 
   //! Load real comments from API
@@ -214,20 +86,52 @@ class CommentsController extends GetxController {
       isLoading.value = true;
       appLog('Loading comments for post: $postId');
 
-      final response = await _repository.getSinglePost(postId);
+      final response = await _repository.getPostComments(postId);
 
-      if (response != null && response['success'] == true) {
-        postData.value = post_model.SinglePostModel.fromJson(response);
+      if (response.isSuccess && response.data != null) {
+        final fetchedComments = response.data!;
 
         // Get current user ID to set isLiked state
         final userData = await StorageService.instance.getUserData();
         final currentUserId = userData?['_id'] as String?;
 
-        if (currentUserId != null && postData.value?.data?.comments != null) {
+        if (currentUserId != null) {
           // Update isLiked for all comments and replies
-          for (var comment in postData.value!.data!.comments!) {
+          for (var comment in fetchedComments) {
             _updateCommentLikeState(comment, currentUserId);
           }
+        }
+
+        // Construct or update postData.value with the fetched comments
+        if (postData.value == null) {
+          postData.value = post_model.SinglePostModel(
+            success: true,
+            message: "Comments fetched successfully",
+            data: post_model.PostData(
+              id: postId,
+              comments: fetchedComments,
+              commentsCount: fetchedComments.length,
+            ),
+          );
+        } else {
+          postData.value = post_model.SinglePostModel(
+            success: postData.value!.success,
+            message: postData.value!.message,
+            data: post_model.PostData(
+              id: postData.value!.data?.id,
+              userId: postData.value!.data?.userId,
+              description: postData.value!.data?.description,
+              likes: postData.value!.data?.likes,
+              highlights: postData.value!.data?.highlights,
+              commentsCount: fetchedComments.length,
+              likesCount: postData.value!.data?.likesCount,
+              isDeleted: postData.value!.data?.isDeleted,
+              createdAt: postData.value!.data?.createdAt,
+              updatedAt: postData.value!.data?.updatedAt,
+              v: postData.value!.data?.v,
+              comments: fetchedComments,
+            ),
+          );
         }
 
         appLog('Comments loaded successfully');
@@ -869,15 +773,19 @@ class CommentsBottomSheet extends StatelessWidget {
                   );
                 }
 
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  itemCount: comments.length,
-                  itemBuilder: (context, index) {
-                    return RealCommentWidget(
-                      comment: comments[index],
-                      controller: controller,
-                    );
-                  },
+                return RefreshIndicator(
+                  onRefresh: () => controller.loadRealComments(refresh: true),
+                  child: ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    itemCount: comments.length,
+                    itemBuilder: (context, index) {
+                      return RealCommentWidget(
+                        comment: comments[index],
+                        controller: controller,
+                      );
+                    },
+                  ),
                 );
               }
 

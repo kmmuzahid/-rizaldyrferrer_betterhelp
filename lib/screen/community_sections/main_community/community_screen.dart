@@ -29,6 +29,33 @@ class CommunityScreen extends StatefulWidget {
 }
 
 class _CommunityScreenState extends State<CommunityScreen> {
+  final ScrollController _scrollController = ScrollController();
+  late final CommunityScreenController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = Get.find<CommunityScreenController>();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      if (_controller.selectedTab == CommunityTab.article) {
+        _controller.loadMoreArticles();
+      } else {
+        _controller.loadMorePosts();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,460 +71,464 @@ class _CommunityScreenState extends State<CommunityScreen> {
       backgroundColor: AppColors.white,
       body: Stack(
         children: [
-          CustomScrollView(
-            slivers: [
-              GetBuilder<CommunityScreenController>(
-                builder: (controller) => SliverAppBar(
-                  pinned: true,
-                  expandedHeight: controller.selectedTab == CommunityTab.article
-                      ? AppSize.height(value: 80)
-                      : AppSize.height(value: 120),
-                  collapsedHeight:
-                      controller.selectedTab == CommunityTab.article
-                      ? AppSize.height(value: 80)
-                      : AppSize.height(value: 120),
-                  toolbarHeight: controller.selectedTab == CommunityTab.article
-                      ? AppSize.height(value: 80)
-                      : AppSize.height(value: 120),
-                  backgroundColor: AppColors.white,
-                  automaticallyImplyLeading: false,
-                  flexibleSpace: Container(
-                    color: AppColors.white,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSize.width(value: 20),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GetBuilder<CommunityScreenController>(
-                          builder: (controller) => Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              //! Peer Forum Button
-                              IconAppButton(
-                                title: "Peer Forum",
-                                fontSize: 12,
-                                iconSize: 15,
-                                titleColor:
-                                    controller.isTabSelected(
-                                      CommunityTab.peerForum,
-                                    )
-                                    ? AppColors.white
-                                    : AppColors.black,
-                                backgroundColor:
-                                    controller.isTabSelected(
-                                      CommunityTab.peerForum,
-                                    )
-                                    ? AppColors.t3
-                                    : AppColors.white500,
-                                borderColor: AppColors.grey100,
-                                borderRadius: 12,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: AppSize.width(value: 10),
-                                  vertical: AppSize.height(value: 5.5),
+          RefreshIndicator(
+            onRefresh: () async {
+              if (_controller.selectedTab == CommunityTab.article) {
+                await _controller.refreshArticles();
+              } else {
+                await _controller.refreshPosts();
+              }
+            },
+            color: AppColors.primary500,
+            child: CustomScrollView(
+              controller: _scrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: [
+                GetBuilder<CommunityScreenController>(
+                  builder: (controller) => SliverAppBar(
+                    pinned: true,
+                    expandedHeight: controller.selectedTab == CommunityTab.article
+                        ? AppSize.height(value: 80)
+                        : AppSize.height(value: 120),
+                    collapsedHeight:
+                        controller.selectedTab == CommunityTab.article
+                        ? AppSize.height(value: 80)
+                        : AppSize.height(value: 120),
+                    toolbarHeight: controller.selectedTab == CommunityTab.article
+                        ? AppSize.height(value: 80)
+                        : AppSize.height(value: 120),
+                    backgroundColor: AppColors.white,
+                    automaticallyImplyLeading: false,
+                    flexibleSpace: Container(
+                      color: AppColors.white,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSize.width(value: 20),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GetBuilder<CommunityScreenController>(
+                            builder: (controller) => Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                //! Peer Forum Button
+                                IconAppButton(
+                                  title: "Peer Forum",
+                                  fontSize: 12,
+                                  iconSize: 15,
+                                  titleColor:
+                                      controller.isTabSelected(
+                                        CommunityTab.peerForum,
+                                      )
+                                      ? AppColors.white
+                                      : AppColors.black,
+                                  backgroundColor:
+                                      controller.isTabSelected(
+                                        CommunityTab.peerForum,
+                                      )
+                                      ? AppColors.t3
+                                      : AppColors.white500,
+                                  borderColor: AppColors.grey100,
+                                  borderRadius: 12,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: AppSize.width(value: 10),
+                                    vertical: AppSize.height(value: 5.5),
+                                  ),
+                                  height: AppSize.width(value: 36),
+                                  width: AppSize.height(value: 165),
+                                  icon: AppStaticImages.peerforum,
+                                  iconAlignment: CustomIconAlignment.left,
+                                  // Add this missing onTap callback
+                                  onTap: () => controller.selectTab(
+                                    CommunityTab.peerForum,
+                                  ),
                                 ),
-                                height: AppSize.width(value: 36),
-                                width: AppSize.height(value: 165),
-                                icon: AppStaticImages.peerforum,
-                                iconAlignment: CustomIconAlignment.left,
-                                // Add this missing onTap callback
-                                onTap: () => controller.selectTab(
-                                  CommunityTab.peerForum,
+                                //! Article Button
+                                IconAppButton(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: AppSize.width(value: 10),
+                                    vertical: AppSize.height(value: 5.5),
+                                  ),
+                                  iconAlignment: CustomIconAlignment.left,
+                                  icon: AppStaticImages.communityArticle,
+                                  height: AppSize.width(value: 36),
+                                  width: AppSize.height(value: 165),
+                                  fontSize: 12,
+                                  iconSize: 15,
+                                  title: "Article",
+                                  backgroundColor:
+                                      controller.isTabSelected(
+                                        CommunityTab.article,
+                                      )
+                                      ? AppColors.t3
+                                      : AppColors.white500,
+                                  titleColor:
+                                      controller.isTabSelected(
+                                        CommunityTab.article,
+                                      )
+                                      ? AppColors.white
+                                      : AppColors.black,
+                                  onTap: () =>
+                                      controller.selectTab(CommunityTab.article),
+                                  borderColor: AppColors.grey100,
+                                  borderRadius: 12,
                                 ),
-                              ),
-                              //! Article Button
-                              IconAppButton(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: AppSize.width(value: 10),
-                                  vertical: AppSize.height(value: 5.5),
-                                ),
-                                iconAlignment: CustomIconAlignment.left,
-                                icon: AppStaticImages.communityArticle,
-                                height: AppSize.width(value: 36),
-                                width: AppSize.height(value: 165),
-                                fontSize: 12,
-                                iconSize: 15,
-                                title: "Article",
-                                backgroundColor:
-                                    controller.isTabSelected(
-                                      CommunityTab.article,
-                                    )
-                                    ? AppColors.t3
-                                    : AppColors.white500,
-                                titleColor:
-                                    controller.isTabSelected(
-                                      CommunityTab.article,
-                                    )
-                                    ? AppColors.white
-                                    : AppColors.black,
-                                onTap: () =>
-                                    controller.selectTab(CommunityTab.article),
-                                borderColor: AppColors.grey100,
-                                borderRadius: 12,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Gap(height: 15),
-                        // Only show filter buttons for Peer Forum
-                        GetBuilder<CommunityScreenController>(
-                          builder: (controller) =>
-                              controller.selectedTab == CommunityTab.peerForum
-                              ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    //! Recent Button
-                                    IconAppButton(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: AppSize.width(value: 08),
-                                        vertical: AppSize.height(value: 5.5),
+                          Gap(height: 15),
+                          // Only show filter buttons for Peer Forum
+                          GetBuilder<CommunityScreenController>(
+                            builder: (controller) =>
+                                controller.selectedTab == CommunityTab.peerForum
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      //! Recent Button
+                                      IconAppButton(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: AppSize.width(value: 08),
+                                          vertical: AppSize.height(value: 5.5),
+                                        ),
+                                        iconAlignment: CustomIconAlignment.left,
+                                        icon: AppStaticImages.communityRecent,
+                                        borderRadius: 12,
+                                        height: AppSize.width(value: 36),
+                                        width: AppSize.height(value: 100),
+                                        fontSize: 12,
+                                        iconSize: 15,
+                                        title: "Recent",
+                                        backgroundColor:
+                                            controller.isFilterSelected(
+                                              ForumFilter.recent,
+                                            )
+                                            ? AppColors.iconWarming
+                                            : AppColors.white500,
+                                        titleColor: AppColors.black,
+                                        onTap: () => controller.selectFilter(
+                                          ForumFilter.recent,
+                                        ),
                                       ),
-                                      iconAlignment: CustomIconAlignment.left,
-                                      icon: AppStaticImages.communityRecent,
-                                      borderRadius: 12,
-                                      height: AppSize.width(value: 36),
-                                      width: AppSize.height(value: 100),
-                                      fontSize: 12,
-                                      iconSize: 15,
-                                      title: "Recent",
-                                      backgroundColor:
-                                          controller.isFilterSelected(
-                                            ForumFilter.recent,
-                                          )
-                                          ? AppColors.iconWarming
-                                          : AppColors.white500,
-                                      titleColor: AppColors.black,
-                                      onTap: () => controller.selectFilter(
-                                        ForumFilter.recent,
+                                      //! Highlight Button
+                                      IconAppButton(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: AppSize.width(value: 10),
+                                          vertical: AppSize.height(value: 5.5),
+                                        ),
+                                        iconAlignment: CustomIconAlignment.left,
+                                        icon: AppStaticImages.communityHighlight,
+                                        height: AppSize.width(value: 36),
+                                        width: AppSize.height(value: 125),
+                                        fontSize: 12,
+                                        iconSize: 15,
+                                        title: "Highlight",
+                                        backgroundColor:
+                                            controller.isFilterSelected(
+                                              ForumFilter.highlight,
+                                            )
+                                            ? AppColors.iconWarming
+                                            : AppColors.white500,
+                                        titleColor: AppColors.black,
+                                        onTap: () => controller.selectFilter(
+                                          ForumFilter.highlight,
+                                        ),
+                                        borderColor: AppColors.grey100,
+                                        borderRadius: 12,
                                       ),
-                                    ),
-                                    //! Highlight Button
-                                    IconAppButton(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: AppSize.width(value: 10),
-                                        vertical: AppSize.height(value: 5.5),
+                                      //! Popular Button
+                                      IconAppButton(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: AppSize.width(value: 05),
+                                          vertical: AppSize.height(value: 5.5),
+                                        ),
+                                        iconAlignment: CustomIconAlignment.left,
+                                        icon: AppStaticImages.communityRecent,
+                                        height: AppSize.width(value: 36),
+                                        width: AppSize.height(value: 100),
+                                        fontSize: 12,
+                                        iconSize: 15,
+                                        title: "Popular",
+                                        backgroundColor:
+                                            controller.isFilterSelected(
+                                              ForumFilter.popular,
+                                            )
+                                            ? AppColors.iconWarming
+                                            : AppColors.white500,
+                                        titleColor: AppColors.black,
+                                        onTap: () => controller.selectFilter(
+                                          ForumFilter.popular,
+                                        ),
+                                        borderColor: AppColors.grey100,
+                                        borderRadius: 12,
                                       ),
-                                      iconAlignment: CustomIconAlignment.left,
-                                      icon: AppStaticImages.communityHighlight,
-                                      height: AppSize.width(value: 36),
-                                      width: AppSize.height(value: 125),
-                                      fontSize: 12,
-                                      iconSize: 15,
-                                      title: "Highlight",
-                                      backgroundColor:
-                                          controller.isFilterSelected(
-                                            ForumFilter.highlight,
-                                          )
-                                          ? AppColors.iconWarming
-                                          : AppColors.white500,
-                                      titleColor: AppColors.black,
-                                      onTap: () => controller.selectFilter(
-                                        ForumFilter.highlight,
-                                      ),
-                                      borderColor: AppColors.grey100,
-                                      borderRadius: 12,
-                                    ),
-                                    //! Popular Button
-                                    IconAppButton(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: AppSize.width(value: 05),
-                                        vertical: AppSize.height(value: 5.5),
-                                      ),
-                                      iconAlignment: CustomIconAlignment.left,
-                                      icon: AppStaticImages.communityRecent,
-                                      height: AppSize.width(value: 36),
-                                      width: AppSize.height(value: 100),
-                                      fontSize: 12,
-                                      iconSize: 15,
-                                      title: "Popular",
-                                      backgroundColor:
-                                          controller.isFilterSelected(
-                                            ForumFilter.popular,
-                                          )
-                                          ? AppColors.iconWarming
-                                          : AppColors.white500,
-                                      titleColor: AppColors.black,
-                                      onTap: () => controller.selectFilter(
-                                        ForumFilter.popular,
-                                      ),
-                                      borderColor: AppColors.grey100,
-                                      borderRadius: 12,
-                                    ),
-                                  ],
-                                )
-                              : SizedBox.shrink(),
-                        ),
-                        Gap(height: 03),
-                      ],
+                                    ],
+                                  )
+                                : SizedBox.shrink(),
+                          ),
+                          Gap(height: 03),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              //! Fixed: Move GetBuilder inside the sliver content
-              GetBuilder<CommunityScreenController>(
-                builder: (controller) {
-                  appLog(
-                    'Building content for tab: ${controller.selectedTab}',
-                  ); // Debug log
-
-                  if (controller.selectedTab == CommunityTab.article) {
-                    appLog('Rendering articles list'); // Debug log
-                    // Show articles when Article tab is selected
-                    return Obx(() {
-                      if (controller.isLoadingArticles.value &&
-                          controller.articles.isEmpty) {
-                        // Show loading for initial load
-                        return SliverFillRemaining(
-                          child: Center(
-                            child: LoadingAnimationWidget.threeArchedCircle(
-                              color: AppColors.primary500,
-                              size: 50,
-                            ),
-                          ),
-                        );
-                      }
-
-                      if (controller.articles.isEmpty) {
-                        // Show empty state
-                        return SliverFillRemaining(
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.article_outlined,
-                                  size: 64,
-                                  color: AppColors.grey100,
-                                ),
-                                Gap(height: 16),
-                                AppText(
-                                  text: "No articles available",
-                                  fontSize: 16,
-                                  color: AppColors.grey100,
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-
-                      return SliverList(
-                        key: ValueKey('article_list'),
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            // Show loading indicator at the end
-                            if (index == controller.articles.length) {
-                              if (controller.hasMoreArticles.value) {
-                                // Trigger load more
-                                Future.microtask(
-                                  () => controller.loadMoreArticles(),
-                                );
-                                return Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: AppSize.height(value: 20),
-                                  ),
-                                  child: Center(
-                                    child:
-                                        LoadingAnimationWidget.staggeredDotsWave(
-                                          color: AppColors.primary500,
-                                          size: 40,
-                                        ),
-                                  ),
-                                );
-                              }
-                              return SizedBox.shrink();
-                            }
-
-                            final article = controller.articles[index];
-
-                            // Build full image URL if needed
-                            String imageUrl = article.image ?? '';
-                            if (imageUrl.isNotEmpty &&
-                                !imageUrl.startsWith('http')) {
-                              // If image is a relative path, prepend the base domain
-                              imageUrl = '${ApiEndPoints.liveDomain}$imageUrl';
-                            }
-
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: AppSize.width(value: 20),
-                                vertical: AppSize.height(value: 8),
-                              ),
-                              child: CourseCard(
-                                onTap: () {
-                                  Get.toNamed(
-                                    AppRoute.articleScreen,
-                                    arguments: {'articleId': article.id},
-                                  );
-                                },
-                                margin: EdgeInsets.only(bottom: 08),
-                                height: AppSize.height(value: 245),
-                                cardType: CardType.article,
-                                title: article.title ?? "Untitled Article",
-                                instructor:
-                                    article.sourseName ?? "Unknown Author",
-                                timeToread:
-                                    article.readTime ?? "5 minutes to read",
-                                date: article.publicationDate != null
-                                    ? "${article.publicationDate!.day} ${_getMonthName(article.publicationDate!.month)}, ${article.publicationDate!.year}"
-                                    : "Date not available",
-                                imageUrl: imageUrl.isNotEmpty
-                                    ? imageUrl
-                                    : AppStaticImages.habits01,
-                                isFavorited: article.isFavorite ?? false,
-                                onFavoritePressed: () {
-                                  if (article.id != null) {
-                                    controller.toggleSaveArticle(
-                                      article.id!,
-                                      index,
-                                    );
-                                  }
-                                },
-                              ),
-                            );
-                          },
-                          childCount:
-                              controller.articles.length +
-                              (controller.hasMoreArticles.value ? 1 : 0),
-                        ),
-                      );
-                    });
-                  } else {
+                //! Fixed: Move GetBuilder inside the sliver content
+                GetBuilder<CommunityScreenController>(
+                  builder: (controller) {
                     appLog(
-                      'Rendering posts list for filter: ${controller.selectedFilter}',
+                      'Building content for tab: ${controller.selectedTab}',
                     ); // Debug log
-                    // Show posts for Peer Forum with real data from API
-                    return Obx(() {
-                      if (controller.isLoadingPosts.value &&
-                          controller.posts.isEmpty) {
-                        // Show loading for initial load
-                        return SliverFillRemaining(
-                          child: Center(
-                            child: LoadingAnimationWidget.threeArchedCircle(
-                              color: AppColors.primary500,
-                              size: 50,
-                            ),
-                          ),
-                        );
-                      }
 
-                      if (controller.posts.isEmpty) {
-                        // Show empty state
-                        return SliverFillRemaining(
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.forum_outlined,
-                                  size: 64,
-                                  color: AppColors.grey100,
-                                ),
-                                Gap(height: 16),
-                                AppText(
-                                  text: "No posts available",
-                                  fontSize: 16,
-                                  color: AppColors.grey100,
-                                ),
-                              ],
+                    if (controller.selectedTab == CommunityTab.article) {
+                      appLog('Rendering articles list'); // Debug log
+                      // Show articles when Article tab is selected
+                      return Obx(() {
+                        if (controller.isLoadingArticles.value &&
+                            controller.articles.isEmpty) {
+                          // Show loading for initial load
+                          return SliverFillRemaining(
+                            child: Center(
+                              child: LoadingAnimationWidget.threeArchedCircle(
+                                color: AppColors.primary500,
+                                size: 50,
+                              ),
                             ),
-                          ),
-                        );
-                      }
+                          );
+                        }
 
-                      return SliverList(
-                        key: ValueKey(
-                          'forum_list_${controller.selectedFilter}',
-                        ),
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            // Show loading indicator at the end
-                            if (index == controller.posts.length) {
-                              if (controller.hasMorePosts.value) {
-                                // Trigger load more
-                                Future.microtask(
-                                  () => controller.loadMorePosts(),
-                                );
-                                return Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: AppSize.height(value: 20),
+                        if (controller.articles.isEmpty) {
+                          // Show empty state
+                          return SliverFillRemaining(
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.article_outlined,
+                                    size: 64,
+                                    color: AppColors.grey100,
                                   ),
-                                  child: Center(
-                                    child:
-                                        LoadingAnimationWidget.staggeredDotsWave(
-                                          color: AppColors.primary500,
-                                          size: 40,
-                                        ),
+                                  Gap(height: 16),
+                                  AppText(
+                                    text: "No articles available",
+                                    fontSize: 16,
+                                    color: AppColors.grey100,
                                   ),
-                                );
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+
+                        return SliverList(
+                          key: ValueKey('article_list'),
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              // Show loading indicator at the end
+                              if (index == controller.articles.length) {
+                                if (controller.hasMoreArticles.value) {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: AppSize.height(value: 20),
+                                    ),
+                                    child: Center(
+                                      child:
+                                          LoadingAnimationWidget.staggeredDotsWave(
+                                            color: AppColors.primary500,
+                                            size: 40,
+                                          ),
+                                    ),
+                                  );
+                                }
+                                return SizedBox.shrink();
                               }
-                              return SizedBox.shrink();
-                            }
 
-                            final post = controller.posts[index];
+                              final article = controller.articles[index];
 
-                            // Build profile image URL if needed
-                            String profileImage = post.userId?.profile ?? '';
-                            if (profileImage.isNotEmpty &&
-                                !profileImage.startsWith('http')) {
-                              profileImage =
-                                  '${ApiEndPoints.imageUrl}$profileImage';
-                            }
+                              // Build full image URL if needed
+                              String imageUrl = article.image ?? '';
+                              if (imageUrl.isNotEmpty &&
+                                  !imageUrl.startsWith('http')) {
+                                // If image is a relative path, prepend the base domain
+                                imageUrl = '${ApiEndPoints.liveDomain}$imageUrl';
+                              }
 
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: AppSize.width(value: 20),
-                                vertical: AppSize.height(value: 8),
-                              ),
-                              child: SocialMediaPostCard(
-                                postText: post.description ?? "No description",
-                                userName:
-                                    post.userId?.fullName ?? "Unknown User",
-                                userLocation:
-                                    post.userId?.address ?? "Unknown Location",
-                                profileImage: profileImage.isNotEmpty
-                                    ? profileImage
-                                    : AppStaticImages.postProfile,
-                                likesCount: post.likesCount ?? 0,
-                                commentsCount: post.commentsCount ?? 0,
-                                isLiked: post.isLiked ?? false,
-                                onLikeTap: () {
-                                  if (post.id != null) {
-                                    controller.likePost(post.id!, index);
-                                  }
-                                },
-                                onCommentTap: () {
-                                  // Navigate to comments bottom sheet with post ID
-                                  if (post.id != null) {
-                                    Get.bottomSheet(
-                                      CommentsBottomSheet(postId: post.id),
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
+                              return Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppSize.width(value: 20),
+                                  vertical: AppSize.height(value: 8),
+                                ),
+                                child: CourseCard(
+                                  onTap: () {
+                                    Get.toNamed(
+                                      AppRoute.articleScreen,
+                                      arguments: {'articleId': article.id},
                                     );
-                                  }
-                                },
+                                  },
+                                  margin: EdgeInsets.only(bottom: 08),
+                                  height: AppSize.height(value: 245),
+                                  cardType: CardType.article,
+                                  title: article.title ?? "Untitled Article",
+                                  instructor:
+                                      article.sourseName ?? "Unknown Author",
+                                  timeToread:
+                                      article.readTime ?? "5 minutes to read",
+                                  date: article.publicationDate != null
+                                      ? "${article.publicationDate!.day} ${_getMonthName(article.publicationDate!.month)}, ${article.publicationDate!.year}"
+                                      : "Date not available",
+                                  imageUrl: imageUrl.isNotEmpty
+                                      ? imageUrl
+                                      : AppStaticImages.habits01,
+                                  isFavorited: article.isFavorite ?? false,
+                                  onFavoritePressed: () {
+                                    if (article.id != null) {
+                                      controller.toggleSaveArticle(
+                                        article.id!,
+                                        index,
+                                      );
+                                    }
+                                  },
+                                ),
+                              );
+                            },
+                            childCount:
+                                controller.articles.length +
+                                (controller.hasMoreArticles.value ? 1 : 0),
+                          ),
+                        );
+                      });
+                    } else {
+                      appLog(
+                        'Rendering posts list for filter: ${controller.selectedFilter}',
+                      ); // Debug log
+                      // Show posts for Peer Forum with real data from API
+                      return Obx(() {
+                        if (controller.isLoadingPosts.value &&
+                            controller.posts.isEmpty) {
+                          // Show loading for initial load
+                          return SliverFillRemaining(
+                            child: Center(
+                              child: LoadingAnimationWidget.threeArchedCircle(
+                                color: AppColors.primary500,
+                                size: 50,
                               ),
-                            );
-                          },
-                          childCount:
-                              controller.posts.length +
-                              (controller.hasMorePosts.value ? 1 : 0),
-                        ),
-                      );
-                    });
-                  }
-                },
-              ),
-              GetBuilder<CommunityScreenController>(
-                builder: (controller) => SliverToBoxAdapter(
-                  child: controller.selectedTab == CommunityTab.article
-                      ? Gap(height: 80)
-                      : Gap(height: 130),
+                            ),
+                          );
+                        }
+
+                        if (controller.posts.isEmpty) {
+                          // Show empty state
+                          return SliverFillRemaining(
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.forum_outlined,
+                                    size: 64,
+                                    color: AppColors.grey100,
+                                  ),
+                                  Gap(height: 16),
+                                  AppText(
+                                    text: "No posts available",
+                                    fontSize: 16,
+                                    color: AppColors.grey100,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+
+                        return SliverList(
+                          key: ValueKey(
+                            'forum_list_${controller.selectedFilter}',
+                          ),
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              // Show loading indicator at the end
+                              if (index == controller.posts.length) {
+                                if (controller.hasMorePosts.value) {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: AppSize.height(value: 20),
+                                    ),
+                                    child: Center(
+                                      child:
+                                          LoadingAnimationWidget.staggeredDotsWave(
+                                            color: AppColors.primary500,
+                                            size: 40,
+                                          ),
+                                    ),
+                                  );
+                                }
+                                return SizedBox.shrink();
+                              }
+
+                              final post = controller.posts[index];
+
+                              // Build profile image URL if needed
+                              String profileImage = post.userId?.profile ?? '';
+                              if (profileImage.isNotEmpty &&
+                                  !profileImage.startsWith('http')) {
+                                profileImage =
+                                    '${ApiEndPoints.liveDomain}$profileImage';
+                              }
+
+                              return Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppSize.width(value: 20),
+                                  vertical: AppSize.height(value: 8),
+                                ),
+                                child: SocialMediaPostCard(
+                                  postText: post.description ?? "No description",
+                                  userName:
+                                      post.userId?.fullName ?? "Unknown User",
+                                  userLocation:
+                                      post.userId?.address ?? "Unknown Location",
+                                  profileImage: profileImage.isNotEmpty
+                                      ? profileImage
+                                      : AppStaticImages.postProfile,
+                                  likesCount: post.likesCount ?? 0,
+                                  commentsCount: post.commentsCount ?? 0,
+                                  isLiked: post.isLiked ?? false,
+                                  onLikeTap: () {
+                                    if (post.id != null) {
+                                      controller.likePost(post.id!, index);
+                                    }
+                                  },
+                                  onCommentTap: () {
+                                    // Navigate to comments bottom sheet with post ID
+                                    if (post.id != null) {
+                                      Get.bottomSheet(
+                                        CommentsBottomSheet(postId: post.id),
+                                        isScrollControlled: true,
+                                        backgroundColor: Colors.transparent,
+                                      );
+                                    }
+                                  },
+                                ),
+                              );
+                            },
+                            childCount:
+                                controller.posts.length +
+                                (controller.hasMorePosts.value ? 1 : 0),
+                          ),
+                        );
+                      });
+                    }
+                  },
                 ),
-              ), //! Extra space for fixed button
-            ],
+                GetBuilder<CommunityScreenController>(
+                  builder: (controller) => SliverToBoxAdapter(
+                    child: controller.selectedTab == CommunityTab.article
+                        ? Gap(height: 80)
+                        : Gap(height: 130),
+                  ),
+                ), //! Extra space for fixed button
+              ],
+            ),
           ),
           //! Fixed Create Post Button at bottom (only for Peer Forum)
           GetBuilder<CommunityScreenController>(

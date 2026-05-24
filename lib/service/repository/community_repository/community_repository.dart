@@ -1,6 +1,7 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/community_sections/main_community/model/article_model.dart';
 import 'package:better_help/screen/community_sections/main_community/model/post_model.dart';
+import 'package:better_help/screen/community_sections/main_community/model/single_post_model.dart' as single_post;
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:core_kit/network/request_input.dart';
@@ -321,5 +322,21 @@ class CommunityRepository {
       );
       return false;
     }
+  }
+
+  //! Get comments for a post
+  Future<ResponseState<List<single_post.Comment>?>> getPostComments(String postId) async {
+    appLog('CommunityRepository: Fetching comments for post with ID - $postId');
+
+    return DioService.instance.request<List<single_post.Comment>>(
+      input: RequestInput(
+        endpoint: ApiEndPoints.getPostComment(postId),
+        method: RequestMethod.GET,
+      ),
+      responseBuilder: (data) {
+        if (data == null) return [];
+        return (data as List).map((x) => single_post.Comment.fromJson(x)).toList();
+      },
+    );
   }
 }

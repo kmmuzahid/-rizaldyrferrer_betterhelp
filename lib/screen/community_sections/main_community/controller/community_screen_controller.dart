@@ -128,7 +128,7 @@ class CommunityScreenController extends GetxController {
     if (isLoadingArticles.value) return;
 
     try {
-      if (refresh) {
+      if (refresh || currentPage.value == 1) {
         currentPage.value = 1;
         articles.clear();
         hasMoreArticles.value = true;
@@ -145,7 +145,7 @@ class CommunityScreenController extends GetxController {
       if (result != null && result.data != null) {
         appLog('Articles fetched successfully: ${result.data!.length} items');
 
-        if (refresh) {
+        if (refresh || currentPage.value == 1) {
           articles.value = result.data!;
         } else {
           articles.addAll(result.data!);
@@ -188,7 +188,7 @@ class CommunityScreenController extends GetxController {
     if (isLoadingPosts.value) return;
 
     try {
-      if (refresh) {
+      if (refresh || currentPostPage.value == 1) {
         currentPostPage.value = 1;
         // Don't clear posts immediately to preserve like states
         hasMorePosts.value = true;
@@ -236,7 +236,7 @@ class CommunityScreenController extends GetxController {
         final userData = await StorageService.instance.getUserData();
         final currentUserId = userData?['_id'] as String?;
 
-        if (refresh) {
+        if (refresh || currentPostPage.value == 1) {
           // Update posts with correct like states based on likes array
           posts.value = result.data!.map((newPost) {
             // Check if current user ID is in the likes array

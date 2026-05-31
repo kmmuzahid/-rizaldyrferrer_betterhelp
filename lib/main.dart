@@ -8,7 +8,6 @@ import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/screen/notification/notification_service.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
-import 'package:better_help/service/timer_service/timer_service.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/widget/app_deviceutils/app_device_utils.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
@@ -44,11 +43,7 @@ void main() async {
 
   //!Initialize Storage
   await StorageService().init();
-  //! Initialize TimerService as a service
-  Get.put(TimerService(), permanent: true);
   DeviceUtils.lockDevicePortrait();
-  //! Initial Bindings
-  AppInitialBindings().dependencies();
   runApp(const MyApp());
 }
 
@@ -73,6 +68,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       defaultTransition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 200),
+      initialBinding: AppInitialBindings(),
       initialRoute: AppRoute.splashscreen,
       navigatorKey: navigatorKey,
       theme: ThemeData(

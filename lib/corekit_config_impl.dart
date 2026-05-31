@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
+import 'package:better_help/core/app_bindings/app_bindings.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
+import 'package:better_help/service/timer_service/timer_service.dart';
 import 'package:core_kit/initializer.dart';
 import 'package:core_kit/network/ck_transport_config.dart';
 import 'package:core_kit/auth/auth_config.dart';
@@ -21,15 +23,24 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
   @override
   String get imageBaseUrl => ApiEndPoints.imageUrl;
 
+  /// Disable enforced splash delay for faster navigation
+  @override
+  int get splashDelayMs => 0;
+
+  /// Custom initialization tasks run during the 3-second splash delay.
+  /// Use this to register dependencies, initialize services, etc.
+  @override
+  Future<void> Function()? get onInit => () async {
+    // Initialize TimerService as a service
+    Get.put(TimerService(), permanent: true);
+    // Initial Bindings
+    AppInitialBindings().dependencies();
+  };
+
   @override
   CkTransportConfig get ckTransportConfig => CkTransportConfig(
     baseUrl: ApiEndPoints.baseUrl,
     refreshTokenEndpoint: ApiEndPoints.refreshToken,
-    onLogout: () {
-      StorageService().removeTokens();
-      StorageService().removeUserData();
-      Get.offAllNamed(AppRoute.splashscreen);
-    },
     enableDebugLogs: kDebugMode,
   );
 
@@ -74,7 +85,12 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
           Get.offAllNamed(AppRoute.bottomNav);
         }
       },
-      routeToLogin: () => Get.offAllNamed(AppRoute.splashscreen),
+      routeToLogin: () {
+        Get.offAllNamed(AppRoute.loginScreen);
+      },
+      routeToOnboarding: () {
+        Get.offAllNamed(AppRoute.onboardingscreen);
+      },
     ),
     onProfileLoaded: (profile) async {
       await StorageService().saveUserData(profile.toJson());

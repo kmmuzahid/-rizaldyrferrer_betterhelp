@@ -3,12 +3,9 @@
  * @Date: 2026-01-09 09:41:39
  * @Email: km.muzahid@gmail.com
  */
-import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/model/my_profile_model.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
-import 'package:better_help/service/repository/auth_repository/auth_reporsitory.dart';
 import 'package:better_help/service/repository/profile_repositroy/profile_repository.dart';
-import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:core_kit/auth/ck_auth.dart';
@@ -16,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginScreenController extends GetxController {
-  final _authRepository = AuthReporsitory();
   final _profileRepsitory = ProfileRepository();
 
   // Text controllers
@@ -75,12 +71,7 @@ class LoginScreenController extends GetxController {
       }
       AppSnackBar.showSuccess(result.message ?? "Login successful");
       isLoading.value = false;
-
-      if (profileData?.subscriptionPackageId == null) {
-        Get.offAllNamed(AppRoute.subscriptionscreen);
-      } else {
-        Get.offAllNamed(AppRoute.bottomNav);
-      }
+      // CoreKit's autoNavigate will handle routing based on subscription status
     } else {
       AppSnackBar.showError(result.message ?? "Login failed");
       isLoading.value = false;

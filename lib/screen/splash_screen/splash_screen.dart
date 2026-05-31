@@ -1,13 +1,10 @@
-import 'package:better_help/screen/splash_screen/controller/splash_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class SplashScreen extends StatelessWidget {
-   SplashScreen({super.key});
-   final SplashScreenController controller = Get.find<SplashScreenController>();
+  const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

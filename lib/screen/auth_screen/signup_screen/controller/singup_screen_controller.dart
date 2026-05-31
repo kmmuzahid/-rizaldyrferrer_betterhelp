@@ -3,6 +3,7 @@ import 'package:better_help/service/repository/auth_repository/auth_reporsitory.
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
+import 'package:core_kit/auth/ck_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -68,38 +69,48 @@ class SingupScreenController extends GetxController {
     appLog('SignupController: Starting signup process...');
     isLoading.value = true;
 
-    try {
-      final response = await _authRepository.createUser(
-        fullName: fullNameController.text.trim(),
-        email: emailController.text.trim(),
-        password: passwordController.text,
-      );
+    CkAuth.signUp(
+      body: {
+        "fullName": fullNameController.text.trim(),
+        "email": emailController.text.trim(),
+        "password": passwordController.text,
+        "role": "user",
+      },
+    );
 
-      if (response != null && response.isSuccess) {
-        appLog('SignupController: Signup successful');
+    // try {
+    //   final response = await
+    //  _authRepository.createUser(
+    //   fullName: fullNameController.text.trim(),
+    //   email: emailController.text.trim(),
+    //   password: passwordController.text,
+    // );
 
-        // Save createUserToken from response
-        if (response.data != null &&
-            response.data?['createUserToken'] != null) {
-          await _storageService.saveCreateUserToken(
-            response.data!['createUserToken'],
-          );
-          appLog('SignupController: createUserToken saved to storage');
-        }
+    //   if (response != null && response.isSuccess) {
+    //     appLog('SignupController: Signup successful');
 
-        AppSnackBar.showSuccess("Account created successfully!");
-        Get.toNamed(
-          AppRoute.otpVerificationScreen,
-          arguments: {'screen': "signup", 'email': emailController.text.trim()},
-        );
-      } else {
-        appLog('SignupController: Signup failed');
-      }
-    } catch (e) {
-      appLog('SignupController: Exception - $e');
-      AppSnackBar.showError("Something went wrong. Please try again.");
-    } finally {
-      isLoading.value = false;
-    }
+    //     // Save createUserToken from response
+    //     if (response.data != null &&
+    //         response.data?['createUserToken'] != null) {
+    //       await _storageService.saveCreateUserToken(
+    //         response.data!['createUserToken'],
+    //       );
+    //       appLog('SignupController: createUserToken saved to storage');
+    //     }
+
+    //     AppSnackBar.showSuccess("Account created successfully!");
+    //     Get.toNamed(
+    //       AppRoute.otpVerificationScreen,
+    //       arguments: {'screen': "signup", 'email': emailController.text.trim()},
+    //     );
+    //   } else {
+    //     appLog('SignupController: Signup failed');
+    //   }
+    // } catch (e) {
+    //   appLog('SignupController: Exception - $e');
+    //   AppSnackBar.showError("Something went wrong. Please try again.");
+    // } finally {
+    isLoading.value = false;
+    // }
   }
 }

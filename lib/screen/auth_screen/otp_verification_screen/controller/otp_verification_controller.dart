@@ -4,6 +4,7 @@ import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/service/repository/auth_repository/auth_reporsitory.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
+import 'package:core_kit/auth/ck_auth.dart';
 import 'package:get/get.dart';
 
 class OtpVerificationController extends GetxController {
@@ -68,23 +69,17 @@ class OtpVerificationController extends GetxController {
     isLoading.value = true;
 
     try {
-      if (sourceScreen == 'signup') {
-        final response = await _authRepository.verifyOtp(otp: otp);
+      final result = await CkAuth.verifyOtp(otp: otp);
 
-        if (response != null && response.isSuccess) {
-          appLog('OtpVerificationController: OTP verified successfully');
-          AppSnackBar.showSuccess('Account verified successfully!');
-          Get.offAllNamed(AppRoute.loginScreen);
-        }
-      } else if (sourceScreen == 'forgotpassword') {
-        final response = await _authRepository.verifyForgotPasswordOtp(otp: otp);
-
-        if (response != null && response.isSuccess) {
-          print(response);
-          appLog('OtpVerificationController: Forgot password OTP verified');
-          AppSnackBar.showSuccess('OTP verified successfully!');
+      if (result.isSuccess) {
+        appLog('OtpVerificationController: OTP verified successfully');
+        AppSnackBar.showSuccess('OTP verified successfully!');
+        if (sourceScreen == 'forgotpassword') {
           Get.offNamed(AppRoute.changePasswrodScreen, arguments: {'isForgetPassword': true});
         }
+      } else {
+        appLog('OtpVerificationController: Verification failed - ${result.message}');
+        AppSnackBar.showError(result.message ?? 'Verification failed');
       }
     } catch (e) {
       appLog('OtpVerificationController: Exception - $e');

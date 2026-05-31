@@ -3,6 +3,7 @@ import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_bindings/app_bindings.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/service/timer_service/timer_service.dart';
+import 'package:core_kit/core_kit_internal.dart';
 import 'package:core_kit/initializer.dart';
 import 'package:core_kit/network/ck_transport_config.dart';
 import 'package:core_kit/auth/auth_config.dart';
@@ -61,7 +62,13 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
     extractors: CkAuthExtractors<ProfileData>(
       accessToken: (data) => data['accessToken']?.toString(),
       refreshToken: (data) => data['refreshToken']?.toString(),
-      profileData: (data) => data['user'],
+      profile: (data) {
+        ckDebug("@@@@@@@@@@@@@@@@ log: $data");
+        final profile = ProfileData.fromJson(data);
+        print('✅✅✅ Profile name: ${profile.fullName}');
+        return profile;
+      },
+
       message: (data) => data['message']?.toString(),
       verificationTokens: {
         CkOtpTrigger.signup: (data) =>
@@ -77,6 +84,12 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
       sendVerificationTokenInHeader: true,
     ),
     routes: CkAuthRoutes(
+      roteToOtpVerification: () {
+        Get.toNamed(
+          AppRoute.otpVerificationScreen,
+          arguments: {'screen': "", 'email': ""},
+        );
+      },
       routeOnSuccess: () {
         final profile = CkAuth.profile as ProfileData?;
         if (profile?.subscriptionPackageId == null) {
@@ -92,8 +105,5 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
         Get.offAllNamed(AppRoute.onboardingscreen);
       },
     ),
-    onProfileLoaded: (profile) async {
-      await StorageService().saveUserData(profile.toJson());
-    },
   );
 }

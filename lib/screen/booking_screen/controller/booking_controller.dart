@@ -1,7 +1,6 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/booking_screen/model/slots_model.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 
 class BookingController extends GetxController {
@@ -59,7 +58,7 @@ class BookingController extends GetxController {
     focuseDate.value = normalizeToLocalDate(date);
     isAvailableDateLoading.value = true;
 
-    ResponseState<List<SlotsModel>?> response = await DioService.instance.request<List<SlotsModel>>(
+    ResponseState<List<SlotsModel>?> response = await CkTransport.request<List<SlotsModel>>(
       input: RequestInput(
         endpoint: ApiEndPoints.getDoctorAvailableSlots,
         queryParams: {
@@ -134,7 +133,7 @@ class BookingController extends GetxController {
 
     isBookingLoading.value = true;
 
-    final response = await DioService.instance.request<dynamic>(
+    final response = await CkTransport.request<dynamic>(
       showMessage: true,
       input: RequestInput(
         endpoint: ApiEndPoints.createDoctorBooking,

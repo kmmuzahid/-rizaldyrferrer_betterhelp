@@ -8,8 +8,7 @@ import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/menu_drawer/bookings_sessions/model/booking_session_model.dart';
 import 'package:better_help/screen/menu_drawer/bookings_sessions/model/bookings_model.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 
 class BookingsSessionsController extends GetxController {
@@ -38,7 +37,7 @@ class BookingsSessionsController extends GetxController {
     if (refresh) {
       bookingSessionModel.clear();
     }
-    final result = await DioService.instance.request<List<BookedSessionModel>>(
+    final result = await CkTransport.request<List<BookedSessionModel>>(
       input: RequestInput(
         endpoint: ApiEndPoints.getMyBooking,
         queryParams: {'page': page, 'limit': 10},
@@ -63,12 +62,12 @@ class BookingsSessionsController extends GetxController {
     DateTime currentDateTime = DateTime.now();
 
     if (currentDateTime.isAfter(bookingSessionModel.endTime)) {
-      showSnackBar('Session Over', type: SnackBarType.warning);
+      CkSnackBar('Session Over', type: .warning);
       return;
     }
 
     if (currentDateTime.isBefore(bookingSessionModel.startTime)) {
-      showSnackBar('Session Not Started', type: SnackBarType.warning);
+      CkSnackBar('Session Not Started', type: .warning);
       return;
     }
 
@@ -101,7 +100,7 @@ class BookingsSessionsController extends GetxController {
     isLoading.value = true;
     appLog('Fetching bookings - Page: ${currentPage.value}');
 
-    final response = await DioService.instance.request<BookingsResponse>(
+    final response = await CkTransport.request<BookingsResponse>(
       input: RequestInput(
         endpoint:
             '${ApiEndPoints.seeAllBookings}?page=${currentPage.value}&limit=10',

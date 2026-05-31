@@ -20,7 +20,7 @@ class FaqsScreen extends StatelessWidget {
       appBar: AppBarWithBack(text: "FAQs", backgroundColor: AppColors.white),
       backgroundColor: AppColors.white,
       body: Obx(() {
-        return SmartListLoader(
+        return CkListView(
           limit: 20,
           isLoading: controller.isLoading.value,
           onRefresh: () => controller.fetchFaqList(isRefresh: true),
@@ -55,7 +55,10 @@ class _FaqItemState extends State<FaqItem> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
     _heightAnimation = Tween<double>(
       begin: 0,
       end: 100,
@@ -87,11 +90,17 @@ class _FaqItemState extends State<FaqItem> with TickerProviderStateMixin {
         subtitle: AnimatedBuilder(
           animation: _controller,
           builder: (context, child) {
-            return SizedBox(height: _isExpanded ? _heightAnimation.value : 0, child: child);
+            return SizedBox(
+              height: _isExpanded ? _heightAnimation.value : 0,
+              child: child,
+            );
           },
           child: Padding(
             padding: const EdgeInsets.only(top: 8.0),
-            child: Text(widget.answer, style: TextStyle(fontSize: 15, color: Colors.black87)),
+            child: Text(
+              widget.answer,
+              style: TextStyle(fontSize: 15, color: Colors.black87),
+            ),
           ),
         ),
         trailing: Icon(

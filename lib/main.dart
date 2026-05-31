@@ -13,11 +13,10 @@ import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/widget/app_deviceutils/app_device_utils.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:core_kit/initializer.dart';
-import 'package:core_kit/utils/core_screen_utils.dart';
+import 'package:core_kit/utils/ck_screen_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 import 'widget/app_observer/app_observer.dart';
 
@@ -45,10 +44,6 @@ void main() async {
 
   //!Initialize Storage
   await StorageService().init();
-  //! Initialize GetStorage
-  await GetStorage.init();
-  //! Initialize cached tokens
-  await MyApp.initializeTokens();
   //! Initialize TimerService as a service
   Get.put(TimerService(), permanent: true);
   DeviceUtils.lockDevicePortrait();
@@ -59,11 +54,6 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // Cache tokens in memory for synchronous access
-
-  // Initialize tokens from storage
-  static Future<void> initializeTokens() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +69,6 @@ class MyApp extends StatelessWidget {
   Widget _materialApp(CorkitInitBuilder builder) {
     return GetMaterialApp(
       navigatorObservers: [NavigationObserver()],
-      scaffoldMessengerKey: AppSnackBar.scaffoldMessengerKey,
       useInheritedMediaQuery: true,
       debugShowCheckedModeBanner: false,
       defaultTransition: Transition.fadeIn,

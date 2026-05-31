@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:better_help/widget/app_appbar/appbar_only_logo.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:core_kit/utils/core_screen_utils.dart';
+import 'package:core_kit/utils/ck_screen_utils.dart';
 import 'package:flutter/material.dart';
 
 class AnalyzingScreen extends StatelessWidget {

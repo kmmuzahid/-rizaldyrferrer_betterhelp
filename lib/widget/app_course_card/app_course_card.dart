@@ -2,7 +2,7 @@ import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:core_kit/image/common_image.dart';
+import 'package:core_kit/image/ck_image.dart';
 import 'package:flutter/material.dart';
 
 enum CardType { course, article }
@@ -80,8 +80,12 @@ class CourseCard extends StatelessWidget {
   Widget _buildImageSection() {
     return Stack(
       children: [
-        CommonImage(src: imageUrl, height: 120, width: double.infinity,
-          borderRadius: 12),
+        CkImage(
+          src: imageUrl,
+          height: 120,
+          width: double.infinity,
+          borderRadius: 12,
+        ),
         _buildFavoriteButton(),
         _buildViewsCounter(),
       ],

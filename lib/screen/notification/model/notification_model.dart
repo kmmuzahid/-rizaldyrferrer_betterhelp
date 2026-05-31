@@ -57,8 +57,8 @@ class NotificationModel {
       type: json['type'] ?? '',
       status: json['status'] ?? '',
       isRead: json['isRead'] ?? false,
-      createdAt: CoreUtils.parseDate(json['createdAt']),
-      updatedAt: CoreUtils.parseDate(json['updatedAt']),
+      createdAt: CkUtils.parseDate(json['createdAt']),
+      updatedAt: CkUtils.parseDate(json['updatedAt']),
     );
   }
 

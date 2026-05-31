@@ -8,8 +8,7 @@ import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/generate_task/generate_task_dialog.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -61,11 +60,11 @@ class HabitsScreenController extends GetxController {
   ].obs;
 
   void startNow(String id) async {
-    final result = await DioService.instance.request(
+    final result = await CkTransport.request(
       showMessage: true,
       input: RequestInput(
         endpoint: ApiEndPoints.taskStatus(id),
-        method: .PATCH,
+        method: RequestMethod.PATCH,
         queryParams: {'status': "do_now"},
       ),
       responseBuilder: (data) => data,
@@ -81,11 +80,11 @@ class HabitsScreenController extends GetxController {
   }
 
   void postpone(String id, int delayMinute) async {
-    final result = await DioService.instance.request(
+    final result = await CkTransport.request(
       showMessage: true,
       input: RequestInput(
         endpoint: ApiEndPoints.taskStatus(id),
-        method: .PATCH,
+        method: RequestMethod.PATCH,
         queryParams: {'status': "postpone", 'delayMinute': delayMinute},
       ),
       responseBuilder: (data) => data,
@@ -101,11 +100,11 @@ class HabitsScreenController extends GetxController {
   }
 
   void skip(String id) async {
-    final result = await DioService.instance.request(
+    final result = await CkTransport.request(
       showMessage: true,
       input: RequestInput(
         endpoint: ApiEndPoints.taskStatus(id),
-        method: .PATCH,
+        method: RequestMethod.PATCH,
         queryParams: {'status': "skip"},
       ),
       responseBuilder: (data) => data,
@@ -218,7 +217,7 @@ class HabitsScreenController extends GetxController {
 
     appLog('Fetching tasks for date: $formattedDate');
 
-    final response = await DioService.instance.request<TaskResponse>(
+    final response = await CkTransport.request<TaskResponse>(
       input: RequestInput(
         endpoint: ApiEndPoints.taskBytheDate(formattedDate),
         method: RequestMethod.GET,
@@ -254,7 +253,7 @@ class HabitsScreenController extends GetxController {
   /// Mark task as completed
   Future<void> markTaskAsCompleted(String taskId) async {
     appLog('Marking task $taskId as completed');
-    final response = await DioService.instance.request<Map<String, dynamic>>(
+    final response = await CkTransport.request<Map<String, dynamic>>(
       input: RequestInput(
         endpoint: ApiEndPoints.taskCompleted(taskId),
         method: RequestMethod.PATCH,
@@ -266,13 +265,10 @@ class HabitsScreenController extends GetxController {
       appLog('Task $taskId marked as completed successfully');
       // Refresh tasks to reflect status change
       await refreshTasks();
-      showSnackBar("Task marked as completed", type: SnackBarType.success);
+      CkSnackBar("Task marked as completed", type: .success);
     } else {
       appLog('Failed to mark task $taskId as completed');
-      showSnackBar(
-        "Failed to mark task as completed",
-        type: SnackBarType.error,
-      );
+      CkSnackBar("Failed to mark task as completed", type: .error);
     }
   }
 

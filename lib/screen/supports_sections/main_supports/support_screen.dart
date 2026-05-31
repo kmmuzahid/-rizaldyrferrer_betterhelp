@@ -15,7 +15,7 @@ import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -97,7 +97,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                   ? const Center(
                                       child: CircularProgressIndicator(),
                                     )
-                                  : SmartListLoader(
+                                  : CkListView(
                                       isReverse: true,
                                       limit: 20,
                                       onLoadMore: (page) {
@@ -143,10 +143,10 @@ class _SupportScreenState extends State<SupportScreen> {
                                                       .toLocal()
                                                       .date ==
                                                   DateTime.now().toLocal().date
-                                              ? CoreUtils.formatTime(
+                                              ? CkUtils.formatTime(
                                                   message.createdAt.toLocal(),
                                                 )
-                                              : CoreUtils.formatDateTimeToHms(
+                                              : CkUtils.formatDateTimeToHms(
                                                   message.createdAt.toLocal(),
                                                 ),
                                           isSender:
@@ -196,7 +196,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                       ),
                                       child: Column(
                                         children: [
-                                          CommonText(
+                                          CkText(
                                             text: controller
                                                 .messageModel[controller
                                                     .replyIndex
@@ -209,9 +209,9 @@ class _SupportScreenState extends State<SupportScreen> {
                                             isDescription: true,
                                           ),
                                           10.height,
-                                          CommonTextField(
-                                            validationType:
-                                                ValidationType.validateRequired,
+                                          CkTextField(
+                                            validationType: CkValidationType
+                                                .validateRequired,
                                             hintText: 'Reply to message',
                                             onChanged: (value) {
                                               controller.replyMessage = value;
@@ -274,7 +274,7 @@ class _SupportScreenState extends State<SupportScreen> {
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 2),
           child: Row(
             children: [
-              CommonText(
+              CkText(
                 text: "Next Appointment",
                 textColor: AppColors.accelerationButton,
                 fontSize: 14,
@@ -285,7 +285,7 @@ class _SupportScreenState extends State<SupportScreen> {
                 onTap: () {
                   Get.toNamed(AppRoute.bookingsSessions);
                 },
-                child: CommonText(
+                child: CkText(
                   top: 4,
                   bottom: 4,
                   left: 8,

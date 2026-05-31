@@ -11,7 +11,7 @@ import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/route_manager.dart';
@@ -118,7 +118,7 @@ class SubscriptionItem extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       children: [
-                        CommonButton(
+                        CkButton(
                           isLoading: isVerifying,
                           titleColor: buttonTextColor,
                           buttonWidth: .infinity,
@@ -214,7 +214,7 @@ class SubscriptionItem extends StatelessWidget {
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * .3,
         ),
-        child: CommonImage(src: plan.image ?? '', fill: BoxFit.contain),
+        child: CkImage(src: plan.image ?? '', fill: BoxFit.contain),
       );
     } else if (index == 1) {
       return Row(
@@ -249,7 +249,7 @@ class SubscriptionItem extends StatelessWidget {
         ],
       );
     } else if (index == 2) {
-      return CommonText(
+      return CkText(
         text: plan.subtitle ?? '',
         style: GoogleFonts.inter(),
         fontSize: 20,

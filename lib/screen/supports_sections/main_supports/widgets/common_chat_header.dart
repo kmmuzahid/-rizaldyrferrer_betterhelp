@@ -3,7 +3,7 @@
  * @Date: 2026-01-11 14:48:33
  * @Email: km.muzahid@gmail.com
  */
-import 'package:core_kit/core_kit.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 
 class CommonChatHeader extends StatelessWidget implements PreferredSizeWidget {
@@ -41,7 +41,7 @@ class CommonChatHeader extends StatelessWidget implements PreferredSizeWidget {
                 : const Icon(Icons.person, color: Colors.cyan),
           ),
           12.width,
-          CommonText(
+          CkText(
             text: title,
             fontSize: 18,
             fontWeight: FontWeight.bold,

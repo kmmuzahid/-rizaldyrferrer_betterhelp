@@ -5,7 +5,7 @@
  */
 import 'package:better_help/screen/supports_sections/main_supports/controller/support_screen_controller.dart';
 import 'package:better_help/screen/supports_sections/main_supports/model/message_model.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -61,7 +61,7 @@ class CommonChatBubble extends StatelessWidget {
                     : const Color(0xFFEEEEEE),
                 borderRadius: BorderRadius.circular(4.r),
               ),
-              child: CommonText(
+              child: CkText(
                 text: message.message,
                 textColor: Colors.black87,
                 textAlign: TextAlign.left,
@@ -84,7 +84,7 @@ class CommonChatBubble extends StatelessWidget {
                   runSpacing: 8,
                   children: [
                     ...List.generate(getLength(message.messageType), (index) {
-                      return CommonButton(
+                      return CkButton(
                         titleText: '${index + 1}',
                         buttonWidth: 30,
                         buttonHeight: 40,
@@ -104,7 +104,7 @@ class CommonChatBubble extends StatelessWidget {
                       );
                     }),
                     if (showReply(message.messageType))
-                      CommonButton(
+                      CkButton(
                         titleText: 'Reply',
                         borderWidth: 1.1,
                         borderColor: Colors.teal.withValues(alpha: .2),
@@ -120,7 +120,7 @@ class CommonChatBubble extends StatelessWidget {
                 ),
               ),
             if (timestamp != null)
-              CommonText(
+              CkText(
                 top: 4,
                 left: isSender ? 0 : 15,
                 right: isSender ? 15 : 0,

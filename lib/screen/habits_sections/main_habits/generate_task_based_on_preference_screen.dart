@@ -2,9 +2,9 @@ import 'package:better_help/screen/habits_sections/main_habits/controller/genera
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:core_kit/core_kit.dart' hide StringExtensions;
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide GetStringUtils;
 
 class GenerateTaskBasedOnPreferenceScreen extends StatelessWidget {
   const GenerateTaskBasedOnPreferenceScreen({super.key});
@@ -62,7 +62,7 @@ class GenerateTaskBasedOnPreferenceScreen extends StatelessWidget {
                   ? const SizedBox.shrink()
                   : Column(
                       children: [
-                        CommonButton(
+                        CkButton(
                           onTap: () => controller.addTask(),
                           buttonColor: const Color(0xFFFF8D41),
 
@@ -71,7 +71,7 @@ class GenerateTaskBasedOnPreferenceScreen extends StatelessWidget {
                         ),
 
                         10.height,
-                        CommonButton(
+                        CkButton(
                           onTap: () {
                             controller.regenerateTasks();
                           },

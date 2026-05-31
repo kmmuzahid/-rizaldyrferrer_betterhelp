@@ -11,7 +11,8 @@ import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/generate_task/generate_task_dialog.dart';
-import 'package:core_kit/snackbar/snackbar.dart';
+import 'package:core_kit/snackbar/ck_snackbar.dart';
+import 'package:core_kit/auth/ck_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -121,10 +122,7 @@ class UserDrawer extends StatelessWidget {
                                       .value
                                       ?.subscriptionPlanType ==
                                   null) {
-                            showSnackBar(
-                              'Upgrade Your Plan',
-                              type: SnackBarType.warning,
-                            );
+                            CkSnackBar('Upgrade Your Plan', type: .warning);
                             return;
                           }
                         }
@@ -149,10 +147,7 @@ class UserDrawer extends StatelessWidget {
                                   .value
                                   ?.subscriptionPlanType ==
                               null) {
-                        showSnackBar(
-                          'Upgrade Your Plan',
-                          type: SnackBarType.warning,
-                        );
+                        CkSnackBar('Upgrade Your Plan', type: .warning);
                         return;
                       }
                       Get.dialog(const GenerateTaskDialog());
@@ -251,9 +246,8 @@ class UserDrawer extends StatelessWidget {
                   Gap(height: 40),
                   AppButton(
                     title: "Logout",
-                    onTap: () {
-                      StorageService.instance.clearAll();
-                      Get.offAllNamed(AppRoute.loginScreen);
+                    onTap: () async {
+                      await CkAuth.logout();
                     },
                     backgroundColor: AppColors.red500,
                     borderradius: 08,

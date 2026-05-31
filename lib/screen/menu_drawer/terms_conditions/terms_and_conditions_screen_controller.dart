@@ -4,8 +4,7 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 
 class TermsAndConditionsScreenController extends GetxController {
@@ -21,7 +20,7 @@ class TermsAndConditionsScreenController extends GetxController {
   fetch() async {
     isLoading.value = true;
 
-    final result = await DioService.instance.request<String>(
+    final result = await CkTransport.request<String>(
       input: RequestInput(endpoint: ApiEndPoints.termsOfService, method: RequestMethod.GET),
       responseBuilder: (data) {
         return data?['termsOfService']?.toString() ?? '';

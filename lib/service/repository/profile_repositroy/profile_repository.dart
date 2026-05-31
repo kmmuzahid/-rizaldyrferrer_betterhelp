@@ -1,15 +1,14 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/model/my_profile_model.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 
 class ProfileRepository {
   final _storageServices = StorageService();
 
   /// Get user profile
   Future<ResponseState<ProfileData?>> getMyProfile() async {
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.getMyProfile,
         method: RequestMethod.GET,
@@ -27,7 +26,7 @@ class ProfileRepository {
     String? address,
     XFile? profile,
   }) async {
-    return DioService.instance.request(
+    return CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.editMyProfile,
         formFields: {'fullName': fullName, 'phone': phone, 'address': address},

@@ -4,8 +4,7 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
-import 'package:core_kit/network/dio_service.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
@@ -22,7 +21,7 @@ class PrivacyPolicyScreenController extends GetxController {
   fetch() async {
     isLoading.value = true;
 
-    final result = await DioService.instance.request<String>(
+    final result = await CkTransport.request<String>(
       input: RequestInput(endpoint: ApiEndPoints.privacyPolicy, method: RequestMethod.GET),
       responseBuilder: (data) {
         return data?['privacyPolicy']?.toString() ?? '';

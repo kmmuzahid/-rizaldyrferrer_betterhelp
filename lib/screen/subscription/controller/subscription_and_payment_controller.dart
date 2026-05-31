@@ -14,8 +14,7 @@ import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/control
 import 'package:better_help/screen/subscription/model/payment_verification_model.dart';
 import 'package:better_help/screen/subscription/model/subscription_model.dart';
 import 'package:better_help/sockets/support_message_socket.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -45,7 +44,7 @@ class SubscriptionAndPaymentController extends GetxController {
       platform = 'google';
     }
 
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.package,
         method: RequestMethod.GET,
@@ -254,7 +253,7 @@ class SubscriptionAndPaymentController extends GetxController {
     bool newSubscription = false,
   }) async {
     if (response == null) {
-      showSnackBar('Failed to verify purchase', type: SnackBarType.warning);
+      CkSnackBar('Failed to verify purchase', type: .warning);
       return;
     }
 
@@ -262,7 +261,7 @@ class SubscriptionAndPaymentController extends GetxController {
     if ((response.active == true && !routeFromDrawer) || newSubscription) {
       Get.offAllNamed(AppRoute.bottomNav);
     } else if (routeFromDrawer && response.active == true) {
-      showSnackBar('Subscription successful!', type: SnackBarType.success);
+      CkSnackBar('Subscription successful!', type: .success);
       Get.back();
     }
   }
@@ -278,7 +277,7 @@ class SubscriptionAndPaymentController extends GetxController {
     if (isVerifying.value) return null;
     isVerifying.value = true;
     try {
-      final response = await DioService.instance.request(
+      final response = await CkTransport.request(
         input: RequestInput(
           endpoint: ApiEndPoints.createSubscription,
           method: RequestMethod.POST,

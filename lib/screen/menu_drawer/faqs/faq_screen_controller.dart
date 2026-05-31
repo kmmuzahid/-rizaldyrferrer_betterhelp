@@ -4,8 +4,7 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 
 class FaqScreenController extends GetxController {
@@ -23,7 +22,7 @@ class FaqScreenController extends GetxController {
       faqList.clear();
     }
     isLoading.value = true;
-    final result = await DioService.instance.request<List<MapEntry<String, String>>>(
+    final result = await CkTransport.request<List<MapEntry<String, String>>>(
       input: RequestInput(
         endpoint: ApiEndPoints.faq,
         method: RequestMethod.GET,

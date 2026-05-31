@@ -7,7 +7,7 @@ import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:core_kit/utils/core_screen_utils.dart';
+import 'package:core_kit/utils/ck_screen_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';

@@ -4,8 +4,7 @@ import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/control
 import 'package:better_help/screen/notification/model/notification_model.dart';
 import 'package:better_help/screen/notification/notification_service.dart';
 import 'package:better_help/sockets/support_message_socket.dart';
-import 'package:core_kit/network/dio_service.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 
 class NotificationScreenController extends GetxController {
@@ -36,7 +35,7 @@ class NotificationScreenController extends GetxController {
   }
 
   getUnreadCount() async {
-    final response = await DioService.instance.request<int>(
+    final response = await CkTransport.request<int>(
       input: RequestInput(
         endpoint: ApiEndPoints.notification,
         queryParams: {'limit': 1},
@@ -50,7 +49,7 @@ class NotificationScreenController extends GetxController {
   }
 
   getAllNotification({int page = 1, bool isRefresh = false}) async {
-    final response = await DioService.instance.request<List<NotificationModel>>(
+    final response = await CkTransport.request<List<NotificationModel>>(
       input: RequestInput(
         endpoint: ApiEndPoints.notification,
         queryParams: {'page': page, 'limit': 20},
@@ -70,7 +69,7 @@ class NotificationScreenController extends GetxController {
   }
 
   markAllRead() async {
-    final response = await DioService.instance.request<dynamic>(
+    final response = await CkTransport.request<dynamic>(
       input: RequestInput(
         endpoint: ApiEndPoints.notificationAllRead,
         method: RequestMethod.POST,
@@ -90,7 +89,7 @@ class NotificationScreenController extends GetxController {
 
   readOneNotification(int index) async {
     final notification = notificationList[index];
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.getNotificationRead(notification.id),
         method: RequestMethod.PATCH,

@@ -1,8 +1,7 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 
 class AuthReporsitory {
   final _storageService = StorageService();
@@ -15,7 +14,7 @@ class AuthReporsitory {
   }) async {
     final body = {"email": email, "password": password};
 
-    final response = await DioService.instance.request<Map<String, dynamic>>(
+    final response = await CkTransport.request<Map<String, dynamic>>(
       input: RequestInput(
         endpoint: ApiEndPoints.login,
         method: RequestMethod.POST,
@@ -59,7 +58,7 @@ class AuthReporsitory {
     appLog('AuthRepository: Request body prepared');
     appLog('AuthRepository: Calling API - ${ApiEndPoints.createUser}');
 
-    final response = await DioService.instance.request<Map<String, dynamic>>(
+    final response = await CkTransport.request<Map<String, dynamic>>(
       input: RequestInput(
         endpoint: ApiEndPoints.createUser,
         method: RequestMethod.POST,
@@ -104,7 +103,7 @@ class AuthReporsitory {
     appLog('AuthRepository: Calling API - ${ApiEndPoints.verifyOtp}');
 
     //! Send token in header
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.verifyOtp,
         method: RequestMethod.POST,
@@ -132,7 +131,7 @@ class AuthReporsitory {
     appLog('AuthRepository: Email - $email');
     final createUserToken = await _storageService.getCreateUserToken();
 
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.resendOtp,
         method: RequestMethod.PATCH,
@@ -156,7 +155,7 @@ class AuthReporsitory {
 
     final body = {"email": email};
 
-    final response = await DioService.instance.request<Map<String, dynamic>>(
+    final response = await CkTransport.request<Map<String, dynamic>>(
       input: RequestInput(
         endpoint: ApiEndPoints.forgotPassword,
         method: RequestMethod.POST,
@@ -188,7 +187,7 @@ class AuthReporsitory {
 
     final body = {"otp": otp};
 
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.forgotPasswordOtpMatch,
         method: RequestMethod.PATCH,
@@ -212,7 +211,7 @@ class AuthReporsitory {
 
     final forgetToken = await _storageService.getString('forget_token');
 
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.forgotPassworResendOtp,
         method: RequestMethod.PATCH,
@@ -241,7 +240,7 @@ class AuthReporsitory {
 
     final body = {"newPassword": newPassword, "oldPassword": oldPassword};
 
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.forgotPassoword,
         method: RequestMethod.PATCH,
@@ -275,7 +274,7 @@ class AuthReporsitory {
       "confirmPassword": confirmPassword,
     };
 
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.resetPassword,
         method: RequestMethod.PATCH,

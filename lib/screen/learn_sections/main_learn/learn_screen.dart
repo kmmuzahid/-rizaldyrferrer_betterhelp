@@ -9,7 +9,7 @@ import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -56,26 +56,30 @@ class _LearnScreenState extends State<LearnScreen> {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.width(value: 20),
+                  ),
                   child: GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
                       Get.toNamed(
                         AppRoute.trendingCourse,
-                        arguments: {'title': 'Search Courses', 'isSearch': true},
+                        arguments: {
+                          'title': 'Search Courses',
+                          'isSearch': true,
+                        },
                       );
                     },
                     child: AbsorbPointer(
-                      child: CommonTextField(
+                      child: CkTextField(
                         prefixIcon: const Icon(Icons.search),
                         hintText: "Search courses...",
-                        validationType: ValidationType.notRequired,
+                        validationType: CkValidationType.notRequired,
                         backgroundColor: AppColors.white,
                         borderColor: AppColors.black10,
                       ),
                     ),
                   ),
-
                 ),
                 Gap(height: 15),
                 Obx(
@@ -85,7 +89,8 @@ class _LearnScreenState extends State<LearnScreen> {
                       return ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: RotatedBox(
-                          quarterTurns: -1, // 90 degrees clockwise (use 3 for counter-clockwise)
+                          quarterTurns:
+                              -1, // 90 degrees clockwise (use 3 for counter-clockwise)
                           child: Image.asset(
                             imagePath,
                             fit: BoxFit.contain,
@@ -103,7 +108,9 @@ class _LearnScreenState extends State<LearnScreen> {
 
                       autoPlay: true,
                       autoPlayInterval: const Duration(seconds: 4),
-                      autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                      autoPlayAnimationDuration: const Duration(
+                        milliseconds: 800,
+                      ),
                       autoPlayCurve: Curves.linear,
                       enlargeCenterPage: true,
                       enlargeFactor: 0.2,
@@ -114,35 +121,42 @@ class _LearnScreenState extends State<LearnScreen> {
                     ),
                   ),
                 ),
-             
+
                 Gap(height: 16),
                 Center(
                   child: Obx(
                     () => Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: List.generate(controller.backgroundImages.length, (index) {
-                        return GestureDetector(
-                          onTap: () => controller.goToSlide(index),
-                          child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: AppSize.width(value: 3)),
-                            height: AppSize.height(value: 8),
-                            width: AppSize.width(value: 32),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4.5),
-                              color: controller.currentIndex.value == index
-                                  ? AppColors.secondary900
-                                  : AppColors.iconLightgrey,
+                      children: List.generate(
+                        controller.backgroundImages.length,
+                        (index) {
+                          return GestureDetector(
+                            onTap: () => controller.goToSlide(index),
+                            child: Container(
+                              margin: EdgeInsets.symmetric(
+                                horizontal: AppSize.width(value: 3),
+                              ),
+                              height: AppSize.height(value: 8),
+                              width: AppSize.width(value: 32),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4.5),
+                                color: controller.currentIndex.value == index
+                                    ? AppColors.secondary900
+                                    : AppColors.iconLightgrey,
+                              ),
                             ),
-                          ),
-                        );
-                      }),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
                 Gap(height: 16),
                 //! Categories Section
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSize.height(value: 20)),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.height(value: 20),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -153,11 +167,10 @@ class _LearnScreenState extends State<LearnScreen> {
                         fontWeight: FontWeight.w500,
                         color: AppColors.grey500,
                       ),
-                    
                     ],
                   ),
                 ),
-              
+
                 Gap(height: 20),
               ],
             ),
@@ -167,14 +180,17 @@ class _LearnScreenState extends State<LearnScreen> {
             padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
             sliver: Obx(
               () => controller.isCategoryLoading.value
-                  ? SliverToBoxAdapter(child: const Center(child: CircularProgressIndicator()))
+                  ? SliverToBoxAdapter(
+                      child: const Center(child: CircularProgressIndicator()),
+                    )
                   : SliverGrid.builder(
-                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 100,
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 8,
-                        childAspectRatio: .95,
-                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 100,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
+                            childAspectRatio: .95,
+                          ),
                       itemCount: controller.categoryList.length,
                       itemBuilder: (context, index) {
                         return _category(index);
@@ -200,11 +216,14 @@ class _LearnScreenState extends State<LearnScreen> {
       child: Container(
         width: AppSize.width(value: 88),
         padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(color: AppColors.red50, borderRadius: BorderRadius.circular(10)),
+        decoration: BoxDecoration(
+          color: AppColors.red50,
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CommonImage(src: controller.categoryList[index].image, size: 32),
+            CkImage(src: controller.categoryList[index].image, size: 32),
             Gap(height: 4),
             Expanded(
               child: AppText(

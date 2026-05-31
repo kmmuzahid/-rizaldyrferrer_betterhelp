@@ -1,7 +1,6 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/progress_sections/main_progress/controller/model/task_summery_model.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:get/get.dart';
 
@@ -25,7 +24,7 @@ class ProgressScreenController extends GetxController {
 
   Future<void> loadProgressData() async {
     isLoading.value = true;
-    final result = await DioService.instance.request(
+    final result = await CkTransport.request(
       input: RequestInput(endpoint: ApiEndPoints.taskStatistics, method: RequestMethod.GET),
       responseBuilder: (data) {
         return TaskSummaryModel.fromMap(data);

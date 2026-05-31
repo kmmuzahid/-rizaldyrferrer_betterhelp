@@ -5,7 +5,7 @@ import 'package:better_help/screen/questionnaries_screen/controller/questionnari
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -70,7 +70,7 @@ class BeforeQuestionScreen extends StatelessWidget {
                             ),
                           ),
                           Gap(height: AppSize.height(value: 40)),
-                          CommonText(
+                          CkText(
                             text: AppString.weHavegotYourAttention,
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
@@ -82,7 +82,7 @@ class BeforeQuestionScreen extends StatelessWidget {
 
                           Gap(height: AppSize.height(value: 8)),
 
-                          CommonText(
+                          CkText(
                             text: AppString.weHaveGotYourAttentionDetails,
                             fontSize: 16,
                             fontWeight: FontWeight.w400,

@@ -5,8 +5,7 @@
  */
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/learn_sections/main_learn/model/category_model.dart';
-import 'package:core_kit/network/dio_service.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_workers/utils/debouncer.dart';
@@ -20,7 +19,7 @@ class CategoriesScreenController extends GetxController {
   String lastSearchTerm = '';
 
   void fetchCategory({String? searchTerm}) async {
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         queryParams: {
           "page": 1,

@@ -4,8 +4,7 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -25,7 +24,7 @@ class TalkToSupportScreenController extends GetxController {
   }
 
   submitFeedBack(final String feedback) async {
-    final result = await DioService.instance.request(
+    final result = await CkTransport.request(
       showMessage: true,
       input: RequestInput(
         endpoint: ApiEndPoints.report,

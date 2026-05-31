@@ -6,8 +6,7 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/course_details/model/course_details_model.dart';
 import 'package:better_player_plus/better_player_plus.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -23,7 +22,8 @@ class CourseDetailsController extends GetxController {
   RxBool isPlay = false.obs;
   RxString videoDuration = "".obs;
 
-  Rxn<BetterPlayerController> betterPlayerController = Rxn<BetterPlayerController>();
+  Rxn<BetterPlayerController> betterPlayerController =
+      Rxn<BetterPlayerController>();
 
   void initializePlayer() {
     final videoUrl = courseDetails.value?.data.video;
@@ -32,7 +32,10 @@ class CourseDetailsController extends GetxController {
 
     isPlay.value = false;
 
-    final dataSource = BetterPlayerDataSource(BetterPlayerDataSourceType.network, videoUrl);
+    final dataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      videoUrl,
+    );
 
     betterPlayerController.value = BetterPlayerController(
       const BetterPlayerConfiguration(),
@@ -45,11 +48,14 @@ class CourseDetailsController extends GetxController {
 
       final duration = controller.value.duration;
       if (duration != null && duration.inSeconds > 0) {
-        videoDuration.value = CoreUtils.formatDurationToHms(duration);
+        videoDuration.value = CkUtils.formatDurationToHms(duration);
       }
       Future.delayed(const Duration(seconds: 1)).then((value) {
-        final d = betterPlayerController.value?.videoPlayerController?.value.duration;
-        videoDuration.value = d != null ? CoreUtils.formatDurationToHms(d) : '00:00:00';
+        final d =
+            betterPlayerController.value?.videoPlayerController?.value.duration;
+        videoDuration.value = d != null
+            ? CkUtils.formatDurationToHms(d)
+            : '00:00:00';
       });
     });
   }
@@ -65,7 +71,7 @@ class CourseDetailsController extends GetxController {
   }
 
   setCourseViewCount() async {
-    DioService.instance.request(
+    CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.setCourseViewCount(id),
         method: RequestMethod.PATCH,
@@ -81,7 +87,7 @@ class CourseDetailsController extends GetxController {
   }
 
   void submitFeedback() async {
-    final result = await DioService.instance.request(
+    final result = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.review,
         method: RequestMethod.POST,
@@ -96,16 +102,19 @@ class CourseDetailsController extends GetxController {
       },
     );
     if (result.isSuccess) {
-      showSnackBar(result.message ?? '', type: SnackBarType.success);
+      CkSnackBar(result.message ?? '', type: .success);
     } else {
-      showSnackBar(result.message ?? '', type: SnackBarType.error);
+      CkSnackBar(result.message ?? '', type: .error);
     }
   }
 
   fetchCourseDetails() async {
     betterPlayerController.value?.dispose();
-    final result = await DioService.instance.request(
-      input: RequestInput(endpoint: '${ApiEndPoints.getCourseList}/$id', method: RequestMethod.GET),
+    final result = await CkTransport.request(
+      input: RequestInput(
+        endpoint: '${ApiEndPoints.getCourseList}/$id',
+        method: RequestMethod.GET,
+      ),
       responseBuilder: (response) {
         return CourseDetailsModel.fromJson(response);
       },
@@ -123,7 +132,7 @@ class CourseDetailsController extends GetxController {
     // Handle both 'id' and 'courseId' argument keys with null safety
     id = Get.arguments?['courseId'] ?? Get.arguments?['id'] ?? '';
     if (id.isEmpty) {
-      showSnackBar('Course ID not found', type: SnackBarType.error);
+      CkSnackBar('Course ID not found', type: .error);
       Get.back();
       return;
     }

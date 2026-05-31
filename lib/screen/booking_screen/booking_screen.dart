@@ -2,7 +2,7 @@ import 'package:better_help/screen/booking_screen/controller/booking_controller.
 import 'package:better_help/screen/booking_screen/model/slots_model.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -266,7 +266,7 @@ class BookingScreen extends StatelessWidget {
   }
 
   Widget _buildConfirmButton(BookingController controller) {
-    return CommonButton(
+    return CkButton(
       titleText: controller.isBookingLoading.value ? 'Processing...' : "Confirm Booking",
       buttonWidth: double.infinity,
       buttonRadius: 8,

@@ -2,8 +2,7 @@ import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/habits_sections/main_habits/model/task_info_model.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/widget/generate_task/task_created_dialog.dart';
-import 'package:core_kit/network/dio_service.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 
 class GenerateTaskBasedOnPreferenceController extends GetxController {
@@ -34,10 +33,10 @@ class GenerateTaskBasedOnPreferenceController extends GetxController {
       });
     }
 
-    final result = await DioService.instance.request(
+    final result = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.createTask,
-        method: .POST,
+        method: RequestMethod.POST,
         listBody: tasksToAdd,
       ),
       responseBuilder: (data) {
@@ -57,10 +56,10 @@ class GenerateTaskBasedOnPreferenceController extends GetxController {
     if (isLoading.value) return;
     aiTasks.clear();
     isLoading.value = true;
-    final result = await DioService.instance.request(
+    final result = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.generateTaskByAi,
-        method: .POST,
+        method: RequestMethod.POST,
         listBody: task,
       ),
       responseBuilder: (data) {

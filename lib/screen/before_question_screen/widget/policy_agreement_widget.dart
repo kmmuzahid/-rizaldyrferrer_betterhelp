@@ -7,7 +7,7 @@ import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,14 +34,14 @@ class PolicyAgreementWidget extends StatelessWidget {
               height: AppSize.height(value: 65),
               width: AppSize.width(value: 174),
             ).center,
-            CommonText(
+            CkText(
               text: 'Privacy & User Agreement',
               style: TextStyle(fontFamily: 'Inter'),
               fontSize: 18,
               fontWeight: FontWeight.w500,
               textColor: AppColors.textPrimaryBlack,
             ),
-            CommonText(
+            CkText(
               top: 10,
               bottom: 10,
               text:
@@ -100,7 +100,7 @@ class PolicyAgreementWidget extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: CommonButton(
+                  child: CkButton(
                     titleText: 'Accept',
                     onTap: onAgree,
                     buttonColor: AppColors.primary500,
@@ -109,7 +109,7 @@ class PolicyAgreementWidget extends StatelessWidget {
                 ),
                 10.width,
                 Expanded(
-                  child: CommonButton(
+                  child: CkButton(
                     titleText: 'Decline',
                     onTap: () {
                       Get.back();

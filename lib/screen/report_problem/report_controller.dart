@@ -3,8 +3,7 @@
  * @Date: 2026-01-10 16:01:41
  * @Email: km.muzahid@gmail.com
  */
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 
 import '../../core/app_apiurl/api_end_points.dart';
@@ -29,7 +28,7 @@ class ReportController extends GetxController {
 
   void submitReport() async {
     if (report.isNotEmpty) {
-      final result = await DioService.instance.request(
+      final result = await CkTransport.request(
         showMessage: true,
         input: RequestInput(
           endpoint: ApiEndPoints.report,

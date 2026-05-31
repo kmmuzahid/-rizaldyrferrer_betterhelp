@@ -3,8 +3,7 @@ import 'package:better_help/screen/community_sections/main_community/model/artic
 import 'package:better_help/screen/community_sections/main_community/model/post_model.dart';
 import 'package:better_help/screen/community_sections/main_community/model/single_post_model.dart' as single_post;
 import 'package:better_help/utils/app_log/app_log.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 
 class CommunityRepository {
   //! Get all articles with pagination
@@ -12,7 +11,7 @@ class CommunityRepository {
     appLog('CommunityRepository: Fetching all articles...');
     appLog('CommunityRepository: Page - $page, Limit - $limit');
 
-    final response = await DioService.instance.request<ArticleModel>(
+    final response = await CkTransport.request<ArticleModel>(
       input: RequestInput(
         endpoint: '${ApiEndPoints.getAllArticle}?page=$page&limit=$limit',
         method: RequestMethod.GET,
@@ -33,7 +32,7 @@ class CommunityRepository {
   Future<Datum?> getSingleArticle(String id) async {
     appLog('CommunityRepository: Fetching article with ID - $id');
 
-    final response = await DioService.instance.request<Datum>(
+    final response = await CkTransport.request<Datum>(
       input: RequestInput(
         endpoint: ApiEndPoints.getSingleArticle(id),
         method: RequestMethod.GET,
@@ -54,7 +53,7 @@ class CommunityRepository {
   Future<ResponseState<dynamic>?> createApost(dynamic description) async {
     appLog('CommunityRepository: Creating a post...');
 
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.createPost,
         method: RequestMethod.POST,
@@ -77,7 +76,7 @@ class CommunityRepository {
     appLog('CommunityRepository: Fetching all posts...');
     appLog('CommunityRepository: Page - $page, Limit - $limit');
 
-    final response = await DioService.instance.request<PostModel>(
+    final response = await CkTransport.request<PostModel>(
       input: RequestInput(
         endpoint: '${ApiEndPoints.getAllPost}?page=$page&limit=$limit',
         method: RequestMethod.GET,
@@ -98,7 +97,7 @@ class CommunityRepository {
   Future<PostModel?> getHighlightPosts({int page = 1, int limit = 10}) async {
     appLog('CommunityRepository: Fetching highlight posts...');
 
-    final response = await DioService.instance.request<PostModel>(
+    final response = await CkTransport.request<PostModel>(
       input: RequestInput(
         endpoint: '${ApiEndPoints.getHighlightPost}&page=$page&limit=$limit',
         method: RequestMethod.GET,
@@ -119,7 +118,7 @@ class CommunityRepository {
   Future<PostModel?> getRecentPosts({int page = 1, int limit = 10}) async {
     appLog('CommunityRepository: Fetching recent posts...');
 
-    final response = await DioService.instance.request<PostModel>(
+    final response = await CkTransport.request<PostModel>(
       input: RequestInput(
         endpoint: '${ApiEndPoints.getRecentPost}&page=$page&limit=$limit',
         method: RequestMethod.GET,
@@ -140,7 +139,7 @@ class CommunityRepository {
   Future<PostModel?> getPopularPosts({int page = 1, int limit = 10}) async {
     appLog('CommunityRepository: Fetching popular posts...');
 
-    final response = await DioService.instance.request<PostModel>(
+    final response = await CkTransport.request<PostModel>(
       input: RequestInput(
         endpoint: '${ApiEndPoints.getPopularPost}&page=$page&limit=$limit',
         method: RequestMethod.GET,
@@ -161,7 +160,7 @@ class CommunityRepository {
   Future<bool> likePost(String postId) async {
     appLog('CommunityRepository: Liking post with ID - $postId');
 
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.getPostLike(postId),
         method: RequestMethod.POST,
@@ -183,7 +182,7 @@ class CommunityRepository {
   Future<dynamic> getSinglePost(String postId) async {
     appLog('CommunityRepository: Fetching post with ID - $postId');
 
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.getSinglePost(postId),
         method: RequestMethod.GET,
@@ -207,7 +206,7 @@ class CommunityRepository {
   }) async {
     appLog('CommunityRepository: Creating comment on post - $postId');
 
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.createComment,
         method: RequestMethod.POST,
@@ -233,7 +232,7 @@ class CommunityRepository {
   }) async {
     appLog('CommunityRepository: Creating reply to comment - $parentId');
 
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.createCommentReply,
         method: RequestMethod.POST,
@@ -255,7 +254,7 @@ class CommunityRepository {
   Future<bool> reactOnComment(String commentId) async {
     appLog('CommunityRepository: Reacting on comment - $commentId');
 
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.reactOnComment,
         method: RequestMethod.POST,
@@ -280,7 +279,7 @@ class CommunityRepository {
   }) async {
     appLog('CommunityRepository: Reacting on reply - $replyId');
 
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.reactOnCommentReply,
         method: RequestMethod.POST,
@@ -302,7 +301,7 @@ class CommunityRepository {
   Future<bool> toggleSaveArticle(String articleId) async {
     appLog('CommunityRepository: Toggling save for article - $articleId');
 
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.toggleSaveArticle(articleId),
         method: RequestMethod.POST,
@@ -328,7 +327,7 @@ class CommunityRepository {
   Future<ResponseState<List<single_post.Comment>?>> getPostComments(String postId) async {
     appLog('CommunityRepository: Fetching comments for post with ID - $postId');
 
-    return DioService.instance.request<List<single_post.Comment>>(
+    return CkTransport.request<List<single_post.Comment>>(
       input: RequestInput(
         endpoint: ApiEndPoints.getPostComment(postId),
         method: RequestMethod.GET,

@@ -4,7 +4,7 @@ import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -37,7 +37,7 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
               children: [
                 Gap(height: AppSize.height(value: 24)),
                 Center(
-                  child: CommonImage(
+                  child: CkImage(
                     borderRadius: 12,
                     src: profile?.profile ?? '',
                     height: AppSize.height(value: 100),
@@ -207,10 +207,7 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
                                     .value
                                     ?.subscriptionPlanType ==
                                 null) {
-                          showSnackBar(
-                            'Upgrade Your Plan',
-                            type: SnackBarType.warning,
-                          );
+                          CkSnackBar('Upgrade Your Plan', type: .warning);
                           return;
                         }
                         showReplaceBhaBhaaDialog();
@@ -300,19 +297,19 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
 
               const SizedBox(height: 10),
 
-              CommonDropDown(
+              CkDropDown(
                 enableInitalSelection: true,
                 hint: "Select BHA/BHAA",
                 items: ["BHA", "BHAA"],
                 onChanged: (value) {
                   selectedChoice.value = value ?? 'BHA';
                 },
-                nameBuilder: (item) => CommonText(text: item.item),
+                nameBuilder: (item) => CkText(text: item.item),
               ),
 
               const SizedBox(height: 16),
 
-              const CommonText(
+              const CkText(
                 text: 'Write down the reason for changing BHA, BHAA',
                 style: TextStyle(color: Colors.blueGrey, fontSize: 14),
               ),
@@ -321,9 +318,9 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
 
               SizedBox(
                 height: AppSize.height(value: 140),
-                child: CommonMultilineTextField(
+                child: CkMultilineTextField(
                   hintText: "Reason",
-                  validationType: ValidationType.validateRequired,
+                  validationType: CkValidationType.validateRequired,
                   onChanged: (value) {
                     reason.value = value;
                   },
@@ -333,7 +330,7 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
               20.height,
 
               Obx(() {
-                return CommonButton(
+                return CkButton(
                   isLoading: controller.isReplaceBhaBhaaLoading.value,
                   buttonRadius: 8,
                   buttonColor: Colors.cyan,

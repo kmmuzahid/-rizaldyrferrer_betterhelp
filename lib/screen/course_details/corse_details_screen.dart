@@ -1,7 +1,7 @@
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
 import 'package:better_player_plus/better_player_plus.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,10 +12,14 @@ class CourseDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CourseDetailsController controller = Get.find<CourseDetailsController>();
+    final CourseDetailsController controller =
+        Get.find<CourseDetailsController>();
 
     return Scaffold(
-      appBar: AppBarWithBack(text: "Course Details", backgroundColor: AppColors.white),
+      appBar: AppBarWithBack(
+        text: "Course Details",
+        backgroundColor: AppColors.white,
+      ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Obx(
@@ -31,16 +35,22 @@ class CourseDetailScreen extends StatelessWidget {
                     children: [
                       _buildTitleSection(controller),
                       const SizedBox(height: 20),
-                      const CommonText(
+                      const CkText(
                         text: 'Description',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       _buildDescription(controller),
                       const SizedBox(height: 24),
-                      const CommonText(
+                      const CkText(
                         text: 'Review & Rating',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       _buildRatingSection(controller),
@@ -70,7 +80,7 @@ class CourseDetailScreen extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           if (controller.isPlay.value == false) ...[
-            CommonImage(
+            CkImage(
               src: controller.courseDetails.value?.data.thumbnail ?? '',
               height: 250,
               width: double.infinity,
@@ -82,11 +92,16 @@ class CourseDetailScreen extends StatelessWidget {
               child: CircleAvatar(
                 radius: 35,
                 backgroundColor: Colors.teal.withOpacity(0.8),
-                child: const Icon(Icons.play_arrow, color: Colors.white, size: 50),
+                child: const Icon(
+                  Icons.play_arrow,
+                  color: Colors.white,
+                  size: 50,
+                ),
               ),
             ),
           ],
-          if (controller.isPlay.value && controller.betterPlayerController.value != null)
+          if (controller.isPlay.value &&
+              controller.betterPlayerController.value != null)
             BetterPlayer(controller: controller.betterPlayerController.value!),
         ],
       ),
@@ -100,22 +115,24 @@ class CourseDetailScreen extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: CommonText(
+              child: CkText(
                 text: controller.courseDetails.value?.data.title ?? '',
                 maxLines: 2,
                 textAlign: TextAlign.left,
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-             
-            _badge(Icons.access_time, controller.videoDuration.value)
-  
+
+            _badge(Icons.access_time, controller.videoDuration.value),
           ],
         ),
         const SizedBox(height: 8),
         Row(
           children: [
-            CommonText(
+            CkText(
               text: controller.courseDetails.value?.data.categoryName ?? '',
               style: const TextStyle(color: Colors.grey, fontSize: 18),
             ),
@@ -127,11 +144,9 @@ class CourseDetailScreen extends StatelessWidget {
     );
   }
 
- 
-
   Widget _buildDescription(CourseDetailsController controller) {
     return Obx(
-      () => CommonText(
+      () => CkText(
         text: controller.courseDetails.value?.data.description ?? '',
         isDescription: true,
         textAlign: TextAlign.left,
@@ -161,7 +176,10 @@ class CourseDetailScreen extends StatelessWidget {
                 Obx(
                   () => Text(
                     '${controller.courseDetails.value?.data.ratings ?? 0}',
-                    style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const Icon(Icons.star, color: Colors.orange, size: 28),
@@ -186,13 +204,18 @@ class CourseDetailScreen extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF33A1B3),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         onPressed: () {
           controller.selectedRating.value = 3;
           showFeedbackSheet(controller);
         }, // State change test
-        child: const Text('Give Feedback', style: TextStyle(color: Colors.white, fontSize: 18)),
+        child: const Text(
+          'Give Feedback',
+          style: TextStyle(color: Colors.white, fontSize: 18),
+        ),
       ),
     );
   }
@@ -208,7 +231,11 @@ class CourseDetailScreen extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          color: color,
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -219,7 +246,8 @@ class CourseDetailScreen extends StatelessWidget {
       children: [
         _badge(
           Icons.access_time,
-          (controller.courseDetails.value?.data.createdAt ?? DateTime.now()).date,
+          (controller.courseDetails.value?.data.createdAt ?? DateTime.now())
+              .date,
         ),
         10.width,
         _badge(
@@ -299,11 +327,11 @@ class CourseDetailScreen extends StatelessWidget {
               style: TextStyle(color: Colors.grey, fontSize: 14),
             ),
             10.height,
-            CommonMultilineTextField(
+            CkMultilineTextField(
               height: 80,
               hintText: 'Write your feedback',
               backgroundColor: Colors.white70.withAlpha(50),
-              validationType: ValidationType.notRequired,
+              validationType: CkValidationType.notRequired,
               onChanged: (value) {
                 controller.reviewController.text = value;
               },
@@ -339,13 +367,18 @@ class CourseDetailScreen extends StatelessWidget {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF33A1B3),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 onPressed: () {
                   controller.submitFeedback();
                   Get.back(); // This closes the bottom sheet after submission
                 },
-                child: const Text('Send', style: TextStyle(color: Colors.white, fontSize: 18)),
+                child: const Text(
+                  'Send',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
               ),
             ),
             const SizedBox(height: 16),

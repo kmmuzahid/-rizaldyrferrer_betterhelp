@@ -12,7 +12,6 @@ dependencies:
     sdk: flutter
   cupertino_icons:   
   get: 
-  get_storage: 
   google_fonts: 
   flutter_svg: 
   syncfusion_flutter_datepicker: 
@@ -32,7 +31,6 @@ dependencies:
   connectivity_plus:
   pretty_dio_logger:  
   dio:  
-  shared_preferences: 
   awesome_snackbar_content:
   loading_animation_widget: 
   better_player_plus: 
@@ -48,7 +46,7 @@ dependencies:
   core_kit:
     git:
       url: https://github.com/kmmuzahid/flutter_core_kit.git
-      ref: 1.1.41
+      ref: main
  
  
 

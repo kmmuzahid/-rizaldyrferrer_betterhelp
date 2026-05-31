@@ -10,8 +10,7 @@ import 'package:better_help/screen/notification/notification_screen_controller.d
 import 'package:better_help/service/repository/profile_repositroy/profile_repository.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 
 class MyProfileScreenController extends GetxController {
@@ -70,7 +69,7 @@ class MyProfileScreenController extends GetxController {
   replaceBhaBhaa({required String choice, required String reason}) async {
     if (isReplaceBhaBhaaLoading.value) return;
     isReplaceBhaBhaaLoading.value = true;
-    await DioService.instance.request(
+    await CkTransport.request(
       showMessage: true,
       input: RequestInput(
         endpoint: ApiEndPoints.bhaBhaaReassignRequest,

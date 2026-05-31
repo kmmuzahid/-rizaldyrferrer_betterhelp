@@ -6,7 +6,7 @@
 import 'package:better_help/screen/report_problem/report_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,11 +26,11 @@ class ReportProblemScreen extends StatelessWidget {
           children: [
             const Text("Write down the problem you are facing"),
             const SizedBox(height: 8),
-            CommonMultilineTextField(
+            CkMultilineTextField(
               height: 150,
               backgroundColor: AppColors.white,
               hintText: "Type something...",
-              validationType: ValidationType.validateRequired,
+              validationType: CkValidationType.validateRequired,
               onChanged: (value) {
                 controller.report = value;
               },
@@ -50,11 +50,18 @@ class ReportProblemScreen extends StatelessWidget {
       height: 50,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xff309AAD), // Matching the original teal theme
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          backgroundColor: const Color(
+            0xff309AAD,
+          ), // Matching the original teal theme
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         onPressed: controller.submitReport,
-        child: const Text("Send Message", style: TextStyle(fontSize: 16, color: Colors.white)),
+        child: const Text(
+          "Send Message",
+          style: TextStyle(fontSize: 16, color: Colors.white),
+        ),
       ),
     );
   }

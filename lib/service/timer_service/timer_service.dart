@@ -1,12 +1,11 @@
 import 'dart:async';
 
+import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class TimerService extends GetxService {
   static TimerService get instance => Get.find<TimerService>();
 
-  final GetStorage _storage = GetStorage();
   Timer? _backgroundTimer;
 
   // Storage keys
@@ -23,19 +22,23 @@ class TimerService extends GetxService {
   @override
   void onInit() {
     super.onInit();
-    _loadTimerState();
+    _initTimerState();
+  }
+
+  Future<void> _initTimerState() async {
+    await _loadTimerState();
     _startBackgroundTimer();
   }
 
-  void _loadTimerState() {
+  Future<void> _loadTimerState() async {
     // Load saved timer state
-    int savedTotalDuration = _storage.read(_keyTotalDuration) ?? 1500;
+    int savedTotalDuration = await StorageService.instance.getInt(_keyTotalDuration) ?? 1500;
     totalDuration.value = savedTotalDuration;
 
     int savedRemaining =
-        _storage.read(_keyRemainingSeconds) ?? totalDuration.value;
-    bool savedIsRunning = _storage.read(_keyIsRunning) ?? false;
-    int? savedStartTime = _storage.read(_keyStartTime);
+        await StorageService.instance.getInt(_keyRemainingSeconds) ?? totalDuration.value;
+    bool savedIsRunning = await StorageService.instance.getBool(_keyIsRunning) ?? false;
+    int? savedStartTime = await StorageService.instance.getInt(_keyStartTime);
 
     if (savedIsRunning && savedStartTime != null) {
       // Calculate actual remaining time based on elapsed time
@@ -50,7 +53,7 @@ class TimerService extends GetxService {
         // Timer has completed while app was closed
         remainingSeconds.value = 0;
         isRunning.value = false;
-        _clearTimerState();
+        await _clearTimerState();
       }
     } else {
       remainingSeconds.value = savedRemaining;
@@ -59,43 +62,43 @@ class TimerService extends GetxService {
   }
 
   void _startBackgroundTimer() {
-    _backgroundTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _backgroundTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       if (isRunning.value && remainingSeconds.value > 0) {
         remainingSeconds.value--;
-        _saveTimerState();
+        await _saveTimerState();
 
         if (remainingSeconds.value <= 0) {
           // Timer completed
-          completeTimer();
+          await completeTimer();
         }
       }
     });
   }
 
-  void startTimer() {
+  Future<void> startTimer() async {
     if (!isRunning.value && remainingSeconds.value > 0) {
       isRunning.value = true;
-      _storage.write(_keyStartTime, DateTime.now().millisecondsSinceEpoch);
-      _saveTimerState();
+      await StorageService.instance.saveInt(_keyStartTime, DateTime.now().millisecondsSinceEpoch);
+      await _saveTimerState();
     }
   }
 
-  void pauseTimer() {
+  Future<void> pauseTimer() async {
     isRunning.value = false;
-    _storage.remove(_keyStartTime);
-    _saveTimerState();
+    await StorageService.instance.remove(_keyStartTime);
+    await _saveTimerState();
   }
 
-  void resetTimer() {
+  Future<void> resetTimer() async {
     isRunning.value = false;
     remainingSeconds.value = totalDuration.value;
-    _clearTimerState();
+    await _clearTimerState();
   }
 
-  void setCustomTime(int seconds) {
+  Future<void> setCustomTime(int seconds) async {
     // Stop the timer if it's running
     if (isRunning.value) {
-      pauseTimer();
+      await pauseTimer();
     }
 
     // Set new total duration and remaining seconds
@@ -103,29 +106,29 @@ class TimerService extends GetxService {
     remainingSeconds.value = seconds;
 
     // Save the new state
-    _saveTimerState();
+    await _saveTimerState();
   }
 
-  void completeTimer() {
+  Future<void> completeTimer() async {
     isRunning.value = false;
     remainingSeconds.value = 0;
-    _clearTimerState();
+    await _clearTimerState();
 
     // Show completion notification
     //
   }
 
-  void _saveTimerState() {
-    _storage.write(_keyRemainingSeconds, remainingSeconds.value);
-    _storage.write(_keyIsRunning, isRunning.value);
-    _storage.write(_keyTotalDuration, totalDuration.value);
+  Future<void> _saveTimerState() async {
+    await StorageService.instance.saveInt(_keyRemainingSeconds, remainingSeconds.value);
+    await StorageService.instance.saveBool(_keyIsRunning, isRunning.value);
+    await StorageService.instance.saveInt(_keyTotalDuration, totalDuration.value);
   }
 
-  void _clearTimerState() {
-    _storage.remove(_keyRemainingSeconds);
-    _storage.remove(_keyIsRunning);
-    _storage.remove(_keyStartTime);
-    _storage.remove(_keyTotalDuration);
+  Future<void> _clearTimerState() async {
+    await StorageService.instance.remove(_keyRemainingSeconds);
+    await StorageService.instance.remove(_keyIsRunning);
+    await StorageService.instance.remove(_keyStartTime);
+    await StorageService.instance.remove(_keyTotalDuration);
   }
 
   String get formattedTime {

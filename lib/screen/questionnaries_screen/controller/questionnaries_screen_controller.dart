@@ -5,9 +5,7 @@ import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
-import 'package:core_kit/network/dio_service.dart';
-import 'package:core_kit/network/request_input.dart';
-import 'package:core_kit/snackbar/snackbar.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -72,7 +70,7 @@ class QuestionnariesScreenController extends GetxController {
     if ((currentPageIndex.value == 0 && answers.length < 4) ||
         (currentPageIndex.value == 1 && answers.length < 8) ||
         (currentPageIndex.value == 2 && answers.length < 12)) {
-      showSnackBar("Please answer all questions", type: SnackBarType.warning);
+      CkSnackBar("Please answer all questions", type: .warning);
       return;
     }
     if (currentPageIndex.value < totalPages - 1) {
@@ -113,10 +111,7 @@ class QuestionnariesScreenController extends GetxController {
     if (isLoading.value) return;
     if (selectedScaleWellbeing.value == null ||
         selectedScaleProductivity.value == null) {
-      showSnackBar(
-        "Please rate both wellbeing and productivity",
-        type: SnackBarType.warning,
-      );
+      CkSnackBar("Please rate both wellbeing and productivity", type: .warning);
       return;
     }
     appLog('Questionnaire completed with ${answers.length} answers');
@@ -230,8 +225,11 @@ class QuestionnariesScreenController extends GetxController {
     // Save responses to storage for OTP verification
     await _saveResponsesToStorage();
 
-    final response = await DioService.instance.request<Map<String, dynamic>>(
-      input: RequestInput(endpoint: ApiEndPoints.questionAnswer, method: .POST),
+    final response = await CkTransport.request<Map<String, dynamic>>(
+      input: RequestInput(
+        endpoint: ApiEndPoints.questionAnswer,
+        method: RequestMethod.POST,
+      ),
       responseBuilder: (data) => data ?? {},
     );
 

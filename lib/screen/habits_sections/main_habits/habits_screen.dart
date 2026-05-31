@@ -15,7 +15,7 @@ import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_button/app_button_with_icon.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:core_kit/image/common_image.dart';
+import 'package:core_kit/image/ck_image.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -587,7 +587,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
   Widget _buildProfileLeading(String? profileImage) {
     return Padding(
       padding: EdgeInsets.only(left: AppSize.width(value: 20)),
-      child: CommonImage(
+      child: CkImage(
         borderRadius: 12,
         src: profileImage ?? '',
         height: AppSize.height(value: 48),

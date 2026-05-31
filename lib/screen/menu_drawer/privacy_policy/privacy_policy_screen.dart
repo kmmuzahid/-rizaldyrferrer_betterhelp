@@ -6,7 +6,7 @@
 import 'package:better_help/screen/menu_drawer/privacy_policy/privacy_policy_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
-import 'package:core_kit/text/common_text.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
@@ -27,7 +27,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
         return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: CommonText(
+            child: CkText(
               text: Get.find<PrivacyPolicyScreenController>().privacyPolicy.value,
               isDescription: true,
             ),

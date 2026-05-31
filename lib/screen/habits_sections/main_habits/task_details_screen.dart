@@ -24,9 +24,9 @@ class TaskDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(
+      appBar: CkAppBar(
         title: "Task Details",
-        appbarConfig: AppbarConfig(titleAlignment: .centerStart),
+        appbarConfig: CkAppBarConfig(titleAlignment: .centerStart),
       ),
       body: _buildScheduleContainer(taskData),
     );

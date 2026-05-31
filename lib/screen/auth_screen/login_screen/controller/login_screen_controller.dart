@@ -10,7 +10,8 @@ import 'package:better_help/service/repository/auth_repository/auth_reporsitory.
 import 'package:better_help/service/repository/profile_repositroy/profile_repository.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
+import 'package:core_kit/auth/ck_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -62,29 +63,17 @@ class LoginScreenController extends GetxController {
 
     isLoading.value = true;
 
-    final response = await _authRepository.loginUser(
-      email: emailController.text.trim(),
-      password: passwordController.text,
-    );
+    final result = await CkAuth.signIn(body: {
+      "email": emailController.text.trim(),
+      "password": passwordController.text,
+    });
 
-    if (response?.isSuccess ?? false) {
-      await StorageService.instance.saveAccessToken(
-        response!.data['accessToken'],
-      );
-      await StorageService.instance.saveRefreshToken(
-        response.data['refreshToken'],
-      );
-      await StorageService.instance.saveUserData(response.data['user']);
-
-      final ResponseState<ProfileData?> profile = await _profileRepsitory
-          .getMyProfile();
-
-      ProfileData? profileData;
-      if (profile.isSuccess) {
-        profileData = profile.data;
+    if (result.isSuccess) {
+      final ProfileData? profileData = CkAuth.profile as ProfileData?;
+      if (profileData != null) {
         Get.find<MyProfileScreenController>().profileData.value = profileData;
       }
-      AppSnackBar.showSuccess(response.message ?? "Login successful");
+      AppSnackBar.showSuccess(result.message ?? "Login successful");
       isLoading.value = false;
 
       if (profileData?.subscriptionPackageId == null) {
@@ -92,6 +81,10 @@ class LoginScreenController extends GetxController {
       } else {
         Get.offAllNamed(AppRoute.bottomNav);
       }
+    } else {
+      AppSnackBar.showError(result.message ?? "Login failed");
+      isLoading.value = false;
     }
   }
 }
+

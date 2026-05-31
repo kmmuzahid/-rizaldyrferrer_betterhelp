@@ -9,8 +9,7 @@ import 'package:better_help/screen/menu_drawer/bookings_sessions/model/booking_s
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/supports_sections/main_supports/model/message_model.dart';
 import 'package:better_help/sockets/support_message_socket.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 
 class SupportScreenController extends GetxController {
@@ -53,7 +52,7 @@ class SupportScreenController extends GetxController {
       DateTime(localDate.year, localDate.month, localDate.day, 23, 59);
 
   fetchBookingSession({bool refresh = false, int page = 1}) async {
-    final result = await DioService.instance.request<List<BookedSessionModel>>(
+    final result = await CkTransport.request<List<BookedSessionModel>>(
       input: RequestInput(
         endpoint: ApiEndPoints.getMyBooking,
         queryParams: {
@@ -83,7 +82,7 @@ class SupportScreenController extends GetxController {
 
   getMessages({int page = 1}) async {
     isLoading.value = true;
-    final result = await DioService.instance.request<List<MessageModel>>(
+    final result = await CkTransport.request<List<MessageModel>>(
       input: RequestInput(
         queryParams: {'page': page, 'limit': 20},
         endpoint: ApiEndPoints.getMyMessages(chatId),
@@ -137,7 +136,7 @@ class SupportScreenController extends GetxController {
         ),
       ),
     );
-    final result = await DioService.instance.request<dynamic>(
+    final result = await CkTransport.request<dynamic>(
       input: RequestInput(
         endpoint: ApiEndPoints.sendMessages,
         method: RequestMethod.POST,

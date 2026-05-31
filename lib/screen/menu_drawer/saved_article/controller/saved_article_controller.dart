@@ -1,8 +1,7 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/menu_drawer/saved_article/model/saved_article_course_model.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 
 class SavedArticleController extends GetxController {
@@ -36,7 +35,7 @@ class SavedArticleController extends GetxController {
     isLoading.value = true;
     appLog('Fetching saved articles - Page: ${currentPage.value}');
 
-    final response = await DioService.instance.request<SavedArticleResponse>(
+    final response = await CkTransport.request<SavedArticleResponse>(
       input: RequestInput(
         endpoint:
             '${ApiEndPoints.getFavouriteArticle}?page=${currentPage.value}&limit=10&type=article',
@@ -102,7 +101,7 @@ class SavedArticleController extends GetxController {
     savedArticles.removeAt(index);
 
     // Call API to unsave
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         endpoint: ApiEndPoints.toggleSaveArticle(articleId),
         method: RequestMethod.POST,

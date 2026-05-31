@@ -1,8 +1,7 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/supports_sections/main_supports/model/video_session_model.dart';
-import 'package:core_kit/core_kit.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -23,7 +22,7 @@ class VideoCallController extends GetxController {
   }
 
   getVideoSession() async {
-    final result = await DioService.instance.request<VideoSessionModel>(
+    final result = await CkTransport.request<VideoSessionModel>(
       input: RequestInput(
         endpoint: ApiEndPoints.createVideoSession,
         jsonBody: {"bookingSheduleId": id},
@@ -38,7 +37,7 @@ class VideoCallController extends GetxController {
       update();
       initAgora();
     } else {
-      showSnackBar(result.message ?? '', type: SnackBarType.error);
+      CkSnackBar(result.message ?? '', type: .error);
       Get.back();
     }
   }
@@ -60,25 +59,30 @@ class VideoCallController extends GetxController {
       engine?.registerEventHandler(
         RtcEngineEventHandler(
           onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-            AppLogger.debug("local user ${connection.localUid} joined");
+            CkLogger.debug("local user ${connection.localUid} joined");
 
             localUserJoined = true;
             update();
           },
           onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-            AppLogger.debug("remote user $remoteUid joined");
+            CkLogger.debug("remote user $remoteUid joined");
 
             this.remoteUid = remoteUid;
             update();
           },
-          onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
-            AppLogger.debug("remote user $remoteUid left channel");
+          onUserOffline:
+              (
+                RtcConnection connection,
+                int remoteUid,
+                UserOfflineReasonType reason,
+              ) {
+                CkLogger.debug("remote user $remoteUid left channel");
 
-            this.remoteUid = null;
-            update();
-          },
+                this.remoteUid = null;
+                update();
+              },
           onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
-            AppLogger.debug(
+            CkLogger.debug(
               '[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token',
             );
           },

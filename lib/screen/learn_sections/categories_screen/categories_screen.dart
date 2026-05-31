@@ -8,7 +8,7 @@ import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
 import 'package:better_help/widget/app_aspect_ratio/app_aspect_ration.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/app_text_input/app_text_input.dart';
-import 'package:core_kit/image/common_image.dart';
+import 'package:core_kit/image/ck_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,7 +17,8 @@ class CategoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CategoriesScreenController controller = Get.find<CategoriesScreenController>();
+    final CategoriesScreenController controller =
+        Get.find<CategoriesScreenController>();
     return Scaffold(
       appBar: AppBarWithBack(
         text: AppString.categories,
@@ -27,19 +28,21 @@ class CategoriesScreen extends StatelessWidget {
       body: Column(
         children: [
           Gap(height: 12),
-            AppTextInput(
+          AppTextInput(
             controller: controller.searchController,
-              prefixIcon: Icons.search,
-            hintText: "Search categories", 
-              height: AppSize.height(value: 48),
-              backgroundColor: AppColors.white,
-              borderColor: AppColors.black10,
-              borderSide: BorderSide(color: AppColors.black10),
-            ),
+            prefixIcon: Icons.search,
+            hintText: "Search categories",
+            height: AppSize.height(value: 48),
+            backgroundColor: AppColors.white,
+            borderColor: AppColors.black10,
+            borderSide: BorderSide(color: AppColors.black10),
+          ),
           Expanded(
             child: Obx(() {
               return SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSize.width(value: 20),
+                ),
                 child: Column(
                   children: [
                     Gap(height: 24),
@@ -60,7 +63,9 @@ class CategoriesScreen extends StatelessWidget {
                             Get.toNamed(
                               AppRoute.trendingCourse,
                               arguments: {
-                                  'categoryName': controller.categoryList[index].name},
+                                'categoryName':
+                                    controller.categoryList[index].name,
+                              },
                             );
                           },
                           child: Container(
@@ -80,7 +85,10 @@ class CategoriesScreen extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                CommonImage(src: controller.categoryList[index].image, size: 32),
+                                CkImage(
+                                  src: controller.categoryList[index].image,
+                                  size: 32,
+                                ),
                                 Gap(height: 02),
                                 AppText(
                                   text: controller.categoryList[index].name,

@@ -6,7 +6,7 @@
 import 'package:better_help/screen/notification/model/notification_model.dart';
 import 'package:better_help/screen/notification/notification_screen_controller.dart';
 import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/state_manager.dart';
@@ -31,7 +31,7 @@ class NotificationScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Obx(
-          () => SmartListLoader(
+          () => CkListView(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             isLoading: controller.isLoading.value,
             onRefresh: () => controller.getAllNotification(isRefresh: true),
@@ -54,7 +54,7 @@ class NotificationScreen extends StatelessWidget {
 
   markAllReadButton(NotificationScreenController controller) {
     return GestureDetector(
-      child: CommonText(
+      child: CkText(
         right: 10,
         textColor: Colors.cyan,
         text: 'Read All',
@@ -96,10 +96,12 @@ class NotificationItem extends StatelessWidget {
         title: Text(
           notification.message,
           style: TextStyle(
-            color: notification.isRead ? Colors.grey : Colors.black, // Read/Unread Title Color
+            color: notification.isRead
+                ? Colors.grey
+                : Colors.black, // Read/Unread Title Color
           ),
         ),
-        trailing: CommonText(
+        trailing: CkText(
           text: notification.createdAt?.checkTime ?? '',
           style: TextStyle(color: Colors.grey.shade500),
         ),

@@ -18,7 +18,8 @@ class TrandingCourse extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TrendingCourseController controller = Get.find<TrendingCourseController>();
+    final TrendingCourseController controller =
+        Get.find<TrendingCourseController>();
 
     // Get category name from arguments if not provided directly
     final String displayTitle =
@@ -36,12 +37,15 @@ class TrandingCourse extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBarWithBack(text: displayTitle, backgroundColor: AppColors.white),
+      appBar: AppBarWithBack(
+        text: displayTitle,
+        backgroundColor: AppColors.white,
+      ),
       backgroundColor: AppColors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Obx(
-          () => SmartListLoader(
+          () => CkListView(
             appbar: search(controller),
             onColapsAppbar: search(controller),
             isLoading: controller.isLoading.value,
@@ -60,7 +64,10 @@ class TrandingCourse extends StatelessWidget {
               final course = controller.trendingCourseList[index];
               return GestureDetector(
                 onTap: () {
-                  Get.toNamed(AppRoute.courseDetailScreen, arguments: {'id': course.id});
+                  Get.toNamed(
+                    AppRoute.courseDetailScreen,
+                    arguments: {'id': course.id},
+                  );
                 },
                 child: _itemBuilder(index, course, controller),
               );
@@ -83,7 +90,11 @@ class TrandingCourse extends StatelessWidget {
     );
   }
 
-  Container _itemBuilder(int index, CourseModel course, TrendingCourseController controller) {
+  Container _itemBuilder(
+    int index,
+    CourseModel course,
+    TrendingCourseController controller,
+  ) {
     return Container(
       margin: EdgeInsets.only(
         bottom: AppSize.width(value: 16),
@@ -106,7 +117,11 @@ class TrandingCourse extends StatelessWidget {
         children: [
           Stack(
             children: [
-              CommonImage(src: course.thumbnail, height: 140, width: double.infinity),
+              CkImage(
+                src: course.thumbnail,
+                height: 140,
+                width: double.infinity,
+              ),
               Positioned(
                 top: 8,
                 right: 8,
@@ -121,7 +136,9 @@ class TrandingCourse extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
-                      course.isFavorite ? Icons.favorite : Icons.favorite_border,
+                      course.isFavorite
+                          ? Icons.favorite
+                          : Icons.favorite_border,
                       color: course.isFavorite ? Colors.pink : Colors.white,
                       size: 18,
                     ),
@@ -176,7 +193,9 @@ class TrandingCourse extends StatelessWidget {
                     Row(
                       children: List.generate(5, (starIndex) {
                         return Icon(
-                          starIndex < course.rating ? Icons.star : Icons.star_border,
+                          starIndex < course.rating
+                              ? Icons.star
+                              : Icons.star_border,
                           color: Colors.amber,
                           size: 16,
                         );

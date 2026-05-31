@@ -42,9 +42,9 @@ class CreatingPostController extends GetxController {
       isSubmitting.value = false;
 
       if (response != null && response.isSuccess) {
-        showSnackBar(
+        CkSnackBar(
           response.message ?? "Post created successfully",
-          type: SnackBarType.success,
+          type: .success,
         );
 
         if (Get.isRegistered<CommunityScreenController>()) {
@@ -54,15 +54,12 @@ class CreatingPostController extends GetxController {
 
         Get.back();
       } else {
-        showSnackBar("Failed to create post", type: SnackBarType.error);
+        CkSnackBar("Failed to create post", type: .error);
       }
     } catch (e) {
       isSubmitting.value = false;
       appLog('CreatingPostController submitPost error: $e');
-      showSnackBar(
-        "Something went wrong. Please try again.",
-        type: SnackBarType.error,
-      );
+      CkSnackBar("Something went wrong. Please try again.", type: .error);
     }
   }
 }

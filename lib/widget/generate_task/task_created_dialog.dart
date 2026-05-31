@@ -4,7 +4,7 @@ import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:core_kit/core_kit_internal.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -29,7 +29,7 @@ class TaskCreatedDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CommonImage(
+            CkImage(
               src: AppStaticImages.success_icon,
               size: 80,
               fill: BoxFit.contain,
@@ -53,7 +53,7 @@ class TaskCreatedDialog extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             Gap(height: AppSize.height(value: 32)),
-            CommonButton(
+            CkButton(
               titleText: "Go to Home",
               buttonColor: AppColors.primary500,
               onTap: () {

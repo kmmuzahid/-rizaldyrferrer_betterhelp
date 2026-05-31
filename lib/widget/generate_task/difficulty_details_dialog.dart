@@ -2,7 +2,7 @@ import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/generate_task/domain_selection_dialog.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -75,7 +75,7 @@ class _DifficultyDetailsDialogState extends State<DifficultyDetailsDialog> {
           }
         },
         behavior: HitTestBehavior.opaque,
-        child: FormBuilder(
+        child: CkFormBuilder(
           entity: null,
           builder: (context, formKey, entity) => Stack(
             key: _dialogKey,
@@ -216,11 +216,11 @@ class _DifficultyInputField extends StatelessWidget {
           ],
         ),
         Gap(height: 8.h),
-        CommonMultilineTextField(
+        CkMultilineTextField(
           controller: controller,
           backgroundColor: Colors.white,
           height: 100,
-          validationType: .validateRequired,
+          validationType: CkValidationType.validateRequired,
         ),
       ],
     );

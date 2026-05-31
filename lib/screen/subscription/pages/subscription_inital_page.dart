@@ -7,7 +7,7 @@ import 'package:better_help/screen/subscription/controller/subscription_and_paym
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:core_kit/core_kit.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -37,7 +37,7 @@ class SubscriptionInitalPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CommonImage(src: AppStaticImages.check_01, size: 16),
+              CkImage(src: AppStaticImages.check_01, size: 16),
               6.width,
               AppText(
                 text: 'Better Habits',
@@ -49,7 +49,7 @@ class SubscriptionInitalPage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               38.width,
-              CommonImage(src: AppStaticImages.check_01, size: 16),
+              CkImage(src: AppStaticImages.check_01, size: 16),
               6.width,
               AppText(
                 text: 'Better Life',
@@ -64,7 +64,7 @@ class SubscriptionInitalPage extends StatelessWidget {
           ),
 
           100.height,
-          CommonButton(
+          CkButton(
             onTap: onLearnMore,
             titleText: 'Learn More',
             buttonWidth: double.infinity,

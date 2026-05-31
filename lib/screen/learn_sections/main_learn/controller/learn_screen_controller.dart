@@ -7,8 +7,7 @@ import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/screen/learn_sections/main_learn/model/category_model.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:carousel_slider/carousel_controller.dart';
-import 'package:core_kit/network/dio_service.dart';
-import 'package:core_kit/network/request_input.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 
 import '../model/course_model.dart';
@@ -55,7 +54,7 @@ class LearnScreenController extends GetxController {
 
   void fetchCategory() async {
     isCategoryLoading.value = true;
-    final response = await DioService.instance.request(
+    final response = await CkTransport.request(
       input: RequestInput(
         queryParams: {"page": 1, "limit": 100},
         endpoint: ApiEndPoints.getCourseCategoryList,
@@ -80,7 +79,7 @@ class LearnScreenController extends GetxController {
 
   // void fetchRecentCourse() async {
 
-  //   final response = await DioService.instance.request(
+  //   final response = await CkTransport.request(
   //     // showMessage: true,
   //     input: RequestInput(
   //       queryParams: {"page": 1, "limit": 10},
@@ -96,7 +95,7 @@ class LearnScreenController extends GetxController {
   // }
 
   // void fetchTrendingCourse() async {
-  //   final response = await DioService.instance.request(
+  //   final response = await CkTransport.request(
   //     input: RequestInput(
   //       queryParams: {"page": 1, "limit": 10, "trending": true},
   //       endpoint: ApiEndPoints.getCourseList,
@@ -113,7 +112,7 @@ class LearnScreenController extends GetxController {
 
   toggleFavouriteTrending(int index) async {
     final course = trendingCourseList[index];
-    final result = await DioService.instance.request(
+    final result = await CkTransport.request(
       showMessage: true,
       input: RequestInput(
         endpoint: ApiEndPoints.favoriteCourse,
@@ -129,7 +128,7 @@ class LearnScreenController extends GetxController {
 
   toggleFavouriteRecent(int index) async {
     final course = recentCourseList[index];
-    final result = await DioService.instance.request(
+    final result = await CkTransport.request(
       showMessage: true,
       input: RequestInput(
         endpoint: ApiEndPoints.favoriteCourse,

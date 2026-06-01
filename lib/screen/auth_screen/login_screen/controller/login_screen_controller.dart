@@ -3,11 +3,11 @@
  * @Date: 2026-01-09 09:41:39
  * @Email: km.muzahid@gmail.com
  */
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/model/my_profile_model.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/service/repository/profile_repositroy/profile_repository.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
-import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:core_kit/auth/ck_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -59,10 +59,10 @@ class LoginScreenController extends GetxController {
 
     isLoading.value = true;
 
-    final result = await CkAuth.signIn(body: {
-      "email": emailController.text.trim(),
-      "password": passwordController.text,
-    });
+    final result = await CkAuth.signIn(
+      username: emailController.text.trim(),
+      password: passwordController.text,
+    );
 
     if (result.isSuccess) {
       final ProfileData? profileData = CkAuth.profile as ProfileData?;
@@ -78,4 +78,3 @@ class LoginScreenController extends GetxController {
     }
   }
 }
-

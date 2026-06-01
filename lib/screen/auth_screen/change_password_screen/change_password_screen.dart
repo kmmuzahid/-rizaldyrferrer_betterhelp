@@ -54,7 +54,9 @@ class ChangePasswordScreen extends StatelessWidget {
               //! Set Password
               Obx(
                 () => AppText(
-                  text: controller.isForgetPassword.value ? 'New Password' : 'Current Password',
+                  text: controller.isForgetPassword.value
+                      ? 'New Password'
+                      : 'Current Password',
                   fontFamilyIndex: 2,
                   fontSize: AppSize.width(value: 16),
                   fontWeight: FontWeight.w500,

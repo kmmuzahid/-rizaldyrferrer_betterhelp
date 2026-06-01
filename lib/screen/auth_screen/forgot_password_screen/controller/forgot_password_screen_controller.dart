@@ -3,7 +3,7 @@
  * @Date: 2026-01-09 09:41:39
  * @Email: km.muzahid@gmail.com
  */
-import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:better_help/service/repository/auth_repository/auth_reporsitory.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:flutter/material.dart';
@@ -36,23 +36,25 @@ class ForgotPasswordScreenController extends GetxController {
   Future<void> sendCode() async {
     if (!_validateEmail()) return;
 
-    isLoading.value = true;
+    CkAuth.forgotPassword(body: {"email": emailController.text.trim()});
 
-    final response = await _authRepository.forgotPassword(
-      email: emailController.text.trim(),
-    ); 
+    // isLoading.value = true;
 
-    isLoading.value = false;
+    // final response = await _authRepository.forgotPassword(
+    //   email: emailController.text.trim(),
+    // );
 
-    if (response != null && response.isSuccess) {
-      AppSnackBar.showSuccess(response.message ?? "OTP sent to your email");
-      Get.toNamed(
-        AppRoute.otpVerificationScreen,
-        arguments: {
-          'screen': 'forgotpassword',
-          'email': emailController.text.trim(),
-        },
-      );
-    }
+    // isLoading.value = false;
+
+    // if (response != null && response.isSuccess) {
+    //   AppSnackBar.showSuccess(response.message ?? "OTP sent to your email");
+    //   Get.toNamed(
+    //     AppRoute.otpVerificationScreen,
+    //     arguments: {
+    //       'screen': 'forgotpassword',
+    //       'email': emailController.text.trim(),
+    //     },
+    //   );
+    // }
   }
 }

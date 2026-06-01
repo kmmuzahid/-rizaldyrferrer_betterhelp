@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/service/repository/auth_repository/auth_reporsitory.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
@@ -68,25 +67,30 @@ class OtpVerificationController extends GetxController {
     appLog('OtpVerificationController: Verifying OTP - $otp');
     isLoading.value = true;
 
-    try {
-      final result = await CkAuth.verifyOtp(otp: otp);
+    // try {
+    final result = await CkAuth.verifyOtp(otp: otp);
 
-      if (result.isSuccess) {
-        appLog('OtpVerificationController: OTP verified successfully');
-        AppSnackBar.showSuccess('OTP verified successfully!');
-        if (sourceScreen == 'forgotpassword') {
-          Get.offNamed(AppRoute.changePasswrodScreen, arguments: {'isForgetPassword': true});
-        }
-      } else {
-        appLog('OtpVerificationController: Verification failed - ${result.message}');
-        AppSnackBar.showError(result.message ?? 'Verification failed');
-      }
-    } catch (e) {
-      appLog('OtpVerificationController: Exception - $e');
-      AppSnackBar.showError('Something went wrong. Please try again.');
-    } finally {
-      isLoading.value = false;
-    }
+    //   if (result.isSuccess) {
+    //     appLog('OtpVerificationController: OTP verified successfully');
+    //     AppSnackBar.showSuccess('OTP verified successfully!');
+    //     if (sourceScreen == 'forgotpassword') {
+    //       Get.offNamed(
+    //         AppRoute.changePasswrodScreen,
+    //         arguments: {'isForgetPassword': true},
+    //       );
+    //     }
+    //   } else {
+    //     appLog(
+    //       'OtpVerificationController: Verification failed - ${result.message}',
+    //     );
+    //     AppSnackBar.showError(result.message ?? 'Verification failed');
+    //   }
+    // } catch (e) {
+    //   appLog('OtpVerificationController: Exception - $e');
+    //   AppSnackBar.showError('Something went wrong. Please try again.');
+    // } finally {
+    isLoading.value = false;
+    // }
   }
 
   @override

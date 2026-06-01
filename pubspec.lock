@@ -252,11 +252,9 @@ packages:
   core_kit:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "^abc8b4f"
-      resolved-ref: abc8b4fadaddb7eb7776c504869c4d53d760af08
-      url: "https://github.com/kmmuzahid/flutter_core_kit.git"
-    source: git
+      path: "/Users/username/Documents/km muzahid/flutter_core_kit"
+      relative: false
+    source: path
     version: "0.0.1"
   cross_file:
     dependency: transitive

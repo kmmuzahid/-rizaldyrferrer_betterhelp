@@ -1,20 +1,13 @@
 import 'dart:ui';
+
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_bindings/app_bindings.dart';
-import 'package:better_help/service/storage_services/storage_services.dart';
+import 'package:better_help/screen/menu_drawer/my_profile/model/my_profile_model.dart';
 import 'package:better_help/service/timer_service/timer_service.dart';
 import 'package:core_kit/core_kit_internal.dart';
-import 'package:core_kit/initializer.dart';
-import 'package:core_kit/network/ck_transport_config.dart';
-import 'package:core_kit/auth/auth_config.dart';
-import 'package:core_kit/auth/auth_endpoints.dart';
-import 'package:core_kit/auth/auth_extractors.dart';
-import 'package:core_kit/auth/auth_routes.dart';
-import 'package:core_kit/auth/otp/otp_config.dart';
-import 'package:core_kit/auth/ck_auth.dart';
-import 'package:better_help/screen/menu_drawer/my_profile/model/my_profile_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+
 import 'core/app_route/app_route.dart';
 
 class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
@@ -46,26 +39,35 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
   );
 
   @override
-  CkAuthConfig<ProfileData> get authConfig => CkAuthConfig<ProfileData>(
+  CkAuthConfig<ProfileData>? get authConfig => CkAuthConfig<ProfileData>(
     endpoints: CkAuthEndpoints(
-      signupUrl: ApiEndPoints.createUser,
-      signinUrl: ApiEndPoints.login,
-      forgetPasswordUrl: ApiEndPoints.forgotPassword,
-      otpSendUrl: ApiEndPoints.resendOtp,
-      otpVerifyUrl: ApiEndPoints.verifyOtp,
-      profileGetUrl: ApiEndPoints.getMyProfile,
-      profileUpdateUrl: ApiEndPoints.editMyProfile,
-      logoutUrl: "${ApiEndPoints.baseUrl}/auth/logout",
-      otpSendMethod: .PATCH, // patch for resend otp
+      resetPassword: ApiEndPoints.resetPassword,
+      forgotPassword: ApiEndPoints.forgotPassword,
+      signup: ApiEndPoints.createUser,
+      signin: ApiEndPoints.login,
+      sendOtp: ApiEndPoints.resendOtp,
+      verifyOtp: ApiEndPoints.verifyOtp,
+      getProfile: ApiEndPoints.getMyProfile,
+      updateProfile: ApiEndPoints.editMyProfile,
+      verifyForgetOtp: ApiEndPoints.forgotPasswordOtpMatch,
+      logout: "",
+      resetPasswordMethod: .PATCH,
+      verifyOtpMethod: .PATCH,
+      sendOtpMethod: .PATCH,
     ),
+    loginBodyBuilder: (LoginCallback loginCallBack) {
+      return {
+        'email': loginCallBack.username,
+        'password': loginCallBack.password,
+      };
+    },
     profileExtractor: (json) => ProfileData.fromJson(json),
     extractors: CkAuthExtractors<ProfileData>(
       accessToken: (data) => data['accessToken']?.toString(),
       refreshToken: (data) => data['refreshToken']?.toString(),
+      resetPasswordToken: (data) => data['forgetOtpMatchToken']?.toString(),
       profile: (data) {
-        ckDebug("@@@@@@@@@@@@@@@@ log: $data");
         final profile = ProfileData.fromJson(data);
-        print('✅✅✅ Profile name: ${profile.fullName}');
         return profile;
       },
 
@@ -77,20 +79,32 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
         CkOtpTrigger.forgetPassword: (data) => data['forgetToken']?.toString(),
       },
     ),
-    otpConfig: const CkOtpConfig(
-      autoTriggers: {CkOtpTrigger.signup},
+    otpConfig: CkOtpConfig(
+      autoTriggers: {CkOtpTrigger.signup, .forgetPassword},
       verificationStrategy: CkOtpVerificationStrategy.tokenBased,
       verificationTokenHeaderKey: 'token',
       sendVerificationTokenInHeader: true,
+      verifyBodyBuilder: (ctx) {
+        return {"otp": ctx.otp};
+      },
+      resendBodyBuilder: (ctx) {
+        return {"email": ctx.identifier};
+      },
     ),
-    routes: CkAuthRoutes(
-      roteToOtpVerification: () {
+    handlers: CkAuthFlowHandlers(
+      showResetPassword: () {
+        Get.offNamed(
+          AppRoute.changePasswrodScreen,
+          arguments: {'isForgetPassword': true},
+        );
+      },
+      showOtpVerification: () {
         Get.toNamed(
           AppRoute.otpVerificationScreen,
           arguments: {'screen': "", 'email': ""},
         );
       },
-      routeOnSuccess: () {
+      onAuthenticated: () {
         final profile = CkAuth.profile as ProfileData?;
         if (profile?.subscriptionPackageId == null) {
           Get.offAllNamed(AppRoute.subscriptionscreen);
@@ -98,10 +112,10 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
           Get.offAllNamed(AppRoute.bottomNav);
         }
       },
-      routeToLogin: () {
+      showLogin: () {
         Get.offAllNamed(AppRoute.loginScreen);
       },
-      routeToOnboarding: () {
+      showOnboarding: () {
         Get.offAllNamed(AppRoute.onboardingscreen);
       },
     ),

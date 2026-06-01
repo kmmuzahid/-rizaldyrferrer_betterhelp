@@ -4,6 +4,7 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:better_help/service/repository/auth_repository/auth_reporsitory.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,8 @@ class ChangePasswordScreenController extends GetxController {
   }
 
   bool _validatePasswords() {
-    if (newPasswordController.text.isEmpty || currentPasswordController.text.isEmpty) {
+    if (newPasswordController.text.isEmpty ||
+        currentPasswordController.text.isEmpty) {
       AppSnackBar.showError("Please enter new password");
       return false;
     }
@@ -45,12 +47,21 @@ class ChangePasswordScreenController extends GetxController {
       AppSnackBar.showError("Please confirm your password");
       return false;
     }
-   
+
     return true;
   }
 
   Future<void> changePassword() async {
     if (!_validatePasswords()) return;
+    if (isForgetPassword.value) {
+      CkAuth.updatePassword(
+        body: {
+          "newPassword": newPasswordController.text,
+          "confirmPassword": currentPasswordController.text,
+        },
+      );
+      return;
+    }
 
     isLoading.value = true;
 
@@ -60,9 +71,9 @@ class ChangePasswordScreenController extends GetxController {
             confirmPassword: currentPasswordController.text,
           )
         : await _authRepository.changePassword(
-      newPassword: newPasswordController.text,
-      oldPassword: currentPasswordController.text,
-    );
+            newPassword: newPasswordController.text,
+            oldPassword: currentPasswordController.text,
+          );
 
     isLoading.value = false;
 

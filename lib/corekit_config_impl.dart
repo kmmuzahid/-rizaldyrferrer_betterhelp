@@ -3,9 +3,11 @@ import 'dart:ui';
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_bindings/app_bindings.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/model/my_profile_model.dart';
+import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/service/timer_service/timer_service.dart';
 import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'core/app_route/app_route.dart';
@@ -52,7 +54,7 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
       verifyForgetOtp: ApiEndPoints.forgotPasswordOtpMatch,
       logout: "",
       resetPasswordMethod: .PATCH,
-      verifyOtpMethod: .PATCH,
+      verifyForgotOtpMethod: .PATCH,
       sendOtpMethod: .PATCH,
     ),
     loginBodyBuilder: (LoginCallback loginCallBack) {
@@ -80,11 +82,24 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
       },
     ),
     otpConfig: CkOtpConfig(
-      autoTriggers: {CkOtpTrigger.signup, .forgetPassword},
+      autoTriggers: {CkOtpTrigger.signup, .forgetPassword, .login},
       verificationStrategy: CkOtpVerificationStrategy.tokenBased,
       verificationTokenHeaderKey: 'token',
       sendVerificationTokenInHeader: true,
-      verifyBodyBuilder: (ctx) {
+      verifyBodyBuilder: (ctx) async {
+        if (ctx.trigger == .signup) {
+          final responses = await StorageService.instance
+              .getQuestionnaireResponses();
+
+          final questionOutput = await StorageService.instance
+              .getQuestionnaireOutput();
+          return {
+            "otp": ctx.otp,
+            "questions": ?responses,
+            "questionOutput": ?questionOutput,
+          };
+        }
+
         return {"otp": ctx.otp};
       },
       resendBodyBuilder: (ctx) {

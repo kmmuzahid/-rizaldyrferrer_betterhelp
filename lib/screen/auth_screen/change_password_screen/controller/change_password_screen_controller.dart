@@ -4,7 +4,7 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_route/app_route.dart';
-import 'package:better_help/core/compatibility/corekit_compat.dart';
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/service/repository/auth_repository/auth_reporsitory.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +54,7 @@ class ChangePasswordScreenController extends GetxController {
   Future<void> changePassword() async {
     if (!_validatePasswords()) return;
     if (isForgetPassword.value) {
-      CkAuth.updatePassword(
+      ckAuth.updatePassword(
         body: {
           "newPassword": newPasswordController.text,
           "confirmPassword": currentPasswordController.text,

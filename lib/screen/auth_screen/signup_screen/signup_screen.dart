@@ -1,4 +1,5 @@
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/screen/auth_screen/signup_screen/controller/singup_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
@@ -7,7 +8,6 @@ import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/app_text_input/app_text_input.dart';
-import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -116,7 +116,7 @@ class SignupScreen extends GetView<SingupScreenController> {
 
               //! Sign Up Button
               Gap(height: AppSize.height(value: 20)),
-              CkAuth.loadingUi(
+              ckAuth.loadingUi(
                 type: .signUp,
                 builder: (loading) {
                   return AppButton(

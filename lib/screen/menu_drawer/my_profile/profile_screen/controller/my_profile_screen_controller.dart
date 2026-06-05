@@ -4,13 +4,9 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
-import 'package:better_help/core/app_route/app_route.dart';
-import 'package:better_help/screen/menu_drawer/my_profile/model/my_profile_model.dart';
-import 'package:better_help/screen/notification/notification_screen_controller.dart';
-import 'package:better_help/service/repository/profile_repositroy/profile_repository.dart';
-import 'package:better_help/service/storage_services/storage_services.dart';
-import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:better_help/core/compatibility/corekit_compat.dart';
+import 'package:better_help/screen/menu_drawer/my_profile/model/my_profile_model.dart';
+import 'package:better_help/service/repository/profile_repositroy/profile_repository.dart';
 import 'package:get/get.dart';
 
 class MyProfileScreenController extends GetxController {
@@ -19,35 +15,6 @@ class MyProfileScreenController extends GetxController {
   var isLoading = false.obs;
   var profileData = Rxn<ProfileData>();
   var isNotificationListening = false.obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-    fetchProfile();
-  }
-
-  Future<void> fetchProfile() async {
-    isLoading.value = true;
-    final response = await _profileRepository.getMyProfile();
-
-    if (response.isSuccess) {
-      profileData.value = response.data;
-      if (isNotificationListening.value == false) {
-        Get.find<NotificationScreenController>()
-          ..getUnreadCount()
-          ..listenNotification();
-        isNotificationListening.value = true;
-      }
-    } else {
-      AppSnackBar.showError(
-        response.message?.toString() ?? "Failed to load profile",
-      );
-      StorageService().clearAll();
-      Get.offAllNamed(AppRoute.loginScreen);
-    }
-
-    isLoading.value = false;
-  }
 
   String getProfileImageUrl() {
     if (profileData.value?.profile != null &&
@@ -66,7 +33,10 @@ class MyProfileScreenController extends GetxController {
 
   RxBool isReplaceBhaBhaaLoading = false.obs;
 
-  replaceBhaBhaa({required String choice, required String reason}) async {
+  Future<void> replaceBhaBhaa({
+    required String choice,
+    required String reason,
+  }) async {
     if (isReplaceBhaBhaaLoading.value) return;
     isReplaceBhaBhaaLoading.value = true;
     await CkTransport.request(

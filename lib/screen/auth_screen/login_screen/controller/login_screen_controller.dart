@@ -3,10 +3,9 @@
  * @Date: 2026-01-09 09:41:39
  * @Email: km.muzahid@gmail.com
  */
-import 'package:better_help/core/compatibility/corekit_compat.dart';
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/service/repository/profile_repositroy/profile_repository.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
-import 'package:core_kit/auth/ck_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -57,13 +56,13 @@ class LoginScreenController extends GetxController {
 
     // isLoading.value = true;
 
-    CkAuth.signIn(
+    ckAuth.signIn(
       username: emailController.text.trim(),
       password: passwordController.text,
     );
 
     // if (result.isSuccess) {
-    //   final ProfileData? profileData = CkAuth.profile as ProfileData?;
+    //   final ProfileData? profileData = ckAuth.profile as ProfileData?;
     //   if (profileData != null) {
     //     Get.find<MyProfileScreenController>().profileData.value = profileData;
     //   }

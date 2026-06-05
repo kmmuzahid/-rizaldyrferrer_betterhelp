@@ -1,9 +1,8 @@
-import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/service/repository/auth_repository/auth_reporsitory.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
-import 'package:core_kit/auth/ck_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -69,7 +68,7 @@ class SingupScreenController extends GetxController {
     appLog('SignupController: Starting signup process...');
     isLoading.value = true;
 
-    CkAuth.signUp(
+    ckAuth.signUp(
       body: {
         "fullName": fullNameController.text.trim(),
         "email": emailController.text.trim(),

@@ -1,3 +1,4 @@
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/screen/auth_screen/otp_verification_screen/controller/otp_verification_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
@@ -7,7 +8,6 @@ import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
@@ -141,7 +141,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               ),
               Gap(height: 20),
               Center(
-                child: CkAuth.otpCountdownUi(
+                child: ckAuth.otpCountdownUi(
                   builder: (count) {
                     return count > 0
                         ? AppText(
@@ -203,7 +203,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               // ),
               //! Verify Otp Button
               Gap(height: 30),
-              CkAuth.loadingUi(
+              ckAuth.loadingUi(
                 type: .verifyOtp,
                 builder: (loading) {
                   return AppButton(

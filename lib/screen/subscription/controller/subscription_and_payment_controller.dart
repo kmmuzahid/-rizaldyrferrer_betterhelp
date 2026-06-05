@@ -10,11 +10,12 @@ import 'dart:io';
 
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/subscription/model/payment_verification_model.dart';
 import 'package:better_help/screen/subscription/model/subscription_model.dart';
 import 'package:better_help/sockets/support_message_socket.dart';
-import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -38,7 +39,7 @@ class SubscriptionAndPaymentController extends GetxController {
   bool isRestoreChecked = false;
   RxBool isVerifying = false.obs;
 
-  _fetchSubscriptionPlan() async {
+  Future<void> _fetchSubscriptionPlan() async {
     String platform = 'apple';
     if (Platform.isAndroid) {
       platform = 'google';
@@ -168,7 +169,7 @@ class SubscriptionAndPaymentController extends GetxController {
     return durationStr.isEmpty ? (plan.duration ?? "Month") : durationStr;
   }
 
-  onRestore({bool showLoader = true}) async {
+  Future<void> onRestore({bool showLoader = true}) async {
     if (showLoader) isPurchaseLoading.value = true;
     try {
       await _iap.restorePurchases();
@@ -183,7 +184,7 @@ class SubscriptionAndPaymentController extends GetxController {
     }
   }
 
-  onSubscribe(int index) async {
+  Future<void> onSubscribe(int index) async {
     if (isPurchaseLoading.value) return;
     final plan = subscriptionPlan[index + (routeFromDrawer ? 1 : 0)];
 
@@ -257,7 +258,7 @@ class SubscriptionAndPaymentController extends GetxController {
       return;
     }
 
-    await Get.find<MyProfileScreenController>().fetchProfile();
+    await ckAuth.fetchProfile();
     if ((response.active == true && !routeFromDrawer) || newSubscription) {
       Get.offAllNamed(AppRoute.bottomNav);
     } else if (routeFromDrawer && response.active == true) {
@@ -339,7 +340,7 @@ class SubscriptionAndPaymentController extends GetxController {
 
     SocketService.instance.connect();
     final profileController = Get.find<MyProfileScreenController>();
-    await profileController.fetchProfile();
+    await ckAuth.fetchProfile();
 
     if (!routeFromDrawer) await onRestore(showLoader: false);
 

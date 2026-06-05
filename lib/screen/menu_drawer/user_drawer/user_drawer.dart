@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
-import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
@@ -12,7 +12,6 @@ import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/generate_task/generate_task_dialog.dart';
 import 'package:core_kit/snackbar/ck_snackbar.dart';
-import 'package:core_kit/auth/ck_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -247,7 +246,7 @@ class UserDrawer extends StatelessWidget {
                   AppButton(
                     title: "Logout",
                     onTap: () async {
-                      await CkAuth.logout();
+                      await ckAuth.logout();
                     },
                     backgroundColor: AppColors.red500,
                     borderradius: 08,

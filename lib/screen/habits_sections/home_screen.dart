@@ -1,3 +1,4 @@
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
@@ -31,24 +32,28 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         titleSpacing: -3,
-        title: Column(
-          children: [
-            AppText(
-              text: AppString.getReadytoStart,
-              fontFamilyIndex: 2,
-              fontSize: AppSize.width(value: 18),
-              fontWeight: FontWeight.w600,
-              color: AppColors.black,
-            ),
-            Gap(height: 10),
-            AppText(
-              text: AppString.mahbubulQareem,
-              fontFamilyIndex: 2,
-              fontSize: AppSize.width(value: 14),
-              fontWeight: FontWeight.w500,
-              color: AppColors.black,
-            ),
-          ],
+        title: ckAuth.profileUi(
+          builder: (_, profile) {
+            return Column(
+              children: [
+                AppText(
+                  text: AppString.getReadytoStart,
+                  fontFamilyIndex: 2,
+                  fontSize: AppSize.width(value: 18),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.black,
+                ),
+                Gap(height: 10),
+                AppText(
+                  text: profile?.fullName ?? "",
+                  fontFamilyIndex: 2,
+                  fontSize: AppSize.width(value: 14),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.black,
+                ),
+              ],
+            );
+          },
         ),
         actions: [
           GestureDetector(

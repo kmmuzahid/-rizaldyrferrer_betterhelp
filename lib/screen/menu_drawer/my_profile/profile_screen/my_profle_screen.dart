@@ -1,10 +1,11 @@
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,252 +21,248 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
     return Scaffold(
       appBar: AppBarWithBack(text: "Profile", backgroundColor: AppColors.white),
       backgroundColor: AppColors.white,
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return Center(
-            child: CircularProgressIndicator(color: AppColors.primary500),
-          );
-        }
-
-        final profile = controller.profileData.value;
-
-        return SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Gap(height: AppSize.height(value: 24)),
-                Center(
-                  child: CkImage(
-                    borderRadius: 12,
-                    src: profile?.profile ?? '',
-                    height: AppSize.height(value: 100),
-                    width: AppSize.width(value: 100),
-                    fill: BoxFit.cover,
+      body: ckAuth.profileUi(
+        builder: (_, profile) {
+          return SafeArea(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSize.width(value: 20),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Gap(height: AppSize.height(value: 24)),
+                  Center(
+                    child: CkImage(
+                      borderRadius: 12,
+                      src: profile?.profile ?? '',
+                      height: AppSize.height(value: 100),
+                      width: AppSize.width(value: 100),
+                      fill: BoxFit.cover,
+                    ),
                   ),
-                ),
-                Gap(height: AppSize.height(value: 08)),
-                Center(
-                  child: AppText(
-                    text: profile?.fullName ?? "User Name",
-                    color: AppColors.black,
+                  Gap(height: AppSize.height(value: 08)),
+                  Center(
+                    child: AppText(
+                      text: profile?.fullName ?? "User Name",
+                      color: AppColors.black,
+                      fontFamilyIndex: 2,
+                      fontSize: AppSize.width(value: 20),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Gap(height: AppSize.height(value: 12)),
+                  Center(
+                    child: AppButton(
+                      title: profile?.isSubscribed == true
+                          ? "Subscribed"
+                          : "Elevete Subscribe",
+                      fontSize: AppSize.width(value: 14),
+                      width: AppSize.width(value: 150),
+                      height: AppSize.height(value: 36),
+                      borderradius: 12,
+                      backgroundColor: Color(0xFF0A7BFF),
+                    ),
+                  ),
+                  Gap(height: AppSize.height(value: 12)),
+                  AppText(
+                    text: "Personal Information",
                     fontFamilyIndex: 2,
-                    fontSize: AppSize.width(value: 20),
+                    fontSize: AppSize.width(value: 14),
                     fontWeight: FontWeight.w500,
                   ),
-                ),
-                Gap(height: AppSize.height(value: 12)),
-                Center(
-                  child: AppButton(
-                    title: profile?.isSubscribed == true
-                        ? "Subscribed"
-                        : "Elevete Subscribe",
-                    fontSize: AppSize.width(value: 14),
-                    width: AppSize.width(value: 150),
-                    height: AppSize.height(value: 36),
-                    borderradius: 12,
-                    backgroundColor: Color(0xFF0A7BFF),
+                  Gap(height: AppSize.height(value: 12)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AppText(
+                        text: "Phone : ",
+                        fontFamilyIndex: 2,
+                        fontSize: AppSize.width(value: 14),
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.darkGrey,
+                      ),
+                      AppText(
+                        text: profile?.phone ?? "N/A",
+                        fontFamilyIndex: 2,
+                        fontSize: AppSize.width(value: 14),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ],
                   ),
-                ),
-                Gap(height: AppSize.height(value: 12)),
-                AppText(
-                  text: "Personal Information",
-                  fontFamilyIndex: 2,
-                  fontSize: AppSize.width(value: 14),
-                  fontWeight: FontWeight.w500,
-                ),
-                Gap(height: AppSize.height(value: 12)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AppText(
-                      text: "Phone : ",
-                      fontFamilyIndex: 2,
-                      fontSize: AppSize.width(value: 14),
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.darkGrey,
-                    ),
-                    AppText(
-                      text: profile?.phone ?? "N/A",
-                      fontFamilyIndex: 2,
-                      fontSize: AppSize.width(value: 14),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ],
-                ),
-                Gap(height: AppSize.height(value: 08)),
-                Divider(height: 0.3, color: AppColors.grey400),
-                Gap(height: AppSize.height(value: 12)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AppText(
-                      text: "Address : ",
-                      fontFamilyIndex: 2,
-                      fontSize: AppSize.width(value: 14),
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.darkGrey,
-                    ),
-                    Expanded(
-                      child: AppText(
-                        text: profile?.address ?? "N/A",
+                  Gap(height: AppSize.height(value: 08)),
+                  Divider(height: 0.3, color: AppColors.grey400),
+                  Gap(height: AppSize.height(value: 12)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AppText(
+                        text: "Address : ",
                         fontFamilyIndex: 2,
                         fontSize: AppSize.width(value: 14),
                         fontWeight: FontWeight.w500,
-                        textAlign: TextAlign.end,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                        color: AppColors.darkGrey,
                       ),
-                    ),
-                  ],
-                ),
-                Gap(height: AppSize.height(value: 08)),
-                Divider(height: 0.3, color: AppColors.grey400),
-                Gap(height: AppSize.height(value: 12)),
-                AppText(
-                  text: "General Information",
-                  fontFamilyIndex: 2,
-                  fontSize: AppSize.width(value: 14),
-                  fontWeight: FontWeight.w500,
-                ),
-                Gap(height: AppSize.height(value: 12)),
-                Row(
-                  children: [
-                    AppText(
-                      text: "Email Address : ",
-                      fontFamilyIndex: 2,
-                      fontSize: AppSize.width(value: 14),
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.darkGrey,
-                    ),
-                    Expanded(
-                      child: AppText(
-                        text: profile?.email ?? "N/A",
+                      Expanded(
+                        child: AppText(
+                          text: profile?.address ?? "N/A",
+                          fontFamilyIndex: 2,
+                          fontSize: AppSize.width(value: 14),
+                          fontWeight: FontWeight.w500,
+                          textAlign: TextAlign.end,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Gap(height: AppSize.height(value: 08)),
+                  Divider(height: 0.3, color: AppColors.grey400),
+                  Gap(height: AppSize.height(value: 12)),
+                  AppText(
+                    text: "General Information",
+                    fontFamilyIndex: 2,
+                    fontSize: AppSize.width(value: 14),
+                    fontWeight: FontWeight.w500,
+                  ),
+                  Gap(height: AppSize.height(value: 12)),
+                  Row(
+                    children: [
+                      AppText(
+                        text: "Email Address : ",
                         fontFamilyIndex: 2,
                         fontSize: AppSize.width(value: 14),
                         fontWeight: FontWeight.w500,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        color: AppColors.darkGrey,
                       ),
-                    ),
-                  ],
-                ),
-                Gap(height: AppSize.height(value: 08)),
-                Divider(height: 0.3, color: AppColors.grey400),
-                Gap(height: AppSize.height(value: 12)),
+                      Expanded(
+                        child: AppText(
+                          text: profile?.email ?? "N/A",
+                          fontFamilyIndex: 2,
+                          fontSize: AppSize.width(value: 14),
+                          fontWeight: FontWeight.w500,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Gap(height: AppSize.height(value: 08)),
+                  Divider(height: 0.3, color: AppColors.grey400),
+                  Gap(height: AppSize.height(value: 12)),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AppText(
-                      text: "Change Password : ",
-                      fontFamilyIndex: 2,
-                      fontSize: AppSize.width(value: 14),
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.darkGrey,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Get.toNamed(AppRoute.changePasswrodScreen);
-                      },
-                      child: AppText(
-                        text: "Click here",
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AppText(
+                        text: "Change Password : ",
                         fontFamilyIndex: 2,
                         fontSize: AppSize.width(value: 14),
                         fontWeight: FontWeight.w500,
-                        color: AppColors.blue500,
-                        decoration: TextDecoration.underline,
+                        color: AppColors.darkGrey,
                       ),
-                    ),
-                  ],
-                ),
-                Gap(height: AppSize.height(value: 08)),
-                Divider(height: 0.3, color: AppColors.grey400),
-                Gap(height: AppSize.height(value: 12)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AppText(
-                      text: "Request to Reassing BHA/BHAA",
-                      fontFamilyIndex: 2,
-                      fontSize: AppSize.width(value: 14),
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.darkGrey,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        MyProfileScreenController myProfileScreenController =
-                            Get.find<MyProfileScreenController>();
-                        if (myProfileScreenController
-                                    .profileData
-                                    .value
-                                    ?.subscriptionPlanType ==
-                                'free' ||
-                            myProfileScreenController
-                                    .profileData
-                                    .value
-                                    ?.subscriptionPlanType ==
-                                null) {
-                          CkSnackBar('Upgrade Your Plan', type: .warning);
-                          return;
-                        }
-                        showReplaceBhaBhaaDialog();
-                      },
-                      child: AppText(
-                        text: "Click here",
+                      GestureDetector(
+                        onTap: () {
+                          Get.toNamed(AppRoute.changePasswrodScreen);
+                        },
+                        child: AppText(
+                          text: "Click here",
+                          fontFamilyIndex: 2,
+                          fontSize: AppSize.width(value: 14),
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.blue500,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Gap(height: AppSize.height(value: 08)),
+                  Divider(height: 0.3, color: AppColors.grey400),
+                  Gap(height: AppSize.height(value: 12)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AppText(
+                        text: "Request to Reassing BHA/BHAA",
                         fontFamilyIndex: 2,
                         fontSize: AppSize.width(value: 14),
                         fontWeight: FontWeight.w500,
-                        color: AppColors.blue500,
+                        color: AppColors.darkGrey,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          MyProfileScreenController myProfileScreenController =
+                              Get.find<MyProfileScreenController>();
+                          if (myProfileScreenController
+                                      .profileData
+                                      .value
+                                      ?.subscriptionPlanType ==
+                                  'free' ||
+                              myProfileScreenController
+                                      .profileData
+                                      .value
+                                      ?.subscriptionPlanType ==
+                                  null) {
+                            CkSnackBar('Upgrade Your Plan', type: .warning);
+                            return;
+                          }
+                          showReplaceBhaBhaaDialog();
+                        },
+                        child: AppText(
+                          text: "Click here",
+                          fontFamilyIndex: 2,
+                          fontSize: AppSize.width(value: 14),
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.blue500,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Gap(height: AppSize.height(value: 08)),
+                  Divider(height: 0.3, color: AppColors.grey400),
+                  Gap(height: AppSize.height(value: 12)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AppText(
+                        text: "Delete Account : ",
+                        fontFamilyIndex: 2,
+                        fontSize: AppSize.width(value: 14),
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.darkGrey,
+                      ),
+                      AppText(
+                        text: "Delete",
+                        fontFamilyIndex: 2,
+                        fontSize: AppSize.width(value: 14),
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.red500,
                         decoration: TextDecoration.underline,
                       ),
-                    ),
-                  ],
-                ),
-                Gap(height: AppSize.height(value: 08)),
-                Divider(height: 0.3, color: AppColors.grey400),
-                Gap(height: AppSize.height(value: 12)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AppText(
-                      text: "Delete Account : ",
-                      fontFamilyIndex: 2,
-                      fontSize: AppSize.width(value: 14),
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.darkGrey,
-                    ),
-                    AppText(
-                      text: "Delete",
-                      fontFamilyIndex: 2,
-                      fontSize: AppSize.width(value: 14),
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.red500,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ],
-                ),
-                Gap(height: AppSize.height(value: 08)),
-                Divider(height: 0.3, color: AppColors.grey400),
-                Gap(height: AppSize.height(value: 25)),
-                //! Edit Profile Button
-                AppButton(
-                  title: "Edit Profile",
-                  backgroundColor: AppColors.primary500,
-                  fontSize: AppSize.width(value: 16),
-                  height: AppSize.height(value: 40),
-                  borderradius: 12,
-                  onTap: () {
-                    Get.toNamed(AppRoute.completeProfileScreen);
-                  },
-                ),
-                Gap(height: AppSize.height(value: 50)),
-              ],
+                    ],
+                  ),
+                  Gap(height: AppSize.height(value: 08)),
+                  Divider(height: 0.3, color: AppColors.grey400),
+                  Gap(height: AppSize.height(value: 25)),
+                  //! Edit Profile Button
+                  AppButton(
+                    title: "Edit Profile",
+                    backgroundColor: AppColors.primary500,
+                    fontSize: AppSize.width(value: 16),
+                    height: AppSize.height(value: 40),
+                    borderradius: 12,
+                    onTap: () {
+                      Get.toNamed(AppRoute.completeProfileScreen);
+                    },
+                  ),
+                  Gap(height: AppSize.height(value: 50)),
+                ],
+              ),
             ),
-          ),
-        );
-      }),
+          );
+        },
+      ),
     );
   }
 

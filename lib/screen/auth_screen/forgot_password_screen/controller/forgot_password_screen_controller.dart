@@ -3,7 +3,7 @@
  * @Date: 2026-01-09 09:41:39
  * @Email: km.muzahid@gmail.com
  */
-import 'package:better_help/core/compatibility/corekit_compat.dart';
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/service/repository/auth_repository/auth_reporsitory.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +36,7 @@ class ForgotPasswordScreenController extends GetxController {
   Future<void> sendCode() async {
     if (!_validateEmail()) return;
 
-    CkAuth.forgotPassword(body: {"email": emailController.text.trim()});
+    ckAuth.forgotPassword(body: {"email": emailController.text.trim()});
 
     // isLoading.value = true;
 

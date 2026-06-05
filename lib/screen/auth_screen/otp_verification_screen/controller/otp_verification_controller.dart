@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/service/repository/auth_repository/auth_reporsitory.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
-import 'package:core_kit/auth/ck_auth.dart';
 import 'package:get/get.dart';
 
 class OtpVerificationController extends GetxController {
@@ -68,7 +68,7 @@ class OtpVerificationController extends GetxController {
     isLoading.value = true;
 
     // try {
-    final result = await CkAuth.verifyOtp(otp: otp);
+    ckAuth.verifyOtp(otp: otp);
 
     //   if (result.isSuccess) {
     //     appLog('OtpVerificationController: OTP verified successfully');

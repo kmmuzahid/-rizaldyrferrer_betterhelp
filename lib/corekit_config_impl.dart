@@ -12,6 +12,8 @@ import 'package:get/get.dart';
 
 import 'core/app_route/app_route.dart';
 
+CkAuth<ProfileData> ckAuth = CkAuth();
+
 class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
   @override
   Size get designSize => const Size(428, 926);
@@ -119,7 +121,7 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
         );
       },
       onAuthenticated: () {
-        final profile = CkAuth.profile as ProfileData?;
+        final profile = ckAuth.profile;
         if (profile?.subscriptionPackageId == null) {
           Get.offAllNamed(AppRoute.subscriptionscreen);
         } else {

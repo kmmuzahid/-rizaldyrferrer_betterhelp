@@ -1,4 +1,5 @@
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/screen/habits_sections/main_habits/controller/habits_screen_controller.dart';
 import 'package:better_help/screen/habits_sections/main_habits/model/daily_task_model.dart';
 import 'package:better_help/screen/habits_sections/main_habits/task_details_screen.dart';
@@ -48,30 +49,27 @@ class _HabitsScreenState extends State<HabitsScreen> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(AppSize.height(value: 70)),
-        child: Obx(() {
-          final profile = profileController.profileData.value;
+        child: ckAuth.profileUi(
+          builder: (_, profile) {
+            final String subtitle =
+                profile?.fullName != null && profile!.fullName!.isNotEmpty
+                ? profile.fullName!
+                : '';
 
-          final String subtitle =
-              profile?.fullName != null && profile!.fullName!.isNotEmpty
-              ? profile.fullName!
-              : AppString.mahbubulQareem;
+            final String? profileImage = profile?.profile;
 
-          final String profileImageUrl = profileController.getProfileImageUrl();
-          final String? profileImage = profileImageUrl.isNotEmpty
-              ? profileImageUrl
-              : null;
-
-          return FlexibleCustomAppBar(
-            appBarHeight: AppSize.height(value: 70),
-            title: AppString.getReadytoStart,
-            subtitle: subtitle,
-            notificationIconPath: AppIcons.notificationIcons,
-            menuIconPath: AppIcons.menuIcons,
-            customLeading: _buildProfileLeading(profileImage),
-            showCircleAvatar: false,
-            onMenuTap: () => widget.scaffoldKey?.currentState?.openDrawer(),
-          );
-        }),
+            return FlexibleCustomAppBar(
+              appBarHeight: AppSize.height(value: 70),
+              title: AppString.getReadytoStart,
+              subtitle: subtitle,
+              notificationIconPath: AppIcons.notificationIcons,
+              menuIconPath: AppIcons.menuIcons,
+              customLeading: _buildProfileLeading(profileImage),
+              showCircleAvatar: false,
+              onMenuTap: () => widget.scaffoldKey?.currentState?.openDrawer(),
+            );
+          },
+        ),
       ),
       backgroundColor: AppColors.habitBackground,
       body: SingleChildScrollView(

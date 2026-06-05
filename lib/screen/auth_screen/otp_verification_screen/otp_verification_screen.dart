@@ -7,6 +7,7 @@ import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_back_appbar.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
+import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
@@ -140,35 +141,66 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               ),
               Gap(height: 20),
               Center(
-                child: Obx(
-                  () => controller.isTimerActive.value
-                      ? AppText(
-                          text:
-                              "${AppString.resendin} ${controller.timerSeconds.value}s",
-                          fontFamilyIndex: 2,
-                          fontSize: AppSize.width(value: 16),
-                          color: AppColors.grey400,
-                          maxLines: 3,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          fontWeight: FontWeight.w500,
-                        )
-                      : GestureDetector(
-                          onTap: controller.resetTimer,
-                          child: AppText(
-                            text: "Resend Code",
+                child: CkAuth.otpCountdownUi(
+                  builder: (count) {
+                    return count > 0
+                        ? AppText(
+                            text: "${AppString.resendin} ${count}s",
                             fontFamilyIndex: 2,
                             fontSize: AppSize.width(value: 16),
-                            color: AppColors.blue900,
+                            color: AppColors.grey400,
                             maxLines: 3,
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
-                            fontWeight: FontWeight.w600,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
+                            fontWeight: FontWeight.w500,
+                          )
+                        : GestureDetector(
+                            onTap: controller.resetTimer,
+                            child: AppText(
+                              text: "Resend Code",
+                              fontFamilyIndex: 2,
+                              fontSize: AppSize.width(value: 16),
+                              color: AppColors.blue900,
+                              maxLines: 3,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              fontWeight: FontWeight.w600,
+                              decoration: TextDecoration.underline,
+                            ),
+                          );
+                  },
                 ),
               ),
+              // Center(
+              //   child: Obx(
+              //     () => controller.isTimerActive.value
+              //         ? AppText(
+              //             text:
+              //                 "${AppString.resendin} ${controller.timerSeconds.value}s",
+              //             fontFamilyIndex: 2,
+              //             fontSize: AppSize.width(value: 16),
+              //             color: AppColors.grey400,
+              //             maxLines: 3,
+              //             textAlign: TextAlign.center,
+              //             overflow: TextOverflow.ellipsis,
+              //             fontWeight: FontWeight.w500,
+              //           )
+              //         : GestureDetector(
+              //             onTap: controller.resetTimer,
+              //             child: AppText(
+              //               text: "Resend Code",
+              //               fontFamilyIndex: 2,
+              //               fontSize: AppSize.width(value: 16),
+              //               color: AppColors.blue900,
+              //               maxLines: 3,
+              //               textAlign: TextAlign.center,
+              //               overflow: TextOverflow.ellipsis,
+              //               fontWeight: FontWeight.w600,
+              //               decoration: TextDecoration.underline,
+              //             ),
+              //           ),
+              //   ),
+              // ),
               //! Verify Otp Button
               Gap(height: 30),
               Obx(

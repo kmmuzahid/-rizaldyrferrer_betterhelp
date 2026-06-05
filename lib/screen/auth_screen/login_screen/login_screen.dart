@@ -7,6 +7,7 @@ import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/app_text_input/app_text_input.dart';
+import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -101,18 +102,31 @@ class LoginScreen extends StatelessWidget {
               ),
               //! Log In Button
               Gap(height: 20),
-              Obx(
-                () => AppButton(
-                  title: controller.isLoading.value
-                      ? "Loading..."
-                      : AppString.login,
-                  backgroundColor: AppColors.primary500,
-                  titleColor: AppColors.white,
-                  onTap: controller.isLoading.value
-                      ? null
-                      : () => controller.login(),
-                ),
+              CkAuth.loadingUi(
+                type: .signIn,
+                builder: (loding) {
+                  return AppButton(
+                    title: loding ? "Loading..." : AppString.login,
+                    backgroundColor: AppColors.primary500,
+                    titleColor: AppColors.white,
+                    onTap: controller.isLoading.value
+                        ? null
+                        : () => controller.login(),
+                  );
+                },
               ),
+              // Obx(
+              //   () => AppButton(
+              //     title: controller.isLoading.value
+              //         ? "Loading..."
+              //         : AppString.login,
+              //     backgroundColor: AppColors.primary500,
+              //     titleColor: AppColors.white,
+              //     onTap: controller.isLoading.value
+              //         ? null
+              //         : () => controller.login(),
+              //   ),
+              // ),
               Gap(height: 12),
               // Center(child: AppText(text: "Or", fontFamilyIndex: 2)),
               // Gap(height: 12),

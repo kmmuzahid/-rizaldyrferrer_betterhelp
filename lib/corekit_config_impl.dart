@@ -41,7 +41,8 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
   );
 
   @override
-  CkAuthConfig<ProfileData>? get authConfig => CkAuthConfig<ProfileData>(
+  CkAuthConfig get authConfig => CkAuthConfig(
+    // authEnable: false,
     endpoints: CkAuthEndpoints(
       resetPassword: ApiEndPoints.resetPassword,
       forgotPassword: ApiEndPoints.forgotPassword,
@@ -63,8 +64,7 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
         'password': loginCallBack.password,
       };
     },
-    profileExtractor: (json) => ProfileData.fromJson(json),
-    extractors: CkAuthExtractors<ProfileData>(
+    extractors: CkAuthExtractors(
       accessToken: (data) => data['accessToken']?.toString(),
       refreshToken: (data) => data['refreshToken']?.toString(),
       resetPasswordToken: (data) => data['forgetOtpMatchToken']?.toString(),
@@ -72,7 +72,6 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
         final profile = ProfileData.fromJson(data);
         return profile;
       },
-
       message: (data) => data['message']?.toString(),
       verificationTokens: {
         CkOtpTrigger.signup: (data) =>

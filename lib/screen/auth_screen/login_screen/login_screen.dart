@@ -109,9 +109,7 @@ class LoginScreen extends StatelessWidget {
                     title: loding ? "Loading..." : AppString.login,
                     backgroundColor: AppColors.primary500,
                     titleColor: AppColors.white,
-                    onTap: controller.isLoading.value
-                        ? null
-                        : () => controller.login(),
+                    onTap: loding ? null : () => controller.login(),
                   );
                 },
               ),

@@ -7,6 +7,7 @@ import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/app_text_input/app_text_input.dart';
+import 'package:core_kit/core_kit_internal.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -115,14 +116,16 @@ class SignupScreen extends GetView<SingupScreenController> {
 
               //! Sign Up Button
               Gap(height: AppSize.height(value: 20)),
-              Obx(
-                () => AppButton(
-                  title: AppString.signUp,
-                  backgroundColor: AppColors.primary500,
-                  titleColor: AppColors.white,
-                  isLoading: controller.isLoading.value,
-                  onTap: controller.isLoading.value ? null : controller.signUp,
-                ),
+              CkAuth.loadingUi(
+                type: .signUp,
+                builder: (loading) {
+                  return AppButton(
+                    title: loading ? "Loading..." : AppString.signUp,
+                    backgroundColor: AppColors.primary500,
+                    titleColor: AppColors.white,
+                    onTap: loading ? null : () => controller.signUp(),
+                  );
+                },
               ),
               Gap(height: AppSize.height(value: 40)),
               Row(

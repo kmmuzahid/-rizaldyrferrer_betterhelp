@@ -203,16 +203,19 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               // ),
               //! Verify Otp Button
               Gap(height: 30),
-              Obx(
-                () => AppButton(
-                  title: AppString.verify,
-                  isLoading: controller.isLoading.value,
-                  onTap: controller.isLoading.value
-                      ? null
-                      : () => controller.verifyOtp(_controller.text),
-                  backgroundColor: AppColors.primary500,
-                  titleColor: AppColors.white,
-                ),
+              CkAuth.loadingUi(
+                type: .verifyOtp,
+                builder: (loading) {
+                  return AppButton(
+                    title: AppString.verify,
+                    isLoading: loading,
+                    onTap: loading
+                        ? null
+                        : () => controller.verifyOtp(_controller.text),
+                    backgroundColor: AppColors.primary500,
+                    titleColor: AppColors.white,
+                  );
+                },
               ),
               Gap(height: 30),
             ],

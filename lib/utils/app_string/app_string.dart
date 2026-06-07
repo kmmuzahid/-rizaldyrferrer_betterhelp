@@ -30,33 +30,33 @@ class AppString {
   static const String begin = "Begin";
   static const String questionTitle =
       'Tell us about you. There are no right or wrong answers. Select the response that best describes your daily experiences.';
-  static const String rarely = 'Rarely';
+  static const String rarely = 'Rarely/Never';
   static const String frequently = 'Frequently';
   static const String sometimes = 'Sometimes';
   static const String question1 =
       'I talk over others or say too much during conversations.';
   static const String question2 =
-      'I am pacing or shifting around, even when I know I should stay still.';
-  static const String question3 =
-      'When I try to focus, my own irrelevant thoughts or things around distract me.';
-  static const String question4 =
       'I forget where I put things or what I was about to do.';
-  static const String question5 =
-      'I make decisions about things like money, work, or relationships before considering the consequences.';
-  static const String question6 =
-      'My attention jumps from one thing to another, and it’s hard to get back on track.';
-  static const String question7 =
-      'It’s hard to keep going on a task, even if they’re important to me.';
-  static const String question8 =
-      'I struggle to calm myself down once a strong emotion starts.';
-  static const String question9 =
+  static const String question3 =
       'I get stuck when things don’t go as planned and don’t know how to adjust.';
-  static const String question10 =
-      'I don’t notice when I’m off-task or making mistakes.';
-  static const String question11 =
+  static const String question4 =
+      'My attention jumps from one thing to another, and it’s hard to get back on track.';
+  static const String question5 =
+      'I am pacing or shifting around, even when I know I should stay still.';
+  static const String question6 =
+      'I struggle to calm myself down once a strong emotion starts.';
+  static const String question7 =
       'I forget what I want to say or do unless I write it down.';
-  static const String question12 =
+  static const String question8 =
+      'It’s hard to keep going on a task, even if they’re important to me.';
+  static const String question9 =
+      'I make decisions about things like money, work, or relationships before considering the consequences.';
+  static const String question10 =
       'I have a hard time keeping up with things like my space, health, or relationships.';
+  static const String question11 =
+      'When I try to focus, my own irrelevant thoughts or things around distract me.';
+  static const String question12 =
+      'I don’t notice when I’m off-task or making mistakes.';
 
   static const String step = 'Step ';
 
@@ -79,7 +79,7 @@ class AppString {
 
   //! ============== Result Screen ==============
   static const String resultQuestionWellbeing =
-      "If 10 represents thriving, how would you rate your overall wellbeing in life?";
+      "If 10 means thriving, how well do you feel in life?";
   static const String resultQuestionProductivity =
       "If 10 means feeling productive in the ways that matter to you, where would you rate yourself today?";
   static const String answer =

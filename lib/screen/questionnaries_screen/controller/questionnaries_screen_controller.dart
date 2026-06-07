@@ -1,11 +1,9 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_route/app_route.dart';
-import 'package:better_help/screen/questionnaries_screen/repository/questionnaries_screen_repository.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
-import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
-import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -251,7 +249,7 @@ class QuestionnariesScreenController extends GetxController {
 
   String getCurrentStepText() {
     int currentStep = currentPageIndex.value + 1;
-    return '$currentStep/${totalPages - 1}';
+    return '$currentStep/$totalPages';
   }
 
   double getCompletionPercentage() {

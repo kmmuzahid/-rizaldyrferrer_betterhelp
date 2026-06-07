@@ -163,7 +163,7 @@ class _QuestionnaireSummaryScreenState extends State<QuestionnaireSummaryScreen>
               ),
               Gap(height: AppSize.height(value: 20)),
               AppButton(
-                title: 'Continue',
+                title: 'Join for a 14-Day Free Trial',
                 backgroundColor: AppColors.white,
                 titleColor: AppColors.black,
                 onTap: () => Get.offNamed(AppRoute.signupScreen),
@@ -187,7 +187,10 @@ class _QuestionnaireSummaryScreenState extends State<QuestionnaireSummaryScreen>
   }
 
   Widget _buildDivider() {
-    return Container(height: 1, color: AppColors.grey500.withOpacity(0.2));
+    return Container(
+      height: 1,
+      color: AppColors.grey500.withValues(alpha: 0.2),
+    );
   }
 
   Widget _buildBulletPoint(String text) {

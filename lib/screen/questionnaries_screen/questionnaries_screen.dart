@@ -1,4 +1,3 @@
-import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/screen/questionnaries_screen/controller/questionnaries_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
@@ -40,9 +39,6 @@ class QuestionnariesScreen extends StatelessWidget {
                   Gap(height: AppSize.height(value: 20)),
                 ],
                 _buildPageView(controller),
-                Gap(height: AppSize.height(value: 20)),
-                _buildBottomButton(controller),
-                Gap(height: AppSize.height(value: 20)),
               ],
             ),
           ),
@@ -72,21 +68,23 @@ class QuestionnariesScreen extends StatelessWidget {
             ),
             Gap(width: AppSize.width(value: 8)),
             Flexible(
-              child: AppText(
+              child: CkText(
                 text: AppString.questionTitle,
-                color: AppColors.white500,
-                lineHeight: 1.3,
-                fontSize: AppSize.width(value: 16),
-                fontFamilyIndex: 2,
-                fontWeight: FontWeight.w600,
-                maxLines: 3,
-                textAlign: TextAlign.justify,
+                textColor: AppColors.white500,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+
+                isDescription: true,
+                textAlign: TextAlign.left,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
         ),
-        Gap(height: AppSize.height(value: 26)),
+        Gap(height: AppSize.height(value: 15)),
         _buildProgressIndicator(controller, context),
         Gap(height: AppSize.height(value: 18)),
       ],
@@ -151,13 +149,58 @@ class QuestionnariesScreen extends StatelessWidget {
       child: PageView(
         controller: controller.pageController,
         onPageChanged: controller.onPageChanged,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         children: [
-          SingleChildScrollView(child: _buildQuestionPage(controller, 0)),
-          SingleChildScrollView(child: _buildQuestionPage(controller, 1)),
-          SingleChildScrollView(child: _buildQuestionPage(controller, 2)),
-          SingleChildScrollView(child: _buildGoalsPage(controller)),
-          SingleChildScrollView(child: _buildResultPage()),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildQuestionPage(controller, 0),
+                Gap(height: AppSize.height(value: 20)),
+                _buildBottomButton(controller),
+                Gap(height: AppSize.height(value: 20)),
+              ],
+            ),
+          ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildQuestionPage(controller, 1),
+                Gap(height: AppSize.height(value: 20)),
+                _buildBottomButton(controller),
+                Gap(height: AppSize.height(value: 20)),
+              ],
+            ),
+          ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildQuestionPage(controller, 2),
+                Gap(height: AppSize.height(value: 20)),
+                _buildBottomButton(controller),
+                Gap(height: AppSize.height(value: 20)),
+              ],
+            ),
+          ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildGoalsPage(controller),
+                Gap(height: AppSize.height(value: 20)),
+                _buildBottomButton(controller),
+                Gap(height: AppSize.height(value: 20)),
+              ],
+            ),
+          ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildResultPage(),
+                Gap(height: AppSize.height(value: 20)),
+                _buildBottomButton(controller),
+                Gap(height: AppSize.height(value: 20)),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -250,20 +293,20 @@ class QuestionnariesScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Center(
-                child: AppText(
-                  text: "Scale of 1-10",
-                  fontFamilyIndex: 2,
-                  fontSize: AppSize.width(value: 24),
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.black,
-                ),
-              ),
-              Gap(height: AppSize.height(value: 20)),
+              // Center(
+              //   child: AppText(
+              //     text: "Scale of 1-10",
+              //     fontFamilyIndex: 2,
+              //     fontSize: AppSize.width(value: 24),
+              //     fontWeight: FontWeight.w600,
+              //     color: AppColors.black,
+              //   ),
+              // ),
+              // Gap(height: AppSize.height(value: 10)),
               _questions(
                 controller: controller,
-                boldText: "10 represents thriving",
-                endText: ", how would you rate your overall wellbeing in life?",
+                boldText: "10 means thriving",
+                endText: ", how well do you feel in life?",
                 isSelected: (number) =>
                     controller.isScaleWellbeingSelected(number),
                 onSelect: (number) => controller.selectScaleWellbeing(number),

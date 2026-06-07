@@ -1,3 +1,4 @@
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:better_help/screen/questionnaries_screen/controller/questionnaries_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
@@ -44,7 +45,7 @@ class CustomQuestionContainer extends StatelessWidget {
             maxLines: 3,
             textAlign: TextAlign.center,
           ),
-          Gap(height: AppSize.height(value: 14)),
+          8.height,
           _buildAnswerSelection(),
         ],
       ),
@@ -62,7 +63,7 @@ class CustomQuestionContainer extends StatelessWidget {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildAnswerOption('rarely', AppString.rarely),
+            _buildAnswerOption('Rarely/Never', AppString.rarely),
             _buildAnswerOption('sometimes', AppString.sometimes),
             _buildAnswerOption('frequently', AppString.frequently),
           ],
@@ -89,10 +90,7 @@ class CustomQuestionContainer extends StatelessWidget {
               height: AppSize.width(value: 24),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: activeColor,
-                  width: 2,
-                ),
+                border: Border.all(color: activeColor, width: 2),
                 color: isSelected ? activeColor : Colors.transparent,
               ),
               child: isSelected
@@ -106,7 +104,7 @@ class CustomQuestionContainer extends StatelessWidget {
             Gap(height: AppSize.height(value: 8)),
             AppText(
               text: answerText,
-              fontSize: AppSize.width(value: 14),
+              fontSize: 13,
               fontFamilyIndex: 2,
               fontWeight: FontWeight.w600,
               color: isSelected ? activeColor : AppColors.black,

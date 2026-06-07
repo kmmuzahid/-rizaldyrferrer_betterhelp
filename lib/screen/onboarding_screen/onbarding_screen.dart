@@ -54,9 +54,9 @@ class OnbardingScreen extends StatelessWidget {
                           width: AppSize.width(value: 174),
                         ),
                         InkWell(
-                          onTap: controller.skipOnboarding,
+                          onTap: () {},
                           child: AppText(
-                            text: AppString.skip,
+                            text: '',
                             fontFamilyIndex: 3,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,

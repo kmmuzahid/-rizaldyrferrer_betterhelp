@@ -23,9 +23,10 @@ class AppString {
   static const String getStarted = "Get Started";
 
   //! ============== Question  Screen ==============
-  static const String weHavegotYourAttention = "We have got your attention";
+  static const String weHavegotYourAttention =
+      "Now that we got your attention, we'd like to learn more about the challenges in your self-management habits.";
   static const String weHaveGotYourAttentionDetails =
-      "We'd like to learn more about the challenges in our self-management habits. This helps us tailor your Better Habits for Life experience to your needs.";
+      "This helps us tailor your Better Habits for Life experience to your needs.";
   static const String begin = "Begin";
   static const String questionTitle =
       'Tell us about you. There are no right or wrong answers. Select the response that best describes your daily experiences.';

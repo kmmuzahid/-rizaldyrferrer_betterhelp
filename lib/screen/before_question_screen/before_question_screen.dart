@@ -1,11 +1,11 @@
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:better_help/screen/before_question_screen/controller/before_question_screen_controller.dart';
 import 'package:better_help/screen/before_question_screen/widget/policy_agreement_widget.dart';
 import 'package:better_help/screen/questionnaries_screen/controller/questionnaries_screen_controller.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
-import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,65 +35,85 @@ class BeforeQuestionScreen extends StatelessWidget {
           Positioned.fill(
             child: SafeArea(
               bottom: false,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Gap(height: AppSize.height(value: 35)),
-                    Padding(
+              child: CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Column(
                         children: [
-                          InkWell(
-                            onTap: () {
-                              Get.back();
-                            },
-                            child: SvgPicture.asset(AppIcons.appbarBackIcon),
-                          ),
-                          Gap(width: AppSize.width(value: 60)),
-                          Image.asset(
-                            AppStaticImages.appBarlogo,
-                            height: AppSize.height(value: 65),
-                            width: AppSize.width(value: 174),
+                          Gap(height: AppSize.height(value: 35)),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  Get.back();
+                                },
+                                child: SvgPicture.asset(
+                                  AppIcons.appbarBackIcon,
+                                ),
+                              ),
+                              Gap(width: AppSize.width(value: 60)),
+                              Image.asset(
+                                AppStaticImages.appBarlogo,
+                                height: AppSize.height(value: 65),
+                                width: AppSize.width(value: 174),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
-                    Padding(
+                  ),
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Gap(height: AppSize.height(value: 85)),
-                          Center(
-                            child: Image.asset(
-                              AppStaticImages.beforeQuestionImage,
-                            ),
-                          ),
-                          Gap(height: AppSize.height(value: 40)),
+                          const Spacer(),
                           CkText(
                             text: AppString.weHavegotYourAttention,
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
                             textColor: AppColors.grey500,
+                            textAlign: TextAlign.center,
+                            isDescription: true,
                             style: const TextStyle(
                               fontFamily: 'PlayfairDisplay',
                             ),
                           ),
 
-                          Gap(height: AppSize.height(value: 8)),
+                          Gap(height: AppSize.height(value: 40)),
 
-                          CkText(
-                            text: AppString.weHaveGotYourAttentionDetails,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            textColor: AppColors.white900,
-                            style: const TextStyle(fontFamily: 'inter'),
-                            maxLines: 4,
+                          Text.rich(
+                            TextSpan(
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.white900,
+                                fontFamily: 'inter',
+                              ),
+                              children: [
+                                const TextSpan(
+                                  text: "This helps us tailor your ",
+                                ),
+                                const TextSpan(
+                                  text: "Better Habits for Life",
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                                const TextSpan(
+                                  text: " experience to your needs.",
+                                ),
+                              ],
+                            ),
                             textAlign: TextAlign.center,
-                            isDescription: true,
                           ),
 
-                          Gap(height: AppSize.height(value: 40)),
+                          30.height,
 
                           AppButton(
                             title: AppString.begin,
@@ -111,7 +131,10 @@ class BeforeQuestionScreen extends StatelessWidget {
                                 ),
                               );
                             },
-                            backgroundColor: AppColors.primary500,
+                            width: 150,
+                            titleColor: Colors.black,
+                            borderradius: 25,
+                            backgroundColor: Colors.white,
                             height: AppSize.height(value: 48),
                           ),
 
@@ -148,11 +171,12 @@ class BeforeQuestionScreen extends StatelessWidget {
                               20.width,
                             ],
                           ),
+                          const Spacer(),
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

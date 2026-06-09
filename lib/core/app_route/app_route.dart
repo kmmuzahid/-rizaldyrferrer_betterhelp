@@ -11,6 +11,7 @@ import 'package:better_help/screen/community_sections/main_community/community_s
 import 'package:better_help/screen/free_trial_screen/free_trial_screen.dart';
 import 'package:better_help/screen/habits_sections/home_screen.dart';
 import 'package:better_help/screen/habits_sections/main_habits/generate_task_based_on_preference_screen.dart';
+import 'package:better_help/screen/habits_sections/main_habits/habit_preference_summary_screen.dart';
 import 'package:better_help/screen/habits_sections/main_habits/habits_screen.dart';
 import 'package:better_help/screen/habits_sections/my_task/my_task.dart';
 import 'package:better_help/screen/habits_sections/timer_screen/timer_screen.dart';
@@ -121,6 +122,7 @@ class AppRoute {
   static const String analyzeScreen = "/analyzeScreen";
   static const String generateTaskBasedOnPreference =
       "/generateTaskBasedOnPreference";
+  static const String habitPreferenceSummary = "/habitPreferenceSummary";
 
   //! Get Pages for all the Screen
 
@@ -294,6 +296,12 @@ class AppRoute {
     GetPage(
       name: AppRoute.generateTaskBasedOnPreference,
       page: () => const GenerateTaskBasedOnPreferenceScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: AppRoute.habitPreferenceSummary,
+      page: () => const HabitPreferenceSummaryScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: const Duration(milliseconds: 300),
     ),

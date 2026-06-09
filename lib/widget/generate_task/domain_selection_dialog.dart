@@ -1,7 +1,7 @@
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:better_help/widget/generate_task/difficulty_details_dialog.dart';
+import 'package:better_help/core/app_route/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,7 +18,7 @@ class _DomainSelectionDialogState extends State<DomainSelectionDialog> {
 
   final Map<String, String> domainDescriptions = {
     "Executive Inhibition (Self-Restraint)":
-        "I talk over others or say too much during conversations. I am pacing or shifting around, even when I know I should stay still. When I try to focus, my own irrelevant thoughts or things around distract me. I make decisions about things like money, work, or relationships before considering the consequences. My attention jumps from one thing to another, and it’s hard to get back on track.",
+        "I talk over others or say too much during conversations. I am pacing or shifting around, even when I know I should stay still. When I try to focus, my own irrelevant thoughts or things around distract me. I make decisions about things like money, work, or relationships before considering the consequences.",
     "Goal-Directed Persistence (Self-Motivation)":
         "It’s hard to keep going on a task, even if they’re important to me.",
     "Planning and Problem-Solving":
@@ -169,7 +169,7 @@ class _DomainSelectionDialogState extends State<DomainSelectionDialog> {
                 height: 22,
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: const Color(0xFF6D717F).withOpacity(0.5),
+                    color: const Color(0xFF6D717F).withValues(alpha: 0.5),
                     width: 1.5,
                   ),
                   borderRadius: BorderRadius.circular(2),
@@ -234,10 +234,9 @@ class _DomainSelectionDialogState extends State<DomainSelectionDialog> {
       onTap: () {
         if (selectedDomains.isNotEmpty) {
           Get.back();
-          Get.dialog(
-            DifficultyDetailsDialog(
-              difficultyDetails: getSelectedDifficulties(),
-            ),
+          Get.toNamed(
+            AppRoute.habitPreferenceSummary,
+            arguments: getSelectedDifficulties(),
           );
         }
       },
@@ -249,7 +248,7 @@ class _DomainSelectionDialogState extends State<DomainSelectionDialog> {
           borderRadius: BorderRadius.circular(AppSize.width(value: 30)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -262,7 +261,7 @@ class _DomainSelectionDialogState extends State<DomainSelectionDialog> {
           fontWeight: FontWeight.w700,
           color: selectedDomains.isNotEmpty
               ? const Color(0xFF131927)
-              : const Color(0xFF131927).withOpacity(0.5),
+              : const Color(0xFF131927).withValues(alpha: 0.5),
         ),
       ),
     );
@@ -452,7 +451,7 @@ class _BubblePainter extends CustomPainter {
     // Subtle shadow
     canvas.drawShadow(
       path.shift(const Offset(0, 2)),
-      Colors.black.withOpacity(0.2),
+      Colors.black.withValues(alpha: 0.2),
       6,
       true,
     );

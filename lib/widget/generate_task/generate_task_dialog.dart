@@ -27,11 +27,12 @@ class GenerateTaskDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               AppText(
-                text: "Choose a Domain\n(Up to 3)",
+                text: "Choose Your First/Second/Third Domain",
                 fontFamilyIndex: 1, // Playfair Display
                 fontSize: AppSize.width(value: 20),
                 fontWeight: FontWeight.w700,
                 color: const Color(0xFF131927),
+                maxLines: 5,
               ),
               Gap(height: AppSize.height(value: 18)),
               AppText(

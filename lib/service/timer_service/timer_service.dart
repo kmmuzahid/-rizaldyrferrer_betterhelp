@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class TimerService extends GetxService {
   static TimerService get instance => Get.find<TimerService>();
 
+  final AudioPlayer _audioPlayer = AudioPlayer();
   Timer? _backgroundTimer;
 
   // Storage keys
@@ -114,8 +117,11 @@ class TimerService extends GetxService {
     remainingSeconds.value = 0;
     await _clearTimerState();
 
-    // Show completion notification
-    //
+    try {
+      await _audioPlayer.play(AssetSource('sounds/timer_end.mp3'));
+    } catch (e) {
+      debugPrint("Error playing timer sound: $e");
+    }
   }
 
   Future<void> _saveTimerState() async {
@@ -144,6 +150,7 @@ class TimerService extends GetxService {
   @override
   void onClose() {
     _backgroundTimer?.cancel();
+    _audioPlayer.dispose();
     super.onClose();
   }
 }

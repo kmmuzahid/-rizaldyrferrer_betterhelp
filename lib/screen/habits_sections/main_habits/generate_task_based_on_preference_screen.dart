@@ -1,8 +1,8 @@
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:better_help/screen/habits_sections/main_habits/controller/generate_task_based_on_preferense_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide GetStringUtils;
 
@@ -22,7 +22,7 @@ class GenerateTaskBasedOnPreferenceScreen extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         title: AppText(
-          text: "Generate a task based on your preferences",
+          text: "Habit ${controller.task.length} of 8",
           fontFamilyIndex: 1,
           fontSize: 20.sp,
           fontWeight: FontWeight.w700,
@@ -63,21 +63,20 @@ class GenerateTaskBasedOnPreferenceScreen extends StatelessWidget {
                   : Column(
                       children: [
                         CkButton(
-                          onTap: () => controller.addTask(),
-                          buttonColor: const Color(0xFFFF8D41),
-
-                          titleText: "Add Task",
-                          buttonWidth: 220,
-                        ),
-
-                        10.height,
-                        CkButton(
                           onTap: () {
                             controller.regenerateTasks();
                           },
                           buttonColor: const Color(0xFF309AAD),
-                          buttonWidth: 220,
-                          titleText: "Regenerate Task",
+                          buttonWidth: double.infinity,
+                          titleText: "Regenerate a different strategy",
+                        ),
+                        10.height,
+                        CkButton(
+                          onTap: () => controller.addTask(),
+                          buttonColor: const Color(0xFFFF8D41),
+
+                          titleText: "Confirm",
+                          buttonWidth: double.infinity,
                         ),
                       ],
                     ),
@@ -154,7 +153,7 @@ class _TaskCard extends StatelessWidget {
               border: Border.all(color: const Color(0xFFEAECF0)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.03),
+                  color: Colors.black.withValues(alpha: 0.03),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),

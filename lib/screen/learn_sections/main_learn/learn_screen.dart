@@ -1,4 +1,5 @@
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:better_help/screen/learn_sections/main_learn/controller/learn_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
@@ -8,8 +9,6 @@ import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -82,76 +81,76 @@ class _LearnScreenState extends State<LearnScreen> {
                   ),
                 ),
                 Gap(height: 15),
-                Obx(
-                  () => CarouselSlider(
-                    carouselController: controller.carouselController,
-                    items: controller.backgroundImages.map<Widget>((imagePath) {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: RotatedBox(
-                          quarterTurns:
-                              -1, // 90 degrees clockwise (use 3 for counter-clockwise)
-                          child: Image.asset(
-                            imagePath,
-                            fit: BoxFit.contain,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                    options: CarouselOptions(
-                      height: AppSize.height(value: 200),
-                      viewportFraction: 0.85,
-                      initialPage: 0,
-                      enableInfiniteScroll: true,
+                // Obx(
+                //   () => CarouselSlider(
+                //     carouselController: controller.carouselController,
+                //     items: controller.backgroundImages.map<Widget>((imagePath) {
+                //       return ClipRRect(
+                //         borderRadius: BorderRadius.circular(12),
+                //         child: RotatedBox(
+                //           quarterTurns:
+                //               -1, // 90 degrees clockwise (use 3 for counter-clockwise)
+                //           child: Image.asset(
+                //             imagePath,
+                //             fit: BoxFit.contain,
+                //             width: double.infinity,
+                //             height: double.infinity,
+                //           ),
+                //         ),
+                //       );
+                //     }).toList(),
+                //     options: CarouselOptions(
+                //       height: AppSize.height(value: 200),
+                //       viewportFraction: 0.85,
+                //       initialPage: 0,
+                //       enableInfiniteScroll: true,
 
-                      autoPlay: true,
-                      autoPlayInterval: const Duration(seconds: 4),
-                      autoPlayAnimationDuration: const Duration(
-                        milliseconds: 800,
-                      ),
-                      autoPlayCurve: Curves.linear,
-                      enlargeCenterPage: true,
-                      enlargeFactor: 0.2,
-                      scrollDirection: Axis.horizontal,
-                      onPageChanged: (index, reason) {
-                        controller.updateCurrentIndex(index);
-                      },
-                    ),
-                  ),
-                ),
+                //       autoPlay: true,
+                //       autoPlayInterval: const Duration(seconds: 4),
+                //       autoPlayAnimationDuration: const Duration(
+                //         milliseconds: 800,
+                //       ),
+                //       autoPlayCurve: Curves.linear,
+                //       enlargeCenterPage: true,
+                //       enlargeFactor: 0.2,
+                //       scrollDirection: Axis.horizontal,
+                //       onPageChanged: (index, reason) {
+                //         controller.updateCurrentIndex(index);
+                //       },
+                //     ),
+                //   ),
+                // ),
 
-                Gap(height: 16),
-                Center(
-                  child: Obx(
-                    () => Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: List.generate(
-                        controller.backgroundImages.length,
-                        (index) {
-                          return GestureDetector(
-                            onTap: () => controller.goToSlide(index),
-                            child: Container(
-                              margin: EdgeInsets.symmetric(
-                                horizontal: AppSize.width(value: 3),
-                              ),
-                              height: AppSize.height(value: 8),
-                              width: AppSize.width(value: 32),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4.5),
-                                color: controller.currentIndex.value == index
-                                    ? AppColors.secondary900
-                                    : AppColors.iconLightgrey,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                Gap(height: 16),
+                // Gap(height: 16),
+                // Center(
+                //   child: Obx(
+                //     () => Row(
+                //       mainAxisSize: MainAxisSize.min,
+                //       children: List.generate(
+                //         controller.backgroundImages.length,
+                //         (index) {
+                //           return GestureDetector(
+                //             onTap: () => controller.goToSlide(index),
+                //             child: Container(
+                //               margin: EdgeInsets.symmetric(
+                //                 horizontal: AppSize.width(value: 3),
+                //               ),
+                //               height: AppSize.height(value: 8),
+                //               width: AppSize.width(value: 32),
+                //               decoration: BoxDecoration(
+                //                 borderRadius: BorderRadius.circular(4.5),
+                //                 color: controller.currentIndex.value == index
+                //                     ? AppColors.secondary900
+                //                     : AppColors.iconLightgrey,
+                //               ),
+                //             ),
+                //           );
+                //         },
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // Gap(height: 16),
                 //! Categories Section
                 Padding(
                   padding: EdgeInsets.symmetric(
@@ -185,11 +184,11 @@ class _LearnScreenState extends State<LearnScreen> {
                     )
                   : SliverGrid.builder(
                       gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 100,
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
                             crossAxisSpacing: 8,
                             mainAxisSpacing: 8,
-                            childAspectRatio: .95,
+                            childAspectRatio: 1.2,
                           ),
                       itemCount: controller.categoryList.length,
                       itemBuilder: (context, index) {
@@ -199,7 +198,7 @@ class _LearnScreenState extends State<LearnScreen> {
             ),
           ),
 
-          SliverToBoxAdapter(child: SizedBox(height: 100)),
+          SliverToBoxAdapter(child: SizedBox(height: 150)),
         ],
       ),
     );

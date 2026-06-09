@@ -179,10 +179,12 @@ class _QuestionnaireSummaryScreenState extends State<QuestionnaireSummaryScreen>
   Widget _buildSectionTitle(String title) {
     return AppText(
       text: title,
-      fontSize: AppSize.width(value: 16),
+      fontSize: AppSize.width(value: 14),
       fontWeight: FontWeight.w600,
       color: AppColors.black,
       fontFamilyIndex: 2,
+      maxLines: 20,
+      textAlign: .left,
     );
   }
 

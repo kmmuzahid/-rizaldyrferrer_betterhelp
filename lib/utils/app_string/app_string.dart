@@ -163,7 +163,7 @@ class AppString {
   static const String community = "Community";
 
   //! Habits Screen
-  static const String getReadytoStart = "Get Ready To Start";
+  static const String getReadytoStart = "Welcome back";
   static const String mahbubulQareem = "Mahbubul Qareem";
   static const String dailyAffermation = "Daily Affermation";
   static const String quotes01 =

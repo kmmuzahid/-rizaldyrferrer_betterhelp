@@ -191,10 +191,9 @@ class ImagePickerService {
         log('📱 Android SDK Version: $sdkVersion');
 
         if (sdkVersion >= 33) {
-          // Android 13+ - use photos permission
-          final status = await Permission.photos.request();
-          log('📱 Photos permission: $status');
-          return status.isGranted;
+          // Android 13+ - Photo Picker handles this automatically, no permission needed
+          log('📱 Android 13+ detected: Using native Photo Picker (no storage permissions required).');
+          return true;
         } else {
           // Android < 13 - use storage permission
           final status = await Permission.storage.request();

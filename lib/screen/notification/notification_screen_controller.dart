@@ -1,10 +1,10 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/notification/model/notification_model.dart';
 import 'package:better_help/screen/notification/notification_service.dart';
 import 'package:better_help/sockets/support_message_socket.dart';
-import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 
 class NotificationScreenController extends GetxController {
@@ -14,7 +14,7 @@ class NotificationScreenController extends GetxController {
   final MyProfileScreenController profileController =
       Get.find<MyProfileScreenController>();
 
-  listenNotification() {
+  void listenNotification() {
     SocketService.instance.startListeningNotification(
       onNotification: (data) {
         final notification = NotificationModel.fromJson(data);
@@ -29,12 +29,12 @@ class NotificationScreenController extends GetxController {
     );
   }
 
-  addSingleNotification(NotificationModel notification) async {
+  Future<void> addSingleNotification(NotificationModel notification) async {
     notificationList.insert(0, notification);
     unreadCount.value++;
   }
 
-  getUnreadCount() async {
+  Future<void> getUnreadCount() async {
     final response = await CkTransport.request<int>(
       input: RequestInput(
         endpoint: ApiEndPoints.notification,
@@ -48,7 +48,11 @@ class NotificationScreenController extends GetxController {
     unreadCount.value = response.data ?? 0;
   }
 
-  getAllNotification({int page = 1, bool isRefresh = false}) async {
+  Future<void> getAllNotification({
+    int page = 1,
+    bool isRefresh = false,
+  }) async {
+    isLoading.value = true;
     final response = await CkTransport.request<List<NotificationModel>>(
       input: RequestInput(
         endpoint: ApiEndPoints.notification,
@@ -66,9 +70,10 @@ class NotificationScreenController extends GetxController {
     } else {
       notificationList.addAll(response.data ?? []);
     }
+    isLoading.value = false;
   }
 
-  markAllRead() async {
+  Future<void> markAllRead() async {
     final response = await CkTransport.request<dynamic>(
       input: RequestInput(
         endpoint: ApiEndPoints.notificationAllRead,
@@ -87,7 +92,7 @@ class NotificationScreenController extends GetxController {
     }
   }
 
-  readOneNotification(int index) async {
+  Future<void> readOneNotification(int index) async {
     final notification = notificationList[index];
     final response = await CkTransport.request(
       input: RequestInput(

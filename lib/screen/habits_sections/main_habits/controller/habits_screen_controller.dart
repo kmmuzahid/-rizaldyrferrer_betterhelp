@@ -1,4 +1,5 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:better_help/screen/habits_sections/main_habits/model/daily_task_model.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
@@ -8,7 +9,6 @@ import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/generate_task/generate_task_dialog.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -181,7 +181,7 @@ class HabitsScreenController extends GetxController {
 
       print('😎 ${profile.subscriptionPlanType}');
 
-      if (profile.subscriptionPlanType == 'free') {
+      if (!profile.isAiGenerated) {
         return;
       }
       final isFirstTimeUser = await StorageService.instance

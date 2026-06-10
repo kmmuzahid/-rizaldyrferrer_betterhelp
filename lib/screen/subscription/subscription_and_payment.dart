@@ -53,7 +53,6 @@ class SubscriptionAndPayment extends StatelessWidget {
                         (!controller.routeFromDrawer ? 1 : 0)];
                 return SubscriptionItem(
                   plan: plan,
-                  isVerifying: controller.isVerifying.value,
                   routeFromDrawer: controller.routeFromDrawer,
                   controller: controller.pageController,
                   index: index,

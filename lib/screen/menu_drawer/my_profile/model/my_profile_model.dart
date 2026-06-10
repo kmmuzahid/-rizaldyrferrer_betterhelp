@@ -25,6 +25,7 @@ class ProfileData {
   int? completedTask;
   String? doctorChatId;
   String? subscriptionPlanType;
+  bool isAiGenerated;
 
   ProfileData({
     this.id,
@@ -51,9 +52,10 @@ class ProfileData {
     this.completedTask,
     this.doctorChatId,
     this.subscriptionPlanType,
+    this.isAiGenerated = false,
   });
 
-  copyWith({
+  ProfileData copyWith({
     String? id,
     String? profile,
     String? fullName,
@@ -78,6 +80,7 @@ class ProfileData {
     int? completedTask,
     String? doctorChatId,
     String? subscriptionPlanType,
+    bool? isAiGenerated,
   }) {
     return ProfileData(
       id: id ?? this.id,
@@ -106,6 +109,7 @@ class ProfileData {
       completedTask: completedTask ?? this.completedTask,
       doctorChatId: doctorChatId ?? this.doctorChatId,
       subscriptionPlanType: subscriptionPlanType ?? this.subscriptionPlanType,
+      isAiGenerated: isAiGenerated ?? this.isAiGenerated,
     );
   }
 
@@ -115,6 +119,7 @@ class ProfileData {
   String toRawJson() => json.encode(toJson());
 
   factory ProfileData.fromJson(dynamic json) => ProfileData(
+    isAiGenerated: json["isAiGenerated"] ?? false,
     id: json["_id"],
     doctorChatId: json["chatId"],
     profile: json["profile"],
@@ -149,6 +154,7 @@ class ProfileData {
   );
 
   Map<String, dynamic> toJson() => {
+    "isAiGenerated": isAiGenerated,
     "_id": id,
     "profile": profile,
     "chatId": doctorChatId,

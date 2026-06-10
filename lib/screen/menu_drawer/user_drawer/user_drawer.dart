@@ -136,16 +136,12 @@ class UserDrawer extends StatelessWidget {
                       Get.back();
                       MyProfileScreenController myProfileScreenController =
                           Get.find<MyProfileScreenController>();
-                      if (myProfileScreenController
+                      if ((myProfileScreenController
                                   .profileData
                                   .value
-                                  ?.subscriptionPlanType ==
-                              'free' ||
-                          myProfileScreenController
-                                  .profileData
-                                  .value
-                                  ?.subscriptionPlanType ==
-                              null) {
+                                  ?.isAiGenerated ??
+                              false) ==
+                          false) {
                         CkSnackBar('Upgrade Your Plan', type: .warning);
                         return;
                       }

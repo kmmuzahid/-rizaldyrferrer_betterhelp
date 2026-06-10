@@ -4,6 +4,7 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/subscription/controller/subscription_and_payment_controller.dart';
 import 'package:better_help/screen/subscription/model/subscription_model.dart';
@@ -11,10 +12,8 @@ import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_instance/get_instance.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
@@ -28,7 +27,6 @@ class SubscriptionItem extends StatelessWidget {
     this.productDetails,
     required this.duration,
     this.routeFromDrawer = false,
-    this.isVerifying = false,
   });
   final SubscriptionModel plan;
   final PageController controller;
@@ -37,7 +35,6 @@ class SubscriptionItem extends StatelessWidget {
   final ProductDetails? productDetails;
   final String duration;
   final bool routeFromDrawer;
-  final bool isVerifying;
 
   @override
   Widget build(BuildContext context) {
@@ -118,39 +115,22 @@ class SubscriptionItem extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       children: [
-                        CkButton(
-                          isLoading: isVerifying,
-                          titleColor: buttonTextColor,
-                          buttonWidth: .infinity,
-                          onTap: () {
-                            Get.find<SubscriptionAndPaymentController>()
-                                .onSubscribe(index - 1);
-                          },
-                          buttonRadius: 12,
-                          buttonColor: buttonColor,
-                          titleText: 'Start My Journey',
-                        ),
+                        Obx(() {
+                          final subController = Get.find<SubscriptionAndPaymentController>();
+                          return CkButton(
+                            isLoading: subController.isVerifying.value,
+                            titleColor: buttonTextColor,
+                            buttonWidth: .infinity,
+                            onTap: () {
+                              subController.onSubscribe(index - 1);
+                            },
+                            buttonRadius: 12,
+                            buttonColor: buttonColor,
+                            titleText: 'Start My Journey',
+                          );
+                        }),
                         const SizedBox(height: 12),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Get.find<SubscriptionAndPaymentController>()
-                                    .onRestore();
-                              },
-                              child: AppText(
-                                text: 'Restore Purchases',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                fontFamilyIndex: 1,
-                                color: Colors.black54,
-                                isUnderlined: true,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -349,14 +329,14 @@ class SubscriptionItem extends StatelessWidget {
     );
   }
 
-  goNextPage() {
+  void goNextPage() {
     controller.nextPage(
       duration: Duration(milliseconds: 300),
       curve: Curves.ease,
     );
   }
 
-  goPreviousPage() {
+  void goPreviousPage() {
     if (routeFromDrawer && index == 0) {
       Get.back();
     } else {

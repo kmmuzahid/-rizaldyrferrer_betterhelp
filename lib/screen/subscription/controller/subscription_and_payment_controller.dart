@@ -285,7 +285,9 @@ class SubscriptionAndPaymentController extends GetxController {
           jsonBody: {
             "packageId": packageId,
             "productId": purchaseDetails?.productID,
-            "purchaseId": purchaseDetails?.purchaseID,
+            "purchaseId": purchaseDetails is GooglePlayPurchaseDetails
+                ? purchaseDetails.billingClientPurchase.purchaseToken
+                : purchaseDetails?.purchaseID,
             "platform": Platform.isAndroid ? "google" : "apple",
             "trasactionDate": purchaseDetails?.transactionDate,
             "status": purchaseDetails?.status.name,

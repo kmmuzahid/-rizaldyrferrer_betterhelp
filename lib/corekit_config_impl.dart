@@ -125,7 +125,10 @@ class CorekitConfigImpl extends CoreKitConfig with CoreKitConfigDefaults {
         if (profile?.subscriptionPackageId == null) {
           Get.offAllNamed(AppRoute.subscriptionscreen);
         } else {
-          Get.offAllNamed(AppRoute.bottomNav);
+          Get.offAllNamed(
+            AppRoute.subscriptionscreen,
+            arguments: {'perform_restore_check': true},
+          );
         }
       },
       showLogin: () {

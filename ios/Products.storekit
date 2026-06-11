@@ -1,0 +1,107 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "7EEDF306",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6761748888",
+    "_askToBuyEnabled" : false,
+    "_billingGracePeriodEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_developerTeamID" : "YV3S8A2JGL",
+    "_disableDialogs" : false,
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 802858135.57305896,
+    "_locale" : "en_US",
+    "_renewalBillingIssuesEnabled" : false,
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ],
+    "_timeRate" : 0
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "22083476",
+      "localizations" : [
+
+      ],
+      "name" : "health_plans",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "69.99",
+          "familyShareable" : false,
+          "groupNumber" : 4,
+          "internalID" : "6776552023",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Daily accountability and guided growth support",
+              "displayName" : "Ignite",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "01_Ignite",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "BHL_01",
+          "subscriptionGroupID" : "22083476",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "22.99",
+          "familyShareable" : false,
+          "groupNumber" : 3,
+          "internalID" : "6775350595",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Its for the test",
+              "displayName" : "Ignite Plan",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "Product_03",
+          "recurringSubscriptionPeriod" : "P3M",
+          "referenceName" : "Test_03",
+          "subscriptionGroupID" : "22083476",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

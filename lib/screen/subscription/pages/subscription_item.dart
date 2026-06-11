@@ -122,7 +122,7 @@ class SubscriptionItem extends StatelessWidget {
                             titleColor: buttonTextColor,
                             buttonWidth: .infinity,
                             onTap: () {
-                              subController.onSubscribe(index - 1);
+                              subController.onSubscribe(plan);
                             },
                             buttonRadius: 12,
                             buttonColor: buttonColor,

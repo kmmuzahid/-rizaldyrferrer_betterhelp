@@ -4,7 +4,6 @@ import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:core_kit/core_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class DelayPicker extends StatefulWidget {
   const DelayPicker({super.key, required this.onSelect});
@@ -142,7 +141,7 @@ class _DelayPickerState extends State<DelayPicker> {
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () => Get.back(),
+                    onPressed: () => Navigator.of(context).pop(),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -162,7 +161,7 @@ class _DelayPickerState extends State<DelayPicker> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Get.back();
+                      Navigator.of(context).pop();
                       widget.onSelect.call(selectedMinutes);
                     },
                     style: ElevatedButton.styleFrom(

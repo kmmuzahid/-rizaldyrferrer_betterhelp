@@ -375,7 +375,6 @@ class SubscriptionAndPaymentController extends GetxController {
   @override
   void onInit() async {
     bool performRestoreCheck = false;
-    return Get.toNamed(AppRoute.bottomNav);
 
     if (Get.arguments != null && Get.arguments is Map) {
       routeFromDrawer = Get.arguments['route_from'] == "drawer";

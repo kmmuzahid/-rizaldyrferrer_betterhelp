@@ -125,7 +125,6 @@ class BeforeQuestionScreen extends StatelessWidget {
                                     Get.delete<
                                       QuestionnariesScreenController
                                     >();
-                                    Get.back();
                                     Get.toNamed(AppRoute.questionariescreen);
                                   },
                                 ),

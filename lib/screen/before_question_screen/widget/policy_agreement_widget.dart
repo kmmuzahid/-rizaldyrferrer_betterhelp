@@ -102,7 +102,10 @@ class PolicyAgreementWidget extends StatelessWidget {
                 Expanded(
                   child: CkButton(
                     titleText: 'Accept',
-                    onTap: onAgree,
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      onAgree();
+                    },
                     buttonColor: AppColors.primary500,
                     buttonHeight: 48.h,
                   ),
@@ -112,7 +115,7 @@ class PolicyAgreementWidget extends StatelessWidget {
                   child: CkButton(
                     titleText: 'Decline',
                     onTap: () {
-                      Get.back();
+                      Navigator.of(context).pop();
                     },
                     titleColor: AppColors.darkGrey,
                     buttonColor: Colors.white,

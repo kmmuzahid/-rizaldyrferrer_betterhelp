@@ -9,11 +9,11 @@ class ApiEndPoints {
   // static const imageUrl = "http://54.241.114.7:5000";
   // static const liveDomain = "http://54.241.114.7:5000";
   //local public
-  // static const imageUrl = "https://humayon5002.binarybards.online";
-  // static const liveDomain = "https://humayon5002.binarybards.online";
+  static const imageUrl = "https://humayon5002.binarybards.online";
+  static const liveDomain = "https://humayon5002.binarybards.online";
   //local
-  static const imageUrl = "https://api.betterhabitsforlife.com";
-  static const liveDomain = "https://api.betterhabitsforlife.com";
+  // static const imageUrl = "https://api.betterhabitsforlife.com";
+  // static const liveDomain = "https://api.betterhabitsforlife.com";
 
   // static const localDomain = "http://10.10.7.65:5003";
   static const domain = liveDomain;

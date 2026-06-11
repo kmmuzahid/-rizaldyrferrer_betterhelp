@@ -13,70 +13,65 @@ import '../../screen/questionnaries_screen/controller/questionnaries_screen_cont
 import '../../service/connectivity_service/connectivity_services.dart';
 import '../../utils/app_log/app_log.dart';
 
-class AppInitialBindings implements Bindings {
+class AppInitialBindings implements Binding {
   @override
-  void dependencies() {
-    //! Internet Connection Checked Screen
-    // Get.lazyPut<ConnectivityService>(() {
-    //   appLog('Registering ConnectivityService');
-    //   return ConnectivityService();
-    // }, fenix: true);
+  List<Bind<dynamic>> dependencies() {
+    return [
+      Bind.lazyPut<OnboardingScreenController>(() {
+        appLog('Registering OnboardingScreenController');
+        return OnboardingScreenController();
+      }, fenix: true),
 
-    //! Onboarding Screen Controller
-    Get.lazyPut<OnboardingScreenController>(() {
-      appLog('Registering OnboardingScreenController');
-      return OnboardingScreenController();
-    }, fenix: true);
+      //! Questionnaries Screen Controller
+      Bind.lazyPut<QuestionnariesScreenController>(
+        () {
+          appLog('Registering QuestionnariesScreenController');
+          return QuestionnariesScreenController();
+        },
+        fenix: true,
+        tag: 'questionnaires',
+      ),
 
-    //! Questionnaries Screen Controller
-    Get.lazyPut<QuestionnariesScreenController>(
-      () {
-        appLog('Registering QuestionnariesScreenController');
-        return QuestionnariesScreenController();
-      },
-      fenix: true,
-      tag: 'questionnaires',
-    );
+      //! Signup Screen Controller
+      Bind.lazyPut<SingupScreenController>(() {
+        appLog('Registering SingupScreenController');
+        return SingupScreenController();
+      }, fenix: true),
 
-    //! Signup Screen Controller
-    Get.lazyPut<SingupScreenController>(() {
-      appLog('Registering SingupScreenController');
-      return SingupScreenController();
-    }, fenix: true);
+      Bind.lazyPut<MyProfileScreenController>(() {
+        appLog('Registering MyProfileScreenController');
+        return MyProfileScreenController();
+      }, fenix: true),
 
-    Get.lazyPut<MyProfileScreenController>(() {
-      appLog('Registering MyProfileScreenController');
-      return MyProfileScreenController();
-    }, fenix: true);
+      Bind.lazyPut<NotificationScreenController>(() {
+        appLog('Registering NotificationScreenController');
+        return NotificationScreenController();
+      }, fenix: true),
 
-    Get.lazyPut<NotificationScreenController>(() {
-      appLog('Registering NotificationScreenController');
-      return NotificationScreenController();
-    }, fenix: true);
+      Bind.lazyPut<FaqScreenController>(() {
+        appLog('Registering FaqScreenController');
+        return FaqScreenController();
+      }, fenix: true),
 
-    Get.lazyPut<FaqScreenController>(() {
-      appLog('Registering FaqScreenController');
-      return FaqScreenController();
-    }, fenix: true);
+      Bind.lazyPut<TalkToSupportScreenController>(() {
+        appLog('Registering TalkToSupportScreenController');
+        return TalkToSupportScreenController();
+      }, fenix: true),
 
-    Get.lazyPut<TalkToSupportScreenController>(() {
-      appLog('Registering TalkToSupportScreenController');
-      return TalkToSupportScreenController();
-    }, fenix: true);
+      Bind.lazyPut<TermsAndConditionsScreenController>(() {
+        appLog('Registering TermsAndConditionsScreenController');
+        return TermsAndConditionsScreenController();
+      }, fenix: true),
 
-    Get.lazyPut<TermsAndConditionsScreenController>(() {
-      appLog('Registering TermsAndConditionsScreenController');
-      return TermsAndConditionsScreenController();
-    }, fenix: true);
+      Bind.lazyPut<PrivacyPolicyScreenController>(() {
+        appLog('Registering PrivacyPolicyScreenController');
+        return PrivacyPolicyScreenController();
+      }, fenix: true),
 
-    Get.lazyPut<PrivacyPolicyScreenController>(() {
-      appLog('Registering PrivacyPolicyScreenController');
-      return PrivacyPolicyScreenController();
-    }, fenix: true);
-
-    Get.lazyPut<GenerateTaskBasedOnPreferenceController>(() {
-      appLog('Registering GenerateTaskBasedOnPreferenceController');
-      return GenerateTaskBasedOnPreferenceController();
-    }, fenix: true);
+      Bind.lazyPut<GenerateTaskBasedOnPreferenceController>(() {
+        appLog('Registering GenerateTaskBasedOnPreferenceController');
+        return GenerateTaskBasedOnPreferenceController();
+      }, fenix: true),
+    ];
   }
 }

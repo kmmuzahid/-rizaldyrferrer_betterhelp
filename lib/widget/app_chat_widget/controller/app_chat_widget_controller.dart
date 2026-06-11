@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+
 import 'package:better_help/widget/app_chat_widget/models/chat_models.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -209,7 +210,7 @@ class ModernChatController extends GetxController
       Get.snackbar(
         'Error',
         'Failed to pick images',
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.bottom,
         backgroundColor: Colors.red[100],
       );
     }
@@ -220,7 +221,7 @@ class ModernChatController extends GetxController
     Get.snackbar(
       'Voice Recording',
       'Voice recording feature coming soon!',
-      snackPosition: SnackPosition.BOTTOM,
+      snackPosition: SnackPosition.bottom,
     );
   }
 

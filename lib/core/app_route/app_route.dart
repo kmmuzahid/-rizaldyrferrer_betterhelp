@@ -274,13 +274,13 @@ class AppRoute {
       page: () => const BottomNavScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
-      binding: BindingsBuilder(() {
-        CommunityBindings().dependencies();
-        HabitBindings().dependencies();
-        LearnBindings().dependencies();
-        SupportBindings().dependencies();
-        MenuBindings().dependencies();
-      }),
+      bindings: [
+        CommunityBindings(),
+        HabitBindings(),
+        LearnBindings(),
+        SupportBindings(),
+        MenuBindings(),
+      ],
     ),
     //! Habits Screen Route
     GetPage(
@@ -288,10 +288,10 @@ class AppRoute {
       page: () => const HabitsScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
-      binding: BindingsBuilder(() {
-        HabitBindings().dependencies();
-        MenuBindings().dependencies();
-      }),
+      bindings: [
+        HabitBindings(),
+        MenuBindings(),
+      ],
     ),
     GetPage(
       name: AppRoute.generateTaskBasedOnPreference,

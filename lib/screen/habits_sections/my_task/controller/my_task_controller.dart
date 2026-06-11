@@ -28,7 +28,7 @@ class MyTaskController extends GetxController {
       // Get.snackbar(
       //   "Congratulations!",
       //   "All tasks completed successfully!",
-      //   snackPosition: SnackPosition.TOP,
+      //   snackPosition: SnackPosition.top,
       //   backgroundColor: Get.theme.colorScheme.primary,
       //   colorText: Get.theme.colorScheme.onPrimary,
       //   duration: Duration(seconds: 2),
@@ -42,7 +42,7 @@ class MyTaskController extends GetxController {
       Get.snackbar(
         "Incomplete Tasks",
         "Please complete all tasks before marking as completed.",
-        snackPosition: SnackPosition.TOP,
+        snackPosition: SnackPosition.top,
         backgroundColor: Get.theme.colorScheme.error,
         colorText: Get.theme.colorScheme.onError,
         duration: Duration(seconds: 2),

@@ -10,7 +10,6 @@ import 'package:better_help/screen/notification/notification_service.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/widget/app_deviceutils/app_device_utils.dart';
-import 'package:better_help/widget/app_snackbar/app_snackbar.dart';
 import 'package:core_kit/initializer.dart';
 import 'package:core_kit/utils/ck_screen_utils.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +67,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       defaultTransition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 200),
-      initialBinding: AppInitialBindings(),
+
+      binds: AppInitialBindings().dependencies(),
       initialRoute: AppRoute.splashscreen,
       navigatorKey: navigatorKey,
       theme: ThemeData(

@@ -375,6 +375,8 @@ class SubscriptionAndPaymentController extends GetxController {
 
   @override
   void onInit() async {
+    return Get.toNamed(AppRoute.bottomNav);
+
     bool performRestoreCheck = false;
     if (Get.arguments != null && Get.arguments is Map) {
       routeFromDrawer = Get.arguments['route_from'] == "drawer";
@@ -424,7 +426,6 @@ class SubscriptionAndPaymentController extends GetxController {
       await onRestore(showLoader: false);
     }
 
-    final profileController = Get.find<MyProfileScreenController>();
     final planType = ckAuth.profile?.subscriptionPlanType;
     if (planType == null ||
         planType == 'free' ||

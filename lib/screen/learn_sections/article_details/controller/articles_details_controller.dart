@@ -45,7 +45,7 @@ class ArticlesDetailsController extends GetxController {
         isSaved.value
             ? "Article saved successfully"
             : "Article removed from saved list",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.bottom,
         duration: const Duration(seconds: 2),
         backgroundColor: isSaved.value ? Colors.green : Colors.orange,
         colorText: Colors.white,
@@ -55,7 +55,7 @@ class ArticlesDetailsController extends GetxController {
       Get.snackbar(
         "Error",
         "Failed to ${isSaved.value ? 'remove' : 'save'} article",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.bottom,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -76,7 +76,7 @@ class ArticlesDetailsController extends GetxController {
     Get.snackbar(
       "Share",
       "Share functionality would be implemented here",
-      snackPosition: SnackPosition.BOTTOM,
+      snackPosition: SnackPosition.bottom,
       duration: const Duration(seconds: 2),
     );
   }

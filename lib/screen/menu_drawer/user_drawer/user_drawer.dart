@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:better_help/corekit_config_impl.dart';
-import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_icons/app_icons.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
@@ -11,9 +11,7 @@ import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_button/app_button.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
 import 'package:better_help/widget/generate_task/generate_task_dialog.dart';
-import 'package:core_kit/snackbar/ck_snackbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class UserDrawer extends StatelessWidget {
@@ -109,18 +107,8 @@ class UserDrawer extends StatelessWidget {
                       () {
                         Get.back();
                         if (index == 3) {
-                          MyProfileScreenController myProfileScreenController =
-                              Get.find<MyProfileScreenController>();
-                          if (myProfileScreenController
-                                      .profileData
-                                      .value
-                                      ?.subscriptionPlanType ==
-                                  'free' ||
-                              myProfileScreenController
-                                      .profileData
-                                      .value
-                                      ?.subscriptionPlanType ==
-                                  null) {
+                          if (ckAuth.profile?.subscriptionPlanType == 'free' ||
+                              ckAuth.profile?.subscriptionPlanType == null) {
                             CkSnackBar('Upgrade Your Plan', type: .warning);
                             return;
                           }
@@ -134,14 +122,8 @@ class UserDrawer extends StatelessWidget {
                     highlightColor: Colors.transparent,
                     onTap: () {
                       Get.back();
-                      MyProfileScreenController myProfileScreenController =
-                          Get.find<MyProfileScreenController>();
-                      if ((myProfileScreenController
-                                  .profileData
-                                  .value
-                                  ?.isAiGenerated ??
-                              false) ==
-                          false) {
+
+                      if ((ckAuth.profile?.isAiGenerated ?? false) == false) {
                         CkSnackBar('Upgrade Your Plan', type: .warning);
                         return;
                       }

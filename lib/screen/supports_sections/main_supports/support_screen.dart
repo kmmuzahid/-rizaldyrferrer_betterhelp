@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/supports_sections/main_supports/controller/support_screen_controller.dart'
     show SupportScreenController;
@@ -15,7 +17,6 @@ import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/app_appbar/app_content_appbar.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -151,10 +152,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                                 ),
                                           isSender:
                                               message.sender.id ==
-                                              profileController
-                                                  .profileData
-                                                  .value
-                                                  ?.id,
+                                              ckAuth.profile?.id,
                                         );
                                       },
                                     ),

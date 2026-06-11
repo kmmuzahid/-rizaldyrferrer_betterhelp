@@ -5,6 +5,7 @@
  */
 import 'package:better_help/core/app_route/app_route.dart';
 import 'package:better_help/core/compatibility/corekit_compat.dart';
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/subscription/controller/subscription_and_payment_controller.dart';
 import 'package:better_help/screen/subscription/model/subscription_model.dart';
@@ -101,22 +102,15 @@ class SubscriptionItem extends StatelessWidget {
                     itemCount: (plan.featureList?.length ?? 0) + 5,
                   ),
                 ),
-                if ((profileController
-                            .profileData
-                            .value
-                            ?.subscriptionPackageId ==
-                        null ||
-                    profileController
-                            .profileData
-                            .value
-                            ?.subscriptionPackageId !=
-                        plan.id))
+                if ((ckAuth.profile?.subscriptionPackageId == null ||
+                    ckAuth.profile?.subscriptionPackageId != plan.id))
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       children: [
                         Obx(() {
-                          final subController = Get.find<SubscriptionAndPaymentController>();
+                          final subController =
+                              Get.find<SubscriptionAndPaymentController>();
                           return CkButton(
                             isLoading: subController.isVerifying.value,
                             titleColor: buttonTextColor,
@@ -208,8 +202,7 @@ class SubscriptionItem extends StatelessWidget {
             textAlign: TextAlign.left,
           ),
           const Spacer(),
-          if (plan.id ==
-              profileController.profileData.value?.subscriptionPackageId)
+          if (plan.id == ckAuth.profile?.subscriptionPackageId)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(

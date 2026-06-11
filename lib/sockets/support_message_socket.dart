@@ -4,11 +4,8 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
-import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:core_kit/utils/ck_logger.dart';
-
-import 'package:get/get_instance/get_instance.dart';
-import 'package:get/utils.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketService {
@@ -46,7 +43,7 @@ class SocketService {
   void startListeningNotification({
     required Function(dynamic data) onNotification,
   }) {
-    final id = Get.find<MyProfileScreenController>().profileData.value?.id;
+    final id = ckAuth.profile?.id;
     socket.on('notification::$id', (data) {
       CkLogger.info('Notification Event: $data', tag: 'Socket');
       if (data != null) {

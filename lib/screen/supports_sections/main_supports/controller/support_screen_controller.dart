@@ -4,12 +4,13 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/screen/habits_sections/main_habits/controller/habits_screen_controller.dart';
 import 'package:better_help/screen/menu_drawer/bookings_sessions/model/booking_session_model.dart';
 import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/supports_sections/main_supports/model/message_model.dart';
 import 'package:better_help/sockets/support_message_socket.dart';
-import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 
 class SupportScreenController extends GetxController {
@@ -29,7 +30,7 @@ class SupportScreenController extends GetxController {
     super.onInit();
     _todayDayStart = startOfDayLocal(DateTime.now());
     _todayDayEnd = endOfDayLocal(DateTime.now());
-    chatId = profileScreenController.profileData.value?.doctorChatId ?? '';
+    chatId = ckAuth.profile?.doctorChatId ?? '';
     getMessages(page: 1);
 
     SocketService.instance.startListeningChat(
@@ -51,7 +52,7 @@ class SupportScreenController extends GetxController {
   DateTime endOfDayLocal(DateTime localDate) =>
       DateTime(localDate.year, localDate.month, localDate.day, 23, 59);
 
-  fetchBookingSession({bool refresh = false, int page = 1}) async {
+  Future<void> fetchBookingSession({bool refresh = false, int page = 1}) async {
     final result = await CkTransport.request<List<BookedSessionModel>>(
       input: RequestInput(
         endpoint: ApiEndPoints.getMyBooking,
@@ -80,7 +81,7 @@ class SupportScreenController extends GetxController {
     super.dispose();
   }
 
-  getMessages({int page = 1}) async {
+  Future<void> getMessages({int page = 1}) async {
     isLoading.value = true;
     final result = await CkTransport.request<List<MessageModel>>(
       input: RequestInput(
@@ -100,7 +101,7 @@ class SupportScreenController extends GetxController {
     isLoading.value = false;
   }
 
-  sendMessage({
+  Future<void> sendMessage({
     required String message,
     required int index,
     int? delayMinute,
@@ -129,7 +130,7 @@ class SupportScreenController extends GetxController {
         message: message,
         status: status,
         sender: Sender(
-          id: profileScreenController.profileData.value?.id ?? '',
+          id: ckAuth.profile?.id ?? '',
           profile: '',
           fullName: '',
           role: '',
@@ -148,7 +149,7 @@ class SupportScreenController extends GetxController {
           'messageQuestion': updatedMessage.message,
           'taskId': updatedMessage.taskId,
           'status': updatedMessage.status,
-          if (delayMinute != null) 'delayMinute': delayMinute,
+          'delayMinute': ?delayMinute,
         },
       ),
       responseBuilder: (data) {

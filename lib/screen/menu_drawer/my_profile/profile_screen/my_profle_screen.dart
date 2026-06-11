@@ -191,18 +191,8 @@ class MyProfleScreen extends GetView<MyProfileScreenController> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          MyProfileScreenController myProfileScreenController =
-                              Get.find<MyProfileScreenController>();
-                          if (myProfileScreenController
-                                      .profileData
-                                      .value
-                                      ?.subscriptionPlanType ==
-                                  'free' ||
-                              myProfileScreenController
-                                      .profileData
-                                      .value
-                                      ?.subscriptionPlanType ==
-                                  null) {
+                          if (ckAuth.profile?.subscriptionPlanType == 'free' ||
+                              ckAuth.profile?.subscriptionPlanType == null) {
                             CkSnackBar('Upgrade Your Plan', type: .warning);
                             return;
                           }

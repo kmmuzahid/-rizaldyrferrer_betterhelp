@@ -1,7 +1,7 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
 import 'package:better_help/core/compatibility/corekit_compat.dart';
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/screen/habits_sections/main_habits/model/daily_task_model.dart';
-import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/sockets/support_message_socket.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
@@ -9,6 +9,8 @@ import 'package:better_help/utils/app_log/app_log.dart';
 import 'package:better_help/utils/app_string/app_string.dart';
 import 'package:better_help/widget/generate_task/generate_task_dialog.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -174,12 +176,10 @@ class HabitsScreenController extends GetxController {
   }
 
   void checkFirstTimeUser() {
-    final profileController = Get.find<MyProfileScreenController>();
-
-    void runCheck(dynamic profile) async {
+    Future<void> runCheck(dynamic profile) async {
       if (profile == null) return;
 
-      print('😎 ${profile.subscriptionPlanType}');
+      debugPrint('😎 subscriptionPlanType: ${profile.subscriptionPlanType}');
 
       if (!profile.isAiGenerated) {
         return;
@@ -192,14 +192,13 @@ class HabitsScreenController extends GetxController {
       }
     }
 
-    // If profile data is already fetched, run the check immediately
-    if (profileController.profileData.value != null) {
-      runCheck(profileController.profileData.value);
+    // ckAuth.profile is a plain getter (not Rx), so GetX workers like once()
+    // cannot observe it. Run the check now if the profile is already loaded;
+    // otherwise fetch it once and then check.
+    if (ckAuth.profile != null) {
+      runCheck(ckAuth.profile);
     } else {
-      // Otherwise, wait for it to be fetched using GetX's 'once' worker
-      once(profileController.profileData, (dynamic profile) {
-        runCheck(profile);
-      });
+      ckAuth.fetchProfile().then((_) => runCheck(ckAuth.profile));
     }
   }
 

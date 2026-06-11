@@ -4,8 +4,8 @@
  * @Email: km.muzahid@gmail.com
  */
 import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/corekit_config_impl.dart';
 import 'package:better_help/screen/learn_sections/main_learn/controller/learn_screen_controller.dart';
-import 'package:better_help/screen/menu_drawer/my_profile/profile_screen/controller/my_profile_screen_controller.dart';
 import 'package:better_help/screen/supports_sections/main_supports/controller/support_screen_controller.dart';
 import 'package:core_kit/snackbar/ck_snackbar.dart';
 import 'package:get/get.dart';
@@ -63,12 +63,8 @@ class BottomNavScreenController extends GetxController {
   }
 
   static void navigateToSupport() {
-    MyProfileScreenController myProfileScreenController =
-        Get.find<MyProfileScreenController>();
-    if (myProfileScreenController.profileData.value?.subscriptionPlanType ==
-            'free' ||
-        myProfileScreenController.profileData.value?.subscriptionPlanType ==
-            null) {
+    if (ckAuth.profile?.subscriptionPlanType == 'free' ||
+        ckAuth.profile?.subscriptionPlanType == null) {
       CkSnackBar('Upgrade Your Plan', type: .warning);
       return;
     }
@@ -83,12 +79,8 @@ class BottomNavScreenController extends GetxController {
   }
 
   static void navigateToProgress() {
-    MyProfileScreenController myProfileScreenController =
-        Get.find<MyProfileScreenController>();
-    if (myProfileScreenController.profileData.value?.subscriptionPlanType ==
-            'free' ||
-        myProfileScreenController.profileData.value?.subscriptionPlanType ==
-            null) {
+    if (ckAuth.profile?.subscriptionPlanType == 'free' ||
+        ckAuth.profile?.subscriptionPlanType == null) {
       CkSnackBar('Upgrade Your Plan', type: .warning);
       return;
     }

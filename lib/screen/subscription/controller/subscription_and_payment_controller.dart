@@ -281,7 +281,7 @@ class SubscriptionAndPaymentController extends GetxController {
       // 3. Only acknowledge purchases to the store AFTER backend verification
       // This prevents the store treating the transaction as "done" if backend failed
       for (final purchase in purchaseDetailsList) {
-        if (purchase.pendingCompletePurchase) {
+        if (purchase.pendingCompletePurchase && purchase.purchaseID != null) {
           await _iap.completePurchase(purchase);
         }
       }
@@ -289,12 +289,7 @@ class SubscriptionAndPaymentController extends GetxController {
       isPurchaseLoading.value = false;
       _isPurchasing = false;
 
-      final isNewSubscription =
-          Get.find<MyProfileScreenController>()
-              .profileData
-              .value
-              ?.subscriptionPackageId ==
-          null;
+      final isNewSubscription = ckAuth.profile?.subscriptionPackageId == null;
 
       _onSuccess(response, newSubscription: isNewSubscription);
     } else {
@@ -430,7 +425,7 @@ class SubscriptionAndPaymentController extends GetxController {
     }
 
     final profileController = Get.find<MyProfileScreenController>();
-    final planType = profileController.profileData.value?.subscriptionPlanType;
+    final planType = ckAuth.profile?.subscriptionPlanType;
     if (planType == null ||
         planType == 'free' ||
         routeFromDrawer ||

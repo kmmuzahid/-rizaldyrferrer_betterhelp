@@ -105,7 +105,7 @@ class UserDrawer extends StatelessWidget {
                       generalSettingsIcons,
                       generalSettingTitle,
                       () {
-                        Get.back();
+                        Navigator.pop(context);
                         if (index == 3) {
                           if (ckAuth.profile?.subscriptionPlanType == 'free' ||
                               ckAuth.profile?.subscriptionPlanType == null) {
@@ -121,7 +121,7 @@ class UserDrawer extends StatelessWidget {
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onTap: () {
-                      Get.back();
+                      Navigator.pop(context);
 
                       if ((ckAuth.profile?.isAiGenerated ?? false) == false) {
                         CkSnackBar('Upgrade Your Plan', type: .warning);
@@ -176,7 +176,7 @@ class UserDrawer extends StatelessWidget {
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () {
-                        Get.back();
+                        Navigator.pop(context);
 
                         Get.toNamed(
                           accountSettingPage[index],

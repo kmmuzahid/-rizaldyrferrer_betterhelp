@@ -1,12 +1,19 @@
 import 'package:better_help/core/app_apiurl/api_end_points.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:better_help/screen/habits_sections/main_habits/model/task_info_model.dart';
 import 'package:better_help/service/storage_services/storage_services.dart';
 import 'package:better_help/widget/generate_task/task_created_dialog.dart';
-import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 
+class GenerateTaskBindings extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => GenerateTaskBasedOnPreferenceController());
+  }
+}
+
 class GenerateTaskBasedOnPreferenceController extends GetxController {
-  RxList<ExecutiveInhibitionModel> aiTasks = RxList<ExecutiveInhibitionModel>();
+  RxList<ExecutiveInhibitionModel> aiTasks = <ExecutiveInhibitionModel>[].obs;
   RxBool isLoading = false.obs;
   late List<Map<String, String>> task;
 
@@ -25,7 +32,6 @@ class GenerateTaskBasedOnPreferenceController extends GetxController {
         "name": taskData.name,
         "goal": taskData.goal,
         "task": taskData.task,
-        "type": taskData.type,
         "days": taskData.days,
 
         "startDate": taskData.startDate.toIso8601String(),
@@ -75,12 +81,7 @@ class GenerateTaskBasedOnPreferenceController extends GetxController {
     isLoading.value = false;
   }
 
-  onWeeklyChange(bool value, int index) {
-    aiTasks[index] = aiTasks[index].copyWith(isWeekly: value);
-    update();
-  }
-
-  onDateChange(DateTime value, int index, bool isStart) {
+  void onDateChange(DateTime value, int index, bool isStart) {
     if (isStart) {
       aiTasks[index] = aiTasks[index].copyWith(startDate: value);
     } else {
@@ -89,7 +90,7 @@ class GenerateTaskBasedOnPreferenceController extends GetxController {
     update();
   }
 
-  onDayChange(String value, int index) {
+  void onDayChange(String value, int index) {
     aiTasks[index] = aiTasks[index].copyWith(
       days: aiTasks[index].days.contains(value)
           ? aiTasks[index].days.where((e) => e != value).toList()

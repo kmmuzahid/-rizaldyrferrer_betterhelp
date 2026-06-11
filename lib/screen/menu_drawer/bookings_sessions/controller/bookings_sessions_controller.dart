@@ -12,7 +12,7 @@ import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:get/get.dart';
 
 class BookingsSessionsController extends GetxController {
-  RxList<BookedSessionModel> bookingSessionModel = RxList();
+  RxList<BookedSessionModel> bookingSessionModel = <BookedSessionModel>[].obs;
   var isLoading = false.obs;
 
   // Loading state

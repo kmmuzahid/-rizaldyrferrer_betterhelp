@@ -141,7 +141,6 @@ class _TaskCard extends StatelessWidget {
     return GetBuilder<GenerateTaskBasedOnPreferenceController>(
       builder: (controller) {
         final task = controller.aiTasks[index];
-
         return AnimatedSize(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
@@ -197,7 +196,7 @@ class _TaskCard extends StatelessWidget {
                 ),
                 Gap(height: 16.h),
                 AppText(
-                  text: "Schedule Type",
+                  text: "Schedule",
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                   color: const Color(0xFF393433),
@@ -205,59 +204,39 @@ class _TaskCard extends StatelessWidget {
                   textAlign: TextAlign.left,
                 ),
                 Gap(height: 8.h),
-                Row(
+                // Row(
+                //   children: [
+                //     _RadioOption(
+                //       label: "Daily",
+                //       isSelected: !task.isWeekly,
+                //       onTap: () => controller.onWeeklyChange(false, index),
+                //     ),
+                //     Gap(width: 24.w),
+                //     _RadioOption(
+                //       label: "Weekly",
+                //       isSelected: task.isWeekly,
+                //       onTap: () => controller.onWeeklyChange(true, index),
+                //     ),
+                //   ],
+                // ),
+                Column(
+                  key: const ValueKey("weekly_selector"),
                   children: [
-                    _RadioOption(
-                      label: "Daily",
-                      isSelected: !task.isWeekly,
-                      onTap: () => controller.onWeeklyChange(false, index),
-                    ),
-                    Gap(width: 24.w),
-                    _RadioOption(
-                      label: "Weekly",
-                      isSelected: task.isWeekly,
-                      onTap: () => controller.onWeeklyChange(true, index),
+                    Gap(height: 16.h),
+                    Wrap(
+                      spacing: 8.w,
+                      runSpacing: 12.h,
+                      children: List.generate(
+                        days.length,
+                        (idx) => _DayItem(
+                          label:
+                              days[idx].substring(0, 3).capitalizeFirst ?? '',
+                          isSelected: task.days.contains(days[idx]),
+                          onTap: () => controller.onDayChange(days[idx], index),
+                        ),
+                      ),
                     ),
                   ],
-                ),
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  transitionBuilder:
-                      (Widget child, Animation<double> animation) {
-                        return SizeTransition(
-                          sizeFactor: animation,
-                          axisAlignment: -1.0,
-                          child: FadeTransition(
-                            opacity: animation,
-                            child: child,
-                          ),
-                        );
-                      },
-                  child: task.isWeekly
-                      ? Column(
-                          key: const ValueKey("weekly_selector"),
-                          children: [
-                            Gap(height: 16.h),
-                            Wrap(
-                              spacing: 8.w,
-                              runSpacing: 12.h,
-                              children: List.generate(
-                                days.length,
-                                (idx) => _DayItem(
-                                  label:
-                                      days[idx]
-                                          .substring(0, 3)
-                                          .capitalizeFirst ??
-                                      '',
-                                  isSelected: task.days.contains(days[idx]),
-                                  onTap: () =>
-                                      controller.onDayChange(days[idx], index),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      : const SizedBox.shrink(key: ValueKey("daily_selector")),
                 ),
               ],
             ),

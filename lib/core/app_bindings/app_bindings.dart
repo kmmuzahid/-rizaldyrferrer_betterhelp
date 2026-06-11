@@ -67,11 +67,6 @@ class AppInitialBindings implements Binding {
         appLog('Registering PrivacyPolicyScreenController');
         return PrivacyPolicyScreenController();
       }, fenix: true),
-
-      Bind.lazyPut<GenerateTaskBasedOnPreferenceController>(() {
-        appLog('Registering GenerateTaskBasedOnPreferenceController');
-        return GenerateTaskBasedOnPreferenceController();
-      }, fenix: true),
     ];
   }
 }

@@ -82,7 +82,7 @@ class GenerateTaskDialog extends StatelessWidget {
                 maxLines: 10,
               ),
               Gap(height: AppSize.height(value: 32)),
-              _buildContinueButton(),
+              _buildContinueButton(context),
             ],
           ),
         ),
@@ -90,10 +90,10 @@ class GenerateTaskDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildContinueButton() {
+  Widget _buildContinueButton(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.back();
+        Navigator.pop(context);
         Get.dialog(const DomainSelectionDialog());
       },
       child: Container(

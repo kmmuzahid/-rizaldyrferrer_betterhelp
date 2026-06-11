@@ -10,6 +10,7 @@ import 'package:better_help/screen/community_sections/creating_post/creating_pos
 import 'package:better_help/screen/community_sections/main_community/community_screen.dart';
 import 'package:better_help/screen/free_trial_screen/free_trial_screen.dart';
 import 'package:better_help/screen/habits_sections/home_screen.dart';
+import 'package:better_help/screen/habits_sections/main_habits/controller/generate_task_based_on_preferense_controller.dart';
 import 'package:better_help/screen/habits_sections/main_habits/generate_task_based_on_preference_screen.dart';
 import 'package:better_help/screen/habits_sections/main_habits/habit_preference_summary_screen.dart';
 import 'package:better_help/screen/habits_sections/main_habits/habits_screen.dart';
@@ -288,14 +289,12 @@ class AppRoute {
       page: () => const HabitsScreen(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 300),
-      bindings: [
-        HabitBindings(),
-        MenuBindings(),
-      ],
+      bindings: [HabitBindings(), MenuBindings()],
     ),
     GetPage(
       name: AppRoute.generateTaskBasedOnPreference,
       page: () => const GenerateTaskBasedOnPreferenceScreen(),
+      binding: GenerateTaskBindings(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: const Duration(milliseconds: 300),
     ),

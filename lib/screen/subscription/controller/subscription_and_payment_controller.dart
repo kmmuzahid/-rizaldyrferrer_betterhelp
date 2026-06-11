@@ -27,8 +27,7 @@ class SubscriptionAndPaymentController extends GetxController {
   bool routeFromDrawer = false;
   var isPurchaseLoading = false.obs;
   late PageController pageController;
-  final RxList<SubscriptionModel> subscriptionPlan =
-      RxList<SubscriptionModel>();
+  final RxList<SubscriptionModel> subscriptionPlan = <SubscriptionModel>[].obs;
   var currentPage = 0.obs;
 
   final InAppPurchase _iap = InAppPurchase.instance;
@@ -375,9 +374,9 @@ class SubscriptionAndPaymentController extends GetxController {
 
   @override
   void onInit() async {
+    bool performRestoreCheck = false;
     return Get.toNamed(AppRoute.bottomNav);
 
-    bool performRestoreCheck = false;
     if (Get.arguments != null && Get.arguments is Map) {
       routeFromDrawer = Get.arguments['route_from'] == "drawer";
       performRestoreCheck = Get.arguments['perform_restore_check'] == true;

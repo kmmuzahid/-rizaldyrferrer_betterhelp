@@ -233,7 +233,7 @@ class _DomainSelectionDialogState extends State<DomainSelectionDialog> {
     return InkWell(
       onTap: () {
         if (selectedDomains.isNotEmpty) {
-          Get.back();
+          Navigator.pop(context);
           Get.toNamed(
             AppRoute.habitPreferenceSummary,
             arguments: getSelectedDifficulties(),

@@ -1,10 +1,11 @@
+import 'package:better_help/core/app_route/app_route.dart';
+import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:better_help/screen/habits_sections/main_habits/controller/habits_screen_controller.dart';
 import 'package:better_help/utils/app_colors/app_colors.dart';
 import 'package:better_help/utils/app_images/app_images.dart';
 import 'package:better_help/utils/app_size/app_gap.dart';
 import 'package:better_help/utils/app_size/app_size.dart';
 import 'package:better_help/widget/app_text/app_text.dart';
-import 'package:better_help/core/compatibility/corekit_compat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -58,8 +59,7 @@ class TaskCreatedDialog extends StatelessWidget {
               buttonColor: AppColors.primary500,
               onTap: () {
                 Get.find<HabitsScreenController>().refreshTasks();
-                Get.back();
-                Get.back();
+                Get.offAllNamed(AppRoute.bottomNav);
               },
             ),
           ],

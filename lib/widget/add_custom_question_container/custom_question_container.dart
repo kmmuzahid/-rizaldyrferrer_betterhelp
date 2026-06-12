@@ -54,7 +54,7 @@ class CustomQuestionContainer extends StatelessWidget {
 
   Widget _buildAnswerSelection() {
     return Container(
-      padding: EdgeInsets.all(AppSize.width(value: 16)),
+      padding: EdgeInsets.only(top: 16, bottom: 16, left: 10, right: 10),
       decoration: BoxDecoration(
         color: answerCardBg ?? AppColors.yellow50,
         borderRadius: BorderRadius.circular(AppSize.width(value: 16)),
@@ -64,7 +64,9 @@ class CustomQuestionContainer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _buildAnswerOption('Rarely/Never', AppString.rarely),
+            2.width,
             _buildAnswerOption('sometimes', AppString.sometimes),
+            2.width,
             _buildAnswerOption('frequently', AppString.frequently),
           ],
         );
@@ -107,6 +109,7 @@ class CustomQuestionContainer extends StatelessWidget {
               fontSize: 13,
               fontFamilyIndex: 2,
               fontWeight: FontWeight.w600,
+              maxLines: 2,
               color: isSelected ? activeColor : AppColors.black,
               textAlign: TextAlign.center,
             ),

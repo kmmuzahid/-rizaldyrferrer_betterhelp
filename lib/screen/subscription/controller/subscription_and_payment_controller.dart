@@ -182,7 +182,7 @@ class SubscriptionAndPaymentController extends GetxController {
 
     if (showLoader) isPurchaseLoading.value = true;
     try {
-      await _iap.restorePurchases();
+      await _iap.restorePurchases(applicationUserName: ckAuth.profile?.id);
       debugPrint("Restore completed");
     } catch (e) {
       if (showLoader) isPurchaseLoading.value = false;
@@ -213,6 +213,7 @@ class SubscriptionAndPaymentController extends GetxController {
           isPurchaseLoading.value = true;
           final PurchaseParam purchaseParam = PurchaseParam(
             productDetails: product,
+            applicationUserName: ckAuth.profile?.id,
           );
           _iap.buyNonConsumable(purchaseParam: purchaseParam);
         } else {

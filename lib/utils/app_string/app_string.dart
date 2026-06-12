@@ -30,7 +30,7 @@ class AppString {
   static const String begin = "Begin";
   static const String questionTitle =
       'Tell us about you. There are no right or wrong answers. Select the response that best describes your daily experiences.';
-  static const String rarely = 'Rarely/Never';
+  static const String rarely = 'Rarely/ Never';
   static const String frequently = 'Frequently';
   static const String sometimes = 'Sometimes';
   static const String question1 =

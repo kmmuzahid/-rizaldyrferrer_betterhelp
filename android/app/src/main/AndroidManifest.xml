@@ -33,7 +33,7 @@
 <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
     <application
-        android:label="Better Help"
+        android:label="Better Habits"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         >

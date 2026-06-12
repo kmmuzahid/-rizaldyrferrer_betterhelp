@@ -42,7 +42,7 @@ dependencies:
   intl:  
   json_annotation:
   json_serializable:
-  in_app_purchase: 
+  in_app_purchase: ^3.3.0
   audioplayers: ^6.7.1
   core_kit:
   #   path: /Users/username/Documents/km muzahid/flutter_core_kit
